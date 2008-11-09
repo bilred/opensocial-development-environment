@@ -1,11 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OpenSocial Development Environment Plug-in
-Bundle-SymbolicName: jp.eisbahn.eclipse.plugins.osde
+Bundle-SymbolicName: jp.eisbahn.eclipse.plugins.osde;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: jp.eisbahn.eclipse.plugins.osde.internal.Activator
 Bundle-Vendor: Yoichiro Tanaka
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.ui.ide;bundle-version="3.4.0",
+ org.eclipse.core.resources;bundle-version="3.4.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
