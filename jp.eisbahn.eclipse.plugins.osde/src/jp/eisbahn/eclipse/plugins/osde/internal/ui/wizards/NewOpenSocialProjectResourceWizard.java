@@ -1,29 +1,26 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-import org.eclipse.ui.ide.undo.CreateProjectOperation;
-import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -125,14 +122,6 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		}
 		// プロジェクトハンドルを取得
 		final IProject newProjectHandle = mainPage.getProjectHandle();
-//		// プロジェクトデクスリプタを生成
-//		URI location = null;
-//		if (!mainPage.useDefaults()) {
-//			location = mainPage.getLocationURI();
-//		}
-//		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-//		final IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
-//		description.setLocationURI(location);
 		// プロジェクト作成ジョブを作成
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			/**
@@ -141,18 +130,20 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 			 * @throws InvocationTargetException プロジェクト作成時に何らかの例外が発生したとき
 			 */
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
-//				// プロジェクト作成オペレーションを生成
-//				CreateProjectOperation op = new CreateProjectOperation(description, "New OpenSocial project");
-//				try {
-//					// プロジェクト作成オペレーションを実行
-//						PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(op, monitor, WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
-//				} catch (ExecutionException e) {
-//					throw new InvocationTargetException(e);
-//				}
 				try {
+					// プロジェクトの作成
 					newProjectHandle.create(monitor);
 					newProjectHandle.open(monitor);
+					// TODO Gadget XMLファイルの作成
+					IFile gadgetXmlFile = newProjectHandle.getFile(new Path("gadget.xml"));
+					String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+					content += "<Module>\n";
+					content += "</Module>";
+					InputStream in = new ByteArrayInputStream(content.getBytes("UTF8"));
+					gadgetXmlFile.create(in, false, monitor);
 				} catch(CoreException e) {
+					throw new InvocationTargetException(e);
+				} catch(UnsupportedEncodingException e) {
 					throw new InvocationTargetException(e);
 				}
 			}
@@ -164,7 +155,7 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 			return null;
 		} catch(InvocationTargetException e) {
 			Throwable t = e.getTargetException();
-			if (t instanceof ExecutionException && t.getCause() instanceof CoreException) {
+			if (t.getCause() instanceof CoreException) {
 				CoreException cause = (CoreException)t.getCause();
 				StatusAdapter status = new StatusAdapter(StatusUtil.newStatus(cause.getStatus().getSeverity(), "プロジェクト作成時にエラーが発生しました。", cause));
 				status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "プロジェクト作成時にエラーが発生しました。");
