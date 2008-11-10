@@ -38,6 +38,9 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 	/** プロジェクト作成ページ */
 	private  WizardNewProjectCreationPage mainPage;
 	
+	/** Gadget XMLファイル作成ページ */
+	private WizardNewGadgetXmlPage gadgetXmlPage;
+	
 	/** 新しく作成するプロジェクトのキャッシュ */
 	private IProject newProject;
 	
@@ -72,6 +75,11 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		mainPage.setTitle("OpenSocial Project");
 		mainPage.setDescription("Create a new OpenSocial project resource.");
 		addPage(mainPage);
+		// Gadget XMLファイル作成ページを追加
+		gadgetXmlPage = new WizardNewGadgetXmlPage("newGadgetXmlPage");
+		gadgetXmlPage.setTitle("Application settings");
+		gadgetXmlPage.setDescription("Define this application settings.");
+		addPage(gadgetXmlPage);
 	}
 	
 	/**
