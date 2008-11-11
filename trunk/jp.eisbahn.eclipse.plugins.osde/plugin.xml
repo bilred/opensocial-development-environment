@@ -2,28 +2,22 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="jp.eisbahn.eclipse.plugins.osde.actionSet"
-            label="Sample Action Set"
-            visible="true">
-         <menu
-               id="sampleMenu"
-               label="Sample &amp;Menu">
-            <separator
-                  name="sampleGroup">
-            </separator>
-         </menu>
-         <action
-               class="jp.eisbahn.eclipse.plugins.osde.actions.SampleAction"
-               icon="icons/sample.gif"
-               id="jp.eisbahn.eclipse.plugins.osde.actions.SampleAction"
-               label="&amp;Sample Action"
-               menubarPath="sampleMenu/sampleGroup"
-               toolbarPath="sampleGroup"
-               tooltip="Hello, Eclipse world">
-         </action>
-      </actionSet>
+         point="org.eclipse.ui.newWizards">
+      <category
+        id="jp.eisbahn.eclipse.plugins.osde.newWizards"
+        name="OpenSocial">
+      </category>
+      <wizard
+          id="jp.eisbahn.eclipse.plugins.osde.newWizards.NewOpenSocialProjectWizard"
+          name="OpenSocial Project"
+          category="jp.eisbahn.eclipse.plugins.osde.newWizards"
+          icon="./icons/sample.gif"
+          project="true"
+          class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.NewOpenSocialProjectResourceWizard">
+          <description>
+              Create an OpenSocial project.
+          </description>
+           <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard> 
    </extension>
-
 </plugin>
