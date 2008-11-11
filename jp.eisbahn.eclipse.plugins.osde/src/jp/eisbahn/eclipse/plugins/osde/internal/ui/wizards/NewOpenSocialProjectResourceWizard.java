@@ -1,7 +1,5 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -20,7 +18,13 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.ide.DialogUtil;
+import org.eclipse.ui.internal.wizards.newresource.ResourceMessages;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -130,6 +134,8 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		}
 		// プロジェクトハンドルを取得
 		final IProject newProjectHandle = mainPage.getProjectHandle();
+		// Gadget XMLファイルの情報を取得
+		final GadgetXmlData gadgetXmlData = gadgetXmlPage.getGadgetXmlData();
 		// プロジェクト作成ジョブを作成
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			/**
@@ -142,13 +148,8 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 					// プロジェクトの作成
 					newProjectHandle.create(monitor);
 					newProjectHandle.open(monitor);
-					// TODO Gadget XMLファイルの作成
-					IFile gadgetXmlFile = newProjectHandle.getFile(new Path("gadget.xml"));
-					String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-					content += "<Module>\n";
-					content += "</Module>";
-					InputStream in = new ByteArrayInputStream(content.getBytes("UTF8"));
-					gadgetXmlFile.create(in, false, monitor);
+					// Gadget XMLファイルの作成
+					(new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData)).generate(monitor);
 				} catch(CoreException e) {
 					throw new InvocationTargetException(e);
 				} catch(UnsupportedEncodingException e) {
@@ -159,8 +160,20 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		// プロジェクト作成ジョブを実行
 		try {
 			getContainer().run(true, true, op);
+			IFile gadgetXmlFile = newProjectHandle.getFile(new Path("gadget.xml"));
+	        IWorkbenchWindow dw = getWorkbench().getActiveWorkbenchWindow();
+	        try {
+	            if (dw != null) {
+	                IWorkbenchPage page = dw.getActivePage();
+	                if (page != null) {
+	                    IDE.openEditor(page, gadgetXmlFile, true);
+	                }
+	            }
+	        } catch (PartInitException e) {
+	            throw new RuntimeException(e);
+	        }
 		} catch(InterruptedException e) {
-			return null;
+			throw new RuntimeException(e);
 		} catch(InvocationTargetException e) {
 			Throwable t = e.getTargetException();
 			if (t.getCause() instanceof CoreException) {
@@ -178,7 +191,7 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		newProject = newProjectHandle;
 		return newProject;
 	}
-
+	
 	/**
 	 * 初期化データをセットします。
 	 * @param config 設定要素
