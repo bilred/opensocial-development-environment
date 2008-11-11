@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Gadget XMLファイルの情報を持つクラスです。
  * @author yoichiro
  */
+@SuppressWarnings("serial")
 public class GadgetXmlData implements Serializable {
 
 	/** Title */
