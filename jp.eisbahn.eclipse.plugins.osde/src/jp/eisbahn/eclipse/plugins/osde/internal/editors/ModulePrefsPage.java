@@ -3,6 +3,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -32,10 +33,15 @@ public class ModulePrefsPage extends FormPage {
 		section.setLayoutData(new GridData(GridData.FILL_BOTH));
 		//
 		Composite sectionPanel = toolkit.createComposite(section);
-		sectionPanel.setLayout(new GridLayout());
+		layout = new GridLayout();
+		layout.numColumns = 4;
+		sectionPanel.setLayout(layout);
 		section.setClient(sectionPanel);
 		//
-		
+		toolkit.createLabel(sectionPanel, "Title:");
+		Text titleText = toolkit.createText(sectionPanel, "");
+		toolkit.createLabel(sectionPanel, "Title URL:");
+		Text titleUrlText = toolkit.createText(sectionPanel, "");
 	}
 
 }
