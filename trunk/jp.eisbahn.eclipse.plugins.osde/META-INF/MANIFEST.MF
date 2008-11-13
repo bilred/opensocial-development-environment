@@ -11,6 +11,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources;bundle-version="3.4",
  org.eclipse.ui.forms;bundle-version="3.3",
  org.eclipse.jface.text,
- org.eclipse.ui.editors
+ org.eclipse.ui.editors,
+ org.junit
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: libs/gadget-xml-models.jar,
+ .,
+ libs/xbean.jar,
+ libs/jsr173_1.0_api.jar
