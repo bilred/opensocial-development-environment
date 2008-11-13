@@ -4,9 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
@@ -28,7 +26,6 @@ public class ModulePrefsPart extends AbstractFormPart {
 		super.initialize(form);
 		//
 		createControls(form);
-		
 	}
 	
 	private void createControls(IManagedForm managedForm) {
@@ -54,11 +51,6 @@ public class ModulePrefsPart extends AbstractFormPart {
 		//
 		createLabel(sectionPanel, toolkit, "Title:");
 		titleText = createText(sectionPanel, toolkit);
-		titleText.addListener(SWT.Modify, new Listener() {
-
-			public void handleEvent(Event event) {
-				markDirty();
-			}});
 		createLabel(sectionPanel, toolkit, "Title URL:");
 		titleUrlText = createText(sectionPanel, toolkit);
 		createLabel(sectionPanel, toolkit, "Description:");

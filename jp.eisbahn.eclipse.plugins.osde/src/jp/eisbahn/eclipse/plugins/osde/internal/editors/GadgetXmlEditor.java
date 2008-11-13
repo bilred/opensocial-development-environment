@@ -5,13 +5,15 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 public class GadgetXmlEditor extends FormEditor {
-
+	
 	@Override
 	protected void addPages() {
 		try {
-			addPage(new ModulePrefsPage(this));
+			ModulePrefsPage modulePrefsPage = new ModulePrefsPage(this);
+			addPage(modulePrefsPage);
 		} catch(PartInitException e) {
-			e.printStackTrace();
+			// TODO あとで修正
+			throw new IllegalStateException(e);
 		}
 	}
 
