@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 import javax.xml.bind.JAXBElement;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -33,6 +35,14 @@ public class FeaturesPart extends AbstractFormPart {
 	private Map<FeatureName, Button> buttonMap;
 	
 	private ObjectFactory objectFactory;
+	
+	private SelectionListener selectionListener = new SelectionListener() {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+		public void widgetSelected(SelectionEvent e) {
+			markDirty();
+		}
+	};
 	
 	public FeaturesPart(ModulePrefsPage page) {
 		this.page = page;
@@ -115,6 +125,7 @@ public class FeaturesPart extends AbstractFormPart {
 		button.setText(text);
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		button.setFont(parent.getFont());
+		button.addSelectionListener(selectionListener);
 		return button;
 	}
 	
@@ -138,7 +149,10 @@ public class FeaturesPart extends AbstractFormPart {
 			FeatureName featureName = entry.getKey();
 			Button button = entry.getValue();
 			if (button.getSelection()) {
-				
+				GadgetFeatureType featureType = objectFactory.createGadgetFeatureType();
+				featureType.setFeature(featureName.toString());
+				JAXBElement<GadgetFeatureType> require = objectFactory.createModuleModulePrefsRequire(featureType);
+				requireOrOptionalOrPreload.add(require);
 			}
 		}
 	}
