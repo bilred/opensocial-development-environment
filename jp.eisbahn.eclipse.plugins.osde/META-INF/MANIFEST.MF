@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.junit
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: libs/gadget-xml-models.jar,
- .,
- libs/xbean.jar,
+Bundle-ClassPath: .,
+ libs/jaxb-api.jar,
+ libs/jaxb-impl.jar,
+ libs/activation.jar,
  libs/jsr173_1.0_api.jar
