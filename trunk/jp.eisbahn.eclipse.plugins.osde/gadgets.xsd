@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:gs="http://google.com/gadgets"
-           targetNamespace="http://google.com/gadgets">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="Module">
     <xs:complexType>
       <xs:sequence>
         <xs:element name="ModulePrefs" minOccurs="0">
           <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element name="Require" type="gs:GadgetFeatureType"/>
-              <xs:element name="Optional" type="gs:GadgetFeatureType"/>
+              <xs:element name="Require" type="GadgetFeatureType"/>
+              <xs:element name="Optional" type="GadgetFeatureType"/>
               <xs:element name="Preload">
                 <xs:complexType>
                   <xs:attribute name="href" type="xs:string" use="required"/>
@@ -95,8 +93,8 @@
                     <xs:element name="Service" maxOccurs="unbounded">
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element name="Request" type="gs:OAuthResourceType" minOccurs="0"/>
-                          <xs:element name="Access" type="gs:OAuthResourceType" minOccurs="0"/>
+                          <xs:element name="Request" type="OAuthResourceType" minOccurs="0"/>
+                          <xs:element name="Access" type="OAuthResourceType" minOccurs="0"/>
                           <xs:element name="Authorization" minOccurs="0">
                             <xs:complexType>
                               <xs:attribute name="url" type="xs:string" use="required"/>
@@ -147,7 +145,7 @@
             </xs:attribute>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Content" minOccurs="1" maxOccurs="unbounded" mixed="true">
+        <xs:element name="Content" minOccurs="1" maxOccurs="unbounded">
           <xs:complexType>
             <xs:simpleContent>
               <xs:extension base="xs:string">
