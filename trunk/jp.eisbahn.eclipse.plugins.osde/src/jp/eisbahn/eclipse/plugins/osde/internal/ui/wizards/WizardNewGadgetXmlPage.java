@@ -1,5 +1,9 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
+import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createCheckbox;
+import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createLabel;
+import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createText;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -9,7 +13,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
@@ -53,14 +56,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 	private Button miniMessageButton;
 	/** Tabsチェックボックス */
 	private Button tabsButton;
-	/** Canvasチェックボックス */
-	private Button canvasButton;
-	/** Profileチェックボックス */
-	private Button profileButton;
-	/** Previewチェックボックス */
-	private Button previewButton;
-	/** Homeチェックボックス */
-	private Button homeButton;
 	
 	/** 入力値の変更を検知するリスナオブジェクト */
 	private Listener modifyListener = new Listener() {
@@ -91,7 +86,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		//
 		createModulePrefsControls(composite);
 		createFeaturesControls(composite);
-		createViewsControls(composite);
 		//
 		setPageComplete(validatePage());
 		setErrorMessage(null);
@@ -172,77 +166,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		tabsButton = createCheckbox(featuresGroup, "Tabs");
 	}
 	
-	/**
-	 * サポートするViewsを定義するUIを構築します。
-	 * @param parent 親のコンテナ
-	 */
-	private void createViewsControls(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		Group viewsGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
-		viewsGroup.setText("Views");
-		viewsGroup.setFont(parent.getFont());
-		viewsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		layout = new GridLayout();
-		layout.numColumns = 4;
-		viewsGroup.setLayout(layout);
-		viewsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		canvasButton = createCheckbox(viewsGroup, "Canvas");
-		canvasButton.addListener(SWT.Selection, modifyListener);
-		canvasButton.setSelection(true);
-		profileButton = createCheckbox(viewsGroup, "Profile");
-		profileButton.addListener(SWT.Selection, modifyListener);
-		profileButton.setSelection(true);
-		previewButton = createCheckbox(viewsGroup, "Preview");
-		previewButton.addListener(SWT.Selection, modifyListener);
-		homeButton = createCheckbox(viewsGroup, "Home");
-		homeButton.addListener(SWT.Selection, modifyListener);
-	}
-	
-	/**
-	 * 指定された文字列を表示するためのラベルを生成します。
-	 * @param parent ラベルを配置するコンテナ
-	 * @param text 表示文字列
-	 */
-	private void createLabel(Composite parent, String text) {
-		Label label = new Label(parent, SWT.NONE);
-		label.setText(text);
-		GridData layoutData = new GridData();
-		layoutData.verticalAlignment = SWT.BEGINNING;
-		layoutData.verticalIndent = 7;
-		label.setLayoutData(layoutData);
-		label.setFont(parent.getFont());
-	}
-	
-	/**
-	 * 入力フィールドを生成し、その結果を返します。
-	 * @param parent 入力フィールドを配置するコンテナ
-	 * @return 生成された入力フィールド
-	 */
-	private Text createText(Composite parent) {
-		Text text = new Text(parent, SWT.BORDER);
-		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		text.setFont(parent.getFont());
-		return text;
-	}
-
-	/**
-	 * チェックボックスを生成し、その結果を返します。
-	 * @param parent チェックボックスを配置するコンテナ
-	 * @param text 表示文字列
-	 * @return 生成されたチェックボックス
-	 */
-	private Button createCheckbox(Composite parent, String text) {
-		Button button = new Button(parent, SWT.CHECK);
-		button.setText(text);
-		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		button.setFont(parent.getFont());
-		return button;
-	}
-	
 	private boolean validatePage() {
 		String title = titleText.getText().trim();
 		if (title.length() == 0) {
@@ -254,15 +177,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		if (authorEmail.length() == 0) {
 			setErrorMessage(null);
 			setMessage("Author Email is empty.");
-			return false;
-		}
-		boolean canvas = canvasButton.getSelection();
-		boolean profile = profileButton.getSelection();
-		boolean preview = previewButton.getSelection();
-		boolean home = homeButton.getSelection();
-		if (!(canvas || profile || preview || home)) {
-			setErrorMessage(null);
-			setMessage("Not checked any views.");
 			return false;
 		}
 		setErrorMessage(null);
@@ -278,16 +192,12 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		GadgetXmlData data = new GadgetXmlData();
 		data.setAuthor(authorText.getText().trim());
 		data.setAuthorEmail(authorEmailText.getText().trim());
-		data.setCanvas(canvasButton.getSelection());
 		data.setDescription(descriptionText.getText().trim());
 		data.setDynamicHeight(dynamicHeightButton.getSelection());
 		data.setFlash(flashButton.getSelection());
-		data.setHome(homeButton.getSelection());
 		data.setMiniMessage(miniMessageButton.getSelection());
 		data.setOpensocial07(opensocial07Button.getSelection());
 		data.setOpensocial08(opensocial08Button.getSelection());
-		data.setPreview(previewButton.getSelection());
-		data.setProfile(profileButton.getSelection());
 		data.setPubsub(pubsubButton.getSelection());
 		data.setScreenshot(screenshotText.getText().trim());
 		data.setSetTitle(setTitleButton.getSelection());
