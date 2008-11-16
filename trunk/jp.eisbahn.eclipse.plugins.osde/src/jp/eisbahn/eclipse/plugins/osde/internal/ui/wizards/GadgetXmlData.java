@@ -43,14 +43,6 @@ public class GadgetXmlData implements Serializable {
 	private boolean miniMessage;
 	/** Tabs */
 	private boolean tabs;
-	/** Canvas */
-	private boolean canvas;
-	/** Profile */
-	private boolean profile;
-	/** Preview */
-	private boolean preview;
-	/** Home */
-	private boolean home;
 	
 	/**
 	 * Titleを返します。
@@ -308,70 +300,6 @@ public class GadgetXmlData implements Serializable {
 		this.tabs = tabs;
 	}
 	
-	/**
-	 * Canvasを返します。
-	 * @return canvas Canvas
-	 */
-	public boolean isCanvas() {
-		return canvas;
-	}
-	
-	/**
-	 * Canvasをセットします。
-	 * @param canvas Canvas
-	 */
-	public void setCanvas(boolean canvas) {
-		this.canvas = canvas;
-	}
-	
-	/**
-	 * Profileを返します。
-	 * @return profile Profile
-	 */
-	public boolean isProfile() {
-		return profile;
-	}
-	
-	/**
-	 * Profileをセットします。
-	 * @param profile Profile
-	 */
-	public void setProfile(boolean profile) {
-		this.profile = profile;
-	}
-	
-	/**
-	 * Previewを返します。
-	 * @return preview Preview
-	 */
-	public boolean isPreview() {
-		return preview;
-	}
-	
-	/**
-	 * Previewをセットします。
-	 * @param preview Preview
-	 */
-	public void setPreview(boolean preview) {
-		this.preview = preview;
-	}
-	
-	/**
-	 * Homeを返します。
-	 * @return home Home
-	 */
-	public boolean isHome() {
-		return home;
-	}
-	
-	/**
-	 * Homeをセットします。
-	 * @param home Home
-	 */
-	public void setHome(boolean home) {
-		this.home = home;
-	}
-
 	/**
 	 * Skinsを返します。
 	 * @return skins Skins

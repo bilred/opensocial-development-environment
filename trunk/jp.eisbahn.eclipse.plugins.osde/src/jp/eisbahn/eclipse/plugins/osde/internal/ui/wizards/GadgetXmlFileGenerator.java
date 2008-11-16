@@ -3,6 +3,8 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.EnumMap;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -10,16 +12,22 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
+import com.google.gadgets.ViewName;
+import com.google.gadgets.ViewType;
+
 public class GadgetXmlFileGenerator {
 	
 	private IProject project;
 	
-	private GadgetXmlData data;
+	private GadgetXmlData gadgetXmlData;
 	
-	public GadgetXmlFileGenerator(IProject project, GadgetXmlData data) {
+	private EnumMap<ViewName, GadgetViewData> gadgetViewData;
+	
+	public GadgetXmlFileGenerator(IProject project, GadgetXmlData gadgetXmlData, EnumMap<ViewName, GadgetViewData> gadgetViewData) {
 		super();
 		this.project = project;
-		this.data = data;
+		this.gadgetXmlData = gadgetXmlData;
+		this.gadgetViewData = gadgetViewData;
 	}
 	
 	public IFile generate(IProgressMonitor monitor) throws UnsupportedEncodingException, CoreException {
@@ -27,82 +35,77 @@ public class GadgetXmlFileGenerator {
 		String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		content += "<Module>\n";
 		content += "  <ModulePrefs";
-		content += " title=\"" + data.getTitle() + "\"";
-		if (data.getTitleUrl().length() > 0) {
-			content += " title_url=\"" + data.getTitleUrl() + "\"";
+		content += " title=\"" + gadgetXmlData.getTitle() + "\"";
+		if (gadgetXmlData.getTitleUrl().length() > 0) {
+			content += " title_url=\"" + gadgetXmlData.getTitleUrl() + "\"";
 		}
-		if (data.getAuthor().length() > 0) {
-			content += " author=\"" + data.getAuthor() + "\"";
+		if (gadgetXmlData.getAuthor().length() > 0) {
+			content += " author=\"" + gadgetXmlData.getAuthor() + "\"";
 		}
-		content += " author_email=\"" + data.getAuthorEmail() + "\"";
-		if (data.getDescription().length() > 0) {
-			content += " description=\"" + data.getDescription() + "\"";
+		content += " author_email=\"" + gadgetXmlData.getAuthorEmail() + "\"";
+		if (gadgetXmlData.getDescription().length() > 0) {
+			content += " description=\"" + gadgetXmlData.getDescription() + "\"";
 		}
-		if (data.getScreenshot().length() > 0) {
-			content += " screenshot=\"" + data.getScreenshot() + "\"";
+		if (gadgetXmlData.getScreenshot().length() > 0) {
+			content += " screenshot=\"" + gadgetXmlData.getScreenshot() + "\"";
 		}
-		if (data.getThumbnail().length() > 0) {
-			content += " thumbnail=\"" + data.getThumbnail() + "\"";
+		if (gadgetXmlData.getThumbnail().length() > 0) {
+			content += " thumbnail=\"" + gadgetXmlData.getThumbnail() + "\"";
 		}
 		content += ">\n";
-		if (data.isOpensocial08()) {
+		if (gadgetXmlData.isOpensocial08()) {
 			content += "    <Require feature=\"opensocial-0.8\" />\n";
 		}
-		if (data.isOpensocial07()) {
+		if (gadgetXmlData.isOpensocial07()) {
 			content += "    <Require feature=\"opensocial-0.7\" />\n";
 		}
-		if (data.isDynamicHeight()) {
+		if (gadgetXmlData.isDynamicHeight()) {
 			content += "    <Require feature=\"window\" />\n";
 		}
-		if (data.isFlash()) {
+		if (gadgetXmlData.isFlash()) {
 			content += "    <Require feature=\"flash\" />\n";
 		}
-		if (data.isMiniMessage()) {
+		if (gadgetXmlData.isMiniMessage()) {
 			content += "    <Require feature=\"minimessage\" />\n";
 		}
-		if (data.isPubsub()) {
+		if (gadgetXmlData.isPubsub()) {
 			content += "    <Require feature=\"pubsub\" />\n";
 		}
-		if (data.isSetTitle()) {
+		if (gadgetXmlData.isSetTitle()) {
 			content += "    <Require feature=\"settitle\" />\n";
 		}
-		if (data.isSkins()) {
+		if (gadgetXmlData.isSkins()) {
 			content += "    <Require feature=\"skins\" />\n";
 		}
-		if (data.isTabs()) {
+		if (gadgetXmlData.isTabs()) {
 			content += "    <Require feature=\"tabs\" />\n";
 		}
-		if (data.isViews()) {
+		if (gadgetXmlData.isViews()) {
 			content += "    <Require feature=\"views\" />\n";
 		}
 		content += "  </ModulePrefs>\n";
-		if (data.isCanvas()) {
-			content += "  <Content type=\"html\" view=\"canvas\"><![CDATA[\n";
-			content += "\n";
-			content += "<!-- The code for canvas view is here. -->\n";
-			content += "\n";
-			content += "  ]]></Content>\n";
-		}
-		if (data.isProfile()) {
-			content += "  <Content type=\"html\" view=\"profile\"><![CDATA[\n";
-			content += "\n";
-			content += "<!-- The code for profile view is here. -->\n";
-			content += "\n";
-			content += "  ]]></Content>\n";
-		}
-		if (data.isPreview()) {
-			content += "  <Content type=\"html\" view=\"preview\"><![CDATA[\n";
-			content += "\n";
-			content += "<!-- The code for preview view is here. -->\n";
-			content += "\n";
-			content += "  ]]></Content>\n";
-		}
-		if (data.isHome()) {
-			content += "  <Content type=\"html\" view=\"home\"><![CDATA[\n";
-			content += "\n";
-			content += "<!-- The code for home view is here. -->\n";
-			content += "\n";
-			content += "  ]]></Content>\n";
+		Set<ViewName> keySet = gadgetViewData.keySet();
+		for (ViewName viewName : keySet) {
+			GadgetViewData viewData = gadgetViewData.get(viewName);
+			if (viewData.getType().equals(ViewType.HTML)) {
+				content += "  <Content type=\"html\" view=\"" + viewName.toString() + "\"><![CDATA[\n";
+				if (viewData.isCreateExternalJavaScript()) {
+					content += "\n";
+					content += "<script type=\"text/javascript\" src=\"http://your.server.host/" + viewName.toString() + ".js\"></script>\n";
+					if (viewData.isCreateInitFunction()) {
+						content += "\n";
+						content += "<script type=\"text/javascript\">\n";
+						content += "gadgets.util.registerOnLoadHandler(\"init\");\n";
+						content += "</script>\n";
+					}
+				}
+				content += "\n";
+				content += "<!-- The code for " + viewName.getDisplayName() + " view is here. -->\n";
+				content += "\n";
+				content += "  ]]></Content>\n";
+			} else if (viewData.getType().equals(ViewType.URL)) {
+				content += "  <Content type=\"url\" view=\"" + viewName.toString() + "\" href=\"" + viewData.getHref() + "\" />\n";
+			}
 		}
 		content += "</Module>";
 		InputStream in = new ByteArrayInputStream(content.getBytes("UTF8"));

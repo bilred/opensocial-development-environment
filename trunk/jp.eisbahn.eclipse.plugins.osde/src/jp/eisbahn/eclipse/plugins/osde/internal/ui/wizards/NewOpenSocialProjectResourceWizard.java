@@ -2,6 +2,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.EnumMap;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
@@ -27,6 +28,8 @@ import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
+
+import com.google.gadgets.ViewName;
 
 /**
  * OpenSocialプロジェクトを作成するためのウィザードクラスです。
@@ -141,7 +144,9 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		// プロジェクトハンドルを取得
 		final IProject newProjectHandle = mainPage.getProjectHandle();
 		// Gadget XMLファイルの情報を取得
-		final GadgetXmlData gadgetXmlData = gadgetXmlPage.getGadgetXmlData();
+		final GadgetXmlData gadgetXmlData = gadgetXmlPage.getInputedData();
+		// Gadget View情報を取得
+		final EnumMap<ViewName, GadgetViewData> gadgetViewData = viewPage.getInputedData();
 		// プロジェクト作成ジョブを作成
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			/**
@@ -155,7 +160,9 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 					newProjectHandle.create(monitor);
 					newProjectHandle.open(monitor);
 					// Gadget XMLファイルの作成
-					(new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData)).generate(monitor);
+					(new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
+					// JavaScriptファイルの作成
+					(new JavaScriptFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
 				} catch(CoreException e) {
 					throw new InvocationTargetException(e);
 				} catch(UnsupportedEncodingException e) {
