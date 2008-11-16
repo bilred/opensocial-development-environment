@@ -188,7 +188,7 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 	 * 入力された情報を持つオブジェクトを返します。
 	 * @return 入力された情報を持つオブジェクト
 	 */
-	public GadgetXmlData getGadgetXmlData() {
+	public GadgetXmlData getInputedData() {
 		GadgetXmlData data = new GadgetXmlData();
 		data.setAuthor(authorText.getText().trim());
 		data.setAuthorEmail(authorEmailText.getText().trim());
