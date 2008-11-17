@@ -18,6 +18,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 import com.google.gadgets.Module;
+import com.google.gadgets.ViewName;
 
 public class GadgetXmlEditor extends FormEditor {
 	
@@ -45,8 +46,15 @@ public class GadgetXmlEditor extends FormEditor {
 	@Override
 	protected void addPages() {
 		try {
+			// ModulePrefs関連のページを追加
 			ModulePrefsPage modulePrefsPage = new ModulePrefsPage(this, module);
 			addPage(modulePrefsPage);
+			// 各ビューのページを追加
+			ViewName[] viewNames = ViewName.values();
+			for (ViewName viewName : viewNames) {
+				ContentPage contentPage = new ContentPage(this, module, viewName);
+				addPage(contentPage);
+			}
 		} catch(PartInitException e) {
 			// TODO あとで修正
 			throw new IllegalStateException(e);
@@ -76,13 +84,10 @@ public class GadgetXmlEditor extends FormEditor {
 
 	@Override
 	public void doSaveAs() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public boolean isSaveAsAllowed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
