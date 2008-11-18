@@ -58,11 +58,24 @@ public class ComponentUtils {
 	 * @return 生成されたラジオボタン
 	 */
 	public static Button createRadio(Composite parent, String text) {
+		return createRadio(parent, text, 1);
+	}
+	
+	/**
+	 * ラジオボタンを生成し、その結果を返します。
+	 * @param parent ラジオボタンを配置するコンテナ
+	 * @param text 表示文字列
+	 * @param span このコンポーネントが占めるセル数
+	 * @return 生成されたラジオボタン
+	 */
+	public static Button createRadio(Composite parent, String text, int span) {
 		Button button = new Button(parent, SWT.RADIO);
 		button.setText(text);
-		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = span;
+		button.setLayoutData(layoutData);
 		button.setFont(parent.getFont());
 		return button;
 	}
-	
+
 }
