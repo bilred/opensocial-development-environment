@@ -1,12 +1,16 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 
+import static jp.eisbahn.eclipse.plugins.osde.internal.editors.ComponentUtils.createLabel;
+import static jp.eisbahn.eclipse.plugins.osde.internal.editors.ComponentUtils.createText;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.normalize;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.trim;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
@@ -16,9 +20,6 @@ import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.Module;
 import com.google.gadgets.Module.ModulePrefs;
-
-import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.trim;
-import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.normalize;
 
 public class ApplicationInformationPart extends AbstractFormPart {
 
@@ -87,9 +88,9 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		sectionPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		//
 		createLabel(sectionPanel, toolkit, "Title:");
-		titleText = createText(sectionPanel, toolkit, 3);
+		titleText = createText(sectionPanel, toolkit, 3, modifyListener);
 		createLabel(sectionPanel, toolkit, "Title URL:");
-		titleUrlText = createText(sectionPanel, toolkit, 3);
+		titleUrlText = createText(sectionPanel, toolkit, 3, modifyListener);
 		createLabel(sectionPanel, toolkit, "Description:");
 		descriptionText = toolkit.createText(sectionPanel, "", SWT.MULTI | SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -98,38 +99,16 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		descriptionText.setLayoutData(layoutData);
 		descriptionText.addModifyListener(modifyListener);
 		createLabel(sectionPanel, toolkit, "Author:");
-		authorText = createText(sectionPanel, toolkit);
+		authorText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Author Email:");
-		authorEmailText = createText(sectionPanel, toolkit);
+		authorEmailText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Screen Shot:");
-		screenshotText = createText(sectionPanel, toolkit, 3);
+		screenshotText = createText(sectionPanel, toolkit, 3, modifyListener);
 		createLabel(sectionPanel, toolkit, "Thumbnail:");
-		thumbnailText = createText(sectionPanel, toolkit, 3);
+		thumbnailText = createText(sectionPanel, toolkit, 3, modifyListener);
 		
 	}
 	
-	private Label createLabel(Composite parent, FormToolkit toolkit, String text) {
-		Label label = toolkit.createLabel(parent, text);
-		GridData layoutData = new GridData();
-		layoutData.verticalAlignment = SWT.BEGINNING;
-		layoutData.verticalIndent = 7;
-		label.setLayoutData(layoutData);
-		return label;
-	}
-	
-	private Text createText(Composite parent, FormToolkit toolkit) {
-		return createText(parent, toolkit, 1);
-	}
-	
-	private Text createText(Composite parent, FormToolkit toolkit, int span) {
-		Text text = toolkit.createText(parent, "");
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = span;
-		text.setLayoutData(layoutData);
-		text.addModifyListener(modifyListener);
-		return text;
-	}
-
 	@Override
 	public void commit(boolean onSave) {
 		super.commit(onSave);

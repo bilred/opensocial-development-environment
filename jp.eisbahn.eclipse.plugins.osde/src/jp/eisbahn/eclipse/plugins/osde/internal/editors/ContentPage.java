@@ -28,7 +28,7 @@ public class ContentPage extends FormPage {
 
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
-		managedForm.addPart(new ContentHtmlPart(this));
+		managedForm.addPart(new ContentPart(this));
 	}
 	
 }
