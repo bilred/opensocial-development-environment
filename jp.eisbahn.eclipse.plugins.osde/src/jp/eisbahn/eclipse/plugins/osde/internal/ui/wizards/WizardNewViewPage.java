@@ -112,11 +112,11 @@ public class WizardNewViewPage extends WizardPage {
 				GadgetViewData data = new GadgetViewData();
 				data.setViewName(viewName);
 				if (part.htmlButton.getSelection()) {
-					data.setType(ViewType.HTML);
+					data.setType(ViewType.html);
 					data.setCreateExternalJavaScript(part.getCreateJavaScriptFileButton().getSelection());
 					data.setCreateInitFunction(part.getInitFunctionButton().getSelection());
 				} else if (part.urlButton.getSelection()) {
-					data.setType(ViewType.URL);
+					data.setType(ViewType.url);
 					data.setHref(part.getHrefText().getText().trim());
 				} else {
 					throw new IllegalStateException("Unknown ViewType is selected.");
