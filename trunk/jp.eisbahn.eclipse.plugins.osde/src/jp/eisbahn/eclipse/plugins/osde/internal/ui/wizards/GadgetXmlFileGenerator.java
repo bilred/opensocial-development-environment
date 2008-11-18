@@ -87,7 +87,7 @@ public class GadgetXmlFileGenerator {
 		Set<ViewName> keySet = gadgetViewData.keySet();
 		for (ViewName viewName : keySet) {
 			GadgetViewData viewData = gadgetViewData.get(viewName);
-			if (viewData.getType().equals(ViewType.HTML)) {
+			if (viewData.getType().equals(ViewType.html)) {
 				content += "  <Content type=\"html\" view=\"" + viewName.toString() + "\"><![CDATA[\n";
 				if (viewData.isCreateExternalJavaScript()) {
 					content += "\n";
@@ -103,7 +103,7 @@ public class GadgetXmlFileGenerator {
 				content += "<!-- The code for " + viewName.getDisplayName() + " view is here. -->\n";
 				content += "\n";
 				content += "  ]]></Content>\n";
-			} else if (viewData.getType().equals(ViewType.URL)) {
+			} else if (viewData.getType().equals(ViewType.url)) {
 				content += "  <Content type=\"url\" view=\"" + viewName.toString() + "\" href=\"" + viewData.getHref() + "\" />\n";
 			}
 		}
