@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/svnkit.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jaxb-impl.jar"/>
