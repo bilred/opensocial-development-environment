@@ -1,5 +1,12 @@
 package jp.eisbahn.eclipse.plugins.osde.internal;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -13,6 +20,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+	
+	private Map<RGB, Color> colorMap = new HashMap<RGB, Color>();
 	
 	/**
 	 * The constructor
@@ -35,6 +44,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		disposeColors();
 		super.stop(context);
 	}
 
@@ -45,6 +55,29 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
+	}
+	
+	private void disposeColors() {
+		Collection<Color> colors = colorMap.values();
+		for (Color color : colors) {
+			color.dispose();
+		}
+	}
+	
+	/**
+	 * 指定された色を示すオブジェクトを返します。
+	 * @param rgb 色の情報
+	 * @return 色を示すオブジェクト
+	 */
+	public Color getColor(RGB rgb) {
+		synchronized (colorMap) {
+			Color color = colorMap.get(rgb);
+			if (color == null) {
+				color = new Color(Display.getCurrent(), rgb);
+				colorMap.put(rgb, color);
+			}
+			return color;
+		}
 	}
 
 }
