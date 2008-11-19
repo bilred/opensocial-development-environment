@@ -9,6 +9,8 @@ import java.util.List;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -139,7 +141,15 @@ public class ContentPart extends AbstractFormPart {
 		layoutData.horizontalSpan = 2;
 		editor.getTextWidget().setLayoutData(layoutData);
 		Document document = new Document();
+		IDocumentPartitioner partitioner = new FastPartitioner(
+				new HtmlContentPartitionScanner(),
+				new String[] {
+					HtmlContentPartitionScanner.TOKEN_HTML_COMMENT,
+					HtmlContentPartitionScanner.TOKEN_TAG});
+		document.setDocumentPartitioner(partitioner);
+		partitioner.connect(document);
 		editor.setDocument(document);
+		editor.configure(new HtmlContentConfiguration());
 		document.addDocumentListener(new IDocumentListener() {
 			public void documentAboutToBeChanged(DocumentEvent event) {
 			}
