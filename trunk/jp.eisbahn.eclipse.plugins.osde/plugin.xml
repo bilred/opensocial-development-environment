@@ -29,6 +29,17 @@
             icon="icons/sample.gif"
             id="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor"
             name="Gadget XML Editor">
+         <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.editors.gadgetXml" />
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            describer="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlDescriber"
+            file-extensions="xml"
+            id="gadgetXml"
+            name="Gadget XML File"
+            priority="high" />
    </extension>
 </plugin>
