@@ -6,11 +6,11 @@ import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.normalize;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.trim;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
@@ -33,8 +33,8 @@ public class ApplicationInformationPart extends AbstractFormPart {
 	
 	private ModulePrefsPage page;
 	
-	private ModifyListener modifyListener = new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
+	private Listener modifyListener = new Listener() {
+		public void handleEvent(Event event) {
 			markDirty();
 		}
 	};
@@ -97,7 +97,7 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		layoutData.heightHint = 50;
 		layoutData.horizontalSpan = 3;
 		descriptionText.setLayoutData(layoutData);
-		descriptionText.addModifyListener(modifyListener);
+		descriptionText.addListener(SWT.Modify, modifyListener);
 		createLabel(sectionPanel, toolkit, "Author:");
 		authorText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Author Email:");
@@ -106,7 +106,8 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		screenshotText = createText(sectionPanel, toolkit, 3, modifyListener);
 		createLabel(sectionPanel, toolkit, "Thumbnail:");
 		thumbnailText = createText(sectionPanel, toolkit, 3, modifyListener);
-		
+		//
+		createLabel(sectionPanel, toolkit, "");
 	}
 	
 	@Override
