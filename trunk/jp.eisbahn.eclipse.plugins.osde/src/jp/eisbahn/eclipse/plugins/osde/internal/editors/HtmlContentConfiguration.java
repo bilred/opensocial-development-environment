@@ -18,7 +18,8 @@ public class HtmlContentConfiguration extends SourceViewerConfiguration {
 		return new String[] {
 				IDocument.DEFAULT_CONTENT_TYPE,
 				HtmlContentPartitionScanner.TOKEN_HTML_COMMENT,
-				HtmlContentPartitionScanner.TOKEN_TAG
+				HtmlContentPartitionScanner.TOKEN_TAG,
+				HtmlContentPartitionScanner.TOKEN_SCRIPT
 		};
 	}
 
@@ -26,6 +27,11 @@ public class HtmlContentConfiguration extends SourceViewerConfiguration {
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 		Activator activator = Activator.getDefault();
+		// script part
+		DefaultDamagerRepairer scriptDamageRepairer = new DefaultDamagerRepairer(
+				new SingleTokenScanner(new TextAttribute(activator.getColor(new RGB(0, 128, 150)))));
+		reconciler.setDamager(scriptDamageRepairer, HtmlContentPartitionScanner.TOKEN_SCRIPT);
+		reconciler.setRepairer(scriptDamageRepairer, HtmlContentPartitionScanner.TOKEN_SCRIPT);
 		// html comment part
 		DefaultDamagerRepairer htmlCommentDamageRepairer = new DefaultDamagerRepairer(
 				new SingleTokenScanner(new TextAttribute(activator.getColor(new RGB(100, 100, 100)))));
