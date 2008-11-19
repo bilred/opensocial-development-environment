@@ -25,13 +25,9 @@ public class SvnKitTest extends TestCase {
 	public void testSVNKit() throws Exception {
 		DAVRepositoryFactory.setup();
 		SVNURL url = SVNURL.parseURIEncoded("http://svn.apache.org/repos/asf/incubator/shindig/trunk/");
-//		String userName = "yoichiro";
-//		String userPassword = "maki3!";
 		File exportDir = new File("aaa");
 		exportDir.mkdirs();
 		SVNRepository repository = SVNRepositoryFactory.create(url);
-//		ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(userName, userPassword);
-//		repository.setAuthenticationManager(authManager);
 //		SVNNodeKind nodeKind = repository.checkPath("", -1);
 		long latestRevision = repository.getLatestRevision();
 		ISVNReporterBaton reporterBaton = new ExportReporterBaton(latestRevision);
