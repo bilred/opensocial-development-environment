@@ -32,16 +32,22 @@ public class JavaScriptFileGenerator {
 	}
 	
 	public List<IFile> generate(IProgressMonitor monitor) throws UnsupportedEncodingException, CoreException {
-		List<IFile> resultList = new ArrayList<IFile>();
-		Set<ViewName> keySet = gadgetViewData.keySet();
-		for (ViewName viewName : keySet) {
-			GadgetViewData viewData = gadgetViewData.get(viewName);
-			if (viewData.isCreateExternalJavaScript()) {
-				IFile file = generateJavaScriptFile(monitor, viewName, viewData);
-				resultList.add(file);
+		try {
+			monitor.beginTask("Generate JavaScript files", gadgetViewData.size());
+			List<IFile> resultList = new ArrayList<IFile>();
+			Set<ViewName> keySet = gadgetViewData.keySet();
+			for (ViewName viewName : keySet) {
+				GadgetViewData viewData = gadgetViewData.get(viewName);
+				if (viewData.isCreateExternalJavaScript()) {
+					IFile file = generateJavaScriptFile(monitor, viewName, viewData);
+					resultList.add(file);
+				}
+				monitor.worked(1);
 			}
+			return resultList;
+		} finally {
+			monitor.done();
 		}
-		return resultList;
 	}
 	
 	private IFile generateJavaScriptFile(IProgressMonitor monitor, ViewName viewName, GadgetViewData viewData) throws CoreException, UnsupportedEncodingException {
