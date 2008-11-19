@@ -136,7 +136,7 @@ public class ContentPart extends AbstractFormPart {
 		htmlButton = createRadio(parent, toolkit, "Use the HTML type for this view.", 2, modifyListener);
 		htmlButton.addSelectionListener(selectionListener);
 		//
-		editor = new SourceViewer(parent, null, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		editor = new SourceViewer(parent, null, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = 2;
 		editor.getTextWidget().setLayoutData(layoutData);
@@ -144,6 +144,7 @@ public class ContentPart extends AbstractFormPart {
 		IDocumentPartitioner partitioner = new FastPartitioner(
 				new HtmlContentPartitionScanner(),
 				new String[] {
+					HtmlContentPartitionScanner.TOKEN_SCRIPT,
 					HtmlContentPartitionScanner.TOKEN_HTML_COMMENT,
 					HtmlContentPartitionScanner.TOKEN_TAG});
 		document.setDocumentPartitioner(partitioner);
