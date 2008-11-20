@@ -42,4 +42,12 @@
             name="Gadget XML File"
             priority="high" />
    </extension>
+   <extension
+         id="osdeNature"
+         point="org.eclipse.core.resources.natures"
+         name="OpenSocial Development Environment Nature">
+      <runtime>
+         <run class="jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature" />
+      </runtime>
+   </extension>
 </plugin>

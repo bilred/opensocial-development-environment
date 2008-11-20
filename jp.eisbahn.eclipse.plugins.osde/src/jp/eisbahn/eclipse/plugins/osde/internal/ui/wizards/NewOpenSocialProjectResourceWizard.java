@@ -5,10 +5,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.EnumMap;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -159,6 +161,16 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 					// プロジェクトの作成
 					newProjectHandle.create(monitor);
 					newProjectHandle.open(monitor);
+					// Natureのセット
+					IProjectDescription description = newProjectHandle.getDescription();
+					if (!description.hasNature(OsdeProjectNature.ID)) {
+						String[] ids = description.getNatureIds();
+						String[] newIds = new String[ids.length + 1];
+						System.arraycopy(ids, 0, newIds, 0, ids.length);
+						newIds[ids.length] = OsdeProjectNature.ID;
+						description.setNatureIds(newIds);
+						newProjectHandle.setDescription(description, monitor);
+					}
 					// Gadget XMLファイルの作成
 					(new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
 					// JavaScriptファイルの作成
