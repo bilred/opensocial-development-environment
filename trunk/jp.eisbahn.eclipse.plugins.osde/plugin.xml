@@ -50,4 +50,26 @@
          <run class="jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature" />
       </runtime>
    </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="jp.eisbahn.eclipse.plugins.osde.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu
+               id="jp.eisbahn.eclipse.plugins.osde.menu1"
+               label="OSDE"
+               path="additions">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.svn.InstallShindigAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.newAction"
+               label="Install Shindig"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
+         </action>
+      </objectContribution>
+   </extension>
 </plugin>
