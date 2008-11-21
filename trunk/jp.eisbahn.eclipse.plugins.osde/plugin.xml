@@ -50,32 +50,4 @@
          <run class="jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature" />
       </runtime>
    </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            id="jp.eisbahn.eclipse.plugins.osde.contribution1"
-            objectClass="org.eclipse.core.resources.IProject">
-         <menu
-               id="jp.eisbahn.eclipse.plugins.osde.menu1"
-               label="OpenSocial"
-               path="additions">
-            <separator
-                  name="group1">
-            </separator>
-         </menu>
-         <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.export.InstallShindigAction"
-               enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.newAction"
-               label="Install Shindig"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
-            <enablement>
-                <objectState
-                      name="nature"
-                      value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
-                </objectState>
-            </enablement>
-         </action>
-      </objectContribution>
-   </extension>
 </plugin>
