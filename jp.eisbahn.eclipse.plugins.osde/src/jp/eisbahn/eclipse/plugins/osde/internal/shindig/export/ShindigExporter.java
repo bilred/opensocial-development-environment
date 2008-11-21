@@ -1,4 +1,4 @@
-package jp.eisbahn.eclipse.plugins.osde.internal.shindig.svn;
+package jp.eisbahn.eclipse.plugins.osde.internal.shindig.export;
 
 import java.io.File;
 import java.io.IOException;
