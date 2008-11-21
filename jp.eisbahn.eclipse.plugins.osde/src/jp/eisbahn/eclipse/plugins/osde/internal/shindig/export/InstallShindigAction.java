@@ -53,7 +53,7 @@ public class InstallShindigAction implements IObjectActionDelegate {
 				try {
 					// Maven2の入手
 					monitor.beginTask("Making the target directory for Apache Maven2.", 1);
-					IFolder maven2Folder = project.getFolder(new Path("maven2"));
+					IFolder maven2Folder = project.getFolder(new Path("maven"));
 					if (maven2Folder.exists()) {
 						maven2Folder.delete(false, monitor);
 					}
@@ -82,9 +82,9 @@ public class InstallShindigAction implements IObjectActionDelegate {
 						monitor.done();
 						// ExporterにShindig入手処理を依頼
 						ShindigExporter shindigExporter = new ShindigExporter();
-//						shindigExporter.export(shindigTargetDirectory, monitor);
+						shindigExporter.export(shindigTargetDirectory, monitor);
 						// リフレッシュ
-//						shindigFolder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+						shindigFolder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 					} else {
 						// TODO ロケーションが得られなかったときの処理
 						throw new IllegalStateException("location is null");
@@ -93,9 +93,9 @@ public class InstallShindigAction implements IObjectActionDelegate {
 					return Status.OK_STATUS;
 				} catch(CoreException e) {
 					return e.getStatus();
-//				} catch (SVNException e) {
-//					// TODO 例外処理
-//					throw new IllegalStateException(e);
+				} catch (SVNException e) {
+					// TODO 例外処理
+					throw new IllegalStateException(e);
 				} catch (HttpException e) {
 					// TODO 例外処理
 					throw new IllegalStateException(e);
