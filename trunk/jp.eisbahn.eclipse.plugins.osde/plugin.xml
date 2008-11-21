@@ -64,7 +64,7 @@
             </separator>
          </menu>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.svn.InstallShindigAction"
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.export.InstallShindigAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.newAction"
                label="Install Shindig"

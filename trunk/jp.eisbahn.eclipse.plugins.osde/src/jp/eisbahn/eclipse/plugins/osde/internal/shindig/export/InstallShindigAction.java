@@ -1,7 +1,9 @@
-package jp.eisbahn.eclipse.plugins.osde.internal.shindig.svn;
+package jp.eisbahn.eclipse.plugins.osde.internal.shindig.export;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.httpclient.HttpException;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -49,22 +51,40 @@ public class InstallShindigAction implements IObjectActionDelegate {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
+					// Maven2の入手
+					monitor.beginTask("Making the target directory for Apache Maven2.", 1);
+					IFolder maven2Folder = project.getFolder(new Path("maven2"));
+					if (maven2Folder.exists()) {
+						maven2Folder.delete(false, monitor);
+					}
+					maven2Folder.create(false, true, monitor);
+					IPath maven2Location = maven2Folder.getLocation();
+					if (maven2Location != null) {
+						File maven2TargetDirectory = maven2Location.toFile();
+						Maven2Exporter maven2Exporter = new Maven2Exporter();
+						maven2Exporter.export(maven2TargetDirectory, monitor);
+						// リフレッシュ
+						maven2Folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+					} else {
+						// TODO ロケーションが得られなかったときの処理
+						throw new IllegalStateException("location is null");
+					}
 					// shindigディレクトリの作成
 					monitor.beginTask("Making the target directory for Apache Shindig.", 1);
-					IFolder folder = project.getFolder(new Path("shindig"));
-					if (folder.exists()) {
-						folder.delete(false, monitor);
+					IFolder shindigFolder = project.getFolder(new Path("shindig"));
+					if (shindigFolder.exists()) {
+						shindigFolder.delete(false, monitor);
 					}
-					folder.create(false, true, monitor);
-					IPath location = folder.getLocation();
-					if (location != null) {
-						File targetDirectory = location.toFile();
+					shindigFolder.create(false, true, monitor);
+					IPath shindigLocation = shindigFolder.getLocation();
+					if (shindigLocation != null) {
+						File shindigTargetDirectory = shindigLocation.toFile();
 						monitor.done();
-						// Expoterに処理を依頼
-						ShindigExporter exporter = new ShindigExporter();
-						exporter.export(targetDirectory, monitor);
+						// ExporterにShindig入手処理を依頼
+						ShindigExporter shindigExporter = new ShindigExporter();
+//						shindigExporter.export(shindigTargetDirectory, monitor);
 						// リフレッシュ
-						folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+//						shindigFolder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 					} else {
 						// TODO ロケーションが得られなかったときの処理
 						throw new IllegalStateException("location is null");
@@ -73,7 +93,13 @@ public class InstallShindigAction implements IObjectActionDelegate {
 					return Status.OK_STATUS;
 				} catch(CoreException e) {
 					return e.getStatus();
-				} catch (SVNException e) {
+//				} catch (SVNException e) {
+//					// TODO 例外処理
+//					throw new IllegalStateException(e);
+				} catch (HttpException e) {
+					// TODO 例外処理
+					throw new IllegalStateException(e);
+				} catch (IOException e) {
 					// TODO 例外処理
 					throw new IllegalStateException(e);
 				}
