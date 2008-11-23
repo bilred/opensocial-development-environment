@@ -101,7 +101,7 @@ public class GadgetXmlFileGenerator {
 						if (viewData.isCreateInitFunction()) {
 							content += "\n";
 							content += "<script type=\"text/javascript\">\n";
-							content += "gadgets.util.registerOnLoadHandler(\"init\");\n";
+							content += "gadgets.util.registerOnLoadHandler(init);\n";
 							content += "</script>\n";
 						}
 					}
