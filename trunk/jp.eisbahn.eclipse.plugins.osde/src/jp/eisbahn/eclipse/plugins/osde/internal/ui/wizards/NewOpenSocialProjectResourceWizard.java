@@ -1,11 +1,15 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.util.EnumMap;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature;
+import jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor;
+import jp.eisbahn.eclipse.plugins.osde.internal.runtime.WebServerLaunchConfigurationCreator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -51,6 +55,9 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 	/** ビュー作成ページ */
 	private WizardNewViewPage viewPage;
 	
+	/** サーバ設定ページ */
+	private WizardServerPage serverPage;
+	
 	/** 新しく作成するプロジェクトのキャッシュ */
 	private IProject newProject;
 	
@@ -95,6 +102,11 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		viewPage.setTitle("View settings");
 		viewPage.setDescription("Define the view settings.");
 		addPage(viewPage);
+		// サーバ設定ページを追加
+		serverPage = new WizardServerPage("serverPage");
+		serverPage.setTitle("Server settings");
+		serverPage.setDescription("Settings about execution environment of this application.");
+		addPage(serverPage);
 	}
 	
 	/**
@@ -149,6 +161,8 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		final GadgetXmlData gadgetXmlData = gadgetXmlPage.getInputedData();
 		// Gadget View情報を取得
 		final EnumMap<ViewName, GadgetViewData> gadgetViewData = viewPage.getInputedData();
+		// サーバ設定情報を取得
+		final ServerData serverData = serverPage.getInputedData();
 		// プロジェクト作成ジョブを作成
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			/**
@@ -172,12 +186,18 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 						newProjectHandle.setDescription(description, monitor);
 					}
 					// Gadget XMLファイルの作成
-					(new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
+					(new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData, serverData)).generate(monitor);
 					// JavaScriptファイルの作成
 					(new JavaScriptFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
+					// Gadget起動設定の作成
+					(new WebServerLaunchConfigurationCreator()).create(newProjectHandle, serverData.getLocalPort(), monitor);
 				} catch(CoreException e) {
 					throw new InvocationTargetException(e);
 				} catch(UnsupportedEncodingException e) {
+					throw new InvocationTargetException(e);
+				} catch (MalformedURLException e) {
+					throw new InvocationTargetException(e);
+				} catch (IOException e) {
 					throw new InvocationTargetException(e);
 				}
 			}
@@ -191,7 +211,7 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 	            if (dw != null) {
 	                IWorkbenchPage page = dw.getActivePage();
 	                if (page != null) {
-	                    IDE.openEditor(page, gadgetXmlFile, true);
+	                    IDE.openEditor(page, gadgetXmlFile, GadgetXmlEditor.ID, true);
 	                }
 	            }
 	        } catch (PartInitException e) {
