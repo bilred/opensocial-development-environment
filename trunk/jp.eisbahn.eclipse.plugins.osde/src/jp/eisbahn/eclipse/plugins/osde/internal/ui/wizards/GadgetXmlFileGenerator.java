@@ -103,6 +103,7 @@ public class GadgetXmlFileGenerator {
 					}
 					content += "\n";
 					content += "<!-- The code for " + viewName.getDisplayName() + " view is here. -->\n";
+					content += "<div>" + viewName.getDisplayName() + " view for " + gadgetXmlData.getTitle() + ".</div>\n";
 					content += "\n";
 					content += "  ]]></Content>\n";
 				} else if (viewData.getType().equals(ViewType.url)) {
