@@ -66,13 +66,38 @@
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.newAction"
+               id="jp.eisbahn.eclipse.plugins.osde.launchShindigAction"
                label="Launch Apache Shindig"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
             <enablement>
                <objectState
                      name="nature"
                      value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
+               </objectState>
+            </enablement>
+         </action>
+      </objectContribution>
+      <objectContribution
+            id="jp.eisbahn.eclipse.plugins.osde.contribution2"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="jp.eisbahn.eclipse.plugins.osde.menu2"
+               label="OpenSocial"
+               path="additions">
+            <separator
+                  name="group2">
+            </separator>
+         </menu>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.runAction"
+               label="Run this application"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
                </objectState>
             </enablement>
          </action>

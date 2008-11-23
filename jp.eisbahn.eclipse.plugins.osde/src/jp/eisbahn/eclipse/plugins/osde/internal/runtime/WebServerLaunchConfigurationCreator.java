@@ -8,6 +8,7 @@ import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -24,31 +25,35 @@ import org.eclipse.jdt.launching.JavaRuntime;
 
 public class WebServerLaunchConfigurationCreator {
 	
-	public void delete(String projectName, IProgressMonitor monitor) throws CoreException {
-		try {
-			monitor.beginTask("Deleting the launch configuration for Web Server.", 1);
-			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
-			for (int i = 0; i < configurations.length; i++) {
-				if (configurations[i].getName().equals("Apache Shindig")) {
-					configurations[i].delete();
-				}
-			}
-		} finally {
-			monitor.done();
-		}
+//	public void delete(String projectName, IProgressMonitor monitor) throws CoreException {
+//		try {
+//			monitor.beginTask("Deleting the launch configuration for Web Server.", 1);
+//			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+//			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
+//			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
+//			for (int i = 0; i < configurations.length; i++) {
+//				if (configurations[i].getName().equals("Apache Shindig")) {
+//					configurations[i].delete();
+//				}
+//			}
+//		} finally {
+//			monitor.done();
+//		}
+//	}
+	
+	private String createLauncherName(IProject project) {
+		return "Web server for " + project.getName();
 	}
 	
-	public void create(String projectName, IProgressMonitor monitor) throws CoreException, MalformedURLException, IOException {
+	public void create(IProject project, int port, IProgressMonitor monitor) throws CoreException, MalformedURLException, IOException {
 		try {
-			monitor.beginTask("Creating the launch configuration for Apache Shindig", 3);
+			monitor.beginTask("Creating the launch configuration for this application", 3);
 			monitor.subTask("Deleting the setting that already exists.");
 			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
 			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
 			for (int i = 0; i < configurations.length; i++) {
-				if (configurations[i].getName().equals("Apache Shindig")) {
+				if (configurations[i].getName().equals(createLauncherName(project))) {
 					configurations[i].delete();
 				}
 			}
@@ -62,7 +67,7 @@ public class WebServerLaunchConfigurationCreator {
 			IRuntimeClasspathEntry jettyUtilEntry = createRuntimeClasspathEntry("/shindig/jetty-util-6.1.14.jar");
 			IRuntimeClasspathEntry servletApiEntry = createRuntimeClasspathEntry("/shindig/servlet-api-2.5-6.1.14.jar");
 			IRuntimeClasspathEntry launcherEntry = createRuntimeClasspathEntry("/shindig/launcher.jar");
-			ILaunchConfigurationWorkingCopy wc = type.newInstance(null, "Apache Shindig");
+			ILaunchConfigurationWorkingCopy wc = type.newInstance(null, createLauncherName(project));
 			List<String> classpath = new ArrayList<String>();
 			classpath.add(systemLibsEntry.getMemento());
 			classpath.add(jettyEntry.getMemento());
@@ -74,8 +79,8 @@ public class WebServerLaunchConfigurationCreator {
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "Main");
-			String warFile = getBundleEntryUrl("/shindig/shindig.war").toExternalForm();
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "8080 " + warFile);
+			IPath location = project.getLocation();
+			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, port + " " + location.toOSString());
 			wc.doSave();
 			monitor.worked(1);
 		} finally {

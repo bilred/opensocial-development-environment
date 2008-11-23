@@ -23,11 +23,15 @@ public class GadgetXmlFileGenerator {
 	
 	private EnumMap<ViewName, GadgetViewData> gadgetViewData;
 	
-	public GadgetXmlFileGenerator(IProject project, GadgetXmlData gadgetXmlData, EnumMap<ViewName, GadgetViewData> gadgetViewData) {
+	private ServerData serverData;
+	
+	public GadgetXmlFileGenerator(
+			IProject project, GadgetXmlData gadgetXmlData, EnumMap<ViewName, GadgetViewData> gadgetViewData, ServerData serverData) {
 		super();
 		this.project = project;
 		this.gadgetXmlData = gadgetXmlData;
 		this.gadgetViewData = gadgetViewData;
+		this.serverData = serverData;
 	}
 	
 	public IFile generate(IProgressMonitor monitor) throws UnsupportedEncodingException, CoreException {
@@ -93,7 +97,7 @@ public class GadgetXmlFileGenerator {
 					content += "  <Content type=\"html\" view=\"" + viewName.toString() + "\"><![CDATA[\n";
 					if (viewData.isCreateExternalJavaScript()) {
 						content += "\n";
-						content += "<script type=\"text/javascript\" src=\"http://your.server.host/" + viewName.toString() + ".js\"></script>\n";
+						content += "<script type=\"text/javascript\" src=\"http://localhost:" + serverData.getLocalPort() + "/" + viewName.toString() + ".js\"></script>\n";
 						if (viewData.isCreateInitFunction()) {
 							content += "\n";
 							content += "<script type=\"text/javascript\">\n";

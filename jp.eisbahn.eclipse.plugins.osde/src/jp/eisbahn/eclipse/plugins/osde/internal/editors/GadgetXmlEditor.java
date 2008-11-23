@@ -22,6 +22,8 @@ import com.google.gadgets.ViewName;
 
 public class GadgetXmlEditor extends FormEditor {
 	
+	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor";
+	
 	private Module module;
 	private JAXBContext context;
 	
