@@ -1,14 +1,11 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.util.EnumMap;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature;
-import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationCreator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -178,15 +175,9 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 					(new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
 					// JavaScriptファイルの作成
 					(new JavaScriptFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
-					// Apache Shindig起動設定の作成
-					(new ShindigLaunchConfigurationCreator()).create(monitor);
 				} catch(CoreException e) {
 					throw new InvocationTargetException(e);
 				} catch(UnsupportedEncodingException e) {
-					throw new InvocationTargetException(e);
-				} catch (MalformedURLException e) {
-					throw new InvocationTargetException(e);
-				} catch (IOException e) {
 					throw new InvocationTargetException(e);
 				}
 			}

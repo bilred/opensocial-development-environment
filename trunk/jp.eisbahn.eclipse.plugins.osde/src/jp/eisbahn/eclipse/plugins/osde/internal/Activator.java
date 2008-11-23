@@ -4,9 +4,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationCreator;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -36,6 +45,8 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		// Apache Shindig起動設定の作成
+		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
 	}
 
 	/*
@@ -43,9 +54,24 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		(new ShindigLaunchConfigurationCreator()).delete(getStatusMonitor());
 		plugin = null;
 		disposeColors();
 		super.stop(context);
+	}
+	
+	private IProgressMonitor getStatusMonitor() {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		if (workbench != null) {
+			WorkbenchWindow workbenchWindow = (WorkbenchWindow)workbench.getActiveWorkbenchWindow();
+			if (workbenchWindow != null) {
+				IActionBars bars = workbenchWindow.getActionBars();
+				IStatusLineManager lineManager = bars.getStatusLineManager();
+				IProgressMonitor monitor = lineManager.getProgressMonitor();
+				return monitor;
+			}
+		}
+		return new NullProgressMonitor();
 	}
 
 	/**

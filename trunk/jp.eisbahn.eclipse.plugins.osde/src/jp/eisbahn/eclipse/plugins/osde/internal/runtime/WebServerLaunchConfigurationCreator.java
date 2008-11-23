@@ -1,4 +1,4 @@
-package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
+package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -22,11 +22,11 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 
-public class ShindigLaunchConfigurationCreator {
+public class WebServerLaunchConfigurationCreator {
 	
-	public void delete(IProgressMonitor monitor) throws CoreException {
+	public void delete(String projectName, IProgressMonitor monitor) throws CoreException {
 		try {
-			monitor.beginTask("Deleting the launch configuration for Apache Shindig.", 1);
+			monitor.beginTask("Deleting the launch configuration for Web Server.", 1);
 			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
 			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
@@ -40,7 +40,7 @@ public class ShindigLaunchConfigurationCreator {
 		}
 	}
 	
-	public void create(IProgressMonitor monitor) throws CoreException, MalformedURLException, IOException {
+	public void create(String projectName, IProgressMonitor monitor) throws CoreException, MalformedURLException, IOException {
 		try {
 			monitor.beginTask("Creating the launch configuration for Apache Shindig", 3);
 			monitor.subTask("Deleting the setting that already exists.");
