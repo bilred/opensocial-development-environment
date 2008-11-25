@@ -10,6 +10,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor;
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.WebServerLaunchConfigurationCreator;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -193,8 +194,8 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 					(new JavaScriptFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
 					// Gadget起動設定の作成
 					(new WebServerLaunchConfigurationCreator()).create(newProjectHandle, serverData.getLocalPort(), monitor);
-//					// プロジェクトの設定を保存
-//					newProjectHandle.setPersistentProperty(
+					// プロジェクトの設定を保存
+					ProjectPreferenceUtils.setLocalWebServerPort(newProjectHandle, serverData.getLocalPort());
 					// エディタの起動
 					monitor.beginTask("Opening the Gadget XML file.", 1);
 					getShell().getDisplay().syncExec(new Runnable() {

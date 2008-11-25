@@ -13,6 +13,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -95,7 +97,8 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								for (Content content : contents) {
 									if (ViewType.html.toString().equals(content.getType())) {
 										String value = content.getValue();
-										Pattern pattern = Pattern.compile("http://localhost:8081/[-_.!~*\\'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#]+\\.js");
+										int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
+										Pattern pattern = Pattern.compile("http://localhost:" + port + "/[-_.!~*\\'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#]+\\.js");
 										Matcher matcher = pattern.matcher(value);
 										StringBuffer sb = new StringBuffer();
 										while(matcher.find()) {

@@ -6,6 +6,8 @@ import java.net.URL;
 
 import javax.swing.border.Border;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -75,6 +77,7 @@ public class RunAction implements IObjectActionDelegate {
 					}
 					monitor.worked(1);
 					monitor.subTask("Starting Web browser.");
+					ProjectPreferenceUtils.getLocalWebServerPort(project)
 					final String url = "http://localhost:8080/gadgets/ifr?url=http://localhost:8081/"
 							+ gadgetXmlFile.getName()
 							+ "&view=canvas&nocache=1";
