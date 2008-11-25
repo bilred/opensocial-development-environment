@@ -103,4 +103,13 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         id="gadgetBuilder"
+         point="org.eclipse.core.resources.builders">
+      <builder>
+         <run
+               class="jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder">
+         </run>
+      </builder>
+   </extension>
 </plugin>
