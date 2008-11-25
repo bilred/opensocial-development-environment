@@ -19,7 +19,7 @@ public class GadgetXmlDescriber implements IContentDescriber {
 		try {
 			JAXBContext context = JAXBContext.newInstance(Module.class);
 			Unmarshaller um = context.createUnmarshaller();
-			um.unmarshal(contents);
+			Module module = (Module)um.unmarshal(contents);
 			return IContentDescriber.VALID;
 		} catch (JAXBException e) {
 			return IContentDescriber.INDETERMINATE;
