@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -186,11 +188,32 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 						newProjectHandle.setDescription(description, monitor);
 					}
 					// Gadget XMLファイルの作成
-					(new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData, serverData)).generate(monitor);
+					final IFile gadgetXmlFile = (new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData, serverData)).generate(monitor);
 					// JavaScriptファイルの作成
 					(new JavaScriptFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
 					// Gadget起動設定の作成
 					(new WebServerLaunchConfigurationCreator()).create(newProjectHandle, serverData.getLocalPort(), monitor);
+//					// プロジェクトの設定を保存
+//					newProjectHandle.setPersistentProperty(
+					// エディタの起動
+					monitor.beginTask("Opening the Gadget XML file.", 1);
+					getShell().getDisplay().syncExec(new Runnable() {
+						public void run() {
+							IWorkbenchWindow dw = getWorkbench().getActiveWorkbenchWindow();
+							try {
+								if (dw != null) {
+									IWorkbenchPage page = dw.getActivePage();
+									if (page != null) {
+										IDE.openEditor(page, gadgetXmlFile, GadgetXmlEditor.ID, true);
+									}
+								}
+							} catch (PartInitException e) {
+								throw new RuntimeException(e);
+							}
+						}
+					});
+					monitor.worked(1);
+					monitor.done();
 				} catch(CoreException e) {
 					throw new InvocationTargetException(e);
 				} catch(UnsupportedEncodingException e) {
@@ -205,18 +228,6 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		// プロジェクト作成ジョブを実行
 		try {
 			getContainer().run(true, true, op);
-			IFile gadgetXmlFile = newProjectHandle.getFile(new Path("gadget.xml"));
-	        IWorkbenchWindow dw = getWorkbench().getActiveWorkbenchWindow();
-	        try {
-	            if (dw != null) {
-	                IWorkbenchPage page = dw.getActivePage();
-	                if (page != null) {
-	                    IDE.openEditor(page, gadgetXmlFile, GadgetXmlEditor.ID, true);
-	                }
-	            }
-	        } catch (PartInitException e) {
-	            throw new RuntimeException(e);
-	        }
 		} catch(InterruptedException e) {
 			throw new RuntimeException(e);
 		} catch(InvocationTargetException e) {

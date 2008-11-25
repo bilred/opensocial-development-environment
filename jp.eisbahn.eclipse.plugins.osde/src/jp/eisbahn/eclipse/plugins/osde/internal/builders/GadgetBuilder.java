@@ -100,7 +100,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 										StringBuffer sb = new StringBuffer();
 										while(matcher.find()) {
 											matcher.appendReplacement(sb,
-													value.substring(matcher.start(), matcher.end()) + "#" + Math.abs(rnd.nextInt()));
+													value.substring(matcher.start(), matcher.end()) + "?rnd=" + Math.abs(rnd.nextInt()));
 										}
 										matcher.appendTail(sb);
 										content.setValue(sb.toString());
