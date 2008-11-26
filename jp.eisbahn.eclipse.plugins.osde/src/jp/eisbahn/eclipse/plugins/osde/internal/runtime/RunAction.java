@@ -77,8 +77,8 @@ public class RunAction implements IObjectActionDelegate {
 					}
 					monitor.worked(1);
 					monitor.subTask("Starting Web browser.");
-					ProjectPreferenceUtils.getLocalWebServerPort(project)
-					final String url = "http://localhost:8080/gadgets/ifr?url=http://localhost:8081/"
+					int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
+					final String url = "http://localhost:8080/gadgets/ifr?url=http://localhost:" + port + "/"
 							+ gadgetXmlFile.getName()
 							+ "&view=canvas&nocache=1";
 					shell.getDisplay().syncExec(new Runnable() {
