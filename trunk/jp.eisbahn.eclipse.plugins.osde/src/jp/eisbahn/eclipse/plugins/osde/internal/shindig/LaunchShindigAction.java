@@ -41,10 +41,23 @@ public class LaunchShindigAction implements IObjectActionDelegate {
 			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
 			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
+			// launch shindig & database
+			int cnt = 0;
 			for (int i = 0; i < configurations.length; i++) {
-				if (configurations[i].getName().equals("Apache Shindig")) {
-					ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
-					DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
+				if (configurations[i].getName().equals("Apache Shindig")
+						|| configurations[i].getName().equals("Shindig Database")) {
+					final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
+					shell.getDisplay().timerExec(cnt, new Runnable() {
+						public void run() {
+							try {
+								DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
+							} catch (CoreException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});
+					cnt += 1000;
 				}
 			}
 		} catch (CoreException e) {

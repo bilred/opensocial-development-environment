@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationCreator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -47,6 +48,8 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		// Apache Shindig起動設定の作成
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
+		// Derby起動設定の作成
+		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
 	}
 
 	/*
@@ -55,6 +58,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		(new ShindigLaunchConfigurationCreator()).delete(getStatusMonitor());
+		(new DatabaseLaunchConfigurationCreator()).delete(getStatusMonitor());
 		plugin = null;
 		disposeColors();
 		super.stop(context);
