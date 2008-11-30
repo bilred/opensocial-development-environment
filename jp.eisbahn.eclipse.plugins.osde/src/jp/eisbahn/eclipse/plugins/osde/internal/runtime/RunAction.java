@@ -1,10 +1,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.swing.border.Border;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 
@@ -23,8 +20,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -78,9 +73,9 @@ public class RunAction implements IObjectActionDelegate {
 					monitor.worked(1);
 					monitor.subTask("Starting Web browser.");
 					int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-					final String url = "http://localhost:8080/gadgets/ifr?url=http://localhost:" + port + "/"
+					final String url = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:" + port + "/"
 							+ gadgetXmlFile.getName()
-							+ "&view=canvas&nocache=1";
+							+ "&view=canvas";
 					shell.getDisplay().syncExec(new Runnable() {
 						public void run() {
 							try {
