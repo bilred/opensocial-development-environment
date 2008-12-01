@@ -23,4 +23,10 @@ Bundle-ClassPath: .,
  libs/jaxb-api.jar,
  libs/jaxb-impl.jar,
  libs/activation.jar,
- libs/jsr173_1.0_api.jar
+ libs/jsr173_1.0_api.jar,
+ libs/shindig-samples-0.9-1-SNAPSHOT.jar,
+ libs/persistence-api-1.0.jar,
+ libs/commons-logging-1.1.1.jar,
+ libs/eclipselink-1.0.jar,
+ libs/shindig-social-api-0.9-1-SNAPSHOT.jar,
+ libs/derbyclient-10.4.2.0.jar

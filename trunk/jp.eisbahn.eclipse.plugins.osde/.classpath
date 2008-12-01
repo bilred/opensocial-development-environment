@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/derbyclient-10.4.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/shindig-social-api-0.9-1-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/eclipselink-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/persistence-api-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/shindig-samples-0.9-1-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jaxb-impl.jar"/>
