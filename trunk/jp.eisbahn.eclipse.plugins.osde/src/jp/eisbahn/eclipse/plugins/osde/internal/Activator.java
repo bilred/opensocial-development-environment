@@ -1,5 +1,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +12,8 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurati
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
@@ -18,6 +22,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -50,6 +55,8 @@ public class Activator extends AbstractUIPlugin {
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
 		// Derby起動設定の作成
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
+		// イメージレジストリの作成
+		registIcon();
 	}
 
 	/*
@@ -109,5 +116,58 @@ public class Activator extends AbstractUIPlugin {
 			return color;
 		}
 	}
+	
+	private void registIcon() {
+		ImageRegistry registry = getImageRegistry();
+		registIcon(registry, "icons/icon_user.gif");
+	}
+	
+    public ImageDescriptor registIcon(ImageRegistry registry, String iconPath) {
+        ImageDescriptor descriptor = createSystemImageDescriptor(iconPath);
+        registry.put(iconPath, descriptor);
+        return descriptor;
+    }
+    
+    public ImageDescriptor createImageDescriptor(String url) {
+    	ImageRegistry registry = getImageRegistry();
+    	ImageDescriptor imageDescriptor = registry.getDescriptor(url);
+    	if (imageDescriptor == null) {
+            try {
+                // イメージディスクリプタを生成
+                imageDescriptor = ImageDescriptor.createFromURL(new URL(url));
+            } catch(MalformedURLException e) {
+                imageDescriptor = ImageDescriptor.getMissingImageDescriptor();
+            }
+            registry.put(url, imageDescriptor);
+    	}
+    	return imageDescriptor;
+    }
+
+    /**
+     * 指定されたパスのイメージを示すイメージディスクリプタを生成して返します。
+     * @param path イメージのパス
+     * @return 生成されたイメージディスクリプタ
+     */
+    private ImageDescriptor createSystemImageDescriptor(String path) {
+        ImageDescriptor descriptor;
+        try {
+            // プラグインインストールディレクトリを取得
+            URL installUrl = getInstallUrl();
+            // イメージディスクリプタを生成
+            descriptor = ImageDescriptor.createFromURL(new URL(installUrl, path));
+        } catch(MalformedURLException e) {
+            descriptor = ImageDescriptor.getMissingImageDescriptor();
+        }
+        return descriptor;
+    }
+
+    /**
+     * プラグインがインストールされているディレクトリを示すURLを返します。
+     * @return プラグインがインストールされているディレクトリを示すURL
+     */
+    public URL getInstallUrl() {
+        Bundle bundle = getBundle();
+        return bundle.getEntry("/");
+    }
 
 }
