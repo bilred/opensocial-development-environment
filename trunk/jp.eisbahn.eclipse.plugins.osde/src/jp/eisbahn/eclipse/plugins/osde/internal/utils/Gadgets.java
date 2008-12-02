@@ -6,7 +6,7 @@ public class Gadgets {
 		if (source == null) {
 			return "";
 		} else {
-			return source;
+			return source.trim();
 		}
 	}
 	
