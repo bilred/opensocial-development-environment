@@ -6,6 +6,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
@@ -16,6 +17,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -46,6 +48,7 @@ class PersonPage implements IDetailsPage {
 		Composite basicPane = toolkit.createComposite(basicSection);
 		basicPane.setLayout(new GridLayout(4, false));
 		basicSection.setClient(basicPane);
+		final SectionPart part = new SectionPart(basicSection);
 		toolkit.createLabel(basicPane, "ID:");
 		idLabel = toolkit.createLabel(basicPane, "");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -60,7 +63,8 @@ class PersonPage implements IDetailsPage {
 			public void focusLost(FocusEvent e) {
 				person.setDisplayName(displayNameText.getText());
 				PersonService personService = personView.getPersonService();
-				
+				personService.save(person);
+				managedForm.fireSelectionChanged(part, new StructuredSelection(person));
 			}
 		});
 	}

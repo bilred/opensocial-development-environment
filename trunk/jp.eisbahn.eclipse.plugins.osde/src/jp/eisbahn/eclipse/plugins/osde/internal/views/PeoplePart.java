@@ -33,7 +33,7 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
 	}
 	
 	private void createContents(Section section, FormToolkit toolkit) {
-		section.setText("People");
+		section.setText("People ");
 		Composite composite = toolkit.createComposite(section);
 		composite.setLayout(new GridLayout(2, false));
 		// Person list

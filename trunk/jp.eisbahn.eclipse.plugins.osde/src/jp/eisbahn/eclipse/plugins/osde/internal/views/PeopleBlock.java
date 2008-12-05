@@ -3,8 +3,6 @@ package jp.eisbahn.eclipse.plugins.osde.internal.views;
 
 import java.util.List;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
-
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.DetailsPart;
@@ -26,6 +24,7 @@ class PeopleBlock extends MasterDetailsBlock {
 	@Override
 	protected void createMasterPart(final IManagedForm managedForm, Composite parent) {
 		peoplePart = new PeoplePart(parent, managedForm);
+		managedForm.addPart(peoplePart);
 	}
 
 	@Override
