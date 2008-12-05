@@ -1,25 +1,17 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.db;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
-import org.apache.shindig.social.core.model.EnumImpl;
-import org.apache.shindig.social.opensocial.jpa.PersonDb;
-import org.apache.shindig.social.opensocial.jpa.eclipselink.Bootstrap;
-import org.apache.shindig.social.opensocial.model.Person;
-import org.apache.shindig.social.opensocial.model.Enum;
-import org.apache.shindig.social.opensocial.model.Enum.Drinker;
-import org.apache.shindig.social.opensocial.model.Enum.LookingFor;
-import org.apache.shindig.social.opensocial.model.Enum.Smoker;
-import org.apache.shindig.social.opensocial.model.Person.Gender;
-
 import junit.framework.TestCase;
+
+import org.apache.shindig.social.opensocial.jpa.PersonDb;
+import org.apache.shindig.social.opensocial.jpa.hibernate.Bootstrap;
+import org.apache.shindig.social.opensocial.model.Person;
 
 public class PersonTest extends TestCase {
 	
@@ -27,9 +19,9 @@ public class PersonTest extends TestCase {
 	
 	public PersonTest() {
 		super();
-		Bootstrap b = new Bootstrap("org.apache.derby.jdbc.ClientDriver",
-				"jdbc:derby://localhost:1527/testdb;create=true", "sa", " ", "1", "1");
-		em = b.getEntityManager("default");
+		Bootstrap b = new Bootstrap("org.h2.Driver",
+				"jdbc:h2:tcp://localhost:9092/shindig", "sa", "", "1", "1");
+		em = b.getEntityManager("hibernate");
 	}
 
 	protected void setUp() throws Exception {

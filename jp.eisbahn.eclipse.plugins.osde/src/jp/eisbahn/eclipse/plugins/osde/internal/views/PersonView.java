@@ -1,13 +1,12 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.views;
 
-
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
-import org.apache.shindig.social.opensocial.jpa.eclipselink.Bootstrap;
+import org.apache.shindig.social.opensocial.jpa.hibernate.Bootstrap;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -28,9 +27,12 @@ public class PersonView extends ViewPart {
 
 	private Action connectAction;
 	private Action disconnectAction;
+	private Action reloadAction;
 	
 	private PersonService service = null;
 	private PeopleBlock block;
+	
+	private PersonService s2 = null;
 
 	private final class DisconnectAction extends Action {
 		public void run() {
@@ -41,16 +43,29 @@ public class PersonView extends ViewPart {
 
 	private class ConnectAction extends Action {
 		public void run() {
-			Bootstrap b = new Bootstrap("org.apache.derby.jdbc.ClientDriver",
-					"jdbc:derby://localhost:1527/testdb;create=true", "sa", " ", "1", "1");
-			EntityManager em = b.getEntityManager("default");
+			Bootstrap b = new Bootstrap("org.h2.Driver",
+					"jdbc:h2:tcp://localhost:9092/shindig", "sa", "", "1", "1");
+			EntityManager em = b.getEntityManager("hibernate");
 			service = new PersonService(em);
 			//
 			List<Person> people = service.getPeople();
 			block.setPeople(people);
 		}
 	}
-	
+
+	private class ReloadAction extends Action {
+		public void run() {
+			if (s2 == null) {
+				Bootstrap b = new Bootstrap("org.h2.Driver",
+						"jdbc:h2:tcp://localhost:9092/shindig", "sa", "", "1", "1");
+				EntityManager em = b.getEntityManager("hibernate");
+				s2 = new PersonService(em);
+			}
+			Person johnDoe = s2.getJohnDoe();
+			System.out.println(johnDoe.getDisplayName());
+		}
+	}
+
 	public PersonView() {
 	}
 
@@ -87,17 +102,20 @@ public class PersonView extends ViewPart {
 		manager.add(connectAction);
 		manager.add(new Separator());
 		manager.add(disconnectAction);
+		manager.add(reloadAction);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(connectAction);
 		manager.add(disconnectAction);
+		manager.add(reloadAction);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(connectAction);
 		manager.add(disconnectAction);
+		manager.add(reloadAction);
 	}
 
 	private void makeActions() {
@@ -111,6 +129,12 @@ public class PersonView extends ViewPart {
 		disconnectAction.setText("Disconnect");
 		disconnectAction.setToolTipText("Disconnect to Shindig Database");
 		disconnectAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		//
+		reloadAction = new ReloadAction();
+		reloadAction.setText("Reload");
+		reloadAction.setToolTipText("Reload");
+		reloadAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 	}
 

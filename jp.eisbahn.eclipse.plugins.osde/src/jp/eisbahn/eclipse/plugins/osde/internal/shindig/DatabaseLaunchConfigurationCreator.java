@@ -58,20 +58,18 @@ public class DatabaseLaunchConfigurationCreator {
 			IRuntimeClasspathEntry systemLibsEntry = JavaRuntime.newRuntimeContainerClasspathEntry(
 					systemLibs, IRuntimeClasspathEntry.STANDARD_CLASSES);
 			systemLibsEntry.setClasspathProperty(IRuntimeClasspathEntry.BOOTSTRAP_CLASSES);
-			IRuntimeClasspathEntry derbyEntry = createRuntimeClasspathEntry("/derby/derby.jar");
-			IRuntimeClasspathEntry derbynetEntry = createRuntimeClasspathEntry("/derby/derbynet.jar");
+			IRuntimeClasspathEntry h2Entry = createRuntimeClasspathEntry("/h2/h2-1.1.104.jar");
 			ILaunchConfigurationWorkingCopy wc = type.newInstance(null, "Shindig Database");
 			List<String> classpath = new ArrayList<String>();
 			classpath.add(systemLibsEntry.getMemento());
-			classpath.add(derbyEntry.getMemento());
-			classpath.add(derbynetEntry.getMemento());
+			classpath.add(h2Entry.getMemento());
 			monitor.worked(1);
 			monitor.subTask("Creating the launch configuration.");
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "org.apache.derby.drda.NetworkServerControl");
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, "-Dderby.system.home=" + System.getProperty("java.io.tmpdir"));
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "start");
+			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "org.h2.tools.Server");
+//			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+//					"-database.0 " + System.getProperty("java.io.tmpdir") + "/osde -dbname.0 shindig");
 			wc.doSave();
 			monitor.worked(1);
 		} finally {
