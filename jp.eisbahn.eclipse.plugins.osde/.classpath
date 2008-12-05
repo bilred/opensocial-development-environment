@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/shindig-samples-1.1-SNAPSHOT.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/shindig-social-api-1.1-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/log4j-1.2.14.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/h2-1.1.104.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/antlr-2.7.6.jar"/>
@@ -14,8 +16,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/hibernate-entitymanager-3.2.1.ga.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jta-1.0.1B.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/shindig-samples-0.9-1-SNAPSHOT.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/shindig-social-api-0.9-1-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/persistence-api-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/activation.jar"/>
