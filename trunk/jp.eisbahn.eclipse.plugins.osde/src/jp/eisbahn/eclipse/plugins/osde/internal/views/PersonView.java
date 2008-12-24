@@ -1,12 +1,11 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.views;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
-import org.apache.shindig.social.opensocial.model.Person;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -51,10 +50,31 @@ public class PersonView extends ViewPart {
 
 	private class ConnectAction extends Action {
 		public void run() {
-			sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-			Session session = sessionFactory.openSession();
-			service = new PersonService(session);
-			block.setPeople(service.getPeople());
+			Job job = new Job("Connect to Shindig database.") {
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					monitor.beginTask("Connect to Shindig database.", 4);
+					monitor.subTask("Building Hibernate SessionFactory.");
+					sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+					monitor.worked(1);
+					monitor.subTask("Opening Hibernate session.");
+					Session session = sessionFactory.openSession();
+					monitor.worked(1);
+					monitor.subTask("Creating PersonService.");
+					service = new PersonService(session);
+					monitor.worked(1);
+					monitor.subTask("Retrieving people.");
+					getSite().getShell().getDisplay().syncExec(new Runnable() {
+						public void run() {
+							block.setPeople(service.getPeople());
+						}
+					});
+					monitor.worked(1);
+					monitor.done();
+					return Status.OK_STATUS;
+				}
+			};
+			job.schedule();
 		}
 	}
 
