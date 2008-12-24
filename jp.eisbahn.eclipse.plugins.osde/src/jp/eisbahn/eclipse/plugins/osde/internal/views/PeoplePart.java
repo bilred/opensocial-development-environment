@@ -9,6 +9,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -69,6 +71,14 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
 		addButton.setLayoutData(layoutData);
+		addButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			public void widgetSelected(SelectionEvent e) {
+				NewPersonDialog dialog = new NewPersonDialog(getSection().getShell());
+				dialog.open();
+			}
+		});
 		Button deleteButton = toolkit.createButton(buttonPane, "Delete", SWT.PUSH);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;

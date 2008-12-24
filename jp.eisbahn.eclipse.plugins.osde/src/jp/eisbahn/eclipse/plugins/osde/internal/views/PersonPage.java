@@ -4,6 +4,10 @@ import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.normalize;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.string;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.toInteger;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.trim;
+
+import java.util.Calendar;
+import java.util.Date;
+
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
 import org.apache.shindig.social.opensocial.model.Person;
@@ -16,6 +20,7 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IDetailsPage;
@@ -38,7 +43,7 @@ class PersonPage implements IDetailsPage {
 	private Text displayNameText;
 	private Text aboutMeText;
 	private Text ageText;
-//	private DateTime birthdayText;
+	private DateTime birthdayText;
 	private Text thumbnailUrlText;
 
 	public PersonPage(PersonView personView) {
@@ -88,11 +93,11 @@ class PersonPage implements IDetailsPage {
 		ageText.setLayoutData(layoutData);
 		ageText.addFocusListener(valueChangeListener);
 		//
-//		toolkit.createLabel(basicPane, "Birthday:");
-//		birthdayText = new DateTime(basicPane, SWT.DATE);
-//		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-//		birthdayText.setLayoutData(layoutData);
-//		birthdayText.addFocusListener(valueChangeListener);
+		toolkit.createLabel(basicPane, "Birthday:");
+		birthdayText = new DateTime(basicPane, SWT.DATE);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		birthdayText.setLayoutData(layoutData);
+		birthdayText.addFocusListener(valueChangeListener);
 		//
 		toolkit.createLabel(basicPane, "Thumbnail Url:");
 		thumbnailUrlText = toolkit.createText(basicPane, "");
@@ -136,7 +141,19 @@ class PersonPage implements IDetailsPage {
 		displayNameText.setText(trim(person.getDisplayName()));
 		aboutMeText.setText(trim(person.getAboutMe()));
 		ageText.setText(string(person.getAge()));
+		setDate(birthdayText, person.getBirthday());
 		thumbnailUrlText.setText(trim(person.getThumbnailUrl()));
+	}
+	
+	private void setDate(DateTime dateTime, Date date) {
+		if (date != null) {
+			Calendar cal = Calendar.getInstance();
+			cal.clear();
+			cal.setTime(date);
+			dateTime.setYear(cal.get(Calendar.YEAR));
+			dateTime.setMonth(cal.get(Calendar.MONTH));
+			dateTime.setDay(cal.get(Calendar.DATE));
+		}
 	}
 	
 	private class ValueChangeListener implements FocusListener {
@@ -153,10 +170,21 @@ class PersonPage implements IDetailsPage {
 			person.setDisplayName(normalize(displayNameText.getText()));
 			person.setAboutMe(aboutMeText.getText());
 			person.setAge(toInteger(ageText.getText()));
+			person.setBirthday(getDate(birthdayText));
 			person.setThumbnailUrl(normalize(thumbnailUrlText.getText()));
 			PersonService personService = personView.getPersonService();
 			personService.store(person);
 			managedForm.fireSelectionChanged(part, new StructuredSelection(person));
+		}
+		
+		private Date getDate(DateTime dateTime) {
+			int year = dateTime.getYear();
+			int month = dateTime.getMonth();
+			int day = dateTime.getDay();
+			Calendar cal = Calendar.getInstance();
+			cal.clear();
+			cal.set(year, month, day);
+			return cal.getTime();
 		}
 	}
 
