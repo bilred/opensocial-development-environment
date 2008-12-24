@@ -2,56 +2,38 @@ package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.FlushModeType;
-import javax.persistence.Query;
-
-import org.apache.shindig.social.opensocial.jpa.PersonDb;
 import org.apache.shindig.social.opensocial.model.Person;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class PersonService {
-
-	private EntityManager em;
 	
-	public PersonService(EntityManager em) {
+	private Session session;
+
+	public PersonService(Session session) {
 		super();
-		this.em = em;
+		this.session = session;
 	}
 
-	public void close() {
-		if (em != null) {
-			em.close();
-		}
-		em = null;
-	}
-
+	@SuppressWarnings("unchecked")
 	public List<Person> getPeople() {
-		Query query = em.createQuery("select p from PersonDb p");
-		List<Person> people = (List<Person>)query.getResultList();
-		return people;
+		Query query = session.createQuery("select p from PersonImpl p");
+		List<?> people = query.list();
+		return (List<Person>)people;
 	}
 
-	public void save(Person person) {
-		EntityTransaction tx = em.getTransaction();
-		tx.begin();
-		em.persist(person);
+	public Person store(Person person) {
+		Transaction tx = session.beginTransaction();
+		session.saveOrUpdate(person);
 		tx.commit();
+		return person;
 	}
 	
-	public Person getJohnDoe() {
-		em.clear();
-	    String uid = "john.doe";
-	    Query q = em.createNamedQuery(PersonDb.FINDBY_PERSONID);
-	    q.setParameter(PersonDb.PARAM_PERSONID, uid);
-	    q.setFirstResult(0);
-	    q.setMaxResults(1);
-	    List<?> plist = q.getResultList();
-	    Person person = null;
-	    if (plist != null && plist.size() > 0) {
-	      person = (Person) plist.get(0);
-	    }
-	    return person;
+	public void closeSession() {
+		if (session != null && session.isOpen()) {
+			session.close();
+		}
 	}
 	
 }

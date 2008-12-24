@@ -20,4 +20,26 @@ public class Gadgets {
 		}
 	}
 	
+	public static String string(Integer value) {
+		if (value == null) {
+			return "";
+		} else {
+			return value.toString();
+		}
+	}
+	
+	public static Integer toInteger(String value) {
+		if (value == null) {
+			return null;
+		} else if (value.length() == 0) {
+			return null;
+		} else {
+			try {
+				return new Integer(value);
+			} catch(NumberFormatException e) {
+				return null;
+			}
+		}
+	}
+	
 }

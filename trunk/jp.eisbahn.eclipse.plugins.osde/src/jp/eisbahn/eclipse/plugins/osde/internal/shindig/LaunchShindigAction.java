@@ -57,7 +57,7 @@ public class LaunchShindigAction implements IObjectActionDelegate {
 							}
 						}
 					});
-					cnt += 1000;
+					cnt += 3000;
 				}
 			}
 		} catch (CoreException e) {

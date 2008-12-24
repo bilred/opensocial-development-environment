@@ -1,5 +1,8 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.views;
 
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.normalize;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.string;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.toInteger;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.trim;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
@@ -7,6 +10,7 @@ import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
@@ -24,11 +28,19 @@ import org.eclipse.ui.forms.widgets.Section;
 class PersonPage implements IDetailsPage {
 	
 	private IManagedForm managedForm;
-	private Label idLabel;
-	private Text displayNameText;
+	
 	private PersonView personView;
 	private Person person;
 	
+	private ValueChangeListener valueChangeListener;
+
+	private Label idLabel;
+	private Text displayNameText;
+	private Text aboutMeText;
+	private Text ageText;
+//	private DateTime birthdayText;
+	private Text thumbnailUrlText;
+
 	public PersonPage(PersonView personView) {
 		super();
 		this.personView = personView;
@@ -49,24 +61,45 @@ class PersonPage implements IDetailsPage {
 		basicPane.setLayout(new GridLayout(4, false));
 		basicSection.setClient(basicPane);
 		final SectionPart part = new SectionPart(basicSection);
+		valueChangeListener = new ValueChangeListener(part);
+		//
 		toolkit.createLabel(basicPane, "ID:");
 		idLabel = toolkit.createLabel(basicPane, "");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		idLabel.setLayoutData(layoutData);
+		//
 		toolkit.createLabel(basicPane, "Display name:");
 		displayNameText = toolkit.createText(basicPane, "");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		displayNameText.setLayoutData(layoutData);
-		displayNameText.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {
-			}
-			public void focusLost(FocusEvent e) {
-				person.setDisplayName(displayNameText.getText());
-				PersonService personService = personView.getPersonService();
-				personService.save(person);
-				managedForm.fireSelectionChanged(part, new StructuredSelection(person));
-			}
-		});
+		displayNameText.addFocusListener(valueChangeListener);
+		//
+		toolkit.createLabel(basicPane, "About me:");
+		aboutMeText = toolkit.createText(basicPane, "", SWT.MULTI);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 3;
+		layoutData.heightHint = 50;
+		aboutMeText.setLayoutData(layoutData);
+		aboutMeText.addFocusListener(valueChangeListener);
+		//
+		toolkit.createLabel(basicPane, "Age:");
+		ageText = toolkit.createText(basicPane, "");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		ageText.setLayoutData(layoutData);
+		ageText.addFocusListener(valueChangeListener);
+		//
+//		toolkit.createLabel(basicPane, "Birthday:");
+//		birthdayText = new DateTime(basicPane, SWT.DATE);
+//		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+//		birthdayText.setLayoutData(layoutData);
+//		birthdayText.addFocusListener(valueChangeListener);
+		//
+		toolkit.createLabel(basicPane, "Thumbnail Url:");
+		thumbnailUrlText = toolkit.createText(basicPane, "");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 3;
+		thumbnailUrlText.setLayoutData(layoutData);
+		thumbnailUrlText.addFocusListener(valueChangeListener);
 	}
 
 	public void initialize(IManagedForm managedForm) {
@@ -101,5 +134,30 @@ class PersonPage implements IDetailsPage {
 		person = (Person)((IStructuredSelection)selection).getFirstElement();
 		idLabel.setText(trim(person.getId()));
 		displayNameText.setText(trim(person.getDisplayName()));
+		aboutMeText.setText(trim(person.getAboutMe()));
+		ageText.setText(string(person.getAge()));
+		thumbnailUrlText.setText(trim(person.getThumbnailUrl()));
 	}
+	
+	private class ValueChangeListener implements FocusListener {
+		private final SectionPart part;
+
+		private ValueChangeListener(SectionPart part) {
+			this.part = part;
+		}
+
+		public void focusGained(FocusEvent e) {
+		}
+
+		public void focusLost(FocusEvent e) {
+			person.setDisplayName(normalize(displayNameText.getText()));
+			person.setAboutMe(aboutMeText.getText());
+			person.setAge(toInteger(ageText.getText()));
+			person.setThumbnailUrl(normalize(thumbnailUrlText.getText()));
+			PersonService personService = personView.getPersonService();
+			personService.store(person);
+			managedForm.fireSelectionChanged(part, new StructuredSelection(person));
+		}
+	}
+
 }
