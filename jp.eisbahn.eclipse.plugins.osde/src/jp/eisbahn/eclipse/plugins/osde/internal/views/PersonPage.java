@@ -99,7 +99,7 @@ class PersonPage implements IDetailsPage {
 		birthdayText.setLayoutData(layoutData);
 		birthdayText.addFocusListener(valueChangeListener);
 		//
-		toolkit.createLabel(basicPane, "Thumbnail Url:");
+		toolkit.createLabel(basicPane, "Thumbnail:");
 		thumbnailUrlText = toolkit.createText(basicPane, "");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;

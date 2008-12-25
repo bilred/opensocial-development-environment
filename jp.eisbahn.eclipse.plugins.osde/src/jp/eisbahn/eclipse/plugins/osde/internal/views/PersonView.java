@@ -25,6 +25,8 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.classic.Session;
 
 public class PersonView extends ViewPart {
+	
+	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView";
 
 	private Action connectAction;
 	private Action disconnectAction;
@@ -50,35 +52,39 @@ public class PersonView extends ViewPart {
 
 	private class ConnectAction extends Action {
 		public void run() {
-			Job job = new Job("Connect to Shindig database.") {
-				@Override
-				protected IStatus run(IProgressMonitor monitor) {
-					monitor.beginTask("Connect to Shindig database.", 4);
-					monitor.subTask("Building Hibernate SessionFactory.");
-					sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-					monitor.worked(1);
-					monitor.subTask("Opening Hibernate session.");
-					Session session = sessionFactory.openSession();
-					monitor.worked(1);
-					monitor.subTask("Creating PersonService.");
-					service = new PersonService(session);
-					monitor.worked(1);
-					monitor.subTask("Retrieving people.");
-					getSite().getShell().getDisplay().syncExec(new Runnable() {
-						public void run() {
-							block.setPeople(service.getPeople());
-						}
-					});
-					monitor.worked(1);
-					monitor.done();
-					return Status.OK_STATUS;
-				}
-			};
-			job.schedule();
+			connect();
 		}
 	}
 
 	public PersonView() {
+	}
+	
+	public void connect() {
+		Job job = new Job("Connect to Shindig database.") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Connect to Shindig database.", 4);
+				monitor.subTask("Building Hibernate SessionFactory.");
+				sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+				monitor.worked(1);
+				monitor.subTask("Opening Hibernate session.");
+				Session session = sessionFactory.openSession();
+				monitor.worked(1);
+				monitor.subTask("Creating PersonService.");
+				service = new PersonService(session);
+				monitor.worked(1);
+				monitor.subTask("Retrieving people.");
+				getSite().getShell().getDisplay().syncExec(new Runnable() {
+					public void run() {
+						block.setPeople(service.getPeople());
+					}
+				});
+				monitor.worked(1);
+				monitor.done();
+				return Status.OK_STATUS;
+			}
+		};
+		job.schedule();
 	}
 
 	public void createPartControl(Composite parent) {
