@@ -23,7 +23,7 @@ class PeopleBlock extends MasterDetailsBlock {
 
 	@Override
 	protected void createMasterPart(final IManagedForm managedForm, Composite parent) {
-		peoplePart = new PeoplePart(parent, managedForm);
+		peoplePart = new PeoplePart(parent, managedForm, personView);
 		managedForm.addPart(peoplePart);
 	}
 

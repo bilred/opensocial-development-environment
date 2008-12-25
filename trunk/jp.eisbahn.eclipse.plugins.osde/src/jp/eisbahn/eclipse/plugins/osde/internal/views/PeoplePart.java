@@ -2,7 +2,14 @@ package jp.eisbahn.eclipse.plugins.osde.internal.views;
 
 import java.util.List;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
+
 import org.apache.shindig.social.opensocial.model.Person;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -27,11 +34,13 @@ import org.eclipse.ui.forms.widgets.Section;
 public class PeoplePart extends SectionPart implements IPartSelectionListener {
 	
 	private TableViewer personList;
+	private PersonView personView;
 
-	public PeoplePart(Composite parent, IManagedForm managedForm) {
+	public PeoplePart(Composite parent, IManagedForm managedForm, PersonView personView) {
 		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
 		initialize(managedForm);
 		createContents(getSection(), managedForm.getToolkit());
+		this.personView = personView;
 	}
 	
 	private void createContents(Section section, FormToolkit toolkit) {
@@ -71,18 +80,12 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
 		addButton.setLayoutData(layoutData);
-		addButton.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				NewPersonDialog dialog = new NewPersonDialog(getSection().getShell());
-				dialog.open();
-			}
-		});
+		addButton.addSelectionListener(new NewButtonSelectionListener());
 		Button deleteButton = toolkit.createButton(buttonPane, "Delete", SWT.PUSH);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
 		deleteButton.setLayoutData(layoutData);
+		deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
 		//
 		section.setClient(composite);
 	}
@@ -99,6 +102,72 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
 			return;
 		}
 		personList.refresh((Person)((IStructuredSelection)selection).getFirstElement());
+	}
+
+	private class DeleteButtonSelectionListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			ISelection selection = personList.getSelection();
+			if (!selection.isEmpty()) {
+				IStructuredSelection structured = (IStructuredSelection)selection;
+				final Person person = (Person)structured.getFirstElement();
+				if (MessageDialog.openConfirm(personView.getSite().getShell(),
+						"Deleting person", "Do you want to delete person '" + person.getId() + "'?")) {
+					Job job = new Job("Create new person") {
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							monitor.beginTask("Deleting person from Shindig database.", 1);
+							personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
+								public void run() {
+									personView.getPersonService().deletePerson(person);
+									List<Person> input = (List<Person>)personList.getInput();
+									input.remove(person);
+									personList.refresh();
+								}
+							});
+							monitor.worked(1);
+							monitor.done();
+							return Status.OK_STATUS;
+						}
+					};
+					job.schedule();
+				}
+			}
+		}
+	}
+
+	private class NewButtonSelectionListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			NewPersonDialog dialog = new NewPersonDialog(getSection().getShell());
+			if (dialog.open() == NewPersonDialog.OK) {
+				final String id = dialog.getId();
+				final String displayName = dialog.getDisplayName();
+				Job job = new Job("Create new person") {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						monitor.beginTask("Creating new person to Shindig database.", 1);
+						personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
+							public void run() {
+								PersonService service = personView.getPersonService();
+								Person person = service.createNewPerson(id, displayName);
+								List<Person> input = (List<Person>)personList.getInput();
+								input.add(person);
+								personList.refresh();
+							}
+						});
+						monitor.worked(1);
+						monitor.done();
+						return Status.OK_STATUS;
+					}
+				};
+				job.schedule();
+			}
+		}
 	}
 
 }
