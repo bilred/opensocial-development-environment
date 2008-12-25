@@ -12,13 +12,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.ui.DebugUITools;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -55,23 +48,11 @@ public class RunAction implements IObjectActionDelegate {
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		Job job = new Job("Running this application") {
+		Job job = new Job("Running application") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					monitor.beginTask(createLauncherName(project), 2);
-					monitor.subTask("Starting Web server.");
-					ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-					ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-					ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
-					for (int i = 0; i < configurations.length; i++) {
-						if (configurations[i].getName().equals(createLauncherName(project))) {
-							ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
-							DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
-						}
-					}
-					monitor.worked(1);
-					monitor.subTask("Starting Web browser.");
+					monitor.beginTask("Running application", 1);
 					int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
 					final String url = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:" + port + "/"
 							+ gadgetXmlFile.getName()
@@ -111,10 +92,6 @@ public class RunAction implements IObjectActionDelegate {
 		job.schedule();
 	}
 	
-	private String createLauncherName(IProject project) {
-		return "Web server for " + project.getName();
-	}
-
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */

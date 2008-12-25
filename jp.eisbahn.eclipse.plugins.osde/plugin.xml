@@ -76,6 +76,19 @@
                </objectState>
             </enablement>
          </action>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchWebServerAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction"
+               label="Launch Web Server"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
+            <enablement>
+               <objectState
+                     name="nature"
+                     value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
+               </objectState>
+            </enablement>
+         </action>
       </objectContribution>
       <objectContribution
             id="jp.eisbahn.eclipse.plugins.osde.contribution2"
