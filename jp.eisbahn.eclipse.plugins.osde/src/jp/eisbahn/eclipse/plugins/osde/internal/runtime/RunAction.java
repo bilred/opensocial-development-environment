@@ -1,7 +1,9 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
@@ -62,6 +64,7 @@ public class RunAction implements IObjectActionDelegate {
 				final String view = dialog.getView();
 				final String viewer = dialog.getViewer();
 				final String owner = dialog.getOwner();
+				final String width = dialog.getWidth();
 				Job job = new Job("Running application") {
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
@@ -71,8 +74,9 @@ public class RunAction implements IObjectActionDelegate {
 							final String url = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:" + port + "/"
 									+ gadgetXmlFile.getName()
 									+ "&view=" + view
-									+ "&viewerId=" + viewer
-									+ "&ownerId=" + owner;
+									+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
+									+ "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
+									+ "&width=" + URLEncoder.encode(width, "UTF-8");
 							shell.getDisplay().syncExec(new Runnable() {
 								public void run() {
 									try {
@@ -96,6 +100,9 @@ public class RunAction implements IObjectActionDelegate {
 							});
 							monitor.worked(1);
 						} catch (CoreException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (UnsupportedEncodingException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} finally {
