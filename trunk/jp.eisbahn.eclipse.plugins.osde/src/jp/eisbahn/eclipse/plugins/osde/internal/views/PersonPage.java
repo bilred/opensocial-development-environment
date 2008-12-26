@@ -8,9 +8,12 @@ import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.trim;
 import java.util.Calendar;
 import java.util.Date;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
 import org.apache.shindig.social.opensocial.model.Person;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -166,15 +169,19 @@ class PersonPage implements IDetailsPage {
 		public void focusGained(FocusEvent e) {
 		}
 
-		public void focusLost(FocusEvent e) {
-			person.setDisplayName(normalize(displayNameText.getText()));
-			person.setAboutMe(aboutMeText.getText());
-			person.setAge(toInteger(ageText.getText()));
-			person.setBirthday(getDate(birthdayText));
-			person.setThumbnailUrl(normalize(thumbnailUrlText.getText()));
-			PersonService personService = personView.getPersonService();
-			personService.store(person);
-			managedForm.fireSelectionChanged(part, new StructuredSelection(person));
+		public void focusLost(FocusEvent evt) {
+			try {
+				person.setDisplayName(normalize(displayNameText.getText()));
+				person.setAboutMe(aboutMeText.getText());
+				person.setAge(toInteger(ageText.getText()));
+				person.setBirthday(getDate(birthdayText));
+				person.setThumbnailUrl(normalize(thumbnailUrlText.getText()));
+				PersonService personService = Activator.getDefault().getPersonService();
+				personService.store(person);
+				managedForm.fireSelectionChanged(part, new StructuredSelection(person));
+			} catch(ConnectionException e) {
+				MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
+			}
 		}
 		
 		private Date getDate(DateTime dateTime) {

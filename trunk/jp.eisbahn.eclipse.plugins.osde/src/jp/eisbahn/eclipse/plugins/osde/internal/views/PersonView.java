@@ -1,17 +1,19 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.views;
 
+import java.util.List;
+
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
@@ -20,9 +22,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.ManagedForm;
 import org.eclipse.ui.part.ViewPart;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.classic.Session;
 
 public class PersonView extends ViewPart {
 	
@@ -31,10 +30,7 @@ public class PersonView extends ViewPart {
 	private Action connectAction;
 	private Action disconnectAction;
 	
-	private PersonService service = null;
 	private PeopleBlock block;
-
-	private SessionFactory sessionFactory;
 
 	private final class DisconnectAction extends Action {
 		public void run() {
@@ -42,51 +38,15 @@ public class PersonView extends ViewPart {
 		}
 	}
 	
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (sessionFactory != null && !sessionFactory.isClosed()) {
-			sessionFactory.close();
-		}
-	}
-
 	private class ConnectAction extends Action {
 		public void run() {
-			connect();
+			Activator.getDefault().connect(getSite().getWorkbenchWindow());
 		}
 	}
 
 	public PersonView() {
 	}
 	
-	public void connect() {
-		Job job = new Job("Connect to Shindig database.") {
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Connect to Shindig database.", 4);
-				monitor.subTask("Building Hibernate SessionFactory.");
-				sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-				monitor.worked(1);
-				monitor.subTask("Opening Hibernate session.");
-				Session session = sessionFactory.openSession();
-				monitor.worked(1);
-				monitor.subTask("Creating PersonService.");
-				service = new PersonService(session);
-				monitor.worked(1);
-				monitor.subTask("Retrieving people.");
-				getSite().getShell().getDisplay().syncExec(new Runnable() {
-					public void run() {
-						block.setPeople(service.getPeople());
-					}
-				});
-				monitor.worked(1);
-				monitor.done();
-				return Status.OK_STATUS;
-			}
-		};
-		job.schedule();
-	}
-
 	public void createPartControl(Composite parent) {
 		createForm(parent);
 		makeActions();
@@ -149,9 +109,15 @@ public class PersonView extends ViewPart {
 
 	public void setFocus() {
 	}
-	
-	public PersonService getPersonService() {
-		return service;
+
+	public void connectedDatabase() {
+		try {
+			PersonService personService = Activator.getDefault().getPersonService();
+			List<Person> people = personService.getPeople();
+			block.setPeople(people);
+		} catch(ConnectionException e) {
+			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+		}
 	}
 	
 }

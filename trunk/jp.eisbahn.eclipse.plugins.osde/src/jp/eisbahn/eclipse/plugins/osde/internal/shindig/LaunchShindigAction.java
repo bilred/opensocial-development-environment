@@ -1,6 +1,6 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView;
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 
 public class LaunchShindigAction implements IObjectActionDelegate {
@@ -69,8 +68,6 @@ public class LaunchShindigAction implements IObjectActionDelegate {
 						public void run() {
 							try {
 								DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
-								PersonView personView = (PersonView)targetPart.getSite().getPage().showView(PersonView.ID);
-								personView.connect();
 							} catch (CoreException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -79,6 +76,11 @@ public class LaunchShindigAction implements IObjectActionDelegate {
 					});
 				}
 			}
+			shell.getDisplay().timerExec(3000, new Runnable() {
+				public void run() {
+					Activator.getDefault().connect(targetPart.getSite().getWorkbenchWindow());
+				}
+			});
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
