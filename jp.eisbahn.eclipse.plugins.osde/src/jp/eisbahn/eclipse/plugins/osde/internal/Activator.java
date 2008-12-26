@@ -7,21 +7,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationCreator;
+import jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.classic.Session;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -37,7 +49,10 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 	
 	private Map<RGB, Color> colorMap = new HashMap<RGB, Color>();
-	
+
+	private SessionFactory sessionFactory;
+	private PersonService personService;
+
 	/**
 	 * The constructor
 	 */
@@ -68,6 +83,10 @@ public class Activator extends AbstractUIPlugin {
 		(new DatabaseLaunchConfigurationCreator()).delete(getStatusMonitor());
 		plugin = null;
 		disposeColors();
+		personService.closeSession();
+		sessionFactory.close();
+		personService = null;
+		sessionFactory = null;
 		super.stop(context);
 	}
 	
@@ -169,5 +188,47 @@ public class Activator extends AbstractUIPlugin {
         Bundle bundle = getBundle();
         return bundle.getEntry("/");
     }
+    
+	public void connect(final IWorkbenchWindow window) {
+		Job job = new Job("Connect to Shindig database.") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				monitor.beginTask("Connect to Shindig database.", 4);
+				monitor.subTask("Building Hibernate SessionFactory.");
+				sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+				monitor.worked(1);
+				monitor.subTask("Opening Hibernate session.");
+				Session session = sessionFactory.openSession();
+				monitor.worked(1);
+				monitor.subTask("Creating PersonService.");
+				personService = new PersonService(session);
+				monitor.worked(1);
+				monitor.subTask("Notify each view about connecting with database.");
+				window.getShell().getDisplay().syncExec(new Runnable() {
+					public void run() {
+						try {
+							PersonView personView = (PersonView)window.getActivePage().showView(PersonView.ID);
+							personView.connectedDatabase();
+						} catch (PartInitException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				monitor.worked(1);
+				monitor.done();
+				return Status.OK_STATUS;
+			}
+		};
+		job.schedule();
+	}
+	
+	public PersonService getPersonService() throws ConnectionException {
+		if (personService != null) {
+			return personService;
+		} else {
+			throw new ConnectionException("Not connect yet.");
+		}
+	}
 
 }

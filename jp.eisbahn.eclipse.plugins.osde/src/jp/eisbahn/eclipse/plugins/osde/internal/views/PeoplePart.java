@@ -2,6 +2,8 @@ package jp.eisbahn.eclipse.plugins.osde.internal.views;
 
 import java.util.List;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
 import org.apache.shindig.social.opensocial.model.Person;
@@ -121,10 +123,15 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
 							monitor.beginTask("Deleting person from Shindig database.", 1);
 							personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
 								public void run() {
-									personView.getPersonService().deletePerson(person);
-									List<Person> input = (List<Person>)personList.getInput();
-									input.remove(person);
-									personList.refresh();
+									try {
+										PersonService personService = Activator.getDefault().getPersonService();
+										personService.deletePerson(person);
+										List<Person> input = (List<Person>)personList.getInput();
+										input.remove(person);
+										personList.refresh();
+									} catch(ConnectionException e) {
+										MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
+									}
 								}
 							});
 							monitor.worked(1);
@@ -153,11 +160,15 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
 						monitor.beginTask("Creating new person to Shindig database.", 1);
 						personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
 							public void run() {
-								PersonService service = personView.getPersonService();
-								Person person = service.createNewPerson(id, displayName);
-								List<Person> input = (List<Person>)personList.getInput();
-								input.add(person);
-								personList.refresh();
+								try {
+									PersonService service = Activator.getDefault().getPersonService();
+									Person person = service.createNewPerson(id, displayName);
+									List<Person> input = (List<Person>)personList.getInput();
+									input.add(person);
+									personList.refresh();
+								} catch(ConnectionException e) {
+									MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
+								}
 							}
 						});
 						monitor.worked(1);
