@@ -61,9 +61,9 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
 		column = new TableColumn(table, SWT.LEFT, 1);
 		column.setText("ID");
 		column.setWidth(120);
-		column = new TableColumn(table, SWT.LEFT, 2);
-		column.setText("Display name");
-		column.setWidth(150);
+//		column = new TableColumn(table, SWT.LEFT, 2);
+//		column.setText("Display name");
+//		column.setWidth(150);
 		personList = new TableViewer(table);
 		personList.setContentProvider(new PersonListContentProvider());
 		personList.setLabelProvider(new PersonListLabelProvider());

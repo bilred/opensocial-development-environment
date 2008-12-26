@@ -25,8 +25,8 @@ class PersonListLabelProvider extends LabelProvider implements ITableLabelProvid
 		switch(columnIndex) {
 		case 1:
 			return person.getId();
-		case 2:
-			return person.getDisplayName();
+//		case 2:
+//			return person.getDisplayName();
 		default:
 			return null;
 		}
