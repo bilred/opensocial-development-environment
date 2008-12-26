@@ -65,25 +65,23 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent e) {
 				switch(viewKind.getSelectionIndex()) {
 				case 0:
-					widths.setSelection(800);
+					widths.setSelection(100);
 					break;
 				case 1:
 				case 2:
-					widths.setSelection(500);
-					break;
 				case 3:
-					widths.setSelection(600);
+					widths.setSelection(60);
 					break;
 				}
 			}
 		});
 		//
 		label = new Label(panel, SWT.NONE);
-		label.setText("Width:");
+		label.setText("Width(%):");
 		widths = new Spinner(panel, SWT.BORDER);
-		widths.setMaximum(1000);
-		widths.setMinimum(200);
-		widths.setSelection(800);
+		widths.setMaximum(100);
+		widths.setMinimum(25);
+		widths.setSelection(100);
 		//
 		label = new Label(panel, SWT.NONE);
 		label.setText("Owner:");
