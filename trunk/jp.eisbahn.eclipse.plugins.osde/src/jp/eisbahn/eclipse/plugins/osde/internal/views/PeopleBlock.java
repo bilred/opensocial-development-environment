@@ -52,7 +52,7 @@ class PeopleBlock extends MasterDetailsBlock {
 			}
 			
 		});
-		sashForm.setWeights(new int[]{30, 70});
+		sashForm.setWeights(new int[]{35, 65});
 	}
 
 	public void setPeople(List<Person> people) {
