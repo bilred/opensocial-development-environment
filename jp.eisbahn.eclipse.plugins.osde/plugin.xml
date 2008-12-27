@@ -134,9 +134,9 @@
       <view
             category="jp.eisbahn.eclipse.plugins.osde"
             class="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
-            icon="icons/sample.gif"
+            icon="icons/page_boy.gif"
             id="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
-            name="Person List">
+            name="People">
       </view>
    </extension>
 </plugin>
