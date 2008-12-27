@@ -3,6 +3,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 import java.util.List;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
+import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -15,6 +16,12 @@ public class PersonService {
 	public PersonService(Session session) {
 		super();
 		this.session = session;
+	}
+
+	public void closeSession() {
+		if (session != null && session.isOpen()) {
+			session.close();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -38,15 +45,41 @@ public class PersonService {
 		return store(person);
 	}
 	
-	public void closeSession() {
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-	}
-
 	public void deletePerson(Person person) {
 		Transaction tx = session.beginTransaction();
+		Query query = session.createQuery("select r from RelationshipImpl r where r.person = :person or r.target = :target");
+		query.setParameter("person", person);
+		query.setParameter("target", person);
+		List<RelationshipImpl> relations = (List<RelationshipImpl>)query.list();
+		for (RelationshipImpl relation : relations) {
+			session.delete(relation);
+		}
 		session.delete(person);
+		tx.commit();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<RelationshipImpl> getRelationshipList(Person person) {
+		Query query = session.createQuery("select r from RelationshipImpl r where r.person = :person");
+		query.setParameter("person", person);
+		List<?> results = query.list();
+		return (List<RelationshipImpl>)results;
+	}
+
+	public RelationshipImpl createRelationship(String groupId, Person person, Person target) {
+		Transaction tx = session.beginTransaction();
+		RelationshipImpl relationship = new RelationshipImpl();
+		relationship.setGroupId(groupId);
+		relationship.setPerson(person);
+		relationship.setTarget(target);
+		session.save(relationship);
+		tx.commit();
+		return relationship;
+	}
+
+	public void deleteRelationship(RelationshipImpl relation) {
+		Transaction tx = session.beginTransaction();
+		session.delete(relation);
 		tx.commit();
 	}
 
