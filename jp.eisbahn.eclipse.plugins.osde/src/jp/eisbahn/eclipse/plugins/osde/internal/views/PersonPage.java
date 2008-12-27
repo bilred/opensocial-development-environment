@@ -61,7 +61,7 @@ class PersonPage implements IDetailsPage {
 		parent.setLayout(layout);
 		FormToolkit toolkit = managedForm.getToolkit();
 		// Basic
-		Section basicSection = toolkit.createSection(parent, Section.TITLE_BAR);
+		Section basicSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
 		basicSection.setText("Basic");
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		basicSection.setLayoutData(layoutData);
