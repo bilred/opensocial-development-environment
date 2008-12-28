@@ -4,6 +4,7 @@ import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
 import org.apache.shindig.social.opensocial.model.Person;
@@ -26,23 +27,10 @@ import org.eclipse.ui.part.ViewPart;
 public class PersonView extends ViewPart {
 	
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView";
-
-	private Action connectAction;
-	private Action disconnectAction;
 	
+	private LaunchShindigAction launchShindigAction;
+
 	private PeopleBlock block;
-
-	private final class DisconnectAction extends Action {
-		public void run() {
-			
-		}
-	}
-	
-	private class ConnectAction extends Action {
-		public void run() {
-			Activator.getDefault().connect(getSite().getWorkbenchWindow());
-		}
-	}
 
 	public PersonView() {
 	}
@@ -77,34 +65,25 @@ public class PersonView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(connectAction);
-		manager.add(new Separator());
-		manager.add(disconnectAction);
+		manager.add(launchShindigAction);
+//		manager.add(new Separator());
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		manager.add(connectAction);
-		manager.add(disconnectAction);
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+		manager.add(launchShindigAction);
+//		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(connectAction);
-		manager.add(disconnectAction);
+		manager.add(launchShindigAction);
 	}
 
 	private void makeActions() {
-		connectAction = new ConnectAction();
-		connectAction.setText("Connect");
-		connectAction.setToolTipText("Connect to Shindig Database");
-		connectAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		//
-		disconnectAction = new DisconnectAction();
-		disconnectAction.setText("Disconnect");
-		disconnectAction.setToolTipText("Disconnect to Shindig Database");
-		disconnectAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		launchShindigAction = new LaunchShindigAction(this);
+		launchShindigAction.setText("Launch Shindig");
+		launchShindigAction.setToolTipText("Launch Apache Shindig server.");
+		launchShindigAction.setImageDescriptor(
+				Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_component.gif"));
 	}
 
 	public void setFocus() {

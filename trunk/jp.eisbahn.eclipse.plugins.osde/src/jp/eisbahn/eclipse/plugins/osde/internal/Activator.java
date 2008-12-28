@@ -139,6 +139,7 @@ public class Activator extends AbstractUIPlugin {
 	private void registIcon() {
 		ImageRegistry registry = getImageRegistry();
 		registIcon(registry, "icons/icon_user.gif");
+		registIcon(registry, "icons/icon_component.gif");
 	}
 	
     public ImageDescriptor registIcon(ImageRegistry registry, String iconPath) {
