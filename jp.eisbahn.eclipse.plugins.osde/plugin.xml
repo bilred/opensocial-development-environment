@@ -11,7 +11,7 @@
           id="jp.eisbahn.eclipse.plugins.osde.newWizards.NewOpenSocialProjectWizard"
           name="OpenSocial Project"
           category="jp.eisbahn.eclipse.plugins.osde.newWizards"
-          icon="./icons/sample.gif"
+          icon="./icons/opensocial.gif"
           project="true"
           class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.NewOpenSocialProjectResourceWizard">
           <description>
@@ -27,7 +27,7 @@
             class="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor"
             default="false"
             extensions="xml"
-            icon="icons/page_tag_blue.gif"
+            icon="icons/opensocial.gif"
             id="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor"
             name="Gadget XML Editor">
          <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetXml" />
@@ -90,6 +90,7 @@
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.launchShindigAction"
+               icon="icons/icon_component.gif"
                label="Launch Apache Shindig"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
             <enablement>
@@ -104,6 +105,7 @@
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction"
                label="Launch Web Server"
+               icon="icons/arrow_right.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
             <enablement>
                <objectState
@@ -129,6 +131,21 @@
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.runAction"
                label="Run this application"
+               icon="icons/action_go.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
+               </objectState>
+            </enablement>
+         </action>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchWebServerAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction2"
+               label="Launch Web Server"
+               icon="icons/arrow_right.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
             <enablement>
                <objectState
@@ -159,7 +176,7 @@
       <view
             category="jp.eisbahn.eclipse.plugins.osde"
             class="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
-            icon="icons/page_boy.gif"
+            icon="icons/opensocial.gif"
             id="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
             name="People">
       </view>

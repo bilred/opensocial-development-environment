@@ -213,9 +213,9 @@ public class WizardNewViewPage extends WizardPage {
 			layout.numColumns = 1;
 			htmlGroup.setLayout(layout);
 			htmlGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			createJavaScriptFileButton = createCheckbox(htmlGroup, "Create the external JavaScript file for this canvas view.");
+			createJavaScriptFileButton = createCheckbox(htmlGroup, "Create the external JavaScript file for this view.");
 			createJavaScriptFileButton.addListener(SWT.Selection, modifyListener);
-			initFunctionButton = createCheckbox(htmlGroup, "Generate the init() function that is called when this canvas view is loaded.");
+			initFunctionButton = createCheckbox(htmlGroup, "Generate the init() function that is called when this view is loaded.");
 			initFunctionButton.addListener(SWT.Selection, modifyListener);
 			createJavaScriptFileButton.setEnabled(false);
 			initFunctionButton.setEnabled(false);

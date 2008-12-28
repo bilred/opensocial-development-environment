@@ -1,5 +1,6 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -83,6 +84,8 @@ public class LaunchWebServerAction implements IObjectActionDelegate {
 			Object element = structured.getFirstElement();
 			if (element instanceof IProject) {
 				project = (IProject)element;
+			} else if (element instanceof IFile) {
+				project = ((IFile)element).getProject();
 			}
 		}
 	}
