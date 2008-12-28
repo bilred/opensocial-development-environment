@@ -26,10 +26,10 @@
             class="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor"
             default="false"
             extensions="xml"
-            icon="icons/sample.gif"
+            icon="icons/page_tag_blue.gif"
             id="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor"
             name="Gadget XML Editor">
-         <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.editors.gadgetXml" />
+         <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetXml" />
       </editor>
    </extension>
    <extension

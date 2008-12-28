@@ -35,6 +35,7 @@ public class GadgetXmlEditor extends FormEditor {
 			context = JAXBContext.newInstance(Module.class);
 			Unmarshaller um = context.createUnmarshaller();
 			module = (Module)um.unmarshal(file.getContents());
+			setPartName(file.getName());
 		} catch (JAXBException e) {
 			// TODO 例外処理
 			throw new PartInitException(e.getErrorCode(), e);
@@ -42,7 +43,6 @@ public class GadgetXmlEditor extends FormEditor {
 			// TODO 例外処理
 			throw new PartInitException(e.getMessage(), e);
 		}
-		
 	}
 
 	@Override
