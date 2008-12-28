@@ -75,7 +75,7 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		form.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
-		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
+		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
 		section.setText("Attributes");
 		section.setDescription("These fields describe this OpenSocial application.");
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
