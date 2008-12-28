@@ -80,7 +80,7 @@ public class PersonView extends ViewPart {
 
 	private void makeActions() {
 		launchShindigAction = new LaunchShindigAction(this);
-		launchShindigAction.setText("Launch Shindig");
+		launchShindigAction.setText("Launch Apache Shindig");
 		launchShindigAction.setToolTipText("Launch Apache Shindig server.");
 		launchShindigAction.setImageDescriptor(
 				Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_component.gif"));
