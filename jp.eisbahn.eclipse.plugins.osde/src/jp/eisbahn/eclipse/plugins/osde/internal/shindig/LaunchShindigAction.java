@@ -10,6 +10,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
@@ -17,7 +18,7 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-public class LaunchShindigAction implements IObjectActionDelegate {
+public class LaunchShindigAction extends Action implements IObjectActionDelegate {
 
 	private Shell shell;
 	private IWorkbenchPart targetPart;
@@ -28,6 +29,12 @@ public class LaunchShindigAction implements IObjectActionDelegate {
 	public LaunchShindigAction() {
 		super();
 	}
+	
+	public LaunchShindigAction(IWorkbenchPart targetPart) {
+		super();
+		shell = targetPart.getSite().getShell();
+		this.targetPart = targetPart;
+	}
 
 	/**
 	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
@@ -35,6 +42,14 @@ public class LaunchShindigAction implements IObjectActionDelegate {
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		shell = targetPart.getSite().getShell();
 		this.targetPart = targetPart;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.Action#run()
+	 */
+	@Override
+	public void run() {
+		run(null);
 	}
 
 	/**
