@@ -20,6 +20,7 @@
            <selection class="org.eclipse.core.resources.IResource"/>
       </wizard> 
    </extension>
+   
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -32,6 +33,7 @@
          <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetXml" />
       </editor>
    </extension>
+   
    <extension
          point="org.eclipse.core.runtime.contentTypes">
       <content-type
@@ -42,6 +44,7 @@
             name="Gadget XML File"
             priority="high" />
    </extension>
+   
    <extension
          id="osdeNature"
          point="org.eclipse.core.resources.natures"
@@ -50,6 +53,26 @@
          <run class="jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature" />
       </runtime>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            lightweight="true"
+            location="TOP_RIGHT"
+            adaptable="true"
+            label="OpenSocial Project"
+            icon="icons/person_small.gif"
+            state="true"
+            id="jp.eisbahn.eclipse.plugins.osde.OpenSocialProjectDecorator">
+         <enablement>
+            <objectState
+                  name="nature"
+                  value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
+            </objectState>
+         </enablement>
+      </decorator>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -116,6 +139,7 @@
          </action>
       </objectContribution>
    </extension>
+   
    <extension
          id="gadgetBuilder"
          point="org.eclipse.core.resources.builders">
@@ -125,6 +149,7 @@
          </run>
       </builder>
    </extension>
+   
    <extension
          point="org.eclipse.ui.views">
       <category
