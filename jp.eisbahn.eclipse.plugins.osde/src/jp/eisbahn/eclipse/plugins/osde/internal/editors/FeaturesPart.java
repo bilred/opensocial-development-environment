@@ -87,7 +87,7 @@ public class FeaturesPart extends AbstractFormPart {
 		ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
-		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
+		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.TWISTIE);
 		section.setText("Features");
 		section.setDescription("The checked features will be used in your application.");
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
