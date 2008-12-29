@@ -74,7 +74,8 @@ public class RunAction implements IObjectActionDelegate {
 				String viewer = dialog.getViewer();
 				String owner = dialog.getOwner();
 				String width = dialog.getWidth();
-				Job job = new LaunchApplicationJob("Running application", viewer, owner, view, width);
+				String appId = appInfo.getAppId();
+				Job job = new LaunchApplicationJob("Running application", viewer, owner, view, width, appId);
 				job.setUser(true);
 				job.schedule();
 			}
@@ -106,13 +107,16 @@ public class RunAction implements IObjectActionDelegate {
 		private String owner;
 		private String view;
 		private String width;
+		private String appId;
 
-		private LaunchApplicationJob(String name, String viewer, String owner, String view, String width) {
+		private LaunchApplicationJob(
+				String name, String viewer, String owner, String view, String width, String appId) {
 			super(name);
 			this.viewer = viewer;
 			this.owner = owner;
 			this.view = view;
 			this.width = width;
+			this.appId = appId;
 		}
 
 		@Override
@@ -125,7 +129,8 @@ public class RunAction implements IObjectActionDelegate {
 						+ "&view=" + view
 						+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
 						+ "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
-						+ "&width=" + URLEncoder.encode(width, "UTF-8");
+						+ "&width=" + URLEncoder.encode(width, "UTF-8")
+						+ "&appId=" + URLEncoder.encode(appId, "UTF-8");
 				shell.getDisplay().syncExec(new Runnable() {
 					public void run() {
 						try {
