@@ -42,4 +42,16 @@ public class Gadgets {
 		}
 	}
 	
+	public static String toHexString(byte[] arr) {
+        StringBuffer buff = new StringBuffer(arr.length * 2);
+        for (int i = 0; i < arr.length; i++) {
+            String b = Integer.toHexString(arr[i] & 0xff);
+            if (b.length() == 1) {
+                buff.append("0");
+            }
+            buff.append(b);
+        }
+        return buff.toString();
+    }
+	
 }
