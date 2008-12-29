@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationCreator;
@@ -22,9 +23,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -52,6 +51,8 @@ public class Activator extends AbstractUIPlugin {
 
 	private SessionFactory sessionFactory;
 	private PersonService personService;
+	private ApplicationService applicationService;
+	private Session session;
 
 	/**
 	 * The constructor
@@ -83,9 +84,10 @@ public class Activator extends AbstractUIPlugin {
 		(new DatabaseLaunchConfigurationCreator()).delete(getStatusMonitor());
 		plugin = null;
 		disposeColors();
-		personService.closeSession();
+		session.close();
 		sessionFactory.close();
 		personService = null;
+		applicationService = null;
 		sessionFactory = null;
 		super.stop(context);
 	}
@@ -199,10 +201,11 @@ public class Activator extends AbstractUIPlugin {
 				sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
 				monitor.worked(1);
 				monitor.subTask("Opening Hibernate session.");
-				Session session = sessionFactory.openSession();
+				session = sessionFactory.openSession();
 				monitor.worked(1);
-				monitor.subTask("Creating PersonService.");
+				monitor.subTask("Creating services.");
 				personService = new PersonService(session);
+				applicationService = new ApplicationService(session);
 				monitor.worked(1);
 				monitor.subTask("Notify each view about connecting with database.");
 				window.getShell().getDisplay().syncExec(new Runnable() {
@@ -227,6 +230,14 @@ public class Activator extends AbstractUIPlugin {
 	public PersonService getPersonService() throws ConnectionException {
 		if (personService != null) {
 			return personService;
+		} else {
+			throw new ConnectionException("Not connect yet.");
+		}
+	}
+
+	public ApplicationService getApplicationService() throws ConnectionException {
+		if (applicationService != null) {
+			return applicationService;
 		} else {
 			throw new ConnectionException("Not connect yet.");
 		}

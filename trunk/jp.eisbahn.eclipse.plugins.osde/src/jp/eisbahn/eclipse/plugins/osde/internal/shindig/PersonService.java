@@ -18,12 +18,6 @@ public class PersonService {
 		this.session = session;
 	}
 
-	public void closeSession() {
-		if (session != null && session.isOpen()) {
-			session.close();
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<Person> getPeople() {
 		Query query = session.createQuery("select p from PersonImpl p");
