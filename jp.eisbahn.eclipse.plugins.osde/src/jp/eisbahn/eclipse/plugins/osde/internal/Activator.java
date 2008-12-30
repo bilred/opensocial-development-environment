@@ -6,10 +6,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.AppDataService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationCreator;
+import jp.eisbahn.eclipse.plugins.osde.internal.views.AppDataView;
 import jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +54,7 @@ public class Activator extends AbstractUIPlugin {
 	private SessionFactory sessionFactory;
 	private PersonService personService;
 	private ApplicationService applicationService;
+	private AppDataService appDataService;
 	private Session session;
 
 	/**
@@ -88,6 +91,7 @@ public class Activator extends AbstractUIPlugin {
 		sessionFactory.close();
 		personService = null;
 		applicationService = null;
+		appDataService = null;
 		sessionFactory = null;
 		super.stop(context);
 	}
@@ -142,6 +146,7 @@ public class Activator extends AbstractUIPlugin {
 		ImageRegistry registry = getImageRegistry();
 		registIcon(registry, "icons/icon_user.gif");
 		registIcon(registry, "icons/icon_component.gif");
+		registIcon(registry, "icons/action_refresh.gif");
 	}
 	
     public ImageDescriptor registIcon(ImageRegistry registry, String iconPath) {
@@ -206,6 +211,7 @@ public class Activator extends AbstractUIPlugin {
 				monitor.subTask("Creating services.");
 				personService = new PersonService(session);
 				applicationService = new ApplicationService(session);
+				appDataService = new AppDataService(session);
 				monitor.worked(1);
 				monitor.subTask("Notify each view about connecting with database.");
 				window.getShell().getDisplay().syncExec(new Runnable() {
@@ -213,6 +219,8 @@ public class Activator extends AbstractUIPlugin {
 						try {
 							PersonView personView = (PersonView)window.getActivePage().showView(PersonView.ID);
 							personView.connectedDatabase();
+							AppDataView appDataView = (AppDataView)window.getActivePage().showView(AppDataView.ID);
+							appDataView.connectedDatabase();
 						} catch (PartInitException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -238,6 +246,14 @@ public class Activator extends AbstractUIPlugin {
 	public ApplicationService getApplicationService() throws ConnectionException {
 		if (applicationService != null) {
 			return applicationService;
+		} else {
+			throw new ConnectionException("Not connect yet.");
+		}
+	}
+
+	public AppDataService getAppDataService() throws ConnectionException {
+		if (appDataService != null) {
+			return appDataService;
 		} else {
 			throw new ConnectionException("Not connect yet.");
 		}
