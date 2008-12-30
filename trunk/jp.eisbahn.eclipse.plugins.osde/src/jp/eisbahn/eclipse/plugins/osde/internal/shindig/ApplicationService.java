@@ -1,5 +1,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
+import java.util.List;
+
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
@@ -32,6 +34,11 @@ public class ApplicationService {
 		application.setTitle(module.getModulePrefs().getTitle());
 		session.saveOrUpdate(application);
 		tx.commit();
+	}
+	
+	public List<ApplicationImpl> getApplications() {
+		Query query = session.createQuery("select a from ApplicationImpl a order by a.id");
+		return (List<ApplicationImpl>)query.list();
 	}
 
 }
