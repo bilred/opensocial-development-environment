@@ -98,31 +98,30 @@ public class FeaturesPart extends AbstractFormPart {
 		sectionPanel.setLayout(layout);
 		section.setClient(sectionPanel);
 		sectionPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		Button opensocial08Button = createCheckbox(sectionPanel, "OpenSocial v0.8");
+		Button opensocial08Button = createCheckbox(sectionPanel, "OpenSocial v0.8", toolkit);
 		buttonMap.put(FeatureName.OPENSOCIAL_0_8, opensocial08Button);
-		Button opensocial07Button = createCheckbox(sectionPanel, "OpenSocial v0.7");
+		Button opensocial07Button = createCheckbox(sectionPanel, "OpenSocial v0.7", toolkit);
 		buttonMap.put(FeatureName.OPENSOCIAL_0_7, opensocial07Button);
-		Button pubsubButton = createCheckbox(sectionPanel, "PubSub");
+		Button pubsubButton = createCheckbox(sectionPanel, "PubSub", toolkit);
 		buttonMap.put(FeatureName.PUBSUB, pubsubButton);
-		Button viewsButton = createCheckbox(sectionPanel, "Views");
+		Button viewsButton = createCheckbox(sectionPanel, "Views", toolkit);
 		buttonMap.put(FeatureName.VIEWS, viewsButton);
-		Button flashButton = createCheckbox(sectionPanel, "Flash");
+		Button flashButton = createCheckbox(sectionPanel, "Flash", toolkit);
 		buttonMap.put(FeatureName.FLASH, flashButton);
-		Button skinsButton = createCheckbox(sectionPanel, "Skins");
+		Button skinsButton = createCheckbox(sectionPanel, "Skins", toolkit);
 		buttonMap.put(FeatureName.SKINS, skinsButton);
-		Button dynamicHeightButton = createCheckbox(sectionPanel, "Dynamic Height");
+		Button dynamicHeightButton = createCheckbox(sectionPanel, "Dynamic Height", toolkit);
 		buttonMap.put(FeatureName.DYNAMIC_HEIGHT, dynamicHeightButton);
-		Button setTitleButton = createCheckbox(sectionPanel, "Set Title");
+		Button setTitleButton = createCheckbox(sectionPanel, "Set Title", toolkit);
 		buttonMap.put(FeatureName.SET_TITLE, setTitleButton);
-		Button miniMessageButton = createCheckbox(sectionPanel, "Mini Message");
+		Button miniMessageButton = createCheckbox(sectionPanel, "Mini Message", toolkit);
 		buttonMap.put(FeatureName.MINI_MESSAGE, miniMessageButton);
-		Button tabsButton = createCheckbox(sectionPanel, "Tabs");
+		Button tabsButton = createCheckbox(sectionPanel, "Tabs", toolkit);
 		buttonMap.put(FeatureName.TABS, tabsButton);
 	}
 	
-	private Button createCheckbox(Composite parent, String text) {
-		Button button = new Button(parent, SWT.CHECK);
-		button.setText(text);
+	private Button createCheckbox(Composite parent, String text, FormToolkit toolkit) {
+		Button button = toolkit.createButton(parent, text, SWT.CHECK);
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		button.setFont(parent.getFont());
 		button.addSelectionListener(selectionListener);

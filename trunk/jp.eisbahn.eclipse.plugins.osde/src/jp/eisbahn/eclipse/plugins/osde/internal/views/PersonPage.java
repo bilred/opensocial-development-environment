@@ -90,13 +90,13 @@ public class PersonPage implements IDetailsPage {
 		idLabel.setLayoutData(layoutData);
 		//
 		toolkit.createLabel(basicPane, "Display name:");
-		displayNameText = toolkit.createText(basicPane, "");
+		displayNameText = toolkit.createText(basicPane, "", SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		displayNameText.setLayoutData(layoutData);
 		displayNameText.addFocusListener(basicValueChangeListener);
 		//
 		toolkit.createLabel(basicPane, "About me:");
-		aboutMeText = toolkit.createText(basicPane, "", SWT.MULTI);
+		aboutMeText = toolkit.createText(basicPane, "", SWT.MULTI | SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		layoutData.heightHint = 50;
@@ -104,19 +104,19 @@ public class PersonPage implements IDetailsPage {
 		aboutMeText.addFocusListener(basicValueChangeListener);
 		//
 		toolkit.createLabel(basicPane, "Age:");
-		ageText = toolkit.createText(basicPane, "");
+		ageText = toolkit.createText(basicPane, "", SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		ageText.setLayoutData(layoutData);
 		ageText.addFocusListener(basicValueChangeListener);
 		//
 		toolkit.createLabel(basicPane, "Birthday:");
-		birthdayText = new DateTime(basicPane, SWT.DATE);
+		birthdayText = new DateTime(basicPane, SWT.DATE | SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		birthdayText.setLayoutData(layoutData);
 		birthdayText.addFocusListener(basicValueChangeListener);
 		//
 		toolkit.createLabel(basicPane, "Thumbnail:");
-		thumbnailUrlText = toolkit.createText(basicPane, "");
+		thumbnailUrlText = toolkit.createText(basicPane, "", SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		thumbnailUrlText.setLayoutData(layoutData);
