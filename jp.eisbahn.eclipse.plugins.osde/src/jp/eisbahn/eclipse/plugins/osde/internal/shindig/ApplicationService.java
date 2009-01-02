@@ -40,5 +40,12 @@ public class ApplicationService {
 		Query query = session.createQuery("select a from ApplicationImpl a order by a.id");
 		return (List<ApplicationImpl>)query.list();
 	}
+	
+	public ApplicationImpl getApplication(String appId) {
+		Query query = session.createQuery("select a from ApplicationImpl a where a.id = :id");
+		query.setParameter("id", appId);
+		ApplicationImpl application = (ApplicationImpl)query.uniqueResult();
+		return application;
+	}
 
 }
