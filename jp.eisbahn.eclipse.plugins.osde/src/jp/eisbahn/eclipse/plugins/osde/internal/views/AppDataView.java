@@ -136,7 +136,9 @@ public class AppDataView extends AbstractView {
 				valueText.setText(value);
 			}
 		});
-		valueText = new Text(sashForm, SWT.MULTI | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
+		valueText = new Text(sashForm, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		valueText.setEditable(false);
+		valueText.setBackground(toolkit.getColors().getBackground());
 		sashForm.setWeights(new int[] {40, 60});
 	}
 	

@@ -40,12 +40,12 @@ public class AddRelationshipDialog extends TitleAreaDialog {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		panel.setLayoutData(layoutData);
 		//
 		Label label = new Label(panel, SWT.NONE);
 		label.setText("Group ID:");
-		groupIdCombo = new Combo(panel, SWT.SIMPLE);
+		groupIdCombo = new Combo(panel, SWT.DROP_DOWN);
 		groupIdCombo.add("friends");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		groupIdCombo.setLayoutData(layoutData);

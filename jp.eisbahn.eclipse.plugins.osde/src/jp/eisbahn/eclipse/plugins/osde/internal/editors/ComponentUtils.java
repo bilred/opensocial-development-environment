@@ -15,7 +15,7 @@ public class ComponentUtils {
 		Label label = toolkit.createLabel(parent, text);
 		GridData layoutData = new GridData();
 		layoutData.verticalAlignment = SWT.BEGINNING;
-		layoutData.verticalIndent = 7;
+		layoutData.verticalIndent = 4;
 		label.setLayoutData(layoutData);
 		return label;
 	}
@@ -25,7 +25,7 @@ public class ComponentUtils {
 	}
 	
 	public static Text createText(Composite parent, FormToolkit toolkit, int span, Listener modifyListener) {
-		Text text = toolkit.createText(parent, "");
+		Text text = toolkit.createText(parent, "", SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = span;
 		text.setLayoutData(layoutData);
