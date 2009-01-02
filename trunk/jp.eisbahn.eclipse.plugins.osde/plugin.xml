@@ -187,5 +187,12 @@
             id="jp.eisbahn.eclipse.plugins.osde.internal.views.AppDataView"
             name="AppData">
       </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.views.ActivitiesView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.ActivitiesView"
+            name="Activities">
+      </view>
    </extension>
 </plugin>

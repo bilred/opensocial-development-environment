@@ -46,7 +46,7 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-class PersonPage implements IDetailsPage {
+public class PersonPage implements IDetailsPage {
 	
 	private IManagedForm managedForm;
 	

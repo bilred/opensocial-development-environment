@@ -1,5 +1,9 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class Gadgets {
 
 	public static String trim(String source) {
@@ -26,6 +30,28 @@ public class Gadgets {
 		} else {
 			return value.toString();
 		}
+	}
+	
+	public static String string(Float value) {
+		if (value == null) {
+			return "";
+		} else {
+			return value.toString();
+		}
+	}
+	
+	public static String string(Date value) {
+		if (value == null) {
+			return "";
+		} else {
+			return new SimpleDateFormat().format(value);
+		}
+	}
+	
+	public static String stringFromTimeMillis(long value) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(value);
+		return new SimpleDateFormat().format(cal.getTime());
 	}
 	
 	public static Integer toInteger(String value) {
