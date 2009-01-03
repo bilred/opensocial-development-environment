@@ -1,8 +1,5 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.views;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-import jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction;
-
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -13,8 +10,6 @@ import org.eclipse.ui.part.ViewPart;
 
 public abstract class AbstractView extends ViewPart {
 	
-	private LaunchShindigAction launchShindigAction;
-
 	protected void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
@@ -41,25 +36,17 @@ public abstract class AbstractView extends ViewPart {
 	}
 
 	protected void fillLocalPullDown(IMenuManager manager) {
-		manager.add(launchShindigAction);
 //		manager.add(new Separator());
 	}
 
 	protected void fillContextMenu(IMenuManager manager) {
-		manager.add(launchShindigAction);
 //		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	protected void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(launchShindigAction);
 	}
 
 	protected void makeActions() {
-		launchShindigAction = new LaunchShindigAction(this);
-		launchShindigAction.setText("Launch Apache Shindig");
-		launchShindigAction.setToolTipText("Launch Apache Shindig server.");
-		launchShindigAction.setImageDescriptor(
-				Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_component.gif"));
 	}
 
 }
