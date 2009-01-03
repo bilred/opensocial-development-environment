@@ -11,27 +11,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Spinner;
 
-/**
- * アプリケーションの実行サーバに関するウィザードページです。
- * @author yoichiro
- */
 public class WizardServerPage extends WizardPage {
 
 	private Spinner portSpinner;
 
-	/**
-	 * このオブジェクトが生成されるときに呼び出されます。
-	 * @param pageName ページの名前
-	 */
 	public WizardServerPage(String pageName) {
 		super(pageName);
 		setPageComplete(false);
 	}
 
-	/**
-	 * このウィザードページのUIを構築します。
-	 * @param parent 親のコンテナ
-	 */
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NULL);
 		initializeDialogUnits(parent);
@@ -47,10 +35,6 @@ public class WizardServerPage extends WizardPage {
 		Dialog.applyDialogFont(composite);
 	}
 
-	/**
-	 * ModulePrefsにて定義される情報の入力UIを構築します。
-	 * @param parent 親のコンテナ
-	 */
 	private void createModulePrefsControls(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -78,10 +62,6 @@ public class WizardServerPage extends WizardPage {
 		return true;
 	}
 
-	/**
-	 * 入力された情報を持つオブジェクトを返します。
-	 * @return 入力された情報を持つオブジェクト
-	 */
 	public ServerData getInputedData() {
 		ServerData data = new ServerData();
 		data.setLocalPort(portSpinner.getSelection());
