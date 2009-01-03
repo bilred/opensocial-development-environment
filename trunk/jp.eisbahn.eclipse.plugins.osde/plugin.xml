@@ -219,4 +219,21 @@
          </action>
       </actionSet>
    </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="jp.eisbahn.eclipse.plugins.osde.export"
+            name="OpenSocial">
+      </category>
+      <wizard
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.OpenSocialApplicationExportWizard"
+            id="jp.eisbahn.eclipse.plugins.osde.ExportWizard"
+            category="jp.eisbahn.eclipse.plugins.osde.export"
+            icon="icons/opensocial.gif"
+            name="OpenSocial application">
+         <description>
+            Export the selected OpenSocial application.
+         </description>
+      </wizard>
+   </extension>
 </plugin>
