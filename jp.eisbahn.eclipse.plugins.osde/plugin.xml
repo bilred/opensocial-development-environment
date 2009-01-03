@@ -195,4 +195,28 @@
             name="Activities">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="jp.eisbahn.eclipse.plugins.osde.actionSet"
+            label="OpenSocial"
+            visible="true">
+         <menu
+               id="opensocialMenu"
+               label="&amp;OpenSocial">
+            <separator
+                  name="opensocialGroup">
+            </separator>
+         </menu>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
+               icon="icons/opensocial.gif"
+               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
+               label="Launch Apache &amp;Shindig"
+               menubarPath="opensocialMenu/opensocialGroup"
+               toolbarPath="opensocialGroup"
+               tooltip="Launch Apache Sindig server.">
+         </action>
+      </actionSet>
+   </extension>
 </plugin>
