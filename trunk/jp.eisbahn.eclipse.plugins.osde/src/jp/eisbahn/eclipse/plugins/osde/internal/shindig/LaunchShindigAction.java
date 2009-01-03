@@ -17,8 +17,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class LaunchShindigAction extends Action implements IObjectActionDelegate {
+public class LaunchShindigAction extends Action implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
 	private Shell shell;
 	private IWorkbenchPart targetPart;
@@ -106,6 +108,14 @@ public class LaunchShindigAction extends Action implements IObjectActionDelegate
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
+	}
+
+	public void dispose() {
+	}
+
+	public void init(IWorkbenchWindow window) {
+		targetPart = window.getActivePage().getActivePart();
+		shell = targetPart.getSite().getShell();
 	}
 
 }
