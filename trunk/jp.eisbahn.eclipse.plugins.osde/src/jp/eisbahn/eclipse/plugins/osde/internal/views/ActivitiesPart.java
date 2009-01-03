@@ -99,6 +99,7 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
 	}
 
 	public void setPeople(List<Person> people) {
+		peopleCombo.removeAll();
 		for (Person person : people) {
 			peopleCombo.add(person.getId());
 			peopleCombo.setData(person.getId(), person);
