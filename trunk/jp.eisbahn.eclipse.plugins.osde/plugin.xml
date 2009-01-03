@@ -90,7 +90,7 @@
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.launchShindigAction"
-               icon="icons/icon_component.gif"
+               icon="icons/opensocial.gif"
                label="Launch Apache Shindig"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
             <enablement>
