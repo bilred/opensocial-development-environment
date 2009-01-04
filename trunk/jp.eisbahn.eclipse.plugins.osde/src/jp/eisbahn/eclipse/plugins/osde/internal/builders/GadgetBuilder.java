@@ -13,6 +13,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 
 import org.eclipse.core.resources.IContainer;
@@ -86,8 +87,8 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 						IPath parent = orgFile.getParent().getProjectRelativePath();
 						IFolder destFolder = project.getFolder(targetDirectory.getProjectRelativePath() + "/" + parent);
 						IFile destFile = destFolder.getFile(orgFile.getName());
-						orgFile.copy(destFile.getProjectRelativePath(), false, monitor);
-						if (isGadgetXml(destFile)) {
+						orgFile.copy(destFile.getFullPath(), false, monitor);
+						if (OpenSocialUtil.isGadgetXml(destFile)) {
 							try {
 								JAXBContext context = JAXBContext.newInstance(Module.class);
 								Unmarshaller um = context.createUnmarshaller();
@@ -137,15 +138,4 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 		});
 	}
 	
-	private boolean isGadgetXml(IFile file) {
-		IContentTypeManager manager = Platform.getContentTypeManager();
-		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
-		for (IContentType contentType : contentTypes) {
-			if (contentType.getId().equals("jp.eisbahn.eclipse.plugins.osde.gadgetXml")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 }
