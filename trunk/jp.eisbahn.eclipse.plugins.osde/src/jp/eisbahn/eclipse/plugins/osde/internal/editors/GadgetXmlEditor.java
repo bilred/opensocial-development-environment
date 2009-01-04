@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 
 import java.io.ByteArrayInputStream;
@@ -37,10 +54,8 @@ public class GadgetXmlEditor extends FormEditor {
 			module = (Module)um.unmarshal(file.getContents());
 			setPartName(file.getName());
 		} catch (JAXBException e) {
-			// TODO 例外処理
 			throw new PartInitException(e.getErrorCode(), e);
 		} catch (CoreException e) {
-			// TODO 例外処理
 			throw new PartInitException(e.getMessage(), e);
 		}
 	}
@@ -48,17 +63,14 @@ public class GadgetXmlEditor extends FormEditor {
 	@Override
 	protected void addPages() {
 		try {
-			// ModulePrefs関連のページを追加
 			ModulePrefsPage modulePrefsPage = new ModulePrefsPage(this, module);
 			addPage(modulePrefsPage);
-			// 各ビューのページを追加
 			ViewName[] viewNames = ViewName.values();
 			for (ViewName viewName : viewNames) {
 				ContentPage contentPage = new ContentPage(this, module, viewName);
 				addPage(contentPage);
 			}
 		} catch(PartInitException e) {
-			// TODO あとで修正
 			throw new IllegalStateException(e);
 		}
 	}
@@ -75,10 +87,8 @@ public class GadgetXmlEditor extends FormEditor {
 			file.setContents(in, true, false, monitor);
 			editorDirtyStateChanged();
 		} catch (JAXBException e) {
-			// TODO 例外処理
 			throw new IllegalStateException(e);
 		} catch (CoreException e) {
-			// TODO 例外処理
 			throw new IllegalStateException(e);
 		}
 		

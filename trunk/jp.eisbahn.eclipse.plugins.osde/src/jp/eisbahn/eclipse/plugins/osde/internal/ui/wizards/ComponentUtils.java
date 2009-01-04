@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
 import org.eclipse.swt.SWT;
@@ -9,11 +26,6 @@ import org.eclipse.swt.widgets.Text;
 
 public class ComponentUtils {
 
-	/**
-	 * 指定された文字列を表示するためのラベルを生成します。
-	 * @param parent ラベルを配置するコンテナ
-	 * @param text 表示文字列
-	 */
 	public static Label createLabel(Composite parent, String text) {
 		Label label = new Label(parent, SWT.NONE);
 		label.setText(text);
@@ -25,11 +37,6 @@ public class ComponentUtils {
 		return label;
 	}
 	
-	/**
-	 * 入力フィールドを生成し、その結果を返します。
-	 * @param parent 入力フィールドを配置するコンテナ
-	 * @return 生成された入力フィールド
-	 */
 	public static Text createText(Composite parent) {
 		Text text = new Text(parent, SWT.BORDER);
 		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -37,12 +44,6 @@ public class ComponentUtils {
 		return text;
 	}
 
-	/**
-	 * チェックボックスを生成し、その結果を返します。
-	 * @param parent チェックボックスを配置するコンテナ
-	 * @param text 表示文字列
-	 * @return 生成されたチェックボックス
-	 */
 	public static Button createCheckbox(Composite parent, String text) {
 		Button button = new Button(parent, SWT.CHECK);
 		button.setText(text);
@@ -51,23 +52,10 @@ public class ComponentUtils {
 		return button;
 	}
 	
-	/**
-	 * ラジオボタンを生成し、その結果を返します。
-	 * @param parent ラジオボタンを配置するコンテナ
-	 * @param text 表示文字列
-	 * @return 生成されたラジオボタン
-	 */
 	public static Button createRadio(Composite parent, String text) {
 		return createRadio(parent, text, 1);
 	}
 	
-	/**
-	 * ラジオボタンを生成し、その結果を返します。
-	 * @param parent ラジオボタンを配置するコンテナ
-	 * @param text 表示文字列
-	 * @param span このコンポーネントが占めるセル数
-	 * @return 生成されたラジオボタン
-	 */
 	public static Button createRadio(Composite parent, String text, int span) {
 		Button button = new Button(parent, SWT.RADIO);
 		button.setText(text);

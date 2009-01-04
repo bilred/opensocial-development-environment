@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createCheckbox;
@@ -31,7 +48,6 @@ public class WizardNewViewPage extends WizardPage {
 	
 	private EnumMap<ViewName, ViewSettingPart> partMap;
 	
-	/** 入力値の変更を検知するリスナオブジェクト */
 	private Listener modifyListener = new Listener() {
 		public void handleEvent(Event event) {
 			boolean valid = validatePage();
@@ -142,58 +158,30 @@ public class WizardNewViewPage extends WizardPage {
 			createViewControls(parent);
 		}
 		
-		/**
-		 * compositeを返します。
-		 * @return composite composite
-		 */
 		public Composite getComposite() {
 			return composite;
 		}
 
-		/**
-		 * htmlButtonを返します。
-		 * @return htmlButton htmlButton
-		 */
 		public Button getHtmlButton() {
 			return htmlButton;
 		}
 
-		/**
-		 * createJavaScriptFileButtonを返します。
-		 * @return createJavaScriptFileButton createJavaScriptFileButton
-		 */
 		public Button getCreateJavaScriptFileButton() {
 			return createJavaScriptFileButton;
 		}
 
-		/**
-		 * initFunctionButtonを返します。
-		 * @return initFunctionButton initFunctionButton
-		 */
 		public Button getInitFunctionButton() {
 			return initFunctionButton;
 		}
 
-		/**
-		 * urlButtonを返します。
-		 * @return urlButton urlButton
-		 */
 		public Button getUrlButton() {
 			return urlButton;
 		}
 
-		/**
-		 * hrefTextを返します。
-		 * @return hrefText hrefText
-		 */
 		public Text getHrefText() {
 			return hrefText;
 		}
 
-		/**
-		 * notSupportButtonを返します。
-		 * @return notSupportButton notSupportButton
-		 */
 		public Button getNotSupportButton() {
 			return notSupportButton;
 		}

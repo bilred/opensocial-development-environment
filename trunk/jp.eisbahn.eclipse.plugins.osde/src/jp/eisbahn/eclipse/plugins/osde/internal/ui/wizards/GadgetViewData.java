@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
 import java.io.Serializable;
@@ -18,82 +35,42 @@ public class GadgetViewData implements Serializable {
 	
 	private String href;
 
-	/**
-	 * viewNameを返します。
-	 * @return viewName viewName
-	 */
 	public ViewName getViewName() {
 		return viewName;
 	}
 
-	/**
-	 * viewNameをセットします。
-	 * @param viewName viewName
-	 */
 	public void setViewName(ViewName viewName) {
 		this.viewName = viewName;
 	}
 
-	/**
-	 * typeを返します。
-	 * @return type type
-	 */
 	public ViewType getType() {
 		return type;
 	}
 
-	/**
-	 * typeをセットします。
-	 * @param type type
-	 */
 	public void setType(ViewType type) {
 		this.type = type;
 	}
 
-	/**
-	 * createExternalJavaScriptを返します。
-	 * @return createExternalJavaScript createExternalJavaScript
-	 */
 	public boolean isCreateExternalJavaScript() {
 		return createExternalJavaScript;
 	}
 
-	/**
-	 * createExternalJavaScriptをセットします。
-	 * @param createExternalJavaScript createExternalJavaScript
-	 */
 	public void setCreateExternalJavaScript(boolean createExternalJavaScript) {
 		this.createExternalJavaScript = createExternalJavaScript;
 	}
 
-	/**
-	 * createInitFunctionを返します。
-	 * @return createInitFunction createInitFunction
-	 */
 	public boolean isCreateInitFunction() {
 		return createInitFunction;
 	}
 
-	/**
-	 * createInitFunctionをセットします。
-	 * @param createInitFunction createInitFunction
-	 */
 	public void setCreateInitFunction(boolean createInitFunction) {
 		this.createInitFunction = createInitFunction;
 	}
 
-	/**
-	 * hrefを返します。
-	 * @return href href
-	 */
 	public String getHref() {
 		return href;
 	}
 
-	/**
-	 * hrefをセットします。
-	 * @param href href
-	 */
 	public void setHref(String href) {
 		this.href = href;
 	}

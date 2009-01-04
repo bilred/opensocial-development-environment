@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createCheckbox;
@@ -16,48 +33,26 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
-/**
- * 新規に作成するOpenSocialアプリケーションの各種情報を定義するためのウィザードページです。
- * @author yoichiro
- */
 public class WizardNewGadgetXmlPage extends WizardPage {
 
-	/** Title入力フィールド */
 	private Text titleText;
-	/** Title URL入力フィールド */
 	private Text titleUrlText;
-	/** Description入力エリア */
 	private Text descriptionText;
-	/** Author入力フィールド */
 	private Text authorText;
-	/** Author Email入力フィールド */
 	private Text authorEmailText;
-	/** Screen Shot入力フィールド */
 	private Text screenshotText;
-	/** Thumbnail入力フィールド */
 	private Text thumbnailText;
-	/** opensocial-0.8チェックボックス */
 	private Button opensocial08Button;
-	/** opensocial-0.7チェックボックス */
 	private Button opensocial07Button;
-	/** PubSubチェックボックス */
 	private Button pubsubButton;
-	/** Viewsチェックボックス */
 	private Button viewsButton;
-	/** Flashチェックボックス */
 	private Button flashButton;
-	/** Skinsチェックボックス */
 	private Button skinsButton;
-	/** Dynamic Heightチェックボックス */
 	private Button dynamicHeightButton;
-	/** Set Titleチェックボックス */
 	private Button setTitleButton;
-	/** Mini Messageチェックボックス */
 	private Button miniMessageButton;
-	/** Tabsチェックボックス */
 	private Button tabsButton;
 	
-	/** 入力値の変更を検知するリスナオブジェクト */
 	private Listener modifyListener = new Listener() {
 		public void handleEvent(Event event) {
 			boolean valid = validatePage();
@@ -65,19 +60,11 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		}
 	};
 
-	/**
-	 * このオブジェクトが生成されるときに呼び出されます。
-	 * @param pageName ページの名前
-	 */
 	public WizardNewGadgetXmlPage(String pageName) {
 		super(pageName);
 		setPageComplete(false);
 	}
 
-	/**
-	 * このウィザードページのUIを構築します。
-	 * @param parent 親のコンテナ
-	 */
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NULL);
 		initializeDialogUnits(parent);
@@ -94,10 +81,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		Dialog.applyDialogFont(composite);
 	}
 
-	/**
-	 * ModulePrefsにて定義される情報の入力UIを構築します。
-	 * @param parent 親のコンテナ
-	 */
 	private void createModulePrefsControls(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -135,10 +118,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		thumbnailText = createText(infoGroup);
 	}
 	
-	/**
-	 * Featuresにて定義される情報の入力UIを構築します。
-	 * @param parent 親のコンテナ
-	 */
 	private void createFeaturesControls(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -184,10 +163,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		return true;
 	}
 
-	/**
-	 * 入力された情報を持つオブジェクトを返します。
-	 * @return 入力された情報を持つオブジェクト
-	 */
 	public GadgetXmlData getInputedData() {
 		GadgetXmlData data = new GadgetXmlData();
 		data.setAuthor(authorText.getText().trim());
