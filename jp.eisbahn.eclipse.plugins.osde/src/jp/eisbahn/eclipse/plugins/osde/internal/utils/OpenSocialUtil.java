@@ -10,6 +10,9 @@ import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 
 import com.google.gadgets.Module;
 
@@ -33,6 +36,17 @@ public class OpenSocialUtil {
 		} catch(UnsupportedEncodingException e) {
 			throw new IllegalStateException(e);
 		}
+	}
+	
+	public static boolean isGadgetXml(IFile file) {
+		IContentTypeManager manager = Platform.getContentTypeManager();
+		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
+		for (IContentType contentType : contentTypes) {
+			if (contentType.getId().equals("jp.eisbahn.eclipse.plugins.osde.gadgetXml")) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }
