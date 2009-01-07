@@ -209,6 +209,14 @@
             </separator>
          </menu>
          <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCerAction"
+               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCerAction"
+               icon="icons/icon_key.gif"
+               label="Show &amp;Public Certificate"
+               menubarPath="opensocialMenu/opensocialGroup"
+               tooltip="Show Public Certificate for OAuth.">
+         </action>
+         <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
                icon="icons/opensocial.gif"
                id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
