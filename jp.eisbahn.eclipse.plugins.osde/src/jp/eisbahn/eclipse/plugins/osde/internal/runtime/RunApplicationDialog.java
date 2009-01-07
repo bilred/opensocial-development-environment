@@ -27,12 +27,15 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 public class RunApplicationDialog extends TitleAreaDialog {
 
@@ -50,6 +53,10 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	private Combo viewers;
 
 	private Spinner widths;
+
+	private Button useExternalBrowserCheck;
+
+	private boolean useExternalBrowser;
 	
 	public RunApplicationDialog(Shell shell, List<Person> people) {
 		super(shell);
@@ -92,6 +99,8 @@ public class RunApplicationDialog extends TitleAreaDialog {
 				}
 			}
 		});
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		viewKind.setLayoutData(layoutData);
 		//
 		label = new Label(panel, SWT.NONE);
 		label.setText("Width(%):");
@@ -107,6 +116,8 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			owners.add(person.getId());
 		}
 		owners.select(0);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		owners.setLayoutData(layoutData);
 		//
 		label = new Label(panel, SWT.NONE);
 		label.setText("Viewer:");
@@ -115,6 +126,25 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			viewers.add(person.getId());
 		}
 		viewers.select(0);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		viewers.setLayoutData(layoutData);
+		//
+		Label separator = new Label(panel, SWT.SEPARATOR | SWT.HORIZONTAL);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 4;
+		separator.setLayoutData(layoutData);
+		//
+		useExternalBrowserCheck = new Button(panel, SWT.CHECK);
+		useExternalBrowserCheck.setText("Use an external Web browser.");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 4;
+		useExternalBrowserCheck.setLayoutData(layoutData);
+		//
+		IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+		if (!support.isInternalWebBrowserAvailable()) {
+			useExternalBrowserCheck.setSelection(true);
+			useExternalBrowserCheck.setEnabled(false);
+		}
 		//
 		return composite;
 	}
@@ -136,6 +166,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		viewer = viewers.getItem(viewers.getSelectionIndex());
 		owner = owners.getItem(owners.getSelectionIndex());
 		width = widths.getText();
+		useExternalBrowser = useExternalBrowserCheck.getSelection();
 		setReturnCode(OK);
 		close();
 	}
@@ -154,6 +185,10 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	
 	public String getWidth() {
 		return width;
+	}
+	
+	public boolean isUseExternalBrowser() {
+		return useExternalBrowser;
 	}
 
 }

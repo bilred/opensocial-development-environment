@@ -92,7 +92,8 @@ public class RunAction implements IObjectActionDelegate {
 				String owner = dialog.getOwner();
 				String width = dialog.getWidth();
 				String appId = appInfo.getAppId();
-				Job job = new LaunchApplicationJob("Running application", viewer, owner, view, width, appId);
+				boolean useExternalBrowser = dialog.isUseExternalBrowser();
+				Job job = new LaunchApplicationJob("Running application", viewer, owner, view, width, appId, useExternalBrowser);
 				job.setUser(true);
 				job.schedule();
 			}
@@ -125,15 +126,18 @@ public class RunAction implements IObjectActionDelegate {
 		private String view;
 		private String width;
 		private String appId;
+		private boolean useExternalBrowser;
 
 		private LaunchApplicationJob(
-				String name, String viewer, String owner, String view, String width, String appId) {
+				String name, String viewer, String owner, String view,
+				String width, String appId, boolean useExternalBrwoser) {
 			super(name);
 			this.viewer = viewer;
 			this.owner = owner;
 			this.view = view;
 			this.width = width;
 			this.appId = appId;
+			this.useExternalBrowser = useExternalBrwoser;
 		}
 
 		@Override
@@ -152,14 +156,17 @@ public class RunAction implements IObjectActionDelegate {
 					public void run() {
 						try {
 							IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-							if (support.isInternalWebBrowserAvailable()) {
-								IWebBrowser browser = support.createBrowser(
+							IWebBrowser browser;
+							if (!useExternalBrowser) {
+								browser = support.createBrowser(
 										IWorkbenchBrowserSupport.LOCATION_BAR 
 											| IWorkbenchBrowserSupport.NAVIGATION_BAR
 											| IWorkbenchBrowserSupport.AS_EDITOR,
 										url, project.getName(), project.getName());
-								browser.openURL(new URL(url));
+							} else {
+								browser = support.getExternalBrowser();
 							}
+							browser.openURL(new URL(url));
 						} catch (MalformedURLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
