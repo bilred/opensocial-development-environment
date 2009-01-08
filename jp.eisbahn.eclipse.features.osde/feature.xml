@@ -2,7 +2,7 @@
 <feature
       id="jp.eisbahn.eclipse.features.osde"
       label="OpenSocial Development Environment Feature"
-      version="0.1.0"
+      version="0.1.1"
       provider-name="Yoichiro Tanaka">
 
    <description url="http://www.eisbahn.jp/trac/osde">
@@ -789,6 +789,10 @@ subjecting your linked code to the terms of the Common Public license version
 for NSIS, however, are subject to the terms of the Common Public License version
 1.0.
    </license>
+
+   <url>
+      <update url="http://www.eisbahn.jp/eclipse/update-site/site.xml"/>
+   </url>
 
    <plugin
          id="jp.eisbahn.eclipse.plugins.osde"
