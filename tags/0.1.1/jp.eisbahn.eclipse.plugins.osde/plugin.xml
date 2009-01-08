@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+        id="jp.eisbahn.eclipse.plugins.osde.newWizards"
+        name="OpenSocial">
+      </category>
+      <wizard
+          id="jp.eisbahn.eclipse.plugins.osde.newWizards.NewOpenSocialProjectWizard"
+          name="OpenSocial Project"
+          category="jp.eisbahn.eclipse.plugins.osde.newWizards"
+          icon="./icons/opensocial.gif"
+          project="true"
+          class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.NewOpenSocialProjectResourceWizard">
+          <description>
+              Create an OpenSocial project.
+          </description>
+           <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard> 
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor"
+            default="false"
+            extensions="xml"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor"
+            name="Gadget XML Editor">
+         <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetXml" />
+      </editor>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.runtime.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            describer="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlDescriber"
+            file-extensions="xml"
+            id="gadgetXml"
+            name="Gadget XML File"
+            priority="high" />
+   </extension>
+   
+   <extension
+         id="osdeNature"
+         point="org.eclipse.core.resources.natures"
+         name="OpenSocial Development Environment Nature">
+      <runtime>
+         <run class="jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature" />
+      </runtime>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            lightweight="true"
+            location="TOP_RIGHT"
+            adaptable="true"
+            label="OpenSocial Project"
+            icon="icons/person_small.gif"
+            state="true"
+            id="jp.eisbahn.eclipse.plugins.osde.OpenSocialProjectDecorator">
+         <enablement>
+            <objectState
+                  name="nature"
+                  value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
+            </objectState>
+         </enablement>
+      </decorator>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="jp.eisbahn.eclipse.plugins.osde.contribution1"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu
+               id="jp.eisbahn.eclipse.plugins.osde.menu1"
+               label="OpenSocial"
+               path="additions">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.launchShindigAction"
+               icon="icons/opensocial.gif"
+               label="Launch Apache Shindig"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
+            <enablement>
+               <objectState
+                     name="nature"
+                     value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
+               </objectState>
+            </enablement>
+         </action>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchWebServerAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction"
+               label="Launch Web Server"
+               icon="icons/arrow_right.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
+            <enablement>
+               <objectState
+                     name="nature"
+                     value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
+               </objectState>
+            </enablement>
+         </action>
+      </objectContribution>
+      <objectContribution
+            id="jp.eisbahn.eclipse.plugins.osde.contribution2"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="jp.eisbahn.eclipse.plugins.osde.menu2"
+               label="OpenSocial"
+               path="additions">
+            <separator
+                  name="group2">
+            </separator>
+         </menu>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.runAction"
+               label="Run this application"
+               icon="icons/action_go.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
+               </objectState>
+            </enablement>
+         </action>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchWebServerAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction2"
+               label="Launch Web Server"
+               icon="icons/arrow_right.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
+               </objectState>
+            </enablement>
+         </action>
+      </objectContribution>
+   </extension>
+   
+   <extension
+         id="gadgetBuilder"
+         point="org.eclipse.core.resources.builders">
+      <builder>
+         <run
+               class="jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder">
+         </run>
+      </builder>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="jp.eisbahn.eclipse.plugins.osde"
+            name="OpenSocial">
+      </category>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
+            name="People">
+      </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.views.AppDataView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.AppDataView"
+            name="AppData">
+      </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.views.ActivitiesView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.ActivitiesView"
+            name="Activities">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="jp.eisbahn.eclipse.plugins.osde.actionSet"
+            label="OpenSocial"
+            visible="true">
+         <menu
+               id="opensocialMenu"
+               label="&amp;OpenSocial">
+            <separator
+                  name="opensocialGroup">
+            </separator>
+         </menu>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCerAction"
+               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCerAction"
+               icon="icons/icon_key.gif"
+               label="Show &amp;Public Certificate"
+               menubarPath="opensocialMenu/opensocialGroup"
+               tooltip="Show Public Certificate for OAuth.">
+         </action>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
+               icon="icons/opensocial.gif"
+               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
+               label="Launch Apache &amp;Shindig"
+               menubarPath="opensocialMenu/opensocialGroup"
+               toolbarPath="opensocialGroup"
+               tooltip="Launch Apache Sindig server.">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="jp.eisbahn.eclipse.plugins.osde.export"
+            name="OpenSocial">
+      </category>
+      <wizard
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.OpenSocialApplicationExportWizard"
+            id="jp.eisbahn.eclipse.plugins.osde.ExportWizard"
+            category="jp.eisbahn.eclipse.plugins.osde.export"
+            icon="icons/opensocial.gif"
+            name="OpenSocial application">
+         <description>
+            Export the selected OpenSocial application.
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.OsdeProjectPropertyPage"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.runtime.samplePropertyPage"
+            name="OpenSocial"
+            objectClass="org.eclipse.core.resources.IProject">
+         <filter
+               name="nature"
+               value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
+         </filter>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
+            name="OpenSocial">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.PreferenceInitializer">
+      </initializer>
+   </extension>
+</plugin>
