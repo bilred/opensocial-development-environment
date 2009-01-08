@@ -257,4 +257,18 @@
          </filter>
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
+            name="OpenSocial">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.PreferenceInitializer">
+      </initializer>
+   </extension>
 </plugin>
