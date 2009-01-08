@@ -15,43 +15,43 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
+package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createLabel;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.ui.dialogs.PropertyPage;
 
-public class WizardServerPage extends WizardPage {
+public class OsdeProjectPropertyPage extends PropertyPage {
 
 	private Spinner portSpinner;
 
-	public WizardServerPage(String pageName) {
-		super(pageName);
-		setPageComplete(false);
+	public OsdeProjectPropertyPage() {
+		super();
 	}
 
-	public void createControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NULL);
-		initializeDialogUnits(parent);
-		composite.setLayout(new GridLayout());
-		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+	@Override
+	protected Control createContents(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		composite.setLayout(layout);
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		composite.setLayoutData(layoutData);
 		//
 		createServerSettingsControls(composite);
 		//
-		setPageComplete(validatePage());
-		setErrorMessage(null);
-		setMessage(null);
-		setControl(composite);
-		Dialog.applyDialogFont(composite);
+		return composite;
 	}
-
+	
 	private void createServerSettingsControls(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -70,19 +70,36 @@ public class WizardServerPage extends WizardPage {
 		portSpinner = new Spinner(localGroup, SWT.BORDER);
 		portSpinner.setMinimum(1024);
 		portSpinner.setMaximum(65535);
-		portSpinner.setSelection(8081);
-	}
-	
-	private boolean validatePage() {
-		setErrorMessage(null);
-		setMessage(null);
-		return true;
+		//
+		try {
+			IProject project = (IProject)getElement().getAdapter(IProject.class);
+			portSpinner.setSelection(ProjectPreferenceUtils.getLocalWebServerPort(project));
+		} catch(CoreException e) {
+			// TODO something
+			throw new IllegalStateException(e);
+		}
 	}
 
-	public ServerData getInputedData() {
-		ServerData data = new ServerData();
-		data.setLocalPort(portSpinner.getSelection());
-		return data;
+	protected void performDefaults() {
+		try {
+			IProject project = (IProject)getElement().getAdapter(IProject.class);
+			int port = ProjectPreferenceUtils.setDefaultLocalWebServerPort(project);
+			portSpinner.setSelection(port);
+		} catch(CoreException e) {
+			// TODO something
+			throw new IllegalStateException(e);
+		}
+	}
+	
+	public boolean performOk() {
+		try {
+			IProject project = (IProject)getElement().getAdapter(IProject.class);
+			ProjectPreferenceUtils.setLocalWebServerPort(project, portSpinner.getSelection());
+		} catch(CoreException e) {
+			// TODO something
+			throw new IllegalStateException(e);
+		}
+		return true;
 	}
 
 }
