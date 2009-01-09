@@ -26,6 +26,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
 import org.apache.shindig.social.opensocial.model.Activity;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,6 +35,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -44,7 +46,10 @@ import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IPartSelectionListener;
 import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class ActivitiesPart extends SectionPart implements IPartSelectionListener {
@@ -63,7 +68,7 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
 	private void createContents(Section section, FormToolkit toolkit) {
 		section.setText("Activities ");
 		Composite composite = toolkit.createComposite(section);
-		composite.setLayout(new GridLayout(2, false));
+		composite.setLayout(new GridLayout(3, false));
 		section.setClient(composite);
 		//
 		toolkit.createLabel(composite, "Person:");
@@ -77,12 +82,25 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
 				updateActivityList();
 			}
 		});
+		ImageRegistry imageRegistry = Activator.getDefault().getImageRegistry();
+		Image image = imageRegistry.getDescriptor("icons/action_refresh.gif").createImage();
+		ImageHyperlink reloadLink = toolkit.createImageHyperlink(composite, SWT.TOP);
+		reloadLink.setImage(image);
+		reloadLink.addHyperlinkListener(new IHyperlinkListener() {
+			public void linkActivated(HyperlinkEvent e) {
+				updateActivityList();
+			}
+			public void linkEntered(HyperlinkEvent e) {
+			}
+			public void linkExited(HyperlinkEvent e) {
+			}
+		});
 		//
 		Table table = toolkit.createTable(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		layoutData = new GridData(GridData.FILL_BOTH);
-		layoutData.horizontalSpan = 2;
+		layoutData.horizontalSpan = 3;
 		table.setLayoutData(layoutData);
 		TableColumn column = new TableColumn(table, SWT.LEFT, 0);
 		column.setText("");
@@ -106,10 +124,13 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
 
 	private void updateActivityList() {
 		try {
-			Person person = (Person)peopleCombo.getData(peopleCombo.getItem(peopleCombo.getSelectionIndex()));
 			ActivityService activityService = Activator.getDefault().getActivityService();
-			List<Activity> activities = (List<Activity>)activityService.getActivities(person);
-			activityList.setInput(activities);
+			int index = peopleCombo.getSelectionIndex();
+			if (index != -1) {
+				Person person = (Person)peopleCombo.getData(peopleCombo.getItem(index));
+				List<Activity> activities = (List<Activity>)activityService.getActivities(person);
+				activityList.setInput(activities);
+			}
 		} catch (ConnectionException e) {
 			MessageDialog.openError(activitiesView.getSite().getShell(), "Error", "Shindig database not started yet.");
 		}

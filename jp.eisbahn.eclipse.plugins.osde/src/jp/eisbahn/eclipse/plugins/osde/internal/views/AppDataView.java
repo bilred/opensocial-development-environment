@@ -31,18 +31,24 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class AppDataView extends AbstractView {
@@ -111,7 +117,7 @@ public class AppDataView extends AbstractView {
 		//
 		Composite selectionPanel = toolkit.createComposite(composite);
 		layout = new GridLayout();
-		layout.numColumns = 4;
+		layout.numColumns = 5;
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		selectionPanel.setLayout(layout);
@@ -139,6 +145,22 @@ public class AppDataView extends AbstractView {
 				updateDataMap();
 			}
 		});
+		ImageRegistry imageRegistry = Activator.getDefault().getImageRegistry();
+		Image image = imageRegistry.getDescriptor("icons/action_refresh.gif").createImage();
+		ImageHyperlink reloadLink = toolkit.createImageHyperlink(selectionPanel, SWT.TOP);
+		reloadLink.setImage(image);
+		reloadLink.addHyperlinkListener(new IHyperlinkListener() {
+			public void linkActivated(HyperlinkEvent e) {
+				int index = keyList.getSelectionIndex();
+				updateDataMap();
+				keyList.select(index);
+				updateValue();
+			}
+			public void linkEntered(HyperlinkEvent e) {
+			}
+			public void linkExited(HyperlinkEvent e) {
+			}
+		});
 		//
 		SashForm sashForm = new SashForm(composite, SWT.HORIZONTAL);
 		layoutData = new GridData(GridData.FILL_BOTH);
@@ -149,8 +171,7 @@ public class AppDataView extends AbstractView {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 			public void widgetSelected(SelectionEvent e) {
-				String value = (String)keyList.getData(keyList.getItem(keyList.getSelectionIndex()));
-				valueText.setText(value);
+				updateValue();
 			}
 		});
 		valueText = new Text(sashForm, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
@@ -160,6 +181,11 @@ public class AppDataView extends AbstractView {
 	}
 	
 	public void setFocus() {
+	}
+	
+	private void updateValue() {
+		String value = (String)keyList.getData(keyList.getItem(keyList.getSelectionIndex()));
+		valueText.setText(value);
 	}
 	
 	private void updateDataMap() {
