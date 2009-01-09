@@ -158,11 +158,13 @@ public class RunAction implements IObjectActionDelegate {
 							IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 							IWebBrowser browser;
 							if (!useExternalBrowser) {
+								String title = project.getName() + ":" + gadgetXmlFile.getName() + " [" + view + "]";
+								String desc = project.getName() + ":" + gadgetXmlFile.getName() + " [" + view + "] viewer=" + viewer + " owner=" + owner;
 								browser = support.createBrowser(
 										IWorkbenchBrowserSupport.LOCATION_BAR 
 											| IWorkbenchBrowserSupport.NAVIGATION_BAR
 											| IWorkbenchBrowserSupport.AS_EDITOR,
-										url, project.getName(), project.getName());
+										url, title, desc);
 							} else {
 								browser = support.getExternalBrowser();
 							}
