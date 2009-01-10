@@ -90,11 +90,8 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		// Apache Shindig起動設定の作成
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
-		// Derby起動設定の作成
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
-		// イメージレジストリの作成
 		registIcon();
 	}
 
@@ -147,11 +144,6 @@ public class Activator extends AbstractUIPlugin {
 		}
 	}
 	
-	/**
-	 * 指定された色を示すオブジェクトを返します。
-	 * @param rgb 色の情報
-	 * @return 色を示すオブジェクト
-	 */
 	public Color getColor(RGB rgb) {
 		synchronized (colorMap) {
 			Color color = colorMap.get(rgb);
@@ -171,6 +163,8 @@ public class Activator extends AbstractUIPlugin {
 		registIcon(registry, "icons/comment_yellow.gif");
 		registIcon(registry, "icons/project.gif");
 		registIcon(registry, "icons/icon_key.gif");
+		registIcon(registry, "icons/icon_world.gif");
+		registIcon(registry, "icons/16-em-pencil.gif");
 	}
 	
     public ImageDescriptor registIcon(ImageRegistry registry, String iconPath) {
@@ -184,7 +178,6 @@ public class Activator extends AbstractUIPlugin {
     	ImageDescriptor imageDescriptor = registry.getDescriptor(url);
     	if (imageDescriptor == null) {
             try {
-                // イメージディスクリプタを生成
                 imageDescriptor = ImageDescriptor.createFromURL(new URL(url));
             } catch(MalformedURLException e) {
                 imageDescriptor = ImageDescriptor.getMissingImageDescriptor();
@@ -194,17 +187,10 @@ public class Activator extends AbstractUIPlugin {
     	return imageDescriptor;
     }
 
-    /**
-     * 指定されたパスのイメージを示すイメージディスクリプタを生成して返します。
-     * @param path イメージのパス
-     * @return 生成されたイメージディスクリプタ
-     */
     private ImageDescriptor createSystemImageDescriptor(String path) {
         ImageDescriptor descriptor;
         try {
-            // プラグインインストールディレクトリを取得
             URL installUrl = getInstallUrl();
-            // イメージディスクリプタを生成
             descriptor = ImageDescriptor.createFromURL(new URL(installUrl, path));
         } catch(MalformedURLException e) {
             descriptor = ImageDescriptor.getMissingImageDescriptor();
@@ -212,10 +198,6 @@ public class Activator extends AbstractUIPlugin {
         return descriptor;
     }
 
-    /**
-     * プラグインがインストールされているディレクトリを示すURLを返します。
-     * @return プラグインがインストールされているディレクトリを示すURL
-     */
     public URL getInstallUrl() {
         Bundle bundle = getBundle();
         return bundle.getEntry("/");

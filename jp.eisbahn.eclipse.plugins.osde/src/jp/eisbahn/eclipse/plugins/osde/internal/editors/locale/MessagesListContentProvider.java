@@ -15,14 +15,24 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.editors;
+package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
-import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.text.rules.BufferedRuleBasedScanner;
-import org.eclipse.jface.text.rules.Token;
+import java.util.Map;
 
-public class SingleTokenScanner  extends BufferedRuleBasedScanner {
-    public SingleTokenScanner(TextAttribute attribute){
-      setDefaultReturnToken(new Token(attribute));
-    }
-  }
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+
+class MessagesListContentProvider implements IStructuredContentProvider {
+	
+	public void dispose() {
+	}
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	}
+
+	public Object[] getElements(Object inputElement) {
+		Map<String, String> messages = (Map<String, String>)inputElement;
+		return messages.entrySet().toArray();
+	}
+	
+}

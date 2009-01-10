@@ -25,6 +25,10 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.editors.basic.ModulePrefsPage;
+import jp.eisbahn.eclipse.plugins.osde.internal.editors.content.ContentPage;
+import jp.eisbahn.eclipse.plugins.osde.internal.editors.locale.LocalePage;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -65,6 +69,8 @@ public class GadgetXmlEditor extends FormEditor {
 		try {
 			ModulePrefsPage modulePrefsPage = new ModulePrefsPage(this, module);
 			addPage(modulePrefsPage);
+			LocalePage messageBundlePage = new LocalePage(this, module);
+			addPage(messageBundlePage);
 			ViewName[] viewNames = ViewName.values();
 			for (ViewName viewName : viewNames) {
 				ContentPage contentPage = new ContentPage(this, module, viewName);

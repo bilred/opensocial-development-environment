@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.editors;
+package jp.eisbahn.eclipse.plugins.osde.internal.editors.basic;
 
 import java.util.Collection;
 import java.util.EnumMap;
@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
+
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
