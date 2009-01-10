@@ -15,7 +15,8 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.editors;
+package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
+
 
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -23,23 +24,25 @@ import org.eclipse.ui.forms.editor.FormPage;
 
 import com.google.gadgets.Module;
 
-public class ModulePrefsPage extends FormPage {
-	
+public class LocalePage extends FormPage {
+
 	private Module module;
+	
+	private MessageBundleBlock block;
 	
 	public Module getModule() {
 		return module;
 	}
 
-	public ModulePrefsPage(FormEditor editor, Module module) {
-		super(editor, null, "Basic");
+	public LocalePage(FormEditor editor, Module module) {
+		super(editor, null, "Locale");
 		this.module = module;
+		block = new MessageBundleBlock(this);
 	}
 
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
-		managedForm.addPart(new ApplicationInformationPart(this));
-		managedForm.addPart(new FeaturesPart(this));
+		block.createContent(managedForm);
 	}
 	
 }

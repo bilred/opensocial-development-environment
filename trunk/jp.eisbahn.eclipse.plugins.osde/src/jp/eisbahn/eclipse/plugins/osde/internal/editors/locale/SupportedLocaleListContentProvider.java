@@ -15,37 +15,23 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.editors;
+package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
-import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.editor.FormPage;
+import java.util.List;
 
-import com.google.gadgets.Module;
-import com.google.gadgets.ViewName;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
-public class ContentPage extends FormPage {
+class SupportedLocaleListContentProvider implements IStructuredContentProvider {
 	
-	private Module module;
-	private ViewName viewName;
-	
-	public Module getModule() {
-		return module;
-	}
-	
-	public ViewName getViewName() {
-		return viewName;
+	public void dispose() {
 	}
 
-	public ContentPage(FormEditor editor, Module module, ViewName viewName) {
-		super(editor, null, viewName.getDisplayName());
-		this.module = module;
-		this.viewName = viewName;
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		managedForm.addPart(new ContentPart(this));
+	public Object[] getElements(Object inputElement) {
+		return ((List<LocaleModel>)inputElement).toArray();
 	}
 	
 }
