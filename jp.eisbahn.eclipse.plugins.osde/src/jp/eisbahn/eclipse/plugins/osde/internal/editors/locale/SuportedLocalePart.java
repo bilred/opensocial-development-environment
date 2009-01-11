@@ -56,8 +56,6 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import antlr.MakeGrammar;
-
 import com.google.gadgets.Module;
 import com.google.gadgets.ObjectFactory;
 import com.google.gadgets.Module.ModulePrefs;
@@ -310,6 +308,10 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 			}
 		}
 		
+	}
+
+	public List<LocaleModel> getLocaleModels() {
+		return (List<LocaleModel>)supportedLocaleList.getInput();
 	}
 
 }

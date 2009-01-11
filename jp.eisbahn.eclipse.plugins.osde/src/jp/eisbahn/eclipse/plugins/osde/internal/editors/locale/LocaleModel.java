@@ -27,6 +27,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFile;
@@ -40,7 +41,7 @@ import org.xml.sax.SAXException;
 import com.google.gadgets.Module.ModulePrefs.Locale;
 import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
 
-public class LocaleModel {
+public class LocaleModel implements Comparable<LocaleModel> {
 
 	public static final String MESSAGE_BUNDLE_FILENAME_PREFIX = "messages_";
 	
@@ -152,6 +153,13 @@ public class LocaleModel {
 				.append(country)
 				.append(lang)
 				.toHashCode();
+	}
+
+	public int compareTo(LocaleModel o) {
+		return new CompareToBuilder()
+				.append(country, o.getCountry())
+				.append(lang, o.getLang())
+				.toComparison();
 	}
 
 }

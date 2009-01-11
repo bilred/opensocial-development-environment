@@ -18,6 +18,8 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
 
+import java.util.List;
+
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -47,6 +49,10 @@ public class LocalePage extends FormPage {
 
 	public void updateLocaleModel() {
 		block.updateLocaleModel();
+	}
+	
+	public List<LocaleModel> getLocaleModels() {
+		return block.getLocaleModels();
 	}
 	
 }

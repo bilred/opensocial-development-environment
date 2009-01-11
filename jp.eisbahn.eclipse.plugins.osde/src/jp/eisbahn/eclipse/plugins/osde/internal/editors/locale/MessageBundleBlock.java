@@ -3,14 +3,14 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
+import java.util.List;
+
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.DetailsPart;
 import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IDetailsPageProvider;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
-
-import antlr.MakeGrammar;
 
 public class MessageBundleBlock extends MasterDetailsBlock {
 	
@@ -59,6 +59,10 @@ public class MessageBundleBlock extends MasterDetailsBlock {
 
 	public void updateLocaleModel() {
 		messageBundlesPart.markDirty();
+	}
+	
+	public List<LocaleModel> getLocaleModels() {
+		return messageBundlesPart.getLocaleModels();
 	}
 	
 }
