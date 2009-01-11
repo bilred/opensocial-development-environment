@@ -44,5 +44,9 @@ public class LocalePage extends FormPage {
 	protected void createFormContent(IManagedForm managedForm) {
 		block.createContent(managedForm);
 	}
+
+	public void updateLocaleModel() {
+		block.updateLocaleModel();
+	}
 	
 }

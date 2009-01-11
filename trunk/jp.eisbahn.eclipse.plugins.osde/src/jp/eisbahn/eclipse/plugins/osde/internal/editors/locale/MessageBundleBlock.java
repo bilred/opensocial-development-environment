@@ -10,6 +10,8 @@ import org.eclipse.ui.forms.IDetailsPageProvider;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
 
+import antlr.MakeGrammar;
+
 public class MessageBundleBlock extends MasterDetailsBlock {
 	
 	private SuportedLocalePart messageBundlesPart;
@@ -53,6 +55,10 @@ public class MessageBundleBlock extends MasterDetailsBlock {
 			
 		});
 		sashForm.setWeights(new int[]{45, 55});
+	}
+
+	public void updateLocaleModel() {
+		messageBundlesPart.markDirty();
 	}
 	
 }
