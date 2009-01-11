@@ -19,6 +19,8 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
 import java.util.List;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
+
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -45,18 +47,17 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	private String owner;
 	private String viewer;
 	private String width;
+	private String country;
+	private String language;
+	private boolean useExternalBrowser;
 	
 	private Combo viewKind;
-
 	private Combo owners;
-
 	private Combo viewers;
-
 	private Spinner widths;
-
+	private Combo countries;
+	private Combo languages;
 	private Button useExternalBrowserCheck;
-
-	private boolean useExternalBrowser;
 	
 	public RunApplicationDialog(Shell shell, List<Person> people) {
 		super(shell);
@@ -129,6 +130,28 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		viewers.setLayoutData(layoutData);
 		//
+		label = new Label(panel, SWT.NONE);
+		label.setText("Country:");
+		countries = new Combo(panel, SWT.READ_ONLY);
+		for (int i = 1; i < OpenSocialUtil.COUNTRIES.length; i++) {
+			countries.add(OpenSocialUtil.COUNTRIES[i]);
+		}
+		countries.select(0);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 3;
+		countries.setLayoutData(layoutData);
+		//
+		label = new Label(panel, SWT.NONE);
+		label.setText("Language:");
+		languages = new Combo(panel, SWT.READ_ONLY);
+		for (int i = 1; i < OpenSocialUtil.LANGUAGES.length; i++) {
+			languages.add(OpenSocialUtil.LANGUAGES[i]);
+		}
+		languages.select(0);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 3;
+		languages.setLayoutData(layoutData);
+		//
 		Label separator = new Label(panel, SWT.SEPARATOR | SWT.HORIZONTAL);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 4;
@@ -149,17 +172,11 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		return composite;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
-	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 300);
+		return new Point(550, 400);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-	 */
 	@Override
 	protected void okPressed() {
 		view = viewKind.getItem(viewKind.getSelectionIndex()).toLowerCase();
@@ -167,6 +184,10 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		owner = owners.getItem(owners.getSelectionIndex());
 		width = widths.getText();
 		useExternalBrowser = useExternalBrowserCheck.getSelection();
+		country = countries.getText();
+		country = country.substring(country.indexOf('(') + 1, country.length() - 1);
+		language = languages.getText();
+		language = language.substring(language.indexOf('(') + 1, language.length() - 1);
 		setReturnCode(OK);
 		close();
 	}
@@ -189,6 +210,14 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	
 	public boolean isUseExternalBrowser() {
 		return useExternalBrowser;
+	}
+	
+	public String getCountry() {
+		return country;
+	}
+	
+	public String getLanguage() {
+		return language;
 	}
 
 }
