@@ -15,24 +15,24 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
+package jp.eisbahn.eclipse.plugins.osde.internal.views.people;
 
 import java.util.List;
 
-import org.apache.shindig.social.opensocial.model.Person;
+import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-class PersonListContentProvider implements IStructuredContentProvider {
-	
+public class FriendListContentProvider implements IStructuredContentProvider {
+
+	public Object[] getElements(Object inputElement) {
+		return ((List<RelationshipImpl>)inputElement).toArray();
+	}
+
 	public void dispose() {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
-	public Object[] getElements(Object inputElement) {
-		return ((List<Person>)inputElement).toArray();
-	}
-	
 }

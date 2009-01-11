@@ -15,11 +15,14 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
+package jp.eisbahn.eclipse.plugins.osde.internal.views.people;
+
+import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
+import jp.eisbahn.eclipse.plugins.osde.internal.views.AbstractView;
 
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.action.Action;
@@ -30,15 +33,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.ManagedForm;
 
-public class ActivitiesView extends AbstractView {
+public class PersonView extends AbstractView {
 	
-	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.ActivitiesView";
-
+	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView";
+	
 	private Action reloadAction;
-
-	private ActivitiesBlock block;
 	
-	public ActivitiesView() {
+	private PeopleBlock block;
+
+	public PersonView() {
 	}
 	
 	@Override
@@ -73,10 +76,10 @@ public class ActivitiesView extends AbstractView {
 		reloadAction.setImageDescriptor(
 				Activator.getDefault().getImageRegistry().getDescriptor("icons/action_refresh.gif"));
 	}
-
+	
 	protected void createForm(Composite parent) {
 		IManagedForm managedForm = new ManagedForm(parent);
-		block = new ActivitiesBlock(this);
+		block = new PeopleBlock(this);
 		block.createContent(managedForm);
 	}
 	

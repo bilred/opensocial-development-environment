@@ -15,24 +15,31 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
+package jp.eisbahn.eclipse.plugins.osde.internal.views.activities;
 
-import java.util.List;
+import org.apache.shindig.social.opensocial.model.MediaItem;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 
-import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-
-public class FriendListContentProvider implements IStructuredContentProvider {
-
-	public Object[] getElements(Object inputElement) {
-		return ((List<RelationshipImpl>)inputElement).toArray();
+public class MediaItemListLabelProvider extends LabelProvider implements ITableLabelProvider {
+	
+	public Image getColumnImage(Object element, int columnIndex) {
+		return null;
 	}
 
-	public void dispose() {
+	public String getColumnText(Object element, int columnIndex) {
+		MediaItem mediaItem = (MediaItem)element;
+		switch(columnIndex) {
+		case 0:
+			return mediaItem.getMimeType();
+		case 1:
+			return mediaItem.getType().name();
+		case 2:
+			return mediaItem.getUrl();
+		default:
+			return null;
+		}
 	}
-
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
-
+	
 }

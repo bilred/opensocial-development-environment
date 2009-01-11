@@ -15,24 +15,30 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
+package jp.eisbahn.eclipse.plugins.osde.internal.views.activities;
 
-import java.util.List;
+import java.util.Map;
 
-import org.apache.shindig.social.opensocial.model.Activity;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 
-public class ActivityListContentProvider implements IStructuredContentProvider {
+public class TemplateParamListLabelProvider extends LabelProvider implements ITableLabelProvider {
 	
-	public void dispose() {
+	public Image getColumnImage(Object element, int columnIndex) {
+		return null;
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
-
-	public Object[] getElements(Object inputElement) {
-		return ((List<Activity>)inputElement).toArray();
+	public String getColumnText(Object element, int columnIndex) {
+		Map.Entry<String, String> entry = (Map.Entry<String, String>)element;
+		switch(columnIndex) {
+		case 0:
+			return entry.getKey();
+		case 1:
+			return entry.getValue();
+		default:
+			return null;
+		}
 	}
 	
 }

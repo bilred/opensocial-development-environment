@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
+package jp.eisbahn.eclipse.plugins.osde.internal.views.appdata;
 
 import java.util.Map;
 
@@ -24,6 +24,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.AppDataService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
+import jp.eisbahn.eclipse.plugins.osde.internal.views.AbstractView;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.model.Person;

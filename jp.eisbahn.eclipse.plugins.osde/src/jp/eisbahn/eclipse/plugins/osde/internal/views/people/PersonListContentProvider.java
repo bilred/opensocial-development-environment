@@ -15,14 +15,15 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
+package jp.eisbahn.eclipse.plugins.osde.internal.views.people;
 
-import java.util.Map;
+import java.util.List;
 
+import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-public class TemplateParamListContentProvider implements IStructuredContentProvider {
+class PersonListContentProvider implements IStructuredContentProvider {
 	
 	public void dispose() {
 	}
@@ -31,8 +32,7 @@ public class TemplateParamListContentProvider implements IStructuredContentProvi
 	}
 
 	public Object[] getElements(Object inputElement) {
-		Map<String, String> templateParams = (Map<String, String>)inputElement;
-		return templateParams.entrySet().toArray();
+		return ((List<Person>)inputElement).toArray();
 	}
 	
 }
