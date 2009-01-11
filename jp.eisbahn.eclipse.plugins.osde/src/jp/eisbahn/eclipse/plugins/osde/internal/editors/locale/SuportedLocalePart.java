@@ -183,8 +183,14 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		removeAllMessageBundleFiles(project);
 		for (LocaleModel model : models) {
 			Locale locale = objectFactory.createModuleModulePrefsLocale();
-			locale.setCountry(model.getCountry());
-			locale.setLang(model.getLang());
+			String country = model.getCountry();
+			if (!StringUtils.isEmpty(country)) {
+				locale.setCountry(country);
+			}
+			String lang = model.getLang();
+			if (!StringUtils.isEmpty(lang)) {
+				locale.setLang(lang);
+			}
 			List<Msg> msgs = locale.getMsg();
 			if (model.isInternal()) {
 				Map<String, String> messages = model.getMessages();

@@ -93,7 +93,12 @@ public class RunAction implements IObjectActionDelegate {
 				String width = dialog.getWidth();
 				String appId = appInfo.getAppId();
 				boolean useExternalBrowser = dialog.isUseExternalBrowser();
-				Job job = new LaunchApplicationJob("Running application", viewer, owner, view, width, appId, useExternalBrowser);
+				String country = dialog.getCountry();
+				String language = dialog.getLanguage();
+				Job job = new LaunchApplicationJob(
+						"Running application", viewer, owner, view,
+						width, appId, useExternalBrowser,
+						country, language);
 				job.setUser(true);
 				job.schedule();
 			}
@@ -127,10 +132,13 @@ public class RunAction implements IObjectActionDelegate {
 		private String width;
 		private String appId;
 		private boolean useExternalBrowser;
+		private String country;
+		private String language;
 
 		private LaunchApplicationJob(
 				String name, String viewer, String owner, String view,
-				String width, String appId, boolean useExternalBrwoser) {
+				String width, String appId, boolean useExternalBrwoser,
+				String country, String language) {
 			super(name);
 			this.viewer = viewer;
 			this.owner = owner;
@@ -138,6 +146,8 @@ public class RunAction implements IObjectActionDelegate {
 			this.width = width;
 			this.appId = appId;
 			this.useExternalBrowser = useExternalBrwoser;
+			this.country = country;
+			this.language = language;
 		}
 
 		@Override
@@ -151,7 +161,9 @@ public class RunAction implements IObjectActionDelegate {
 						+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
 						+ "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
 						+ "&width=" + URLEncoder.encode(width, "UTF-8")
-						+ "&appId=" + URLEncoder.encode(appId, "UTF-8");
+						+ "&appId=" + URLEncoder.encode(appId, "UTF-8")
+						+ "&country=" + URLEncoder.encode(country, "UTF-8")
+						+ "&language=" + URLEncoder.encode(language, "UTF-8");
 				shell.getDisplay().syncExec(new Runnable() {
 					public void run() {
 						try {
