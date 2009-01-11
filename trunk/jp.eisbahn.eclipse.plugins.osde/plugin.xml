@@ -175,21 +175,21 @@
       </category>
       <view
             category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.views.people.PersonView"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView"
             icon="icons/opensocial.gif"
             id="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
             name="People">
       </view>
       <view
             category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.views.appdata.AppDataView"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView"
             icon="icons/opensocial.gif"
             id="jp.eisbahn.eclipse.plugins.osde.internal.views.AppDataView"
             name="AppData">
       </view>
       <view
             category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.views.activities.ActivitiesView"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView"
             icon="icons/opensocial.gif"
             id="jp.eisbahn.eclipse.plugins.osde.internal.views.ActivitiesView"
             name="Activities">
