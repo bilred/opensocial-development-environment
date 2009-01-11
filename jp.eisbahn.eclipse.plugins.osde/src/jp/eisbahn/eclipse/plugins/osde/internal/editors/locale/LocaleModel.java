@@ -27,6 +27,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -40,7 +42,7 @@ import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
 
 public class LocaleModel {
 
-	private static final String MESSAGE_BUNDLE_FILENAME_PREFIX = "messages_";
+	public static final String MESSAGE_BUNDLE_FILENAME_PREFIX = "messages_";
 	
 	private String country;
 	private String lang;
@@ -129,6 +131,27 @@ public class LocaleModel {
 
 	public void setMessages(Map<String, String> messages) {
 		this.messages = messages;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof LocaleModel)) {
+			return false;
+		} else {
+			LocaleModel target = (LocaleModel)obj;
+			return new EqualsBuilder()
+					.append(country, target.getCountry())
+					.append(lang, target.getLang())
+					.isEquals();
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37)
+				.append(country)
+				.append(lang)
+				.toHashCode();
 	}
 
 }

@@ -17,15 +17,23 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
+
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -48,15 +56,21 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
+import antlr.MakeGrammar;
+
 import com.google.gadgets.Module;
+import com.google.gadgets.ObjectFactory;
 import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
 
 public class SuportedLocalePart extends SectionPart implements IPartSelectionListener {
 	
 	private LocalePage page;
 	
 	private TableViewer supportedLocaleList;
+	
+	private ObjectFactory objectFactory;
 
 	public SuportedLocalePart(Composite parent, IManagedForm managedForm, LocalePage page) {
 		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
@@ -64,6 +78,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		this.page = page;
 		createContents(getSection(), managedForm.getToolkit());
 		displayInitialValue();
+		objectFactory = new ObjectFactory();
 	}
 	
 	private void createContents(Section section, FormToolkit toolkit) {
@@ -136,8 +151,13 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 	}
 	
 	public void selectionChanged(IFormPart part, ISelection selection) {
-		// TODO Auto-generated method stub
-		
+		if (part == this) {
+			return;
+		}
+		if (!(selection instanceof IStructuredSelection)) {
+			return;
+		}
+		supportedLocaleList.refresh((LocaleModel)((IStructuredSelection)selection).getFirstElement());
 	}
 	
 	private Module getModule() {
@@ -156,8 +176,93 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 	
 	private void setValuesToModule() {
 		Module module = getModule();
+		ModulePrefs modulePrefs = module.getModulePrefs();
+		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		elements = removeAllLocale(elements);
+		List<LocaleModel> models = (List<LocaleModel>)supportedLocaleList.getInput();
+		IFile file = (IFile)page.getEditorInput().getAdapter(IResource.class);
+		IProject project = file.getProject();
+		removeAllMessageBundleFiles(project);
+		for (LocaleModel model : models) {
+			Locale locale = objectFactory.createModuleModulePrefsLocale();
+			locale.setCountry(model.getCountry());
+			locale.setLang(model.getLang());
+			List<Msg> msgs = locale.getMsg();
+			if (model.isInternal()) {
+				Map<String, String> messages = model.getMessages();
+				for (Map.Entry<String, String> entry : messages.entrySet()) {
+					Msg msg = objectFactory.createModuleModulePrefsLocaleMsg();
+					msg.setName(entry.getKey());
+					msg.setValue(entry.getValue());
+					msgs.add(msg);
+				}
+			} else {
+				try {
+					String fileName = LocaleModel.MESSAGE_BUNDLE_FILENAME_PREFIX
+							+ model.getLang() + "_" + model.getCountry() + ".xml";
+					IFile bundleFile = project.getFile(fileName);
+					if (bundleFile.exists()) {
+							bundleFile.delete(true, new NullProgressMonitor());
+					}
+					StringBuilder sb = new StringBuilder();
+					sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<messagebundle>\n");
+					Map<String, String> messages = model.getMessages();
+					for (Map.Entry<String, String> entry : messages.entrySet()) {
+						sb.append("  <msg name=\"" + entry.getKey() + "\">" + entry.getValue() + "</msg>\n");
+					}
+					sb.append("</messagebundle>");
+					ByteArrayInputStream in = new ByteArrayInputStream(sb.toString().getBytes("UTF8"));
+					bundleFile.create(in, true, new NullProgressMonitor());
+					int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
+					locale.setMessages("http://localhost:" + port + "/" + fileName);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			}
+			elements.add(objectFactory.createModuleModulePrefsLocale(locale));
+		}
 	}
 	
+	private void removeAllMessageBundleFiles(IProject project) {
+		try {
+			project.accept(new IResourceVisitor() {
+				public boolean visit(IResource resource) throws CoreException {
+					int type = resource.getType();
+					switch(type) {
+					case IResource.PROJECT:
+						return true;
+					case IResource.FILE:
+						String name = resource.getName();
+						if (name.startsWith("messages_") && name.endsWith(".xml")) {
+							resource.delete(true, new NullProgressMonitor());
+						}
+						return false;
+					case IResource.FOLDER:
+						return false;
+					default:
+						return false;
+					}
+				}
+			});
+		} catch (CoreException e) {
+			// TODO 
+			throw new IllegalStateException(e);
+		}
+	}
+
+	private List<JAXBElement<?>> removeAllLocale(List<JAXBElement<?>> elements) {
+		List<JAXBElement<?>> targetList = new ArrayList<JAXBElement<?>>();
+		for (JAXBElement<?> element : elements) {
+			if (element.getValue() instanceof Locale) {
+				targetList.add(element);
+			}
+		}
+		elements.removeAll(targetList);
+		return elements;
+	}
+
 	private class AddButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -170,10 +275,12 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 				model.setCountry(dialog.getCountry());
 				model.setLang(dialog.getLanguage());
 				model.setInternal(dialog.isInternal());
-				// TODO Check whether this model was already registered.
 				List<LocaleModel> models = (List<LocaleModel>)supportedLocaleList.getInput();
-				models.add(model);
-				supportedLocaleList.refresh();
+				if (!models.contains(model)) {
+					models.add(model);
+					supportedLocaleList.refresh();
+					markDirty();
+				}
 			}
 		}
 		
@@ -198,6 +305,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 					List<LocaleModel> models = (List<LocaleModel>)supportedLocaleList.getInput();
 					models.remove(model);
 					supportedLocaleList.refresh();
+					markDirty();
 				}
 			}
 		}

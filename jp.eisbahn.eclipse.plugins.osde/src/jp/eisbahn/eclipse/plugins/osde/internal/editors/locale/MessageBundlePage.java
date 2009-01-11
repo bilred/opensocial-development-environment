@@ -22,6 +22,7 @@ import java.util.Map;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -35,6 +36,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -48,7 +50,7 @@ public class MessageBundlePage implements IDetailsPage {
 	private TableViewer messagesList;
 
 	private Button internalButton;
-
+	
 	public MessageBundlePage(LocalePage page) {
 		super();
 		this.page = page;
@@ -68,12 +70,14 @@ public class MessageBundlePage implements IDetailsPage {
 		Composite messagesPane = toolkit.createComposite(messagesSection);
 		messagesPane.setLayout(new GridLayout(2, false));
 		messagesSection.setClient(messagesPane);
+		final SectionPart messagesPart = new SectionPart(messagesSection);
 		//
 		internalButton = new Button(messagesPane, SWT.CHECK);
 		internalButton.setText("Define this message bundle in Gadget XML file.");
 		layoutData = new GridData();
 		layoutData.horizontalSpan = 2;
 		internalButton.setLayoutData(layoutData);
+		internalButton.addSelectionListener(new InternalButtonSelectionListener(messagesPart));
 		//
 		Table messagesTable = toolkit.createTable(messagesPane, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		messagesTable.setHeaderVisible(true);
@@ -101,16 +105,98 @@ public class MessageBundlePage implements IDetailsPage {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
 		addButton.setLayoutData(layoutData);
-		addButton.addSelectionListener(new AddButtonSelectionListener());
+		addButton.addSelectionListener(new AddButtonSelectionListener(messagesPart));
 		Button deleteButton = toolkit.createButton(buttonPane, "Remove", SWT.PUSH);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
 		deleteButton.setLayoutData(layoutData);
-		deleteButton.addSelectionListener(new RemoveButtonSelectionListener());
+		deleteButton.addSelectionListener(new RemoveButtonSelectionListener(messagesPart));
 	}
 
 	public void initialize(IManagedForm managedForm) {
 		this.managedForm = managedForm;
+	}
+
+	public void selectionChanged(IFormPart part, ISelection selection) {
+		model = (LocaleModel)((IStructuredSelection)selection).getFirstElement();
+		messagesList.setInput(model.getMessages());
+		internalButton.setSelection(model.isInternal());
+	}
+	
+	private class InternalButtonSelectionListener implements SelectionListener {
+		
+		private SectionPart sectionPart;
+		
+		public InternalButtonSelectionListener(SectionPart sectionPart) {
+			this.sectionPart = sectionPart;
+		}
+		
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			model.setInternal(internalButton.getSelection());
+			managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
+			makeDirty();
+		}
+
+	}
+
+	private void makeDirty() {
+		page.updateLocaleModel();
+	}
+
+	private class AddButtonSelectionListener implements SelectionListener {
+		
+		private SectionPart sectionPart;
+		
+		public AddButtonSelectionListener(SectionPart sectionPart) {
+			this.sectionPart = sectionPart;
+		}
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			AddMessageDialog dialog = new AddMessageDialog(page.getSite().getShell());
+			if (dialog.open() == AddMessageDialog.OK) {
+				Map<String, String> messages = model.getMessages();
+				messages.put(dialog.getName(), dialog.getContent());
+//				messagesList.setInput(messages);
+				managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
+				makeDirty();
+			}
+		}
+		
+	}
+	
+	private class RemoveButtonSelectionListener implements SelectionListener {
+		
+		private SectionPart sectionPart;
+		
+		public RemoveButtonSelectionListener(SectionPart sectionPart) {
+			this.sectionPart = sectionPart;
+		}
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			ISelection selection = messagesList.getSelection();
+			if (!selection.isEmpty()) {
+				IStructuredSelection structured = (IStructuredSelection)selection;
+				final Map.Entry<String, String> message = (Map.Entry<String, String>)structured.getFirstElement();
+				if (MessageDialog.openConfirm(page.getSite().getShell(),
+						"Deleting message", "Do you want to delete message '" + message.getKey() + "'?")) {
+					Map<String, String> messages = (Map<String, String>)messagesList.getInput();
+					messages.remove(message.getKey());
+					messagesList.refresh();
+					managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
+					makeDirty();
+				}
+			}
+		}
+		
 	}
 
 	public void commit(boolean onSave) {
@@ -135,49 +221,6 @@ public class MessageBundlePage implements IDetailsPage {
 
 	public boolean setFormInput(Object input) {
 		return false;
-	}
-
-	public void selectionChanged(IFormPart part, ISelection selection) {
-		model = (LocaleModel)((IStructuredSelection)selection).getFirstElement();
-		messagesList.setInput(model.getMessages());
-		internalButton.setSelection(model.isInternal());
-	}
-	
-	private class AddButtonSelectionListener implements SelectionListener {
-
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-
-		public void widgetSelected(SelectionEvent e) {
-			AddMessageDialog dialog = new AddMessageDialog(page.getSite().getShell());
-			if (dialog.open() == AddMessageDialog.OK) {
-				Map<String, String> messages = model.getMessages();
-				messages.put(dialog.getName(), dialog.getContent());
-				messagesList.setInput(messages);
-			}
-		}
-		
-	}
-	
-	private class RemoveButtonSelectionListener implements SelectionListener {
-
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-
-		public void widgetSelected(SelectionEvent e) {
-			ISelection selection = messagesList.getSelection();
-			if (!selection.isEmpty()) {
-				IStructuredSelection structured = (IStructuredSelection)selection;
-				final Map.Entry<String, String> message = (Map.Entry<String, String>)structured.getFirstElement();
-				if (MessageDialog.openConfirm(page.getSite().getShell(),
-						"Deleting message", "Do you want to delete message '" + message.getKey() + "'?")) {
-					Map<String, String> messages = (Map<String, String>)messagesList.getInput();
-					messages.remove(message.getKey());
-					messagesList.refresh();
-				}
-			}
-		}
-		
 	}
 	
 }
