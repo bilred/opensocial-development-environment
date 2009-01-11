@@ -29,9 +29,9 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationCreator;
-import jp.eisbahn.eclipse.plugins.osde.internal.views.activities.ActivitiesView;
-import jp.eisbahn.eclipse.plugins.osde.internal.views.appdata.AppDataView;
-import jp.eisbahn.eclipse.plugins.osde.internal.views.people.PersonView;
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView;
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
