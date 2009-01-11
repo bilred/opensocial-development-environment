@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
+package jp.eisbahn.eclipse.plugins.osde.internal.views.people;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;

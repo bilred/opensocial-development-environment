@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
+package jp.eisbahn.eclipse.plugins.osde.internal.views.activities;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.string;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.stringFromTimeMillis;

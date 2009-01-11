@@ -15,11 +15,11 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
-
+package jp.eisbahn.eclipse.plugins.osde.internal.views.activities;
 
 import java.util.List;
 
+import org.apache.shindig.social.opensocial.model.Activity;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.DetailsPart;
@@ -28,20 +28,20 @@ import org.eclipse.ui.forms.IDetailsPageProvider;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
 
-class PeopleBlock extends MasterDetailsBlock {
+public class ActivitiesBlock extends MasterDetailsBlock {
 
-	private PeoplePart peoplePart;
-	private PersonView personView;
+	private ActivitiesPart activitiesPart;
+	private ActivitiesView activitiesView;
 	
-	public PeopleBlock(PersonView personView) {
+	public ActivitiesBlock(ActivitiesView activitiesView) {
 		super();
-		this.personView = personView;
+		this.activitiesView = activitiesView;
 	}
 
 	@Override
 	protected void createMasterPart(final IManagedForm managedForm, Composite parent) {
-		peoplePart = new PeoplePart(parent, managedForm, personView);
-		managedForm.addPart(peoplePart);
+		activitiesPart = new ActivitiesPart(parent, managedForm, activitiesView);
+		managedForm.addPart(activitiesPart);
 	}
 
 	@Override
@@ -50,29 +50,29 @@ class PeopleBlock extends MasterDetailsBlock {
 
 	@Override
 	protected void registerPages(DetailsPart detailsPart) {
-		final IDetailsPage detailsPage = new PersonPage(personView);
-		detailsPart.registerPage(Person.class, detailsPage);
+		final IDetailsPage detailsPage = new ActivityPage(activitiesView);
+		detailsPart.registerPage(Activity.class, detailsPage);
 		detailsPart.setPageProvider(new IDetailsPageProvider() {
 
 			public IDetailsPage getPage(Object key) {
-				if (key.equals(Person.class)) {
+				if (key.equals(Activity.class)) {
 					return detailsPage;
 				}
 				return null;
 			}
 
 			public Object getPageKey(Object object) {
-				if (object instanceof Person) {
-					return Person.class;
+				if (object instanceof Activity) {
+					return Activity.class;
 				}
 				return object.getClass();
 			}
 			
 		});
-		sashForm.setWeights(new int[]{35, 65});
+		sashForm.setWeights(new int[]{50, 50});
 	}
 
 	public void setPeople(List<Person> people) {
-		peoplePart.setPeople(people);
+		activitiesPart.setPeople(people);
 	}
 }

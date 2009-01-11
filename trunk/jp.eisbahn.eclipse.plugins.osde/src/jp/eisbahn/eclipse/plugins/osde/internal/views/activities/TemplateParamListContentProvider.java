@@ -15,30 +15,24 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.views;
+package jp.eisbahn.eclipse.plugins.osde.internal.views.activities;
 
 import java.util.Map;
 
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
-public class TemplateParamListLabelProvider extends LabelProvider implements ITableLabelProvider {
+public class TemplateParamListContentProvider implements IStructuredContentProvider {
 	
-	public Image getColumnImage(Object element, int columnIndex) {
-		return null;
+	public void dispose() {
 	}
 
-	public String getColumnText(Object element, int columnIndex) {
-		Map.Entry<String, String> entry = (Map.Entry<String, String>)element;
-		switch(columnIndex) {
-		case 0:
-			return entry.getKey();
-		case 1:
-			return entry.getValue();
-		default:
-			return null;
-		}
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	}
+
+	public Object[] getElements(Object inputElement) {
+		Map<String, String> templateParams = (Map<String, String>)inputElement;
+		return templateParams.entrySet().toArray();
 	}
 	
 }
