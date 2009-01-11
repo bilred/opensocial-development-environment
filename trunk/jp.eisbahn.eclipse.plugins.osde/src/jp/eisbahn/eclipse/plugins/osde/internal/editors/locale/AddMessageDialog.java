@@ -17,6 +17,10 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -42,25 +46,27 @@ public class AddMessageDialog extends TitleAreaDialog {
 	};
 
 	private Text nameText;
-	private Text contentText;
+	private Map<LocaleModel, Text> contentTextMap;
 	
 	private String name;
-	private String content;
+	private Map<LocaleModel, String> contentMap;
+
+	private List<LocaleModel> localeModels;
+
+	private LocaleModel localeModel;
 	
-	public AddMessageDialog(Shell shell) {
+	public AddMessageDialog(Shell shell, List<LocaleModel> localeModels, LocaleModel localeModel) {
 		super(shell);
+		this.localeModels = localeModels;
+		this.localeModel = localeModel;
+		contentTextMap = new HashMap<LocaleModel, Text>();
+		contentMap = new HashMap<LocaleModel, String>();
 	}
 	
 	private boolean validate() {
 		String name = nameText.getText();
 		if (StringUtils.isEmpty(name)) {
 			setMessage("Please fill the name field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		String content = contentText.getText();
-		if (StringUtils.isEmpty(content)) {
-			setMessage("Please fill the content field.", IMessageProvider.ERROR);
 			getButton(IDialogConstants.OK_ID).setEnabled(false);
 			return false;
 		}
@@ -71,7 +77,7 @@ public class AddMessageDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 300);
+		return new Point(500, super.getInitialSize().y);
 	}
 	
 	@Override
@@ -94,22 +100,42 @@ public class AddMessageDialog extends TitleAreaDialog {
 		nameText.addModifyListener(modifyListener);
 		//
 		label = new Label(panel, SWT.NONE);
-		label.setText("Content:");
-		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-		layoutData.verticalAlignment = 5;
-		label.setLayoutData(layoutData);
-		contentText = new Text(panel, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		layoutData = new GridData(GridData.FILL_BOTH);
-		contentText.setLayoutData(layoutData);
-		contentText.addModifyListener(modifyListener);
+		label.setText(getLabelText(localeModel));
+		Text text = new Text(panel, SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		text.setLayoutData(layoutData);
+		text.addModifyListener(modifyListener);
+		contentTextMap.put(localeModel, text);
+		//
+		for (LocaleModel model : localeModels) {
+			if (!localeModel.equals(model)) {
+				label = new Label(panel, SWT.NONE);
+				label.setText(getLabelText(model));
+				text = new Text(panel, SWT.BORDER);
+				layoutData = new GridData(GridData.FILL_HORIZONTAL);
+				text.setLayoutData(layoutData);
+				text.addModifyListener(modifyListener);
+				contentTextMap.put(model, text);
+			}
+		}
 		//
 		return composite;
+	}
+	
+	private String getLabelText(LocaleModel localeModel) {
+		String country = localeModel.getCountry();
+		country = StringUtils.isEmpty(country) ? "(any)" : country;
+		String lang = localeModel.getLang();
+		lang = StringUtils.isEmpty(lang) ? "(any)" : lang;
+		return lang + "_" + country;
 	}
 
 	@Override
 	protected void okPressed() {
 		name = nameText.getText();
-		content = contentText.getText();
+		for (Map.Entry<LocaleModel, Text> entry : contentTextMap.entrySet()) {
+			contentMap.put(entry.getKey(), entry.getValue().getText());
+		}
 		setReturnCode(OK);
 		close();
 	}
@@ -123,9 +149,9 @@ public class AddMessageDialog extends TitleAreaDialog {
 	public String getName() {
 		return name;
 	}
-
-	public String getContent() {
-		return content;
+	
+	public Map<LocaleModel, String> getContentMap() {
+		return contentMap;
 	}
 
 }

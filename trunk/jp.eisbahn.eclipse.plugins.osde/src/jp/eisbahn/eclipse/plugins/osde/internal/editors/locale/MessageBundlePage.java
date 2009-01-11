@@ -17,8 +17,10 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -158,11 +160,19 @@ public class MessageBundlePage implements IDetailsPage {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			AddMessageDialog dialog = new AddMessageDialog(page.getSite().getShell());
+			List<LocaleModel> localeModels = page.getLocaleModels();
+			AddMessageDialog dialog = new AddMessageDialog(page.getSite().getShell(), localeModels, model);
 			if (dialog.open() == AddMessageDialog.OK) {
-				Map<String, String> messages = model.getMessages();
-				messages.put(dialog.getName(), dialog.getContent());
-//				messagesList.setInput(messages);
+				String name = dialog.getName();
+				Map<LocaleModel, String> contentMap = dialog.getContentMap();
+				for (LocaleModel localeModel : localeModels) {
+					String content = contentMap.get(localeModel);
+					if (!StringUtils.isEmpty(content)) {
+						localeModel.getMessages().put(name, content);
+					} else {
+						localeModel.getMessages().remove(name);
+					}
+				}
 				managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
 				makeDirty();
 			}
@@ -188,8 +198,10 @@ public class MessageBundlePage implements IDetailsPage {
 				final Map.Entry<String, String> message = (Map.Entry<String, String>)structured.getFirstElement();
 				if (MessageDialog.openConfirm(page.getSite().getShell(),
 						"Deleting message", "Do you want to delete message '" + message.getKey() + "'?")) {
-					Map<String, String> messages = (Map<String, String>)messagesList.getInput();
-					messages.remove(message.getKey());
+					List<LocaleModel> localeModels = page.getLocaleModels();
+					for (LocaleModel localeModel : localeModels) {
+						localeModel.getMessages().remove(message.getKey());
+					}
 					messagesList.refresh();
 					managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
 					makeDirty();
