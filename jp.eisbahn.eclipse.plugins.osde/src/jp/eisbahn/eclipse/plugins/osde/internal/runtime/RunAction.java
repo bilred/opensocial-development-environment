@@ -85,7 +85,7 @@ public class RunAction implements IObjectActionDelegate {
 			//
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<Person> people = personService.getPeople();
-			RunApplicationDialog dialog = new RunApplicationDialog(shell, people);
+			RunApplicationDialog dialog = new RunApplicationDialog(shell, people, gadgetXmlFile);
 			if (dialog.open() == RunApplicationDialog.OK) {
 				String view = dialog.getView();
 				String viewer = dialog.getViewer();

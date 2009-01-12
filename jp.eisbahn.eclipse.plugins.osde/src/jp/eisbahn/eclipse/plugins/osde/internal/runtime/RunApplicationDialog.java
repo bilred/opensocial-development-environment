@@ -19,9 +19,14 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
 import java.util.List;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.social.opensocial.model.Person;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -40,6 +45,14 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 public class RunApplicationDialog extends TitleAreaDialog {
+	
+	private static final String PREF_VIEW = "pref_view";
+	private static final String PREF_OWNER = "pref_owner";
+	private static final String PREF_VIEWER = "pref_viewer";
+	private static final String PREF_WIDTH = "pref_width";
+	private static final String PREF_COUNTRY = "pref_country";
+	private static final String PREF_LANG = "pref_lang";
+	private static final String PREF_USE_EXTERNAL_BROWSER = "pref_use_external_browser";
 
 	private List<Person> people;
 	
@@ -59,9 +72,12 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	private Combo languages;
 	private Button useExternalBrowserCheck;
 	
-	public RunApplicationDialog(Shell shell, List<Person> people) {
+	private IFile gadgetXmlFile;
+	
+	public RunApplicationDialog(Shell shell, List<Person> people, IFile gadgetXmlFile) {
 		super(shell);
 		this.people = people;
+		this.gadgetXmlFile = gadgetXmlFile;
 	}
 
 	@Override
@@ -169,7 +185,44 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			useExternalBrowserCheck.setEnabled(false);
 		}
 		//
+		setDefaultValues();
+		//
 		return composite;
+	}
+
+	private void setDefaultValues() {
+		try {
+			String prevCountry = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_COUNTRY));
+			if (StringUtils.isNumeric(prevCountry)) {
+				countries.select(Integer.parseInt(prevCountry));
+			}
+			String prevLang = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_LANG));
+			if (StringUtils.isNumeric(prevLang)) {
+				languages.select(Integer.parseInt(prevLang));
+			}
+			String prevOwner = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_OWNER));
+			if (StringUtils.isNumeric(prevOwner)) {
+				owners.select(Integer.parseInt(prevOwner));
+			}
+			String prevViewer = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_VIEWER));
+			if (StringUtils.isNumeric(prevViewer)) {
+				viewers.select(Integer.parseInt(prevViewer));
+			}
+			String prevUseExternalBrowser = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_USE_EXTERNAL_BROWSER));
+			if (StringUtils.isNotEmpty(prevUseExternalBrowser)) {
+				useExternalBrowserCheck.setSelection(Boolean.parseBoolean(prevUseExternalBrowser));
+			}
+			String prevView = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_VIEW));
+			if (StringUtils.isNumeric(prevView)) {
+				viewKind.select(Integer.parseInt(prevView));
+			}
+			String prevWidth = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_WIDTH));
+			if (StringUtils.isNumeric(prevWidth)) {
+				widths.setSelection(Integer.parseInt(prevWidth));
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -188,6 +241,17 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		country = country.substring(country.indexOf('(') + 1, country.length() - 1);
 		language = languages.getText();
 		language = language.substring(language.indexOf('(') + 1, language.length() - 1);
+		try {
+			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_COUNTRY), String.valueOf(countries.getSelectionIndex()));
+			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_LANG), String.valueOf(languages.getSelectionIndex()));
+			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_OWNER), String.valueOf(owners.getSelectionIndex()));
+			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_VIEWER), String.valueOf(viewers.getSelectionIndex()));
+			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_VIEW), String.valueOf(viewKind.getSelectionIndex()));
+			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_WIDTH), String.valueOf(widths.getSelection()));
+			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_USE_EXTERNAL_BROWSER), String.valueOf(useExternalBrowserCheck.getSelection()));
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
 		setReturnCode(OK);
 		close();
 	}
