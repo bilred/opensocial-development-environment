@@ -30,9 +30,11 @@ import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
 import org.apache.shindig.social.opensocial.model.Person;
+import org.apache.shindig.social.opensocial.model.Person.Gender;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,6 +52,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
@@ -70,14 +73,16 @@ public class PersonPage implements IDetailsPage {
 	private PersonView personView;
 	private Person person;
 	
+	private TableViewer friendsList;
+
 	private Label idLabel;
 	private Text displayNameText;
 	private Text aboutMeText;
 	private Text ageText;
 	private DateTime birthdayText;
 	private Text thumbnailUrlText;
-
-	private TableViewer friendsList;
+	private Combo genderCombo;
+	private Text nicknameText;
 
 	public PersonPage(PersonView personView) {
 		super();
@@ -112,32 +117,58 @@ public class PersonPage implements IDetailsPage {
 		displayNameText.setLayoutData(layoutData);
 		displayNameText.addFocusListener(basicValueChangeListener);
 		//
-		toolkit.createLabel(basicPane, "About me:");
-		aboutMeText = toolkit.createText(basicPane, "", SWT.MULTI | SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = 3;
-		layoutData.heightHint = 50;
-		aboutMeText.setLayoutData(layoutData);
-		aboutMeText.addFocusListener(basicValueChangeListener);
-		//
-		toolkit.createLabel(basicPane, "Age:");
-		ageText = toolkit.createText(basicPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		ageText.setLayoutData(layoutData);
-		ageText.addFocusListener(basicValueChangeListener);
-		//
-		toolkit.createLabel(basicPane, "Birthday:");
-		birthdayText = new DateTime(basicPane, SWT.DATE | SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		birthdayText.setLayoutData(layoutData);
-		birthdayText.addFocusListener(basicValueChangeListener);
-		//
 		toolkit.createLabel(basicPane, "Thumbnail:");
 		thumbnailUrlText = toolkit.createText(basicPane, "", SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		thumbnailUrlText.setLayoutData(layoutData);
 		thumbnailUrlText.addFocusListener(basicValueChangeListener);
+		//
+		// General
+		Section generalSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
+		generalSection.setText("General");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		generalSection.setLayoutData(layoutData);
+		Composite generalPane = toolkit.createComposite(generalSection);
+		generalPane.setLayout(new GridLayout(4, false));
+		generalSection.setClient(generalPane);
+		final SectionPart generalPart = new SectionPart(generalSection);
+		ValueChangeListener generalValueChangeListener = new ValueChangeListener(generalPart);
+		//
+		toolkit.createLabel(generalPane, "About me:");
+		aboutMeText = toolkit.createText(generalPane, "", SWT.MULTI | SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 3;
+		layoutData.heightHint = 50;
+		aboutMeText.setLayoutData(layoutData);
+		aboutMeText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Age:");
+		ageText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		ageText.setLayoutData(layoutData);
+		ageText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Birthday:");
+		birthdayText = new DateTime(generalPane, SWT.DATE | SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		birthdayText.setLayoutData(layoutData);
+		birthdayText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Gender:");
+		genderCombo = new Combo(generalPane, SWT.READ_ONLY);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		genderCombo.setLayoutData(layoutData);
+		genderCombo.addSelectionListener(generalValueChangeListener);
+		genderCombo.add("");
+		genderCombo.add("male");
+		genderCombo.add("female");
+		//
+		toolkit.createLabel(generalPane, "Nickname:");
+		nicknameText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		nicknameText.setLayoutData(layoutData);
+		nicknameText.addFocusListener(generalValueChangeListener);
 		//
 		// Friends
 		Section friendsSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
@@ -219,6 +250,18 @@ public class PersonPage implements IDetailsPage {
 		ageText.setText(string(person.getAge()));
 		setDate(birthdayText, person.getBirthday());
 		thumbnailUrlText.setText(trim(person.getThumbnailUrl()));
+		genderCombo.select(0);
+		Gender gender = person.getGender();
+		if (gender != null) {
+			String[] items = genderCombo.getItems();
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].equals(gender.name())) {
+					genderCombo.select(i);
+					break;
+				}
+			}
+		}
+		nicknameText.setText(trim(person.getNickname()));
 		try {
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<RelationshipImpl> relationshipList = personService.getRelationshipList(person);
@@ -239,23 +282,34 @@ public class PersonPage implements IDetailsPage {
 		}
 	}
 	
-	private class ValueChangeListener implements FocusListener {
+	private class ValueChangeListener implements FocusListener, SelectionListener {
 		private final SectionPart part;
 
 		private ValueChangeListener(SectionPart part) {
 			this.part = part;
 		}
 
+		public void widgetSelected(SelectionEvent e) {
+			updatePerson();
+		}
+
 		public void focusGained(FocusEvent e) {
 		}
 
 		public void focusLost(FocusEvent evt) {
+			updatePerson();
+		}
+		
+		private void updatePerson() {
 			try {
 				person.setDisplayName(normalize(displayNameText.getText()));
-				person.setAboutMe(aboutMeText.getText());
+				person.setAboutMe(normalize(aboutMeText.getText()));
 				person.setAge(toInteger(ageText.getText()));
 				person.setBirthday(getDate(birthdayText));
 				person.setThumbnailUrl(normalize(thumbnailUrlText.getText()));
+				String gender = genderCombo.getText();
+				person.setGender(StringUtils.isNotEmpty(gender) ? Gender.valueOf(gender) : null);
+				person.setNickname(normalize(nicknameText.getText()));
 				PersonService personService = Activator.getDefault().getPersonService();
 				personService.store(person);
 				managedForm.fireSelectionChanged(part, new StructuredSelection(person));
@@ -273,6 +327,10 @@ public class PersonPage implements IDetailsPage {
 			cal.set(year, month, day);
 			return cal.getTime();
 		}
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
 	}
 	
 	private class AddButtonSelectionListener implements SelectionListener {
