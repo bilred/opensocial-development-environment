@@ -25,7 +25,7 @@ public enum FeatureName {
 	VIEWS("views"),
 	FLASH("flash"),
 	SKINS("skins"),
-	DYNAMIC_HEIGHT("window"),
+	DYNAMIC_HEIGHT("dynamic-height"),
 	SET_TITLE("settitle"),
 	MINI_MESSAGE("minimessage"),
 	TABS("tabs");
