@@ -17,35 +17,21 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.pref;
 
-import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.editor.FormPage;
+import java.util.Map;
 
-import com.google.gadgets.Module;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
-public class UserPrefsPage extends FormPage {
-
-	private Module module;
+class EnumValuesListContentProvider implements IStructuredContentProvider {
 	
-	private UserPrefsBlock block;
-	
-	public Module getModule() {
-		return module;
+	public void dispose() {
 	}
 
-	public UserPrefsPage(FormEditor editor, Module module) {
-		super(editor, null, "UserPref");
-		this.module = module;
-		block = new UserPrefsBlock(this);
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		block.createContent(managedForm);
-	}
-
-	public void updateUserPrefModel() {
-		block.updateUserPrefModel();
+	public Object[] getElements(Object inputElement) {
+		return ((Map<String, String>)inputElement).entrySet().toArray();
 	}
 	
 }
