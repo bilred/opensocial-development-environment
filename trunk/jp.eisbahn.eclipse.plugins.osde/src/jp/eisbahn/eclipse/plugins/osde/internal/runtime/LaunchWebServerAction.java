@@ -17,11 +17,17 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
@@ -103,6 +109,19 @@ public class LaunchWebServerAction implements IObjectActionDelegate {
 				project = (IProject)element;
 			} else if (element instanceof IFile) {
 				project = ((IFile)element).getProject();
+			}
+			try {
+				int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
+				(new WebServerLaunchConfigurationCreator()).create(project, port, new NullProgressMonitor());
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
