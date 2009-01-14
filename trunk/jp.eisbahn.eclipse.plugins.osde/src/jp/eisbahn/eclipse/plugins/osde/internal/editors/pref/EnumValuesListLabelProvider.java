@@ -17,35 +17,28 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.pref;
 
-import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.editor.FormPage;
+import java.util.Map;
 
-import com.google.gadgets.Module;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 
-public class UserPrefsPage extends FormPage {
-
-	private Module module;
+class EnumValuesListLabelProvider extends LabelProvider implements ITableLabelProvider {
 	
-	private UserPrefsBlock block;
-	
-	public Module getModule() {
-		return module;
+	public Image getColumnImage(Object element, int columnIndex) {
+		return null;
 	}
 
-	public UserPrefsPage(FormEditor editor, Module module) {
-		super(editor, null, "UserPref");
-		this.module = module;
-		block = new UserPrefsBlock(this);
-	}
-
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		block.createContent(managedForm);
-	}
-
-	public void updateUserPrefModel() {
-		block.updateUserPrefModel();
+	public String getColumnText(Object element, int columnIndex) {
+		Map.Entry<String, String> entry = (Map.Entry<String, String>)element;
+		switch(columnIndex) {
+		case 0:
+			return entry.getKey();
+		case 1:
+			return entry.getValue();
+		default:
+			return null;
+		}
 	}
 	
 }

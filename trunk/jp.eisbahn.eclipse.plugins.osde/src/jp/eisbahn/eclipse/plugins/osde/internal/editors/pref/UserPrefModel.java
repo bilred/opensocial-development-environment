@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import com.google.gadgets.Module.UserPref;
 import com.google.gadgets.Module.UserPref.EnumValue;
 
@@ -25,6 +28,10 @@ public class UserPrefModel {
 		public String getDisplayName() {
 			return displayName;
 		}
+		
+		public static DataType getDataType(String name) {
+			return DataType.valueOf(name.toUpperCase());
+		}
 	}
 	
 	private String name;
@@ -45,7 +52,7 @@ public class UserPrefModel {
 		displayName = raw.getDisplayName();
 		defaultValue = raw.getDefaultValue();
 		required = Boolean.parseBoolean(raw.getRequired());
-		dataType = DataType.valueOf(raw.getDatatype());
+		dataType = DataType.getDataType(raw.getDatatype());
 		List<EnumValue> rawEnumValueList = raw.getEnumValue();
 		for (EnumValue enumValue : rawEnumValueList) {
 			enumValueMap.put(enumValue.getValue(), enumValue.getDisplayValue());
@@ -98,6 +105,25 @@ public class UserPrefModel {
 	
 	public void setEnumValueMap(Map<String, String> enumValueMap) {
 		this.enumValueMap = enumValueMap;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof UserPrefModel)) {
+			return false;
+		} else {
+			UserPrefModel target = (UserPrefModel)obj;
+			return new EqualsBuilder()
+					.append(name, target.getName())
+					.isEquals();
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37)
+				.append(name)
+				.toHashCode();
 	}
 
 }
