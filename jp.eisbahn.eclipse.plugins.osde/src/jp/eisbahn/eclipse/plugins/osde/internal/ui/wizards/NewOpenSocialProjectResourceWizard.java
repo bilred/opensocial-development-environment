@@ -50,13 +50,14 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 import com.google.gadgets.ViewName;
 
-public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard implements IExecutableExtension {
+public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceWizard {
 
-	public static final String WIZARD_ID = "jp.eisbahn.eclipse.plugins.osde.ui.wizards.new.project";
+	public static final String WIZARD_ID = "jp.eisbahn.eclipse.plugins.osde.newWizards.NewOpenSocialProjectWizard";
 	
 	private  WizardNewProjectCreationPage mainPage;
 	
@@ -79,7 +80,7 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 	}
 	
 	public void addPages() {
-		super.addPages();
+//		super.addPages();
 		//
 		mainPage = new WizardNewProjectCreationPage("basicNewProjectPage");
 		mainPage.setTitle("OpenSocial Project");
@@ -119,6 +120,7 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 		if (newProject == null) {
 			return false;
 		}
+		updatePerspective();
 		selectAndReveal(newProject);
 		return true;
 	}
@@ -201,6 +203,7 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewResourceWizard i
 	}
 	
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) {
+		super.setInitializationData(config, propertyName, data);
 	}
 
 }
