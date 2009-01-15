@@ -13,11 +13,11 @@
           category="jp.eisbahn.eclipse.plugins.osde.newWizards"
           icon="./icons/opensocial.gif"
           project="true"
+          finalPerspective="jp.eisbahn.eclipse.plugins.osde.perspective"
           class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.NewOpenSocialProjectResourceWizard">
           <description>
               Create an OpenSocial project.
           </description>
-           <selection class="org.eclipse.core.resources.IResource"/>
       </wizard> 
    </extension>
    
@@ -270,5 +270,14 @@
       <initializer
             class="jp.eisbahn.eclipse.plugins.osde.internal.ui.PreferenceInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePerspective"
+            id="jp.eisbahn.eclipse.plugins.osde.perspective"
+            icon="icons/opensocial.gif"
+            name="OpenSocial">
+      </perspective>
    </extension>
 </plugin>
