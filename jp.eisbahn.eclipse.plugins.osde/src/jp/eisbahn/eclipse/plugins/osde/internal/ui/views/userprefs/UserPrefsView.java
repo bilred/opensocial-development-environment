@@ -17,30 +17,36 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel.DataType;
+import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation;
+import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationJob;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -49,48 +55,24 @@ public class UserPrefsView extends AbstractView {
 	
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.UserPrefsView";
 	
-	private Action reloadAction;
-
 	private Composite userPrefFieldsComposite;
 
+	private ScrolledForm form;
+	
+	private SelectionListener listener = new SaveButtonSelectionListener();
+	
+	private Map<String, Control> fieldMap;
+
+	private LaunchApplicationInformation information;
+
 	public UserPrefsView() {
+		super();
+		this.fieldMap = new HashMap<String, Control>();
 	}
 	
-	@Override
-	protected void fillContextMenu(IMenuManager manager) {
-		super.fillContextMenu(manager);
-		manager.add(reloadAction);
-	}
-
-	@Override
-	protected void fillLocalPullDown(IMenuManager manager) {
-		super.fillLocalPullDown(manager);
-		manager.add(reloadAction);
-	}
-
-	@Override
-	protected void fillLocalToolBar(IToolBarManager manager) {
-		super.fillLocalToolBar(manager);
-		manager.add(reloadAction);
-	}
-
-	@Override
-	protected void makeActions() {
-		super.makeActions();
-		reloadAction = new Action() {
-			@Override
-			public void run() {
-			}
-		};
-		reloadAction.setText("Reload");
-		reloadAction.setToolTipText("Reload people and applications.");
-		reloadAction.setImageDescriptor(
-				Activator.getDefault().getImageRegistry().getDescriptor("icons/action_refresh.gif"));
-	}
-
 	protected void createForm(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		ScrolledForm form = toolkit.createScrolledForm(parent);
+		form = toolkit.createScrolledForm(parent);
 		Composite body = form.getBody();
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
@@ -122,6 +104,7 @@ public class UserPrefsView extends AbstractView {
 				for (Control control : children) {
 					control.dispose();
 				}
+				fieldMap.clear();
 			}
 		});
 	}
@@ -160,8 +143,15 @@ public class UserPrefsView extends AbstractView {
 						control = toolkit.createLabel(userPrefFieldsComposite, "---");
 					}
 					control.setLayoutData(layoutData);
+					fieldMap.put(model.getName(), control);
 				}
+				Button saveButton = toolkit.createButton(userPrefFieldsComposite, "Save", SWT.PUSH);
+				saveButton.addSelectionListener(listener);
+				GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_END);
+				layoutData.horizontalSpan = 2;
+				saveButton.setLayoutData(layoutData);
 				userPrefFieldsComposite.layout();
+				form.reflow(true);
 			}
 		});
 	}
@@ -169,20 +159,66 @@ public class UserPrefsView extends AbstractView {
 	public void connectedDatabase() {
 	}
 	
-	public void showUserPrefFields(
-			final String view, final String viewer, final String owner, final String appId,
-			final String country, final String language, final String url) {
+	private void retrieveUserPrefValues(
+			final String appId, final String viewerId, final Map<String, UserPrefModel> models) {
+		getSite().getShell().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				try {
+					ApplicationService service = Activator.getDefault().getApplicationService();
+					List<UserPrefImpl> userPrefs = service.getUserPrefs(appId, viewerId);
+					for (UserPrefImpl userPref : userPrefs) {
+						String name = userPref.getName();
+						Control control = fieldMap.get(name);
+						UserPrefModel model = models.get(name);
+						DataType dataType = model.getDataType();
+						if (dataType.equals(DataType.STRING)) {
+							((Text)control).setText(userPref.getValue());
+						} else if (dataType.equals(DataType.BOOL)) {
+							boolean value = Boolean.parseBoolean(userPref.getValue());
+							((Button)control).setSelection(value);
+						} else if (dataType.equals(DataType.LIST)) {
+							((Text)control).setText(userPref.getValue());
+						} else if (dataType.equals(DataType.ENUM)) {
+							Map<String, String> enumValueMap = model.getEnumValueMap();
+							String displayValue = enumValueMap.get(userPref.getValue());
+							if (StringUtils.isEmpty(displayValue)) {
+								displayValue = userPref.getValue();
+							}
+							Combo combo = (Combo)control;
+							String[] items = combo.getItems();
+							for (int i = 0; i < items.length; i++) {
+								if (items[i].equals(displayValue)) {
+									combo.select(i);
+									break;
+								}
+							}
+						}
+					}
+				} catch (ConnectionException e) {
+					MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+				}
+			}
+		});
+	}
+	
+	public void showUserPrefFields(final LaunchApplicationInformation information, final String url) {
 		Job job = new Job("Fetch metadata") {
 			@Override
 			protected IStatus run(final IProgressMonitor monitor) {
-				monitor.beginTask("Fetch metadata", 3);
+				monitor.beginTask("Fetch metadata", 4);
 				try {
 					removeAllFields();
 					monitor.worked(1);
 					List<UserPrefModel> userPrefModels =
-						MetaDataFetcher.fetch(view, viewer, owner, appId, country, language, url);
+						MetaDataFetcher.fetch(information.getView(), information.getViewer(),
+								information.getOwner(), information.getAppId(), 
+								information.getCountry(), information.getLanguage(), url);
 					monitor.worked(1);
 					setupFields(userPrefModels);
+					monitor.worked(1);
+					retrieveUserPrefValues(information.getAppId(), information.getViewer(), convertMap(userPrefModels));
+					monitor.worked(1);
+					UserPrefsView.this.information = information;
 				} catch (Exception e) {
 					e.printStackTrace();
 					MessageDialog.openError(getSite().getShell(), "Error", "Fetching metadata failed.\n" + e.getMessage());
@@ -190,8 +226,51 @@ public class UserPrefsView extends AbstractView {
 				monitor.done();
 				return Status.OK_STATUS;
 			}
+
+			private Map<String, UserPrefModel> convertMap(List<UserPrefModel> userPrefModels) {
+				Map<String, UserPrefModel> resultMap = new HashMap<String, UserPrefModel>();
+				for (UserPrefModel model : userPrefModels) {
+					resultMap.put(model.getName(), model);
+				}
+				return resultMap;
+			}
 		};
 		job.schedule();
 	}
-	
+
+	private class SaveButtonSelectionListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent evt) {
+			String appId = information.getAppId();
+			String viewerId = information.getViewer();
+			Map<String, String> userPrefMap = new HashMap<String, String>();
+			for (Map.Entry<String, Control> entry : fieldMap.entrySet()) {
+				String name = entry.getKey();
+				String value = null;
+				Control control = entry.getValue();
+				if (control instanceof Text) {
+					value = ((Text)control).getText();
+				} else if (control instanceof Combo) {
+					Combo combo = (Combo)control;
+					value = (String)combo.getData(combo.getText());
+				} else if (control instanceof Button) {
+					value = Boolean.toString(((Button)control).getSelection());
+				}
+				if (value != null) {
+					userPrefMap.put(name, value);
+				}
+			}
+			try {
+				ApplicationService service = Activator.getDefault().getApplicationService();
+				service.storeUserPrefs(appId, viewerId, userPrefMap);
+				Job job = new LaunchApplicationJob("Running application", information, getSite().getShell());
+				job.schedule();
+			} catch(ConnectionException e) {
+				MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+			}
+		}
+	}
+
 }
