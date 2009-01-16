@@ -32,6 +32,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurati
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -231,6 +232,8 @@ public class Activator extends AbstractUIPlugin {
 							appDataView.connectedDatabase();
 							ActivitiesView activitiesView = (ActivitiesView)window.getActivePage().showView(ActivitiesView.ID);
 							activitiesView.connectedDatabase();
+							UserPrefsView userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
+							userPrefsView.connectedDatabase();
 						} catch (PartInitException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

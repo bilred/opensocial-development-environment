@@ -23,6 +23,15 @@ public class ApplicationInformation {
 
 	private String appId;
 	private Module module;
+	private String path;
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 
 	public void setAppId(String appId) {
 		this.appId = appId;

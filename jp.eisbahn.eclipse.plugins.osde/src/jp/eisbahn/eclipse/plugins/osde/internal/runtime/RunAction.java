@@ -29,6 +29,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
@@ -49,16 +50,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
-public class RunAction implements IObjectActionDelegate {
+public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
 	private Shell shell;
 	private IFile gadgetXmlFile;
 	private IProject project;
+	private IWorkbenchPart targetPart;
 	
 	/**
 	 * Constructor for Action1.
@@ -72,6 +76,7 @@ public class RunAction implements IObjectActionDelegate {
 	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		shell = targetPart.getSite().getShell();
+		this.targetPart = targetPart;
 	}
 
 	/**
@@ -99,8 +104,8 @@ public class RunAction implements IObjectActionDelegate {
 						"Running application", viewer, owner, view,
 						width, appId, useExternalBrowser,
 						country, language);
-				job.setUser(true);
 				job.schedule();
+				notifyUserPrefsView(view, viewer, owner, appId, country, language);
 			}
 		} catch(ConnectionException e) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
@@ -111,6 +116,30 @@ public class RunAction implements IObjectActionDelegate {
 		}
 	}
 	
+	private void notifyUserPrefsView(final String view, final String viewer, final String owner,
+			final String appId, final String country, final String language) {
+		try {
+			int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
+			final String url = "http://localhost:" + port + "/" + gadgetXmlFile.getName();
+			final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
+			shell.getDisplay().syncExec(new Runnable() {
+				public void run() {
+					try {
+						UserPrefsView userPrefsView;
+						userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
+						userPrefsView.showUserPrefFields(view, viewer, owner, appId, country, language, url);
+					} catch (PartInitException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
@@ -151,7 +180,7 @@ public class RunAction implements IObjectActionDelegate {
 		}
 
 		@Override
-		protected IStatus run(IProgressMonitor monitor) {
+		protected IStatus run(final IProgressMonitor monitor) {
 			try {
 				monitor.beginTask("Running application", 1);
 				int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
@@ -188,20 +217,30 @@ public class RunAction implements IObjectActionDelegate {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						monitor.done();
 					}
 				});
-				monitor.worked(1);
+				return Status.OK_STATUS;
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				monitor.done();
+				return Status.CANCEL_STATUS;
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} finally {
 				monitor.done();
+				return Status.CANCEL_STATUS;
 			}
-			return Status.OK_STATUS;
 		}
+	}
+
+	public void dispose() {
+	}
+
+	public void init(IWorkbenchWindow window) {
+		targetPart = window.getActivePage().getActivePart();
+		shell = targetPart.getSite().getShell();
 	}
 
 }

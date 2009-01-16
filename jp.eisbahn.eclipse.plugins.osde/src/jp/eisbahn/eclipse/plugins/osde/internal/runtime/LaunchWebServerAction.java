@@ -43,8 +43,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class LaunchWebServerAction implements IObjectActionDelegate {
+public class LaunchWebServerAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
 	private IProject project;
 	
@@ -124,6 +126,12 @@ public class LaunchWebServerAction implements IObjectActionDelegate {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void dispose() {
+	}
+
+	public void init(IWorkbenchWindow window) {
 	}
 
 }

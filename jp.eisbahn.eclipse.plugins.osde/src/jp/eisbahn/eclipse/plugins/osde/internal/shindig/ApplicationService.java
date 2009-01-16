@@ -41,6 +41,7 @@ public class ApplicationService {
 		Transaction tx = session.beginTransaction();
 		String appId = appInfo.getAppId();
 		Module module = appInfo.getModule();
+		String path = appInfo.getPath();
 		Query query = session.createQuery("select a from ApplicationImpl a where a.id = :id");
 		query.setParameter("id", appId);
 		ApplicationImpl application = (ApplicationImpl)query.uniqueResult();
@@ -49,6 +50,7 @@ public class ApplicationService {
 			application.setId(appId);
 		}
 		application.setTitle(module.getModulePrefs().getTitle());
+		application.setPath(path);
 		session.saveOrUpdate(application);
 		tx.commit();
 	}
