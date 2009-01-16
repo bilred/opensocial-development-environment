@@ -47,6 +47,7 @@ public class OpenSocialUtil {
 			ApplicationInformation info = new ApplicationInformation();
 			info.setAppId(appId);
 			info.setModule(module);
+			info.setPath(file.getFullPath().toPortableString());
 			return info;
 		} catch(NoSuchAlgorithmException e) {
 			throw new IllegalStateException(e);
