@@ -17,10 +17,6 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -38,9 +34,6 @@ import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -53,15 +46,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
 	private Shell shell;
-	private IFile gadgetXmlFile;
-	private IProject project;
+	IFile gadgetXmlFile;
+	IProject project;
 	private IWorkbenchPart targetPart;
 	
 	/**
@@ -100,12 +90,12 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 				boolean useExternalBrowser = dialog.isUseExternalBrowser();
 				String country = dialog.getCountry();
 				String language = dialog.getLanguage();
-				Job job = new LaunchApplicationJob(
-						"Running application", viewer, owner, view,
-						width, appId, useExternalBrowser,
-						country, language);
+				LaunchApplicationInformation information = new LaunchApplicationInformation(
+						viewer, owner, view, width, appId, useExternalBrowser,
+						country, language, project, gadgetXmlFile.getName());
+				Job job = new LaunchApplicationJob("Running application", information, shell);
 				job.schedule();
-				notifyUserPrefsView(view, viewer, owner, appId, country, language);
+				notifyUserPrefsView(information);
 			}
 		} catch(ConnectionException e) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
@@ -116,8 +106,7 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 		}
 	}
 	
-	private void notifyUserPrefsView(final String view, final String viewer, final String owner,
-			final String appId, final String country, final String language) {
+	private void notifyUserPrefsView(final LaunchApplicationInformation information) {
 		try {
 			int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
 			final String url = "http://localhost:" + port + "/" + gadgetXmlFile.getName();
@@ -127,7 +116,7 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 					try {
 						UserPrefsView userPrefsView;
 						userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
-						userPrefsView.showUserPrefFields(view, viewer, owner, appId, country, language, url);
+						userPrefsView.showUserPrefFields(information, url);
 					} catch (PartInitException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -150,87 +139,6 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 			if (element instanceof IFile) {
 				gadgetXmlFile = (IFile)element;
 				project = gadgetXmlFile.getProject();
-			}
-		}
-	}
-
-	private class LaunchApplicationJob extends Job {
-		private String viewer;
-		private String owner;
-		private String view;
-		private String width;
-		private String appId;
-		private boolean useExternalBrowser;
-		private String country;
-		private String language;
-
-		private LaunchApplicationJob(
-				String name, String viewer, String owner, String view,
-				String width, String appId, boolean useExternalBrwoser,
-				String country, String language) {
-			super(name);
-			this.viewer = viewer;
-			this.owner = owner;
-			this.view = view;
-			this.width = width;
-			this.appId = appId;
-			this.useExternalBrowser = useExternalBrwoser;
-			this.country = country;
-			this.language = language;
-		}
-
-		@Override
-		protected IStatus run(final IProgressMonitor monitor) {
-			try {
-				monitor.beginTask("Running application", 1);
-				int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-				final String url = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:" + port + "/"
-						+ gadgetXmlFile.getName()
-						+ "&view=" + view
-						+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
-						+ "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
-						+ "&width=" + URLEncoder.encode(width, "UTF-8")
-						+ "&appId=" + URLEncoder.encode(appId, "UTF-8")
-						+ "&country=" + URLEncoder.encode(country, "UTF-8")
-						+ "&language=" + URLEncoder.encode(language, "UTF-8");
-				shell.getDisplay().syncExec(new Runnable() {
-					public void run() {
-						try {
-							IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-							IWebBrowser browser;
-							if (!useExternalBrowser) {
-								String title = project.getName() + ":" + gadgetXmlFile.getName() + " [" + view + "]";
-								String desc = project.getName() + ":" + gadgetXmlFile.getName() + " [" + view + "] viewer=" + viewer + " owner=" + owner;
-								browser = support.createBrowser(
-										IWorkbenchBrowserSupport.LOCATION_BAR 
-											| IWorkbenchBrowserSupport.NAVIGATION_BAR
-											| IWorkbenchBrowserSupport.AS_EDITOR,
-										url, title, desc);
-							} else {
-								browser = support.getExternalBrowser();
-							}
-							browser.openURL(new URL(url));
-						} catch (MalformedURLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (PartInitException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						monitor.done();
-					}
-				});
-				return Status.OK_STATUS;
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				monitor.done();
-				return Status.CANCEL_STATUS;
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				monitor.done();
-				return Status.CANCEL_STATUS;
 			}
 		}
 	}

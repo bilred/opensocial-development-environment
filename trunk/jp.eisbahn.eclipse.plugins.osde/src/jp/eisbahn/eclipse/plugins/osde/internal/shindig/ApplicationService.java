@@ -18,10 +18,12 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
 import java.util.List;
+import java.util.Map;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
+import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -65,6 +67,34 @@ public class ApplicationService {
 		query.setParameter("id", appId);
 		ApplicationImpl application = (ApplicationImpl)query.uniqueResult();
 		return application;
+	}
+	
+	public List<UserPrefImpl> getUserPrefs(String appId, String viewerId) {
+		Query query = session.createQuery(
+				"select u from UserPrefImpl u where u.appId = :appId and u.viewerId = :viewerId");
+		query.setParameter("appId", appId);
+		query.setParameter("viewerId", viewerId);
+		return (List<UserPrefImpl>)query.list();
+	}
+
+	public void storeUserPrefs(String appId, String viewerId, Map<String, String> userPrefMap) {
+		Transaction tx = session.beginTransaction();
+		for (Map.Entry<String, String> entry : userPrefMap.entrySet()) {
+			Query query = session.createQuery("select u from UserPrefImpl u where u.appId = :appId and u.viewerId = :viewerId and u.name = :name");
+			query.setParameter("appId", appId);
+			query.setParameter("viewerId", viewerId);
+			query.setParameter("name", entry.getKey());
+			UserPrefImpl userPref = (UserPrefImpl)query.uniqueResult();
+			if (userPref == null) {
+				userPref = new UserPrefImpl();
+				userPref.setAppId(appId);
+				userPref.setViewerId(viewerId);
+				userPref.setName(entry.getKey());
+			}
+			userPref.setValue(entry.getValue());
+			session.saveOrUpdate(userPref);
+		}
+		tx.commit();
 	}
 
 }
