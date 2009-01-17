@@ -20,6 +20,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -39,6 +40,9 @@ public class OsdePerspective implements IPerspectiveFactory {
 		bottom.addView(ActivitiesView.ID);
 		bottom.addView(AppDataView.ID);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
+		//
+		IFolderLayout leftBottom = factory.createFolder("leftBottom", IPageLayout.BOTTOM, 0.6f, "left");
+		leftBottom.addView(UserPrefsView.ID);
 		//
 		factory.addPerspectiveShortcut("org.eclipse.ui.resourcePerspective");
 		//
