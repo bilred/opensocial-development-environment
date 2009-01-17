@@ -170,26 +170,28 @@ public class UserPrefsView extends AbstractView {
 						String name = userPref.getName();
 						Control control = fieldMap.get(name);
 						UserPrefModel model = models.get(name);
-						DataType dataType = model.getDataType();
-						if (dataType.equals(DataType.STRING)) {
-							((Text)control).setText(userPref.getValue());
-						} else if (dataType.equals(DataType.BOOL)) {
-							boolean value = Boolean.parseBoolean(userPref.getValue());
-							((Button)control).setSelection(value);
-						} else if (dataType.equals(DataType.LIST)) {
-							((Text)control).setText(userPref.getValue());
-						} else if (dataType.equals(DataType.ENUM)) {
-							Map<String, String> enumValueMap = model.getEnumValueMap();
-							String displayValue = enumValueMap.get(userPref.getValue());
-							if (StringUtils.isEmpty(displayValue)) {
-								displayValue = userPref.getValue();
-							}
-							Combo combo = (Combo)control;
-							String[] items = combo.getItems();
-							for (int i = 0; i < items.length; i++) {
-								if (items[i].equals(displayValue)) {
-									combo.select(i);
-									break;
+						if (model != null) {
+							DataType dataType = model.getDataType();
+							if (dataType.equals(DataType.STRING)) {
+								((Text)control).setText(userPref.getValue());
+							} else if (dataType.equals(DataType.BOOL)) {
+								boolean value = Boolean.parseBoolean(userPref.getValue());
+								((Button)control).setSelection(value);
+							} else if (dataType.equals(DataType.LIST)) {
+								((Text)control).setText(userPref.getValue());
+							} else if (dataType.equals(DataType.ENUM)) {
+								Map<String, String> enumValueMap = model.getEnumValueMap();
+								String displayValue = enumValueMap.get(userPref.getValue());
+								if (StringUtils.isEmpty(displayValue)) {
+									displayValue = userPref.getValue();
+								}
+								Combo combo = (Combo)control;
+								String[] items = combo.getItems();
+								for (int i = 0; i < items.length; i++) {
+									if (items[i].equals(displayValue)) {
+										combo.select(i);
+										break;
+									}
 								}
 							}
 						}
