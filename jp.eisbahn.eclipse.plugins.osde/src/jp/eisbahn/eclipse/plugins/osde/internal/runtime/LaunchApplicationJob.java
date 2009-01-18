@@ -122,7 +122,7 @@ public class LaunchApplicationJob extends Job {
 									IWorkbenchBrowserSupport.LOCATION_BAR 
 										| IWorkbenchBrowserSupport.NAVIGATION_BAR
 										| IWorkbenchBrowserSupport.AS_EDITOR,
-									url, title, desc);
+									title, title, desc);
 						} else {
 							browser = support.getExternalBrowser();
 						}
