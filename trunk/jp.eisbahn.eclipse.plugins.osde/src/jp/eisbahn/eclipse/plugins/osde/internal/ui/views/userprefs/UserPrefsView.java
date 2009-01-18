@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -109,7 +110,8 @@ public class UserPrefsView extends AbstractView {
 		});
 	}
 	
-	private void setupFields(final List<UserPrefModel> userPrefModels) {
+	private void setupFields(
+			final List<UserPrefModel> userPrefModels, final LaunchApplicationInformation information) {
 		getSite().getShell().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				FormToolkit toolkit = new FormToolkit(getSite().getShell().getDisplay());
@@ -145,13 +147,33 @@ public class UserPrefsView extends AbstractView {
 					control.setLayoutData(layoutData);
 					fieldMap.put(model.getName(), control);
 				}
-				Button saveButton = toolkit.createButton(userPrefFieldsComposite, "Save", SWT.PUSH);
-				saveButton.addSelectionListener(listener);
-				GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_END);
-				layoutData.horizontalSpan = 2;
-				saveButton.setLayoutData(layoutData);
+				if (!userPrefModels.isEmpty()) {
+					Button saveButton = toolkit.createButton(userPrefFieldsComposite, "Save", SWT.PUSH);
+					saveButton.addSelectionListener(listener);
+					GridData layoutData = new GridData(GridData.HORIZONTAL_ALIGN_END);
+					layoutData.horizontalSpan = 2;
+					saveButton.setLayoutData(layoutData);
+					Label separator = toolkit.createSeparator(userPrefFieldsComposite, SWT.HORIZONTAL);
+					layoutData = new GridData(GridData.FILL_HORIZONTAL);
+					layoutData.horizontalSpan = 2;
+					separator.setLayoutData(layoutData);
+				}
+				createLabel(information.getGadgetXmlFileName(), 2, toolkit);
+				createLabel("Viewer:", 1, toolkit);
+				createLabel(information.getViewer(), 1, toolkit);
+				createLabel("Owner:", 1, toolkit);
+				createLabel(information.getOwner(), 1, toolkit);
+				createLabel("Locale:", 1, toolkit);
+				createLabel(information.getLanguage() + "_" + information.getCountry(), 1, toolkit);
 				userPrefFieldsComposite.layout();
 				form.reflow(true);
+			}
+			
+			private void createLabel(String text, int span, FormToolkit toolkit) {
+				Label label = toolkit.createLabel(userPrefFieldsComposite, text);
+				GridData layoutData = new GridData();
+				layoutData.horizontalSpan = span;
+				label.setLayoutData(layoutData);
 			}
 		});
 	}
@@ -216,7 +238,7 @@ public class UserPrefsView extends AbstractView {
 								information.getOwner(), information.getAppId(), 
 								information.getCountry(), information.getLanguage(), url);
 					monitor.worked(1);
-					setupFields(userPrefModels);
+					setupFields(userPrefModels, information);
 					monitor.worked(1);
 					retrieveUserPrefValues(information.getAppId(), information.getViewer(), convertMap(userPrefModels));
 					monitor.worked(1);
