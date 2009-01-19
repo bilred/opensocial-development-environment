@@ -74,7 +74,7 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	 */
 	public void run(IAction action) {
 		try {
-			ApplicationInformation appInfo = OpenSocialUtil.createApplicationId(gadgetXmlFile);
+			ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(gadgetXmlFile);
 			ApplicationService applicationService = Activator.getDefault().getApplicationService();
 			applicationService.storeAppInfo(appInfo);
 			//
