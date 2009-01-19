@@ -35,7 +35,7 @@ import com.google.gadgets.Module;
 
 public class OpenSocialUtil {
 
-	public static ApplicationInformation createApplicationId(IFile file) throws JAXBException, CoreException {
+	public static ApplicationInformation createApplicationInformation(IFile file) throws JAXBException, CoreException {
 		try {
 			JAXBContext context = JAXBContext.newInstance(Module.class);
 			Unmarshaller um = context.createUnmarshaller();
@@ -44,10 +44,16 @@ public class OpenSocialUtil {
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(path.getBytes("UTF-8"));
 			String appId = Gadgets.toHexString(hash);
+			String consumerKey = "osde:" + path;
+			digest.reset();
+			hash = digest.digest(consumerKey.getBytes("UTF-8"));
+			String consumerSecret = Gadgets.toHexString(hash);
 			ApplicationInformation info = new ApplicationInformation();
 			info.setAppId(appId);
 			info.setModule(module);
 			info.setPath(file.getFullPath().toPortableString());
+			info.setConsumerKey(consumerKey);
+			info.setConsumerSecret(consumerSecret);
 			return info;
 		} catch(NoSuchAlgorithmException e) {
 			throw new IllegalStateException(e);

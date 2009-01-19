@@ -44,6 +44,8 @@ public class ApplicationService {
 		String appId = appInfo.getAppId();
 		Module module = appInfo.getModule();
 		String path = appInfo.getPath();
+		String consumerKey = appInfo.getConsumerKey();
+		String consumerSecret = appInfo.getConsumerSecret();
 		Query query = session.createQuery("select a from ApplicationImpl a where a.id = :id");
 		query.setParameter("id", appId);
 		ApplicationImpl application = (ApplicationImpl)query.uniqueResult();
@@ -53,6 +55,8 @@ public class ApplicationService {
 		}
 		application.setTitle(module.getModulePrefs().getTitle());
 		application.setPath(path);
+		application.setConsumerKey(consumerKey);
+		application.setConsumerSecret(consumerSecret);
 		session.saveOrUpdate(application);
 		tx.commit();
 	}
