@@ -54,7 +54,6 @@ public class OpenSocialUtil {
 			info.setPath(file.getFullPath().toPortableString());
 			info.setConsumerKey(consumerKey);
 			info.setConsumerSecret(consumerSecret);
-System.out.println(consumerKey + " : " + consumerSecret);
 			return info;
 		} catch(NoSuchAlgorithmException e) {
 			throw new IllegalStateException(e);

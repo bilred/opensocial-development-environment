@@ -125,7 +125,24 @@
             <separator
                   name="group2">
             </separator>
+            <separator
+                  name="group3">
+            </separator>
          </menu>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.ShowKeysAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.showKeysAction"
+               label="Show keys"
+               icon="icons/icon_key.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
+               </objectState>
+            </enablement>
+         </action>
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
                enablesFor="1"
@@ -212,7 +229,13 @@
                id="opensocialMenu"
                label="&amp;OpenSocial">
             <separator
-                  name="opensocialGroup">
+                  name="opensocialGroup1">
+            </separator>
+            <separator
+                  name="opensocialGroup2">
+            </separator>
+            <separator
+                  name="opensocialGroup3">
             </separator>
          </menu>
          <action
@@ -220,7 +243,7 @@
                id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCerAction"
                icon="icons/icon_key.gif"
                label="Show &amp;Public Certificate"
-               menubarPath="opensocialMenu/opensocialGroup"
+               menubarPath="opensocialMenu/opensocialGroup3"
                tooltip="Show Public Certificate for OAuth.">
          </action>
          <action
@@ -229,7 +252,7 @@
                id="jp.eisbahn.eclipse.plugins.osde.runAction2"
                label="Run this application"
                icon="icons/action_go.gif"
-               menubarPath="opensocialMenu/opensocialGroup"
+               menubarPath="opensocialMenu/opensocialGroup2"
                toolbarPath="opensocialGroup"
                tooltip="Run this application.">
             <enablement>
@@ -242,10 +265,10 @@
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchWebServerAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction3"
+               id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction2"
                label="Launch Web Server"
                icon="icons/arrow_right.gif"
-               menubarPath="opensocialMenu/opensocialGroup"
+               menubarPath="opensocialMenu/opensocialGroup2"
                toolbarPath="opensocialGroup"
                tooltip="Launch Local Web server.">
             <enablement>
@@ -266,7 +289,7 @@
                icon="icons/opensocial.gif"
                id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
                label="Launch Apache &amp;Shindig"
-               menubarPath="opensocialMenu/opensocialGroup"
+               menubarPath="opensocialMenu/opensocialGroup1"
                toolbarPath="opensocialGroup"
                tooltip="Launch Apache Sindig server.">
          </action>
