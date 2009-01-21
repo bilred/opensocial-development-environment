@@ -20,6 +20,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 
 import org.eclipse.core.resources.IFile;
@@ -113,8 +114,10 @@ public class LaunchWebServerAction implements IObjectActionDelegate, IWorkbenchW
 				project = ((IFile)element).getProject();
 			}
 			try {
-				int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-				(new WebServerLaunchConfigurationCreator()).create(project, port, new NullProgressMonitor());
+				if (project != null && project.exists() && project.hasNature(OsdeProjectNature.ID)) {
+					int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
+					(new WebServerLaunchConfigurationCreator()).create(project, port, new NullProgressMonitor());
+				}
 			} catch (CoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
