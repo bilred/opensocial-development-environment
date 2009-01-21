@@ -130,6 +130,20 @@
             </separator>
          </menu>
          <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.CreateJavaProjectAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.createJavaProjectAction"
+               label="Create Java Project for Restful Protocol"
+               icon="icons/icon_wand.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
+               </objectState>
+            </enablement>
+         </action>
+         <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.ShowKeysAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.showKeysAction"
