@@ -243,9 +243,13 @@ public class UserPrefsView extends AbstractView {
 					retrieveUserPrefValues(information.getAppId(), information.getViewer(), convertMap(userPrefModels));
 					monitor.worked(1);
 					UserPrefsView.this.information = information;
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					e.printStackTrace();
-					MessageDialog.openError(getSite().getShell(), "Error", "Fetching metadata failed.\n" + e.getMessage());
+					getSite().getShell().getDisplay().syncExec(new Runnable() {
+						public void run() {
+							MessageDialog.openError(getSite().getShell(), "Error", "Fetching metadata failed.\n" + e.getMessage());
+						}
+					});
 				}
 				monitor.done();
 				return Status.OK_STATUS;
