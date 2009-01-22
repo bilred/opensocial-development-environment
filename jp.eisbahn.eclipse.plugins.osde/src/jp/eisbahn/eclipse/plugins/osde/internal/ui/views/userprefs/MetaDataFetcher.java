@@ -19,7 +19,6 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel.DataType;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
@@ -60,25 +59,36 @@ public class MetaDataFetcher {
 		JSONObject metadata = (JSONObject)parser.parse(new StringReader(post.getResponseBodyAsString()));
 		JSONArray gadgets = (JSONArray)metadata.get("gadgets");
 		JSONObject gadget = (JSONObject)gadgets.get(0);
-		JSONObject userPrefs = (JSONObject)gadget.get("userPrefs");
-		//
-		List<UserPrefModel> resultModels = new ArrayList<UserPrefModel>();
-		for (Object name : userPrefs.keySet()) {
-			JSONObject userPref = (JSONObject)userPrefs.get(name);
-			UserPrefModel model = new UserPrefModel();
-			model.setName(name.toString());
-			model.setDisplayName(userPref.get("displayName").toString());
-			model.setDefaultValue(userPref.get("default").toString());
-			model.setDataType(DataType.getDataType(userPref.get("type").toString()));
-			Map<String, String> enumValueMap = model.getEnumValueMap();
-			JSONObject enumValues = (JSONObject)userPref.get("enumValues");
-			for (Object value : enumValues.keySet()) {
-				enumValueMap.put(value.toString(), enumValues.get(value).toString());
+		if (gadget.containsKey("errors")) {
+			JSONArray errors = (JSONArray)gadget.get("errors");
+			String errorMsg = "";
+			for (Object error : errors) {
+				System.out.println(error.toString());
+				errorMsg += error.toString() + "\n";
 			}
-			resultModels.add(model);
+			errorMsg += "Has the Web server for this application been starting?";
+			throw new IOException(errorMsg);
+		} else {
+			JSONObject userPrefs = (JSONObject)gadget.get("userPrefs");
+			//
+			List<UserPrefModel> resultModels = new ArrayList<UserPrefModel>();
+			for (Object name : userPrefs.keySet()) {
+				JSONObject userPref = (JSONObject)userPrefs.get(name);
+				UserPrefModel model = new UserPrefModel();
+				model.setName(name.toString());
+				model.setDisplayName(userPref.get("displayName").toString());
+				model.setDefaultValue(userPref.get("default").toString());
+				model.setDataType(DataType.getDataType(userPref.get("type").toString()));
+				Map<String, String> enumValueMap = model.getEnumValueMap();
+				JSONObject enumValues = (JSONObject)userPref.get("enumValues");
+				for (Object value : enumValues.keySet()) {
+					enumValueMap.put(value.toString(), enumValues.get(value).toString());
+				}
+				resultModels.add(model);
+			}
+			//
+			return resultModels;
 		}
-		//
-		return resultModels;
 	}
 
 }
