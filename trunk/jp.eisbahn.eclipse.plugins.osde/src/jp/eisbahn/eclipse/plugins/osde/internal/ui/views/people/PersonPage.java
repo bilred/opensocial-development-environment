@@ -83,6 +83,7 @@ public class PersonPage implements IDetailsPage {
 	private Text thumbnailUrlText;
 	private Combo genderCombo;
 	private Text nicknameText;
+	private Combo relationshipCombo;
 
 	public PersonPage(PersonView personView) {
 		super();
@@ -169,6 +170,18 @@ public class PersonPage implements IDetailsPage {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		nicknameText.setLayoutData(layoutData);
 		nicknameText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Relationship");
+		relationshipCombo = new Combo(generalPane, SWT.READ_ONLY);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		relationshipCombo.setLayoutData(layoutData);
+		relationshipCombo.addSelectionListener(generalValueChangeListener);
+		relationshipCombo.add("");
+		relationshipCombo.add("Single");
+		relationshipCombo.add("Married");
+		relationshipCombo.add("Committed");
+		relationshipCombo.add("Open marriage");
+		relationshipCombo.add("Open relationship");
 		//
 		// Friends
 		Section friendsSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
@@ -262,6 +275,17 @@ public class PersonPage implements IDetailsPage {
 			}
 		}
 		nicknameText.setText(trim(person.getNickname()));
+		relationshipCombo.select(0);
+		String relationship = person.getRelationshipStatus();
+		if (relationship != null) {
+			String[] items = relationshipCombo.getItems();
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].equals(relationship)) {
+					relationshipCombo.select(i);
+					break;
+				}
+			}
+		}
 		try {
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<RelationshipImpl> relationshipList = personService.getRelationshipList(person);
@@ -310,6 +334,9 @@ public class PersonPage implements IDetailsPage {
 				String gender = genderCombo.getText();
 				person.setGender(StringUtils.isNotEmpty(gender) ? Gender.valueOf(gender) : null);
 				person.setNickname(normalize(nicknameText.getText()));
+				String relationship = relationshipCombo.getText();
+				person.setRelationshipStatus(StringUtils.isNotEmpty(relationship) ? relationship : null);
+				//
 				PersonService personService = Activator.getDefault().getPersonService();
 				personService.store(person);
 				managedForm.fireSelectionChanged(part, new StructuredSelection(person));
