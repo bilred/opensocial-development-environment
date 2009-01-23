@@ -56,7 +56,8 @@ public class LaunchApplicationJob extends Job {
 	private String country;
 	private String language;
 	private Shell shell;
-	private String gadgetXmlFileName;
+	private String url;
+	private String appTitle;
 
 	public LaunchApplicationJob(
 			String name, LaunchApplicationInformation information, Shell shell) {
@@ -71,44 +72,41 @@ public class LaunchApplicationJob extends Job {
 		this.country = information.getCountry();
 		this.language = information.getLanguage();
 		this.shell = shell;
-		this.gadgetXmlFileName = information.getGadgetXmlFileName();
+		this.url = information.getUrl();
+		this.appTitle = information.getApplicationTitle();
 	}
 
 	@Override
 	protected IStatus run(final IProgressMonitor monitor) {
 		try {
 			monitor.beginTask("Running application", 3);
-			ApplicationService service = Activator.getDefault().getApplicationService();
-			List<UserPrefImpl> userPrefs = service.getUserPrefs(appId, viewer);
-			JSONObject up = new JSONObject();
-			for (UserPrefImpl userPref : userPrefs) {
-				String value = userPref.getValue();
-				StringTokenizer st = new StringTokenizer(value);
-				String values = "";
-				boolean first = true;
-				while (st.hasMoreTokens()) {
-					String v = st.nextToken();
-					if (!first) {
-						values += "|";
-					}
-					values += v;
-					first = false;
-				}
-				up.put(userPref.getName(), values);
-			}
-			String upJson = up.toString();
+			String upJson = createJsonFromUserPrefs();
 			monitor.worked(1);
-			int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-			final String url = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:" + port + "/"
-					+ gadgetXmlFileName
-					+ "&view=" + view
-					+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
-					+ "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
-					+ "&width=" + URLEncoder.encode(width, "UTF-8")
-					+ "&appId=" + URLEncoder.encode(appId, "UTF-8")
-					+ "&country=" + URLEncoder.encode(country, "UTF-8")
-					+ "&language=" + URLEncoder.encode(language, "UTF-8")
-					+ "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8");
+			final String kicker;
+			if (project != null) {
+				int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
+				kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:" + port + "/"
+						+ url
+						+ "&view=" + view
+						+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
+						+ "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
+						+ "&width=" + URLEncoder.encode(width, "UTF-8")
+						+ "&appId=" + URLEncoder.encode(appId, "UTF-8")
+						+ "&country=" + URLEncoder.encode(country, "UTF-8")
+						+ "&language=" + URLEncoder.encode(language, "UTF-8")
+						+ "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8");
+			} else {
+				kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url="
+				+ url
+				+ "&view=" + view
+				+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
+				+ "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
+				+ "&width=" + URLEncoder.encode(width, "UTF-8")
+				+ "&appId=" + URLEncoder.encode(appId, "UTF-8")
+				+ "&country=" + URLEncoder.encode(country, "UTF-8")
+				+ "&language=" + URLEncoder.encode(language, "UTF-8")
+				+ "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8");
+			}
 			monitor.worked(1);
 			shell.getDisplay().syncExec(new Runnable() {
 				public void run() {
@@ -116,8 +114,8 @@ public class LaunchApplicationJob extends Job {
 						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 						IWebBrowser browser;
 						if (!useExternalBrowser) {
-							String title = project.getName() + ":" + gadgetXmlFileName + " [" + view + "]";
-							String desc = project.getName() + ":" + gadgetXmlFileName + " [" + view + "] viewer=" + viewer + " owner=" + owner;
+							String title = appTitle + " [" + view + "]";
+							String desc = appTitle + " [" + view + "] viewer=" + viewer + " owner=" + owner;
 							browser = support.createBrowser(
 									IWorkbenchBrowserSupport.LOCATION_BAR 
 										| IWorkbenchBrowserSupport.NAVIGATION_BAR
@@ -126,7 +124,7 @@ public class LaunchApplicationJob extends Job {
 						} else {
 							browser = support.getExternalBrowser();
 						}
-						browser.openURL(new URL(url));
+						browser.openURL(new URL(kicker));
 					} catch (MalformedURLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -156,5 +154,28 @@ public class LaunchApplicationJob extends Job {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
 			return Status.CANCEL_STATUS;
 		}
+	}
+
+	protected String createJsonFromUserPrefs() throws ConnectionException {
+		ApplicationService service = Activator.getDefault().getApplicationService();
+		List<UserPrefImpl> userPrefs = service.getUserPrefs(appId, viewer);
+		JSONObject up = new JSONObject();
+		for (UserPrefImpl userPref : userPrefs) {
+			String value = userPref.getValue();
+			StringTokenizer st = new StringTokenizer(value);
+			String values = "";
+			boolean first = true;
+			while (st.hasMoreTokens()) {
+				String v = st.nextToken();
+				if (!first) {
+					values += "|";
+				}
+				values += v;
+				first = false;
+			}
+			up.put(userPref.getName(), values);
+		}
+		String upJson = up.toString();
+		return upJson;
 	}
 }

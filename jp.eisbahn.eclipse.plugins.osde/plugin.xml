@@ -260,7 +260,6 @@
                menubarPath="opensocialMenu/opensocialGroup3"
                tooltip="Show Public Certificate for OAuth.">
          </action>
-<!--
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunExternalAction"
                id="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunExternalAction"
@@ -270,7 +269,6 @@
                toolbarPath="opensocialGroup"
                tooltip="Run the application to locate external.">
          </action>
--->
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
                enablesFor="1"

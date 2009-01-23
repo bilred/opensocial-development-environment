@@ -18,6 +18,8 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -61,7 +63,35 @@ public class OpenSocialUtil {
 			throw new IllegalStateException(e);
 		}
 	}
-	
+
+	public static ApplicationInformation createApplicationInformation(String url) throws JAXBException, CoreException {
+		try {
+			JAXBContext context = JAXBContext.newInstance(Module.class);
+			Unmarshaller um = context.createUnmarshaller();
+			Module module = (Module)um.unmarshal(new URL(url));
+			MessageDigest digest = MessageDigest.getInstance("MD5");
+			byte[] hash = digest.digest(url.getBytes("UTF-8"));
+			String appId = Gadgets.toHexString(hash);
+			String consumerKey = "osde:" + url;
+			digest.reset();
+			hash = digest.digest(consumerKey.getBytes("UTF-8"));
+			String consumerSecret = Gadgets.toHexString(hash);
+			ApplicationInformation info = new ApplicationInformation();
+			info.setAppId(appId);
+			info.setModule(module);
+			info.setPath(url);
+			info.setConsumerKey(consumerKey);
+			info.setConsumerSecret(consumerSecret);
+			return info;
+		} catch(NoSuchAlgorithmException e) {
+			throw new IllegalStateException(e);
+		} catch(UnsupportedEncodingException e) {
+			throw new IllegalStateException(e);
+		} catch (MalformedURLException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
 	public static boolean isGadgetXml(IFile file) {
 		IContentTypeManager manager = Platform.getContentTypeManager();
 		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
