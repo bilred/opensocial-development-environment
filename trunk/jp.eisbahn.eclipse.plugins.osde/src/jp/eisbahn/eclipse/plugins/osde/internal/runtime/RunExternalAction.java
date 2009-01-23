@@ -47,41 +47,25 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 
-public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 
 	private Shell shell;
-	IFile gadgetXmlFile;
-	IProject project;
 	private IWorkbenchPart targetPart;
 	
-	/**
-	 * Constructor for Action1.
-	 */
-	public RunAction() {
+	public RunExternalAction() {
 		super();
 	}
 
-	/**
-	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		shell = targetPart.getSite().getShell();
-		this.targetPart = targetPart;
-	}
-
-	/**
-	 * @see IActionDelegate#run(IAction)
-	 */
 	public void run(IAction action) {
 		try {
-			ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(gadgetXmlFile);
-			ApplicationService applicationService = Activator.getDefault().getApplicationService();
-			applicationService.storeAppInfo(appInfo);
-			//
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<Person> people = personService.getPeople();
-			RunApplicationDialog dialog = new RunApplicationDialog(shell, people, gadgetXmlFile);
+			RunExternalApplicationDialog dialog = new RunExternalApplicationDialog(shell, people);
 			if (dialog.open() == RunApplicationDialog.OK) {
+				String url = dialog.getUrl();
+				ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(url);
+				ApplicationService applicationService = Activator.getDefault().getApplicationService();
+				applicationService.storeAppInfo(appInfo);
 				String view = dialog.getView();
 				String viewer = dialog.getViewer();
 				String owner = dialog.getOwner();
@@ -92,8 +76,7 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 				String language = dialog.getLanguage();
 				LaunchApplicationInformation information = new LaunchApplicationInformation(
 						viewer, owner, view, width, appId, useExternalBrowser,
-						country, language, project, gadgetXmlFile.getName(),
-						project.getName() + ":" + gadgetXmlFile.getName());
+						country, language, null, url, appInfo.getModule().getModulePrefs().getTitle());
 				Job job = new LaunchApplicationJob("Running application", information, shell);
 				job.schedule();
 				notifyUserPrefsView(information);
@@ -101,47 +84,32 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 		} catch(ConnectionException e) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
 		} catch (JAXBException e) {
-			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
+			e.printStackTrace();
+			Throwable ex = e.getLinkedException() != null ? e.getLinkedException() : e;
+			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + ex.getMessage());
 		} catch (CoreException e) {
+			e.printStackTrace();
 			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
 		}
 	}
 	
 	private void notifyUserPrefsView(final LaunchApplicationInformation information) {
-		try {
-			int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-			final String url = "http://localhost:" + port + "/" + gadgetXmlFile.getName();
-			final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
-			shell.getDisplay().syncExec(new Runnable() {
-				public void run() {
-					try {
-						UserPrefsView userPrefsView;
-						userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
-						userPrefsView.showUserPrefFields(information, url);
-					} catch (PartInitException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+		final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
+		shell.getDisplay().syncExec(new Runnable() {
+			public void run() {
+				try {
+					UserPrefsView userPrefsView;
+					userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
+					userPrefsView.showUserPrefFields(information, information.getUrl());
+				} catch (PartInitException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			});
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			}
+		});
 	}
 
-	/**
-	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
-	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structured = (IStructuredSelection)selection;
-			Object element = structured.getFirstElement();
-			if (element instanceof IFile) {
-				gadgetXmlFile = (IFile)element;
-				project = gadgetXmlFile.getProject();
-			}
-		}
 	}
 
 	public void dispose() {

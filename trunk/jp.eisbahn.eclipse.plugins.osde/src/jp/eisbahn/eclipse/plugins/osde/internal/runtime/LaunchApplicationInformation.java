@@ -30,12 +30,13 @@ public class LaunchApplicationInformation {
 	private String country;
 	private String language;
 	private IProject project;
-	private String gadgetXmlFileName;
+	private String url;
+	private String applicationTitle;
 
 	public LaunchApplicationInformation(String viewer, String owner,
 			String view, String width, String appId,
 			boolean useExternalBrwoser, String country, String language,
-			IProject project, String gadgetXmlFileName) {
+			IProject project, String url, String applicationTitle) {
 		this.viewer = viewer;
 		this.owner = owner;
 		this.view = view;
@@ -45,7 +46,8 @@ public class LaunchApplicationInformation {
 		this.country = country;
 		this.language = language;
 		this.project = project;
-		this.gadgetXmlFileName = gadgetXmlFileName;
+		this.url = url;
+		this.applicationTitle = applicationTitle;
 	}
 
 	public String getViewer() {
@@ -120,11 +122,19 @@ public class LaunchApplicationInformation {
 		this.project = project;
 	}
 
-	public String getGadgetXmlFileName() {
-		return gadgetXmlFileName;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setGadgetXmlFileName(String gadgetXmlFileName) {
-		this.gadgetXmlFileName = gadgetXmlFileName;
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getApplicationTitle() {
+		return applicationTitle;
+	}
+	
+	public void setApplicationTitle(String applicationTitle) {
+		this.applicationTitle = applicationTitle;
 	}
 }

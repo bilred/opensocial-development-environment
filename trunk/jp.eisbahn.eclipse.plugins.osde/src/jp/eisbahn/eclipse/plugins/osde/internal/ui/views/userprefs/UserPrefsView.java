@@ -158,7 +158,7 @@ public class UserPrefsView extends AbstractView {
 					layoutData.horizontalSpan = 2;
 					separator.setLayoutData(layoutData);
 				}
-				createLabel(information.getGadgetXmlFileName(), 2, toolkit);
+				createLabel(information.getUrl(), 2, toolkit);
 				createLabel("Viewer:", 1, toolkit);
 				createLabel(information.getViewer(), 1, toolkit);
 				createLabel("Owner:", 1, toolkit);
