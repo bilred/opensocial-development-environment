@@ -2,7 +2,7 @@
 <feature
       id="jp.eisbahn.eclipse.features.osde"
       label="OpenSocial Development Environment Feature"
-      version="0.1.6"
+      version="0.1.7"
       provider-name="Yoichiro Tanaka">
 
    <description url="http://www.eisbahn.jp/trac/osde">
