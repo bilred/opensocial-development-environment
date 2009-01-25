@@ -45,6 +45,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 public class RunExternalApplicationDialog extends TitleAreaDialog {
+	
+	private static final String DEV_APP = "http://osda.appspot.com/gadget/osda-0.8.xml";
 
 	private static final String PREF_URL = "pref_url_for_external";
 	private static final String PREF_VIEW = "pref_view_for_external";
@@ -209,6 +211,9 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 				urlCombo.add(url);
 				this.urls.add(url);
 			}
+		} else {
+			urlCombo.add(DEV_APP);
+			this.urls.add(DEV_APP);
 		}
 		String prevCountry = store.getString(PREF_COUNTRY);
 		if (StringUtils.isNotEmpty(prevCountry) && StringUtils.isNumeric(prevCountry)) {
