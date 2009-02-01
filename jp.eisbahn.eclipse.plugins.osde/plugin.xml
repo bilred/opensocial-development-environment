@@ -308,6 +308,14 @@
             </enablement>
          </action>
          <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.CreateSampleDataAction"
+               icon="icons/icon_download.gif"
+               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.CreateSampleDataAction"
+               label="Create sample data in Shindig"
+               menubarPath="opensocialMenu/opensocialGroup1"
+               tooltip="Create sample data in Shindig database.">
+         </action>
+         <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
                icon="icons/opensocial.gif"
                id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"

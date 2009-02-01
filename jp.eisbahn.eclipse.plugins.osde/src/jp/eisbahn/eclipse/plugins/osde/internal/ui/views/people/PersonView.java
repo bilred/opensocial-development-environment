@@ -86,7 +86,7 @@ public class PersonView extends AbstractView {
 	public void setFocus() {
 	}
 	
-	private void loadPeople() {
+	public void loadPeople() {
 		try {
 			PersonService personService = Activator.getDefault().getPersonService();
 			java.util.List<Person> people = personService.getPeople();

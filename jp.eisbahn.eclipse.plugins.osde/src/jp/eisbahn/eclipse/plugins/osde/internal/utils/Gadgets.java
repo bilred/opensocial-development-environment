@@ -97,4 +97,18 @@ public class Gadgets {
         return buff.toString();
     }
 	
+	public static Date getDate(int year, int month, int date) {
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(year, month, date);
+		return cal.getTime();
+	}
+	
+	public static Date getDate(int year, int month, int date, int hour, int minute, int second) {
+		Calendar cal = Calendar.getInstance();
+		cal.clear();
+		cal.set(year, month, date, hour, minute, second);
+		return cal.getTime();
+	}
+	
 }
