@@ -27,11 +27,9 @@ import java.util.StringTokenizer;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -84,8 +82,7 @@ public class LaunchApplicationJob extends Job {
 			monitor.worked(1);
 			final String kicker;
 			if (project != null) {
-				int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-				kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:" + port + "/"
+				kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:8080/" + project.getName() + "/"
 						+ url
 						+ "&view=" + view
 						+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
@@ -137,11 +134,6 @@ public class LaunchApplicationJob extends Job {
 			monitor.worked(1);
 			monitor.done();
 			return Status.OK_STATUS;
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			monitor.done();
-			return Status.CANCEL_STATUS;
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

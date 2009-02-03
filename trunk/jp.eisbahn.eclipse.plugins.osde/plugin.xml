@@ -100,20 +100,6 @@
                </objectState>
             </enablement>
          </action>
-         <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchWebServerAction"
-               enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction"
-               label="Launch Web Server"
-               icon="icons/arrow_right.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
-            <enablement>
-               <objectState
-                     name="nature"
-                     value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
-               </objectState>
-            </enablement>
-         </action>
       </objectContribution>
       <objectContribution
             id="jp.eisbahn.eclipse.plugins.osde.contribution2"
@@ -163,20 +149,6 @@
                id="jp.eisbahn.eclipse.plugins.osde.runAction"
                label="Run this application"
                icon="icons/action_go.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
-            <enablement>
-               <objectState
-                     name="contentTypeId"
-                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
-               </objectState>
-            </enablement>
-         </action>
-         <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchWebServerAction"
-               enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction2"
-               label="Launch Web Server"
-               icon="icons/arrow_right.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
             <enablement>
                <objectState
@@ -286,28 +258,6 @@
             </enablement>
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchWebServerAction"
-               enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.launchWebServerAction2"
-               label="Launch Web Server"
-               icon="icons/arrow_right.gif"
-               menubarPath="opensocialMenu/opensocialGroup2"
-               toolbarPath="opensocialGroup"
-               tooltip="Launch Local Web server.">
-            <enablement>
-               <or>
-                  <objectState
-                        name="contentTypeId"
-                        value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
-                  </objectState>
-                  <objectState
-                        name="nature"
-                        value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
-                  </objectState>
-               </or>
-            </enablement>
-         </action>
-         <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.CreateSampleDataAction"
                icon="icons/icon_download.gif"
                id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.CreateSampleDataAction"
@@ -342,19 +292,6 @@
             Export the selected OpenSocial application.
          </description>
       </wizard>
-   </extension>
-   <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.OsdeProjectPropertyPage"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.runtime.samplePropertyPage"
-            name="OpenSocial"
-            objectClass="org.eclipse.core.resources.IProject">
-         <filter
-               name="nature"
-               value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
-         </filter>
-      </page>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">

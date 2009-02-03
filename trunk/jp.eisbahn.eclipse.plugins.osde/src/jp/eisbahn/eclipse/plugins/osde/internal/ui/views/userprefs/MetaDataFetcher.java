@@ -27,7 +27,6 @@ import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel.DataType;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
@@ -64,9 +63,8 @@ public class MetaDataFetcher {
 			String errorMsg = "";
 			for (Object error : errors) {
 				System.out.println(error.toString());
-				errorMsg += error.toString() + "\n";
+				errorMsg += error.toString();
 			}
-			errorMsg += "Has the Web server for this application been starting?";
 			throw new IOException(errorMsg);
 		} else {
 			JSONObject userPrefs = (JSONObject)gadget.get("userPrefs");

@@ -35,7 +35,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
 import org.apache.commons.io.IOUtils;
@@ -164,8 +163,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 								for (Content content : contents) {
 									if (ViewType.html.toString().equals(content.getType())) {
 										String value = content.getValue();
-										int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-										Pattern pattern = Pattern.compile("http://localhost:" + port + "/");
+										Pattern pattern = Pattern.compile("http://localhost:8080/" + project.getName() + "/");
 										Matcher matcher = pattern.matcher(value);
 										StringBuffer sb = new StringBuffer();
 										while(matcher.find()) {
