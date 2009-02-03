@@ -17,6 +17,12 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -28,12 +34,16 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -82,6 +92,8 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 			List<Person> people = personService.getPeople();
 			RunApplicationDialog dialog = new RunApplicationDialog(shell, people, gadgetXmlFile);
 			if (dialog.open() == RunApplicationDialog.OK) {
+				Job job = new CreateWebContextJob("Create web context");
+				job.schedule();
 				String view = dialog.getView();
 				String viewer = dialog.getViewer();
 				String owner = dialog.getOwner();
@@ -94,8 +106,8 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 						viewer, owner, view, width, appId, useExternalBrowser,
 						country, language, project, gadgetXmlFile.getName(),
 						project.getName() + ":" + gadgetXmlFile.getName());
-				Job job = new LaunchApplicationJob("Running application", information, shell);
-				job.schedule();
+				job = new LaunchApplicationJob("Running application", information, shell);
+				job.schedule(1000);
 				notifyUserPrefsView(information);
 			}
 		} catch(ConnectionException e) {
@@ -108,26 +120,20 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	}
 	
 	private void notifyUserPrefsView(final LaunchApplicationInformation information) {
-		try {
-			int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-			final String url = "http://localhost:" + port + "/" + gadgetXmlFile.getName();
-			final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
-			shell.getDisplay().syncExec(new Runnable() {
-				public void run() {
-					try {
-						UserPrefsView userPrefsView;
-						userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
-						userPrefsView.showUserPrefFields(information, url);
-					} catch (PartInitException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+		final String url = "http://localhost:8080/" + project.getName() + "/" + gadgetXmlFile.getName();
+		final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
+		shell.getDisplay().syncExec(new Runnable() {
+			public void run() {
+				try {
+					UserPrefsView userPrefsView;
+					userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
+					userPrefsView.showUserPrefFields(information, url);
+				} catch (PartInitException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			});
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			}
+		});
 	}
 
 	/**
@@ -150,6 +156,39 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	public void init(IWorkbenchWindow window) {
 		targetPart = window.getActivePage().getActivePart();
 		shell = targetPart.getSite().getShell();
+	}
+
+	private class CreateWebContextJob extends Job {
+
+		private CreateWebContextJob(String name) {
+			super(name);
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			FileOutputStream fos = null;
+			try {
+				InputStreamReader in = new InputStreamReader(getClass().getResourceAsStream("/shindig/context.tmpl"), "UTF-8");
+				StringWriter out = new StringWriter();
+				IOUtils.copy(in, out);
+				String code = out.toString();
+				code = code.replace("$project_name$", project.getName());
+				IPath location = project.getFolder("target").getLocation();
+				code = code.replace("$context_dir$", location.toOSString());
+				File file = new File(System.getProperty("java.io.tmpdir"), project.getName() + ".xml");
+				fos = new FileOutputStream(file);
+				ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
+				IOUtils.copy(bytes, fos);
+				return Status.OK_STATUS;
+			} catch(IOException e) {
+				// TODO
+				e.printStackTrace();
+				throw new IllegalStateException(e);
+			} finally {
+				IOUtils.closeQuietly(fos);
+			}
+		}
+		
 	}
 
 }

@@ -25,8 +25,6 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -217,8 +215,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 					sb.append("</messagebundle>");
 					ByteArrayInputStream in = new ByteArrayInputStream(sb.toString().getBytes("UTF8"));
 					bundleFile.create(in, true, new NullProgressMonitor());
-					int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-					locale.setMessages("http://localhost:" + port + "/" + fileName);
+					locale.setMessages("http://localhost:8080/" + project.getName() + "/" + fileName);
 				} catch (CoreException e) {
 					e.printStackTrace();
 				} catch (UnsupportedEncodingException e) {

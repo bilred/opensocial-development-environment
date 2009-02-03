@@ -31,25 +31,18 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
-import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.content.IContentTypeManager;
 
 import com.google.gadgets.Module;
 import com.google.gadgets.ViewType;
@@ -111,8 +104,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								for (Content content : contents) {
 									if (ViewType.html.toString().equals(content.getType())) {
 										String value = content.getValue();
-										int port = ProjectPreferenceUtils.getLocalWebServerPort(project);
-										Pattern pattern = Pattern.compile("http://localhost:" + port + "/[-_.!~*\\'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#]+\\.js");
+										Pattern pattern = Pattern.compile("http://localhost:8080" + project.getName() + "/[-_.!~*\\'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#]+\\.js");
 										Matcher matcher = pattern.matcher(value);
 										StringBuffer sb = new StringBuffer();
 										while(matcher.find()) {

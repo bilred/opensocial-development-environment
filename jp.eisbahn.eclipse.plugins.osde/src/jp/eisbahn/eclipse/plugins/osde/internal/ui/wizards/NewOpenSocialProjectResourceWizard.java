@@ -17,17 +17,13 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.util.EnumMap;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor;
-import jp.eisbahn.eclipse.plugins.osde.internal.runtime.WebServerLaunchConfigurationCreator;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.ProjectPreferenceUtils;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -35,7 +31,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -51,7 +46,6 @@ import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
-import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 import com.google.gadgets.ViewName;
 
@@ -64,8 +58,6 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
 	private WizardNewGadgetXmlPage gadgetXmlPage;
 	
 	private WizardNewViewPage viewPage;
-	
-	private WizardServerPage serverPage;
 	
 	private IProject newProject;
 	
@@ -96,11 +88,6 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
 		viewPage.setTitle("View settings");
 		viewPage.setDescription("Define the view settings.");
 		addPage(viewPage);
-		//
-		serverPage = new WizardServerPage("serverPage");
-		serverPage.setTitle("Server settings");
-		serverPage.setDescription("Settings about execution environment of this application.");
-		addPage(serverPage);
 	}
 	
 	@Override
@@ -132,7 +119,6 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
 		final IProject newProjectHandle = mainPage.getProjectHandle();
 		final GadgetXmlData gadgetXmlData = gadgetXmlPage.getInputedData();
 		final EnumMap<ViewName, GadgetViewData> gadgetViewData = viewPage.getInputedData();
-		final ServerData serverData = serverPage.getInputedData();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
@@ -147,10 +133,8 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
 						description.setNatureIds(newIds);
 						newProjectHandle.setDescription(description, monitor);
 					}
-					final IFile gadgetXmlFile = (new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData, serverData)).generate(monitor);
+					final IFile gadgetXmlFile = (new GadgetXmlFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
 					(new JavaScriptFileGenerator(newProjectHandle, gadgetXmlData, gadgetViewData)).generate(monitor);
-					(new WebServerLaunchConfigurationCreator()).create(newProjectHandle, serverData.getLocalPort(), monitor);
-					ProjectPreferenceUtils.setLocalWebServerPort(newProjectHandle, serverData.getLocalPort());
 					monitor.beginTask("Opening the Gadget XML file.", 1);
 					getShell().getDisplay().syncExec(new Runnable() {
 						public void run() {
@@ -172,10 +156,6 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
 				} catch(CoreException e) {
 					throw new InvocationTargetException(e);
 				} catch(UnsupportedEncodingException e) {
-					throw new InvocationTargetException(e);
-				} catch (MalformedURLException e) {
-					throw new InvocationTargetException(e);
-				} catch (IOException e) {
 					throw new InvocationTargetException(e);
 				}
 			}
