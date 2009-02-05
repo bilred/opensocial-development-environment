@@ -26,7 +26,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.basic.ModulePrefsPage;
-import jp.eisbahn.eclipse.plugins.osde.internal.editors.content.ContentPage;
+import jp.eisbahn.eclipse.plugins.osde.internal.editors.contents.ContentsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.locale.LocalePage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefsPage;
 
@@ -40,7 +40,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 
 import com.google.gadgets.Module;
-import com.google.gadgets.ViewName;
 
 public class GadgetXmlEditor extends FormEditor {
 	
@@ -70,15 +69,12 @@ public class GadgetXmlEditor extends FormEditor {
 		try {
 			ModulePrefsPage modulePrefsPage = new ModulePrefsPage(this, module);
 			addPage(modulePrefsPage);
+			ContentsPage contentsPage = new ContentsPage(this, module);
+			addPage(contentsPage);
 			LocalePage messageBundlePage = new LocalePage(this, module);
 			addPage(messageBundlePage);
 			UserPrefsPage userPrefsPage = new UserPrefsPage(this, module);
 			addPage(userPrefsPage);
-			ViewName[] viewNames = ViewName.values();
-			for (ViewName viewName : viewNames) {
-				ContentPage contentPage = new ContentPage(this, module, viewName);
-				addPage(contentPage);
-			}
 		} catch(PartInitException e) {
 			throw new IllegalStateException(e);
 		}

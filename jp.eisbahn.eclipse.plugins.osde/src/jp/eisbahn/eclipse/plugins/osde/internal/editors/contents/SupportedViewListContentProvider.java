@@ -15,15 +15,23 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.google.gadgets;
+package jp.eisbahn.eclipse.plugins.osde.internal.editors.contents;
 
-public enum ViewType {
+import java.util.List;
 
-	html,
-	url;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+
+class SupportedViewListContentProvider implements IStructuredContentProvider {
 	
-	public static ViewType parse(String name) {
-		return ViewType.valueOf(name.toLowerCase());
+	public void dispose() {
+	}
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	}
+
+	public Object[] getElements(Object inputElement) {
+		return ((List<ContentModel>)inputElement).toArray();
 	}
 	
 }

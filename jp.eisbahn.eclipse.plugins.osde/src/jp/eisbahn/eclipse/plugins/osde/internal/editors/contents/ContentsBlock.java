@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
+package jp.eisbahn.eclipse.plugins.osde.internal.editors.contents;
 
 import java.util.List;
 
@@ -26,21 +26,21 @@ import org.eclipse.ui.forms.IDetailsPageProvider;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
 
-public class MessageBundleBlock extends MasterDetailsBlock {
+public class ContentsBlock extends MasterDetailsBlock {
 	
-	private SuportedLocalePart messageBundlesPart;
+	private SupportedViewsPart supportedViewsPart;
 	
-	private LocalePage page;
+	private ContentsPage page;
 	
-	public MessageBundleBlock(LocalePage page) {
+	public ContentsBlock(ContentsPage page) {
 		super();
 		this.page = page;
 	}
 
 	@Override
 	protected void createMasterPart(IManagedForm managedForm, Composite parent) {
-		messageBundlesPart = new SuportedLocalePart(parent, managedForm, page);
-		managedForm.addPart(messageBundlesPart);
+		supportedViewsPart = new SupportedViewsPart(parent, managedForm, page);
+		managedForm.addPart(supportedViewsPart);
 	}
 
 	@Override
@@ -49,20 +49,20 @@ public class MessageBundleBlock extends MasterDetailsBlock {
 
 	@Override
 	protected void registerPages(DetailsPart detailsPart) {
-		final IDetailsPage detailsPage = new MessageBundlePage(page);
-		detailsPart.registerPage(LocaleModel.class, detailsPage);
+		final IDetailsPage detailsPage = new ContentPage(page);
+		detailsPart.registerPage(ContentModel.class, detailsPage);
 		detailsPart.setPageProvider(new IDetailsPageProvider() {
 
 			public IDetailsPage getPage(Object key) {
-				if (key.equals(LocaleModel.class)) {
+				if (key.equals(ContentModel.class)) {
 					return detailsPage;
 				}
 				return null;
 			}
 
 			public Object getPageKey(Object object) {
-				if (object instanceof LocaleModel) {
-					return LocaleModel.class;
+				if (object instanceof ContentModel) {
+					return ContentModel.class;
 				}
 				return object.getClass();
 			}
@@ -71,12 +71,12 @@ public class MessageBundleBlock extends MasterDetailsBlock {
 		sashForm.setWeights(new int[]{45, 55});
 	}
 
-	public void updateLocaleModel() {
-		messageBundlesPart.markDirty();
+	public void updateContentModel() {
+		supportedViewsPart.markDirty();
 	}
 	
-	public List<LocaleModel> getLocaleModels() {
-		return messageBundlesPart.getLocaleModels();
+	public List<ContentModel> getContentModels() {
+		return supportedViewsPart.getContentModels();
 	}
 	
 }
