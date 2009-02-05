@@ -15,15 +15,50 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.google.gadgets;
+package jp.eisbahn.eclipse.plugins.osde.internal.editors.contents;
 
-public enum ViewType {
+import com.google.gadgets.ViewType;
 
-	html,
-	url;
+public class ContentModel {
 	
-	public static ViewType parse(String name) {
-		return ViewType.valueOf(name.toLowerCase());
+	private String view;
+	
+	private ViewType type;
+	
+	private String href;
+	
+	private String body;
+
+	public String getView() {
+		return view;
 	}
-	
+
+	public void setView(String view) {
+		this.view = view;
+	}
+
+	public ViewType getType() {
+		return type;
+	}
+
+	public void setType(ViewType type) {
+		this.type = type;
+	}
+
+	public String getHref() {
+		return href;
+	}
+
+	public void setHref(String href) {
+		this.href = href;
+	}
+
+	public String getBody() {
+		return body;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+
 }

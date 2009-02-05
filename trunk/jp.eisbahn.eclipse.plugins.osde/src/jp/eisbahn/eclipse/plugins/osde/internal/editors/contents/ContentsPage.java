@@ -15,37 +15,44 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.editors.content;
+package jp.eisbahn.eclipse.plugins.osde.internal.editors.contents;
+
+
+import java.util.List;
 
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
 import com.google.gadgets.Module;
-import com.google.gadgets.ViewName;
 
-public class ContentPage extends FormPage {
-	
+public class ContentsPage extends FormPage {
+
 	private Module module;
-	private ViewName viewName;
+	
+	private ContentsBlock block;
 	
 	public Module getModule() {
 		return module;
 	}
-	
-	public ViewName getViewName() {
-		return viewName;
-	}
 
-	public ContentPage(FormEditor editor, Module module, ViewName viewName) {
-		super(editor, null, viewName.getDisplayName());
+	public ContentsPage(FormEditor editor, Module module) {
+		super(editor, null, "Contents");
 		this.module = module;
-		this.viewName = viewName;
+		block = new ContentsBlock(this);
 	}
 
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
-		managedForm.addPart(new ContentPart(this));
+		block.createContent(managedForm);
+	}
+
+	public void updateContentsModel() {
+		block.updateContentModel();
+	}
+	
+	public List<ContentModel> getContentModels() {
+		return block.getContentModels();
 	}
 	
 }

@@ -167,6 +167,7 @@ public class Activator extends AbstractUIPlugin {
 		registIcon(registry, "icons/icon_world.gif");
 		registIcon(registry, "icons/16-em-pencil.gif");
 		registIcon(registry, "icons/icon_settings.gif");
+		registIcon(registry, "icons/page_component.gif");
 	}
 	
     public ImageDescriptor registIcon(ImageRegistry registry, String iconPath) {
