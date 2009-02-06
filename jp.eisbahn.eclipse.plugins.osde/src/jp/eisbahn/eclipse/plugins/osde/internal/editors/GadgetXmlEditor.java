@@ -34,10 +34,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 import com.google.gadgets.Module;
 
@@ -75,6 +78,14 @@ public class GadgetXmlEditor extends FormEditor {
 			addPage(messageBundlePage);
 			UserPrefsPage userPrefsPage = new UserPrefsPage(this, module);
 			addPage(userPrefsPage);
+			StructuredTextEditor editor = new StructuredTextEditor();
+			addPage(editor, getEditorInput());
+			setPageText(4, "Source");
+			addPageChangedListener(new IPageChangedListener() {
+				public void pageChanged(PageChangedEvent event) {
+					System.out.println(GadgetXmlSerializer.serialize(module));
+				}
+			});
 		} catch(PartInitException e) {
 			throw new IllegalStateException(e);
 		}
