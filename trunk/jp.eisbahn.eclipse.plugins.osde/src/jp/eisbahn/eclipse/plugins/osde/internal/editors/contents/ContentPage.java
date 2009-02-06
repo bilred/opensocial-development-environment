@@ -20,7 +20,6 @@ package jp.eisbahn.eclipse.plugins.osde.internal.editors.contents;
 import static jp.eisbahn.eclipse.plugins.osde.internal.editors.ComponentUtils.createLabel;
 import static jp.eisbahn.eclipse.plugins.osde.internal.editors.ComponentUtils.createRadio;
 import static jp.eisbahn.eclipse.plugins.osde.internal.editors.ComponentUtils.createText;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets;
 
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
@@ -155,10 +154,12 @@ public class ContentPage implements IDetailsPage {
 		ViewType type = model.getType();
 		if (ViewType.html.equals(type)) {
 			htmlButton.setSelection(true);
+			urlButton.setSelection(false);
 			String body = model.getBody();
 			editor.getDocument().set((body == null) ? "" : body);
 		} else if (ViewType.url.equals(type)) {
 			urlButton.setSelection(true);
+			htmlButton.setSelection(false);
 			String href = model.getHref();
 			hrefText.setText((href == null) ? "" : href);
 		} else {
