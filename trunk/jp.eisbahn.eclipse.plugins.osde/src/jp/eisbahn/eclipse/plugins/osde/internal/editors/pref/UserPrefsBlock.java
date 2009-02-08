@@ -3,8 +3,6 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.pref;
 
-import java.util.List;
-
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.DetailsPart;
 import org.eclipse.ui.forms.IDetailsPage;
@@ -59,6 +57,18 @@ public class UserPrefsBlock extends MasterDetailsBlock {
 
 	public void updateUserPrefModel() {
 		userPrefsPart.markDirty();
+	}
+
+	public void updateModel() {
+		if (userPrefsPart != null) {
+			userPrefsPart.setValuesToModule();
+		}
+	}
+
+	public void changeModel() {
+		if (userPrefsPart != null) {
+			userPrefsPart.changeModel();
+		}
 	}
 	
 }

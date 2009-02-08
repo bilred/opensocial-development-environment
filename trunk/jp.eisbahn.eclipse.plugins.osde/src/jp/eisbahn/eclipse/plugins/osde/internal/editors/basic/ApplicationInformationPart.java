@@ -50,9 +50,13 @@ public class ApplicationInformationPart extends AbstractFormPart {
 	
 	private ModulePrefsPage page;
 	
+	private boolean initializing;
+	
 	private Listener modifyListener = new Listener() {
 		public void handleEvent(Event event) {
-			markDirty();
+			if (!initializing) {
+				markDirty();
+			}
 		}
 	};
 	
@@ -66,9 +70,11 @@ public class ApplicationInformationPart extends AbstractFormPart {
 	
 	@Override
 	public void initialize(IManagedForm form) {
+		initializing = true;
 		super.initialize(form);
 		createControls(form);
 		displayInitialValue();
+		initializing = false;
 	}
 	
 	private void displayInitialValue() {
@@ -127,17 +133,7 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		createLabel(sectionPanel, toolkit, "");
 	}
 	
-	@Override
-	public void commit(boolean onSave) {
-		super.commit(onSave);
-		if (!onSave) {
-			return;
-		} else {
-			setValuesToModule();
-		}
-	}
-
-	private void setValuesToModule() {
+	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		modulePrefs.setTitle(normalize(titleText.getText()));
@@ -147,6 +143,10 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		modulePrefs.setAuthorEmail(normalize(authorEmailText.getText()));
 		modulePrefs.setScreenshot(normalize(screenshotText.getText()));
 		modulePrefs.setThumbnail(normalize(thumbnailText.getText()));
+	}
+
+	public void changeModel() {
+		displayInitialValue();
 	}
 
 }

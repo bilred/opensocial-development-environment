@@ -60,9 +60,9 @@ public class GadgetXmlSerializer {
 			createAttribute("view", content.getView(), sb);
 			String body = content.getValue();
 			if (StringUtils.isNotEmpty(body)) {
-				sb.append("><![CDATA[\n");
+				sb.append("><![CDATA[");
 				sb.append(body);
-				sb.append("    ]]></Content>\n");
+				sb.append("]]></Content>\n");
 			} else {
 				sb.append(" />\n");
 			}

@@ -134,26 +134,26 @@ public class LocaleModel implements Comparable<LocaleModel> {
 		this.messages = messages;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof LocaleModel)) {
-			return false;
-		} else {
-			LocaleModel target = (LocaleModel)obj;
-			return new EqualsBuilder()
-					.append(country, target.getCountry())
-					.append(lang, target.getLang())
-					.isEquals();
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37)
-				.append(country)
-				.append(lang)
-				.toHashCode();
-	}
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (!(obj instanceof LocaleModel)) {
+//			return false;
+//		} else {
+//			LocaleModel target = (LocaleModel)obj;
+//			return new EqualsBuilder()
+//					.append(country, target.getCountry())
+//					.append(lang, target.getLang())
+//					.isEquals();
+//		}
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return new HashCodeBuilder(17, 37)
+//				.append(country)
+//				.append(lang)
+//				.toHashCode();
+//	}
 
 	public int compareTo(LocaleModel o) {
 		return new CompareToBuilder()

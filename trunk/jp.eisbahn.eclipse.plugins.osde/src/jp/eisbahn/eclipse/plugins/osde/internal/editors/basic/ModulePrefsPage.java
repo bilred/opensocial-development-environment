@@ -27,6 +27,8 @@ import com.google.gadgets.Module;
 public class ModulePrefsPage extends FormPage {
 	
 	private Module module;
+	private ApplicationInformationPart applicationInformationPart;
+	private FeaturesPart featuresPart;
 	
 	public Module getModule() {
 		return module;
@@ -39,8 +41,25 @@ public class ModulePrefsPage extends FormPage {
 
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
-		managedForm.addPart(new ApplicationInformationPart(this));
-		managedForm.addPart(new FeaturesPart(this));
+		applicationInformationPart = new ApplicationInformationPart(this);
+		managedForm.addPart(applicationInformationPart);
+		featuresPart = new FeaturesPart(this);
+		managedForm.addPart(featuresPart);
+	}
+
+	public void updateModel() {
+		if (applicationInformationPart != null) {
+			applicationInformationPart.setValuesToModule();
+		}
+		if (featuresPart != null) {
+			featuresPart.setValuesToModule();
+		}
+	}
+
+	public void changeModel(Module model) {
+		this.module = model;
+		applicationInformationPart.changeModel();
+		featuresPart.changeModel();
 	}
 	
 }

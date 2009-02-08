@@ -107,23 +107,4 @@ public class UserPrefModel {
 		this.enumValueMap = enumValueMap;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof UserPrefModel)) {
-			return false;
-		} else {
-			UserPrefModel target = (UserPrefModel)obj;
-			return new EqualsBuilder()
-					.append(name, target.getName())
-					.isEquals();
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37)
-				.append(name)
-				.toHashCode();
-	}
-
 }

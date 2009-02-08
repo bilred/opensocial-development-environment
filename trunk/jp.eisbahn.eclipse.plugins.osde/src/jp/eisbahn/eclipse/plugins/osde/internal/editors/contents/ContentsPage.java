@@ -54,5 +54,14 @@ public class ContentsPage extends FormPage {
 	public List<ContentModel> getContentModels() {
 		return block.getContentModels();
 	}
+
+	public void updateModel() {
+		block.updateModel();
+	}
+
+	public void changeModel(Module model) {
+		this.module = model;
+		block.changeModel();
+	}
 	
 }

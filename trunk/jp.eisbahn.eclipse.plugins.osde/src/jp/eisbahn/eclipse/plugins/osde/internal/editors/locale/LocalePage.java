@@ -54,5 +54,14 @@ public class LocalePage extends FormPage {
 	public List<LocaleModel> getLocaleModels() {
 		return block.getLocaleModels();
 	}
+
+	public void updateModel() {
+		block.updateModel();
+	}
+
+	public void changeModel(Module model) {
+		this.module = model;
+		block.changeModel();
+	}
 	
 }
