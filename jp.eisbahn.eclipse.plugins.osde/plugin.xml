@@ -76,32 +76,6 @@
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
-            id="jp.eisbahn.eclipse.plugins.osde.contribution1"
-            objectClass="org.eclipse.core.resources.IProject">
-         <menu
-               id="jp.eisbahn.eclipse.plugins.osde.menu1"
-               label="OpenSocial"
-               path="additions">
-            <separator
-                  name="group1">
-            </separator>
-         </menu>
-         <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
-               enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.launchShindigAction"
-               icon="icons/opensocial.gif"
-               label="Launch Apache Shindig"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu1/group1">
-            <enablement>
-               <objectState
-                     name="nature"
-                     value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
-               </objectState>
-            </enablement>
-         </action>
-      </objectContribution>
-      <objectContribution
             id="jp.eisbahn.eclipse.plugins.osde.contribution2"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
@@ -266,8 +240,17 @@
                tooltip="Create sample data in Shindig database.">
          </action>
          <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShutoffShindigAction"
+               icon="icons/shindig_stop.gif"
+               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShutoffShindigAction"
+               label="Shut off Apache &amp;Shindig"
+               menubarPath="opensocialMenu/opensocialGroup1"
+               toolbarPath="opensocialGroup"
+               tooltip="Shut off Apache Sindig server.">
+         </action>
+         <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
-               icon="icons/opensocial.gif"
+               icon="icons/shindig_start.gif"
                id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
                label="Launch Apache &amp;Shindig"
                menubarPath="opensocialMenu/opensocialGroup1"

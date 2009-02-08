@@ -17,17 +17,10 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.ui.DebugUITools;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -38,7 +31,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class LaunchShindigAction extends Action implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+public class ShutoffShindigAction extends Action implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
 	private Shell shell;
 	private IWorkbenchPart targetPart;
@@ -46,11 +39,11 @@ public class LaunchShindigAction extends Action implements IObjectActionDelegate
 	/**
 	 * Constructor for Action1.
 	 */
-	public LaunchShindigAction() {
+	public ShutoffShindigAction() {
 		super();
 	}
 	
-	public LaunchShindigAction(IWorkbenchPart targetPart) {
+	public ShutoffShindigAction(IWorkbenchPart targetPart) {
 		super();
 		shell = targetPart.getSite().getShell();
 		this.targetPart = targetPart;
@@ -85,44 +78,6 @@ public class LaunchShindigAction extends Action implements IObjectActionDelegate
 					launch.terminate();
 				}
 			}
-			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
-			// launch shindig & database
-			for (int i = 0; i < configurations.length; i++) {
-				if (configurations[i].getName().equals("Shindig Database")) {
-					final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
-					shell.getDisplay().syncExec(new Runnable() {
-						public void run() {
-							try {
-								DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
-							} catch (CoreException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					});
-				}
-			}
-			for (int i = 0; i < configurations.length; i++) {
-				if (configurations[i].getName().equals("Apache Shindig")) {
-					final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
-					shell.getDisplay().timerExec(3000, new Runnable() {
-						public void run() {
-							try {
-								DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
-							} catch (CoreException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					});
-				}
-			}
-			shell.getDisplay().timerExec(3000, new Runnable() {
-				public void run() {
-					Activator.getDefault().connect(targetPart.getSite().getWorkbenchWindow());
-				}
-			});
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
