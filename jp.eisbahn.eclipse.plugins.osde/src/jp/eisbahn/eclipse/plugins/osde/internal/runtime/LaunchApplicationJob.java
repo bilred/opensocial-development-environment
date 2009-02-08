@@ -82,8 +82,8 @@ public class LaunchApplicationJob extends Job {
 			monitor.worked(1);
 			final String kicker;
 			if (project != null) {
-				kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:8080/" + project.getName() + "/"
-						+ url
+				kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:8080/" + project.getName().replace(" ", "%20") + "/"
+						+ url.replace(" ", "%20")
 						+ "&view=" + view
 						+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
 						+ "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
@@ -94,7 +94,7 @@ public class LaunchApplicationJob extends Job {
 						+ "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8");
 			} else {
 				kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url="
-				+ url
+				+ url.replace(" ", "%20")
 				+ "&view=" + view
 				+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
 				+ "&ownerId=" + URLEncoder.encode(owner, "UTF-8")

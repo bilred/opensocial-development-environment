@@ -92,7 +92,8 @@ public class ShindigLaunchConfigurationCreator {
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "Main");
 			String warFile = getBundleEntryUrl("/shindig/shindig-server-1.1-SNAPSHOT.war").toExternalForm();
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "8080 " + warFile);
+			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+					"8080 \"" + warFile + "\"");
 			wc.doSave();
 			monitor.worked(1);
 		} finally {

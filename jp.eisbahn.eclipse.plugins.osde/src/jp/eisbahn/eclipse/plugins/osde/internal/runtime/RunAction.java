@@ -120,7 +120,7 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	}
 	
 	private void notifyUserPrefsView(final LaunchApplicationInformation information) {
-		final String url = "http://localhost:8080/" + project.getName() + "/" + gadgetXmlFile.getName();
+		final String url = "http://localhost:8080/" + project.getName().replace(" ", "%20") + "/" + gadgetXmlFile.getName().replace(" ", "%20");
 		final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
 		shell.getDisplay().syncExec(new Runnable() {
 			public void run() {
@@ -131,6 +131,7 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 				} catch (PartInitException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					throw new IllegalStateException(e);
 				}
 			}
 		});
