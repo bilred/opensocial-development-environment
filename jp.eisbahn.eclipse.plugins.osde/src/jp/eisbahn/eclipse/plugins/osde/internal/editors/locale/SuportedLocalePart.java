@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -160,17 +161,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		return page.getModule();
 	}
 
-	@Override
-	public void commit(boolean onSave) {
-		super.commit(onSave);
-		if (!onSave) {
-			return;
-		} else {
-			setValuesToModule();
-		}
-	}
-	
-	private void setValuesToModule() {
+	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
@@ -277,12 +268,28 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 				model.setLang(dialog.getLanguage());
 				model.setInternal(dialog.isInternal());
 				List<LocaleModel> models = (List<LocaleModel>)supportedLocaleList.getInput();
-				if (!models.contains(model)) {
+				if (!contains(models, model)) {
 					models.add(model);
 					supportedLocaleList.refresh();
 					markDirty();
 				}
 			}
+		}
+		
+		private boolean contains(List<LocaleModel> models, LocaleModel model) {
+			for (LocaleModel localeModel : models) {
+				if (equalsLocaleModel(localeModel, model)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		private boolean equalsLocaleModel(LocaleModel m1, LocaleModel m2) {
+			return new EqualsBuilder()
+					.append(m1.getCountry(), m2.getCountry())
+					.append(m1.getLang(), m2.getLang())
+					.isEquals();
 		}
 		
 	}
@@ -315,6 +322,10 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 
 	public List<LocaleModel> getLocaleModels() {
 		return (List<LocaleModel>)supportedLocaleList.getInput();
+	}
+
+	public void changeModel() {
+		displayInitialValue();
 	}
 
 }

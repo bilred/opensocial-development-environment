@@ -79,4 +79,16 @@ public class ContentsBlock extends MasterDetailsBlock {
 		return supportedViewsPart.getContentModels();
 	}
 	
+	public void updateModel() {
+		if (supportedViewsPart != null) {
+			supportedViewsPart.setValuesToModule();
+		}
+	}
+
+	public void changeModel() {
+		if (supportedViewsPart != null) {
+			supportedViewsPart.changeModel();
+		}
+	}
+	
 }

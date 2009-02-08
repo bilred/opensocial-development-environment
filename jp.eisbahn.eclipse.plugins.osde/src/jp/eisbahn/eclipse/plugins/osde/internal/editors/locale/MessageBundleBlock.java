@@ -78,5 +78,17 @@ public class MessageBundleBlock extends MasterDetailsBlock {
 	public List<LocaleModel> getLocaleModels() {
 		return messageBundlesPart.getLocaleModels();
 	}
-	
+
+	public void updateModel() {
+		if (messageBundlesPart != null) {
+			messageBundlesPart.setValuesToModule();
+		}
+	}
+
+	public void changeModel() {
+		if (messageBundlesPart != null) {
+			messageBundlesPart.changeModel();
+		}
+	}
+
 }

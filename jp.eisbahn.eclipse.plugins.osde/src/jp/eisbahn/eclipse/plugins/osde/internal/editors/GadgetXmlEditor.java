@@ -17,12 +17,10 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.basic.ModulePrefsPage;
@@ -35,7 +33,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -50,6 +50,18 @@ public class GadgetXmlEditor extends FormEditor {
 	
 	private Module module;
 	private JAXBContext context;
+
+	private ModulePrefsPage modulePrefsPage;
+
+	private ContentsPage contentsPage;
+
+	private LocalePage messageBundlePage;
+
+	private UserPrefsPage userPrefsPage;
+
+	private StructuredTextEditor sourceEditor;
+	
+	private boolean reflecting = false;
 	
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -70,20 +82,40 @@ public class GadgetXmlEditor extends FormEditor {
 	@Override
 	protected void addPages() {
 		try {
-			ModulePrefsPage modulePrefsPage = new ModulePrefsPage(this, module);
+			modulePrefsPage = new ModulePrefsPage(this, module);
 			addPage(modulePrefsPage);
-			ContentsPage contentsPage = new ContentsPage(this, module);
+			contentsPage = new ContentsPage(this, module);
 			addPage(contentsPage);
-			LocalePage messageBundlePage = new LocalePage(this, module);
+			messageBundlePage = new LocalePage(this, module);
 			addPage(messageBundlePage);
-			UserPrefsPage userPrefsPage = new UserPrefsPage(this, module);
+			userPrefsPage = new UserPrefsPage(this, module);
 			addPage(userPrefsPage);
-			StructuredTextEditor editor = new StructuredTextEditor();
-			addPage(editor, getEditorInput());
+			sourceEditor = new StructuredTextEditor() {
+				@Override
+				public void doSave(IProgressMonitor progressMonitor) {
+					try {
+						reflectModel();
+					} catch (JAXBException e) {
+						// Ignore
+					}
+					commitPages(true);
+					super.doSave(progressMonitor);
+					editorDirtyStateChanged();
+				}
+			};
+			addPage(sourceEditor, getEditorInput());
 			setPageText(4, "Source");
 			addPageChangedListener(new IPageChangedListener() {
 				public void pageChanged(PageChangedEvent event) {
-					System.out.println(GadgetXmlSerializer.serialize(module));
+					if (sourceEditor.isDirty()) {
+						try {
+							reflectModel();
+						} catch (JAXBException e) {
+							MessageDialog.openError(getSite().getShell(), "Error",
+									"Syntax error: " + e.getCause().getMessage());
+							setActiveEditor(sourceEditor);
+						}
+					}
 				}
 			});
 		} catch(PartInitException e) {
@@ -91,23 +123,36 @@ public class GadgetXmlEditor extends FormEditor {
 		}
 	}
 
+	protected void changeModel(Module model) {
+		this.module = model;
+		modulePrefsPage.changeModel(model);
+		contentsPage.changeModel(model);
+		messageBundlePage.changeModel(model);
+		userPrefsPage.changeModel(model);
+	}
+
+	@Override
+	public void editorDirtyStateChanged() {
+		super.editorDirtyStateChanged();
+		if (isDirty() && !reflecting) {
+			modulePrefsPage.updateModel();
+			contentsPage.updateModel();
+			userPrefsPage.updateModel();
+			messageBundlePage.updateModel();
+			String serialized = GadgetXmlSerializer.serialize(module);
+			IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
+			String now = document.get();
+			if (!serialized.equals(now)) {
+				document.set(serialized);
+			}
+		}
+	}
+
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		try {
-			commitPages(true);
-			IFile file = (IFile)getEditorInput().getAdapter(IResource.class);
-			Marshaller ma = context.createMarshaller();
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ma.marshal(module, out);
-			ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-			file.setContents(in, true, false, monitor);
-			editorDirtyStateChanged();
-		} catch (JAXBException e) {
-			throw new IllegalStateException(e);
-		} catch (CoreException e) {
-			throw new IllegalStateException(e);
-		}
-		
+		commitPages(true);
+		sourceEditor.doSave(monitor);
+		editorDirtyStateChanged();
 	}
 
 	@Override
@@ -117,6 +162,19 @@ public class GadgetXmlEditor extends FormEditor {
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
+	}
+
+	private void reflectModel() throws JAXBException {
+		reflecting = true;
+		try {
+			IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
+			String content = document.get();
+			Unmarshaller um = context.createUnmarshaller();
+			StringReader in = new StringReader(content);
+			changeModel((Module)um.unmarshal(in));
+		} finally {
+			reflecting = false;
+		}
 	}
 
 }

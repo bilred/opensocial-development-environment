@@ -140,17 +140,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 		return page.getModule();
 	}
 
-	@Override
-	public void commit(boolean onSave) {
-		super.commit(onSave);
-		if (!onSave) {
-			return;
-		} else {
-			setValuesToModule();
-		}
-	}
-	
-	private void setValuesToModule() {
+	public void setValuesToModule() {
 		Module module = getModule();
 		List<UserPref> userPrefList = module.getUserPref();
 		userPrefList.clear();
@@ -198,12 +188,21 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 				model.setDisplayName(dialog.getDisplayName());
 				model.setDataType(dialog.getDataType());
 				List<UserPrefModel> models = (List<UserPrefModel>)userPrefsList.getInput();
-				if (!models.contains(model)) {
+				if (!contains(models, model)) {
 					models.add(model);
 					userPrefsList.refresh();
 					markDirty();
 				}
 			}
+		}
+		
+		private boolean contains(List<UserPrefModel> models, UserPrefModel model) {
+			for (UserPrefModel userPrefModel : models) {
+				if (userPrefModel.getName().equals(model.getName())) {
+					return true;
+				}
+			}
+			return false;
 		}
 		
 	}
@@ -229,6 +228,10 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 			}
 		}
 		
+	}
+
+	public void changeModel() {
+		displayInitialValue();
 	}
 
 }

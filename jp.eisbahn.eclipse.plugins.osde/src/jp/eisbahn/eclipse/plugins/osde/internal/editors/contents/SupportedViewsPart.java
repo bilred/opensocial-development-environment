@@ -152,17 +152,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 		return page.getModule();
 	}
 
-	@Override
-	public void commit(boolean onSave) {
-		super.commit(onSave);
-		if (!onSave) {
-			return;
-		} else {
-			setValuesToModule();
-		}
-	}
-	
-	private void setValuesToModule() {
+	public void setValuesToModule() {
 		Module module = getModule();
 		List<ContentModel> models = (List<ContentModel>)supportedViewList.getInput();
 		List<Content> contents = module.getContent();
@@ -268,6 +258,10 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 
 	public List<ContentModel> getContentModels() {
 		return (List<ContentModel>)supportedViewList.getInput();
+	}
+
+	public void changeModel() {
+		displayInitialValue();
 	}
 
 }

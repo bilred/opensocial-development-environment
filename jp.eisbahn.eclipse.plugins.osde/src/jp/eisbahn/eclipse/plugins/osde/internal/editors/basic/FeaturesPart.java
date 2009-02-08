@@ -146,21 +146,11 @@ public class FeaturesPart extends AbstractFormPart {
 		return button;
 	}
 	
-	@Override
-	public void commit(boolean onSave) {
-		super.commit(onSave);
-		if (!onSave) {
-			return;
-		} else {
-			setValuesToModule();
-		}
-	}
-
-	private void setValuesToModule() {
+	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
+		clearFeatures(modulePrefs);
 		List<JAXBElement<?>> requireOrOptionalOrPreload = modulePrefs.getRequireOrOptionalOrPreload();
-		requireOrOptionalOrPreload.clear();
 		Set<Entry<FeatureName,Button>> set = buttonMap.entrySet();
 		for (Entry<FeatureName, Button> entry : set) {
 			FeatureName featureName = entry.getKey();
@@ -172,6 +162,20 @@ public class FeaturesPart extends AbstractFormPart {
 				requireOrOptionalOrPreload.add(require);
 			}
 		}
+	}
+	
+	private void clearFeatures(ModulePrefs modulePrefs) {
+		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		for (int i = elements.size() - 1; i >= 0; i--) {
+			JAXBElement<?> element = elements.get(i);
+			if (element.getValue() instanceof GadgetFeatureType) {
+				elements.remove(i);
+			}
+		}
+	}
+
+	public void changeModel() {
+		displayInitialValue();
 	}
 
 }
