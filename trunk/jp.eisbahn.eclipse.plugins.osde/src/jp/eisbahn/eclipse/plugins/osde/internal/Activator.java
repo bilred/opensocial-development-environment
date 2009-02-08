@@ -17,6 +17,8 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -39,6 +41,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -101,10 +106,6 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		(new ShindigLaunchConfigurationCreator()).delete(getStatusMonitor());
-		(new DatabaseLaunchConfigurationCreator()).delete(getStatusMonitor());
-		plugin = null;
-		disposeColors();
 		session.close();
 		sessionFactory.close();
 		personService = null;
@@ -112,6 +113,25 @@ public class Activator extends AbstractUIPlugin {
 		appDataService = null;
 		activityService = null;
 		sessionFactory = null;
+		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+		ILaunch[] launches = manager.getLaunches();
+		for (ILaunch launch : launches) {
+			String name = launch.getLaunchConfiguration().getName();
+			if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
+				launch.terminate();
+			}
+		}
+		(new ShindigLaunchConfigurationCreator()).delete(getStatusMonitor());
+		(new DatabaseLaunchConfigurationCreator()).delete(getStatusMonitor());
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		File[] files = tmpDir.listFiles();
+		for (File file : files) {
+			if (file.getName().startsWith("osde_context_")) {
+				file.delete();
+			}
+		}
+		plugin = null;
+		disposeColors();
 		super.stop(context);
 	}
 	

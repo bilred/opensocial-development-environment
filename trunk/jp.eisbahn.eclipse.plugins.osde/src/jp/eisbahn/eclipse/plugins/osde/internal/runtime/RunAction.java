@@ -176,7 +176,7 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 				code = code.replace("$project_name$", project.getName());
 				IPath location = project.getFolder("target").getLocation();
 				code = code.replace("$context_dir$", location.toOSString());
-				File file = new File(System.getProperty("java.io.tmpdir"), project.getName() + ".xml");
+				File file = new File(System.getProperty("java.io.tmpdir"), "osde_context_" + project.getName() + ".xml");
 				fos = new FileOutputStream(file);
 				ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
 				IOUtils.copy(bytes, fos);
