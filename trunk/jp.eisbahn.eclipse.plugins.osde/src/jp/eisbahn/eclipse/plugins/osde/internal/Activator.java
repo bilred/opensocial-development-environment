@@ -226,6 +226,43 @@ public class Activator extends AbstractUIPlugin {
         return bundle.getEntry("/");
     }
     
+    public void disconnect(final IWorkbenchWindow window, final IProgressMonitor monitor) {
+		if (session != null && session.isConnected()) {
+			session.close();
+		}
+		if (sessionFactory != null && !sessionFactory.isClosed()) {
+			sessionFactory.close();
+		}
+    	session = null;
+    	sessionFactory = null;
+    	personService = null;
+    	appDataService = null;
+    	applicationService = null;
+    	activityService = null;
+    	monitor.worked(1);
+    	window.getShell().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				try {
+					PersonView personView = (PersonView)window.getActivePage().showView(PersonView.ID);
+					personView.disconnectedDatabase();
+					monitor.worked(1);
+					AppDataView appDataView = (AppDataView)window.getActivePage().showView(AppDataView.ID);
+					appDataView.disconnectedDatabase();
+					monitor.worked(1);
+					ActivitiesView activitiesView = (ActivitiesView)window.getActivePage().showView(ActivitiesView.ID);
+					activitiesView.disconnectedDatabase();
+					monitor.worked(1);
+					UserPrefsView userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
+					userPrefsView.disconnectedDatabase();
+					monitor.worked(1);
+				} catch (PartInitException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+    }
+    
 	public void connect(final IWorkbenchWindow window) {
 		Job job = new Job("Connect to Shindig database.") {
 			@Override
