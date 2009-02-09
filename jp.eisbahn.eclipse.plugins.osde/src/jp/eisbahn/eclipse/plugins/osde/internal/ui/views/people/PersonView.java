@@ -17,7 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
@@ -98,6 +98,10 @@ public class PersonView extends AbstractView {
 
 	public void connectedDatabase() {
 		loadPeople();
+	}
+
+	public void disconnectedDatabase() {
+		block.setPeople(new ArrayList<Person>());
 	}
 	
 }

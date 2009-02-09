@@ -301,4 +301,8 @@ public class UserPrefsView extends AbstractView {
 		}
 	}
 
+	public void disconnectedDatabase() {
+		removeAllFields();
+	}
+
 }

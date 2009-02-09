@@ -17,6 +17,8 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities;
 
+import java.util.ArrayList;
+
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
@@ -96,6 +98,10 @@ public class ActivitiesView extends AbstractView {
 
 	public void connectedDatabase() {
 		loadPeople();
+	}
+
+	public void disconnectedDatabase() {
+		block.setPeople(new ArrayList<Person>());
 	}
 	
 }

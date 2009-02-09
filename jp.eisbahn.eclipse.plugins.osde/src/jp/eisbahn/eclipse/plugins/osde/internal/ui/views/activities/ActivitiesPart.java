@@ -138,12 +138,14 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
 
 	public void setPeople(List<Person> people) {
 		peopleCombo.removeAll();
-		for (Person person : people) {
-			peopleCombo.add(person.getId());
-			peopleCombo.setData(person.getId(), person);
+		if (!people.isEmpty()) {
+			for (Person person : people) {
+				peopleCombo.add(person.getId());
+				peopleCombo.setData(person.getId(), person);
+			}
+			peopleCombo.select(0);
+			updateActivityList();
 		}
-		peopleCombo.select(0);
-		updateActivityList();
 	}
 
 	public void selectionChanged(IFormPart part, ISelection selection) {

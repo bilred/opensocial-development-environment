@@ -17,7 +17,13 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
@@ -69,19 +75,35 @@ public class ShutoffShindigAction extends Action implements IObjectActionDelegat
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		try {
-			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-			ILaunch[] launches = manager.getLaunches();
-			for (ILaunch launch : launches) {
-				String name = launch.getLaunchConfiguration().getName();
-				if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
-					launch.terminate();
+		Job job = new Job("Shutting off Apache Shindig.") {
+			@Override
+			protected IStatus run(final IProgressMonitor monitor) {
+				monitor.beginTask("Shutting off Apache Shindig.", 7);
+				try {
+					ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+					ILaunch[] launches = manager.getLaunches();
+					for (ILaunch launch : launches) {
+						String name = launch.getLaunchConfiguration().getName();
+						if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
+							launch.terminate();
+							monitor.worked(1);
+						}
+					}
+					shell.getDisplay().syncExec(new Runnable() {
+						public void run() {
+							Activator.getDefault().disconnect(targetPart.getSite().getWorkbenchWindow(), monitor);
+						}
+					});
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+				monitor.done();
+				return Status.OK_STATUS;
 			}
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		};
+		job.setUser(true);
+		job.schedule();
 	}
 
 	/**
