@@ -111,9 +111,9 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		sectionPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		//
 		createLabel(sectionPanel, toolkit, "Title:");
-		titleText = createText(sectionPanel, toolkit, 3, modifyListener);
+		titleText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Title URL:");
-		titleUrlText = createText(sectionPanel, toolkit, 3, modifyListener);
+		titleUrlText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Description:");
 		descriptionText = toolkit.createText(sectionPanel, "", SWT.MULTI | SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -126,9 +126,9 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		createLabel(sectionPanel, toolkit, "Author Email:");
 		authorEmailText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Screen Shot:");
-		screenshotText = createText(sectionPanel, toolkit, 3, modifyListener);
+		screenshotText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Thumbnail:");
-		thumbnailText = createText(sectionPanel, toolkit, 3, modifyListener);
+		thumbnailText = createText(sectionPanel, toolkit, modifyListener);
 		//
 		createLabel(sectionPanel, toolkit, "");
 	}

@@ -17,15 +17,13 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.basic;
 
-import java.util.Collection;
-import java.util.EnumMap;
+import static jp.eisbahn.eclipse.plugins.osde.internal.editors.ComponentUtils.createLabel;
+import static jp.eisbahn.eclipse.plugins.osde.internal.editors.ComponentUtils.createText;
+
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
-
+import javax.xml.namespace.QName;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,37 +32,51 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.FeatureName;
 import com.google.gadgets.GadgetFeatureType;
 import com.google.gadgets.Module;
 import com.google.gadgets.ObjectFactory;
+import com.google.gadgets.GadgetFeatureType.Param;
 import com.google.gadgets.Module.ModulePrefs;
 
-public class FeaturesPart extends AbstractFormPart {
+public class ContentRewritePart extends AbstractFormPart {
 
 	private ModulePrefsPage page;
 	
-	private Map<FeatureName, Button> buttonMap;
-	
 	private ObjectFactory objectFactory;
+	
+	private boolean initializing;
 	
 	private SelectionListener selectionListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 		public void widgetSelected(SelectionEvent e) {
-			markDirty();
+			if (!initializing) {
+				markDirty();
+			}
 		}
 	};
 	
-	public FeaturesPart(ModulePrefsPage page) {
+	private Listener modifyListener = new Listener() {
+		public void handleEvent(Event event) {
+			if (!initializing) {
+				markDirty();
+			}
+		}
+	};
+
+	private Button useButton;
+	
+	public ContentRewritePart(ModulePrefsPage page) {
 		this.page = page;
-		buttonMap = new EnumMap<FeatureName, Button>(FeatureName.class);
 		objectFactory = new ObjectFactory();
 	}
 	
@@ -74,16 +86,14 @@ public class FeaturesPart extends AbstractFormPart {
 	
 	@Override
 	public void initialize(IManagedForm form) {
+		initializing = true;
 		super.initialize(form);
 		createControls(form);
 		displayInitialValue();
+		initializing = false;
 	}
 	
 	private void displayInitialValue() {
-		Collection<Button> buttons = buttonMap.values();
-		for (Button button : buttons) {
-			button.setSelection(false);
-		}
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
@@ -91,11 +101,18 @@ public class FeaturesPart extends AbstractFormPart {
 			Object value = element.getValue();
 			if (value instanceof GadgetFeatureType) {
 				GadgetFeatureType type = (GadgetFeatureType)value;
+				QName name = element.getName();
 				String featureRealName = type.getFeature();
-				FeatureName feature = FeatureName.getFeatureName(featureRealName);
-				Button button = buttonMap.get(feature);
-				if (button != null) {
-					button.setSelection(true);
+				if (name.equals("Optional") && featureRealName.equals("content-rewrite")) {
+					useButton.setSelection(true);
+					List<Param> params = type.getParam();
+					for (Param param : params) {
+						if (param.getName().equals("include-urls")) {
+							
+						}
+					}
+				} else {
+					useButton.setSelection(false);
 				}
 			}
 		}
@@ -106,8 +123,8 @@ public class FeaturesPart extends AbstractFormPart {
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
 		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.TWISTIE);
-		section.setText("Features");
-		section.setDescription("The checked features will be used in your application.");
+		section.setText("Content rewrite");
+		section.setDescription("Content-rewrite feature allows you to control the cache configuration.");
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		//
 		Composite sectionPanel = toolkit.createComposite(section);
@@ -116,26 +133,23 @@ public class FeaturesPart extends AbstractFormPart {
 		sectionPanel.setLayout(layout);
 		section.setClient(sectionPanel);
 		sectionPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		Button opensocial08Button = createCheckbox(sectionPanel, "OpenSocial v0.8", toolkit);
-		buttonMap.put(FeatureName.OPENSOCIAL_0_8, opensocial08Button);
-		Button opensocial07Button = createCheckbox(sectionPanel, "OpenSocial v0.7", toolkit);
-		buttonMap.put(FeatureName.OPENSOCIAL_0_7, opensocial07Button);
-		Button pubsubButton = createCheckbox(sectionPanel, "PubSub", toolkit);
-		buttonMap.put(FeatureName.PUBSUB, pubsubButton);
-		Button viewsButton = createCheckbox(sectionPanel, "Views", toolkit);
-		buttonMap.put(FeatureName.VIEWS, viewsButton);
-		Button flashButton = createCheckbox(sectionPanel, "Flash", toolkit);
-		buttonMap.put(FeatureName.FLASH, flashButton);
-		Button skinsButton = createCheckbox(sectionPanel, "Skins", toolkit);
-		buttonMap.put(FeatureName.SKINS, skinsButton);
-		Button dynamicHeightButton = createCheckbox(sectionPanel, "Dynamic Height", toolkit);
-		buttonMap.put(FeatureName.DYNAMIC_HEIGHT, dynamicHeightButton);
-		Button setTitleButton = createCheckbox(sectionPanel, "Set Title", toolkit);
-		buttonMap.put(FeatureName.SET_TITLE, setTitleButton);
-		Button miniMessageButton = createCheckbox(sectionPanel, "Mini Message", toolkit);
-		buttonMap.put(FeatureName.MINI_MESSAGE, miniMessageButton);
-		Button tabsButton = createCheckbox(sectionPanel, "Tabs", toolkit);
-		buttonMap.put(FeatureName.TABS, tabsButton);
+		//
+		useButton = createCheckbox(sectionPanel, "Use content-rewrite", toolkit);
+		GridData layoutData = new GridData();
+		layoutData.horizontalSpan = 4;
+		useButton.setLayoutData(layoutData);
+		createLabel(sectionPanel, toolkit, "Include URLs:");
+		createText(sectionPanel, toolkit, modifyListener);
+		createLabel(sectionPanel, toolkit, "Exclude URLs:");
+		createText(sectionPanel, toolkit, modifyListener);
+		createLabel(sectionPanel, toolkit, "Include Tags:");
+		createText(sectionPanel, toolkit, modifyListener);
+		createLabel(sectionPanel, toolkit, "Expires:");
+		Spinner expiresSpinner = new Spinner(sectionPanel, SWT.NONE);
+		expiresSpinner.setIncrement(100);
+		expiresSpinner.setMinimum(0);
+		expiresSpinner.setMaximum(604800);
+		expiresSpinner.setSelection(86400);
 	}
 	
 	private Button createCheckbox(Composite parent, String text, FormToolkit toolkit) {
@@ -149,32 +163,8 @@ public class FeaturesPart extends AbstractFormPart {
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		clearFeatures(modulePrefs);
-		List<JAXBElement<?>> requireOrOptionalOrPreload = modulePrefs.getRequireOrOptionalOrPreload();
-		Set<Entry<FeatureName,Button>> set = buttonMap.entrySet();
-		for (Entry<FeatureName, Button> entry : set) {
-			FeatureName featureName = entry.getKey();
-			Button button = entry.getValue();
-			if (button.getSelection()) {
-				GadgetFeatureType featureType = objectFactory.createGadgetFeatureType();
-				featureType.setFeature(featureName.toString());
-				JAXBElement<GadgetFeatureType> require = objectFactory.createModuleModulePrefsRequire(featureType);
-				requireOrOptionalOrPreload.add(require);
-			}
-		}
 	}
 	
-	private void clearFeatures(ModulePrefs modulePrefs) {
-		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (int i = elements.size() - 1; i >= 0; i--) {
-			JAXBElement<?> element = elements.get(i);
-			if (element.getValue() instanceof GadgetFeatureType
-					&& element.getName().toString().equals("Require")) {
-				elements.remove(i);
-			}
-		}
-	}
-
 	public void changeModel() {
 		displayInitialValue();
 	}
