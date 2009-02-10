@@ -25,6 +25,9 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets;
+
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -35,6 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -59,6 +63,7 @@ public class ContentRewritePart extends AbstractFormPart {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 		public void widgetSelected(SelectionEvent e) {
+			setEnabledControls(useButton.getSelection());
 			if (!initializing) {
 				markDirty();
 			}
@@ -74,6 +79,14 @@ public class ContentRewritePart extends AbstractFormPart {
 	};
 
 	private Button useButton;
+
+	private Text includeUrlsText;
+
+	private Text excludeUrlsText;
+
+	private Text includeTagsText;
+
+	private Spinner expiresSpinner;
 	
 	public ContentRewritePart(ModulePrefsPage page) {
 		this.page = page;
@@ -90,10 +103,23 @@ public class ContentRewritePart extends AbstractFormPart {
 		super.initialize(form);
 		createControls(form);
 		displayInitialValue();
+		setEnabledControls(useButton.getSelection());
 		initializing = false;
 	}
 	
+	private void setEnabledControls(boolean enabled) {
+		includeUrlsText.setEnabled(enabled);
+		excludeUrlsText.setEnabled(enabled);
+		includeTagsText.setEnabled(enabled);
+		expiresSpinner.setEnabled(enabled);
+	}
+	
 	private void displayInitialValue() {
+		useButton.setSelection(false);
+		includeUrlsText.setText("");
+		excludeUrlsText.setText("");
+		includeTagsText.setText("");
+		expiresSpinner.setSelection(86400);
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
@@ -103,16 +129,29 @@ public class ContentRewritePart extends AbstractFormPart {
 				GadgetFeatureType type = (GadgetFeatureType)value;
 				QName name = element.getName();
 				String featureRealName = type.getFeature();
-				if (name.equals("Optional") && featureRealName.equals("content-rewrite")) {
+				if (name.toString().equals("Optional") && featureRealName.equals("content-rewrite")) {
 					useButton.setSelection(true);
 					List<Param> params = type.getParam();
 					for (Param param : params) {
 						if (param.getName().equals("include-urls")) {
-							
+							includeUrlsText.setText(Gadgets.trim(param.getValue()));
+						}
+						if (param.getName().equals("exclude-urls")) {
+							excludeUrlsText.setText(Gadgets.trim(param.getValue()));
+						}
+						if (param.getName().equals("include-tags")) {
+							includeTagsText.setText(Gadgets.trim(param.getValue()));
+						}
+						if (param.getName().equals("expires")) {
+							Integer expiresValue = Gadgets.toInteger(param.getValue());
+							if (expiresValue != null) {
+								expiresSpinner.setSelection(expiresValue);
+							} else {
+								expiresSpinner.setSelection(86400);
+							}
 						}
 					}
-				} else {
-					useButton.setSelection(false);
+					return;
 				}
 			}
 		}
@@ -139,17 +178,18 @@ public class ContentRewritePart extends AbstractFormPart {
 		layoutData.horizontalSpan = 4;
 		useButton.setLayoutData(layoutData);
 		createLabel(sectionPanel, toolkit, "Include URLs:");
-		createText(sectionPanel, toolkit, modifyListener);
+		includeUrlsText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Exclude URLs:");
-		createText(sectionPanel, toolkit, modifyListener);
+		excludeUrlsText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Include Tags:");
-		createText(sectionPanel, toolkit, modifyListener);
+		includeTagsText = createText(sectionPanel, toolkit, modifyListener);
 		createLabel(sectionPanel, toolkit, "Expires:");
-		Spinner expiresSpinner = new Spinner(sectionPanel, SWT.NONE);
+		expiresSpinner = new Spinner(sectionPanel, SWT.NONE);
 		expiresSpinner.setIncrement(100);
 		expiresSpinner.setMinimum(0);
 		expiresSpinner.setMaximum(604800);
 		expiresSpinner.setSelection(86400);
+		expiresSpinner.addListener(SWT.Modify, modifyListener);
 	}
 	
 	private Button createCheckbox(Composite parent, String text, FormToolkit toolkit) {
@@ -163,6 +203,55 @@ public class ContentRewritePart extends AbstractFormPart {
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
+		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		JAXBElement<?> contentRewriteNode = getContentRewriteNode(elements);
+		if (contentRewriteNode != null) {
+			elements.remove(contentRewriteNode);
+		}
+		if (useButton.getSelection()) {
+			GadgetFeatureType type = objectFactory.createGadgetFeatureType();
+			type.setFeature("content-rewrite");
+			List<Param> params = type.getParam();
+			String includeUrls = includeUrlsText.getText();
+			if (StringUtils.isNotEmpty(includeUrls)) {
+				Param param = objectFactory.createGadgetFeatureTypeParam();
+				param.setName("include-urls");
+				param.setValue(includeUrls);
+				params.add(param);
+			}
+			String excludeUrls = excludeUrlsText.getText();
+			if (StringUtils.isNotEmpty(excludeUrls)) {
+				Param param = objectFactory.createGadgetFeatureTypeParam();
+				param.setName("exclude-urls");
+				param.setValue(excludeUrls);
+				params.add(param);
+			}
+			String includeTags = includeTagsText.getText();
+			if (StringUtils.isNotEmpty(includeTags)) {
+				Param param = objectFactory.createGadgetFeatureTypeParam();
+				param.setName("include-tags");
+				param.setValue(includeTags);
+				params.add(param);
+			}
+			Param param = objectFactory.createGadgetFeatureTypeParam();
+			param.setName("expires");
+			param.setValue(String.valueOf(expiresSpinner.getSelection()));
+			params.add(param);
+			JAXBElement<GadgetFeatureType> optional = objectFactory.createModuleModulePrefsOptional(type);
+			elements.add(optional);
+		}
+	}
+	
+	private JAXBElement<?> getContentRewriteNode(List<JAXBElement<?>> elements) {
+		for (JAXBElement<?> element : elements) {
+			Object value = element.getValue();
+			if ((value instanceof GadgetFeatureType)
+					&& (element.getName().toString().equals("Optional"))
+					&& ((GadgetFeatureType)value).getFeature().equals("content-rewrite")) {
+				return element;
+			}
+		}
+		return null;
 	}
 	
 	public void changeModel() {
