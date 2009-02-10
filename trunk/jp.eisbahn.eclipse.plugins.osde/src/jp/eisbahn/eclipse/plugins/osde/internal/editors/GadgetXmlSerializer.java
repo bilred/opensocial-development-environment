@@ -21,11 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gadgets.GadgetFeatureType;
 import com.google.gadgets.Module;
+import com.google.gadgets.GadgetFeatureType.Param;
 import com.google.gadgets.Module.Content;
 import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.UserPref;
@@ -135,8 +137,23 @@ public class GadgetXmlSerializer {
 			Object value = element.getValue();
 			if (value instanceof GadgetFeatureType) {
 				GadgetFeatureType type = (GadgetFeatureType)value;
+				QName name = element.getName();
 				String featureRealName = type.getFeature();
-				sb.append("        <Require feature=\"" + featureRealName + "\" />\n");
+				sb.append("        <" + name.toString() + " feature=\"" + featureRealName + "\"");
+				List<Param> params = type.getParam();
+				if (params.isEmpty()) {
+					sb.append(" />\n");
+				} else {
+					sb.append(">\n");
+					for (Param param : params) {
+						sb.append("            <Param name=\"");
+						sb.append(param.getName());
+						sb.append("\">");
+						sb.append(escape(param.getValue()));
+						sb.append("</Param>\n");
+					}
+					sb.append("        </" + name.toString() + ">\n");
+				}
 			}
 		}
 		return sb.toString();
