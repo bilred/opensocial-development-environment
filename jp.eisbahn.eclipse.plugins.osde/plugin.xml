@@ -246,7 +246,7 @@
                label="Shut off Apache &amp;Shindig"
                menubarPath="opensocialMenu/opensocialGroup1"
                toolbarPath="opensocialGroup"
-               tooltip="Shut off Apache Sindig server.">
+               tooltip="Shut off Apache Shindig server.">
          </action>
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
@@ -255,7 +255,7 @@
                label="Launch Apache &amp;Shindig"
                menubarPath="opensocialMenu/opensocialGroup1"
                toolbarPath="opensocialGroup"
-               tooltip="Launch Apache Sindig server.">
+               tooltip="Launch Apache Shindig server.">
          </action>
       </actionSet>
    </extension>
