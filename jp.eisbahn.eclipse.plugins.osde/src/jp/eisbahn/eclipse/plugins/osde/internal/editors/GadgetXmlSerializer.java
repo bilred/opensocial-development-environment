@@ -23,6 +23,8 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gadgets.GadgetFeatureType;
@@ -31,6 +33,7 @@ import com.google.gadgets.GadgetFeatureType.Param;
 import com.google.gadgets.Module.Content;
 import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.UserPref;
+import com.google.gadgets.Module.ModulePrefs.Icon;
 import com.google.gadgets.Module.ModulePrefs.Locale;
 import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
 import com.google.gadgets.Module.UserPref.EnumValue;
@@ -45,6 +48,7 @@ public class GadgetXmlSerializer {
 		sb.append(createModulePrefsAttributes(module));
 		sb.append(createRequires(module));
 		sb.append(createLocales(module));
+		sb.append(createIcon(module));
 		sb.append("    </ModulePrefs>\n");
 		sb.append(createUserPrefs(module));
 		sb.append(createContents(module));
@@ -52,6 +56,25 @@ public class GadgetXmlSerializer {
 		return sb.toString();
 	}
 	
+	private static String createIcon(Module module) {
+		StringBuilder sb = new StringBuilder();
+		ModulePrefs modulePrefs = module.getModulePrefs();
+		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		for (JAXBElement<?> element : elements) {
+			Object value = element.getValue();
+			if (value instanceof Icon) {
+				Icon icon = (Icon)value;
+				sb.append("        <Icon");
+				createAttribute("mode", icon.getMode(), sb);
+				createAttribute("type", icon.getType(), sb);
+				sb.append(">");
+				sb.append(Gadgets.trim(icon.getValue()));
+				sb.append("</Icon>\n");
+			}
+		}
+		return sb.toString();
+	}
+
 	private static String createContents(Module module) {
 		StringBuilder sb = new StringBuilder();
 		List<Content> contents = module.getContent();

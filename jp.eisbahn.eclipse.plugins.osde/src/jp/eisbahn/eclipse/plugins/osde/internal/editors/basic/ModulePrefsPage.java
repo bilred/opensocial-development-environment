@@ -29,6 +29,7 @@ public class ModulePrefsPage extends FormPage {
 	private Module module;
 	private ApplicationInformationPart applicationInformationPart;
 	private FeaturesPart featuresPart;
+	private IconPart iconPart;
 	private ContentRewritePart contentRewritePart;
 	
 	public Module getModule() {
@@ -46,6 +47,8 @@ public class ModulePrefsPage extends FormPage {
 		managedForm.addPart(applicationInformationPart);
 		featuresPart = new FeaturesPart(this);
 		managedForm.addPart(featuresPart);
+		iconPart = new IconPart(this);
+		managedForm.addPart(iconPart);
 		contentRewritePart = new ContentRewritePart(this);
 		managedForm.addPart(contentRewritePart);
 	}
@@ -60,6 +63,9 @@ public class ModulePrefsPage extends FormPage {
 		if (contentRewritePart != null) {
 			contentRewritePart.setValuesToModule();
 		}
+		if (iconPart != null) {
+			iconPart.setValuesToModule();
+		}
 	}
 
 	public void changeModel(Module model) {
@@ -67,6 +73,7 @@ public class ModulePrefsPage extends FormPage {
 		applicationInformationPart.changeModel();
 		featuresPart.changeModel();
 		contentRewritePart.changeModel();
+		iconPart.changeModel();
 	}
 	
 }
