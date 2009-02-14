@@ -5,7 +5,7 @@
          point="org.eclipse.ui.newWizards">
       <category
         id="jp.eisbahn.eclipse.plugins.osde.newWizards"
-        name="OpenSocial">
+        name="OSDE">
       </category>
       <wizard
           id="jp.eisbahn.eclipse.plugins.osde.newWizards.NewOpenSocialProjectWizard"
@@ -80,7 +80,7 @@
             objectClass="org.eclipse.core.resources.IFile">
          <menu
                id="jp.eisbahn.eclipse.plugins.osde.menu2"
-               label="OpenSocial"
+               label="OSDE"
                path="additions">
             <separator
                   name="group2">
@@ -148,7 +148,7 @@
          point="org.eclipse.ui.views">
       <category
             id="jp.eisbahn.eclipse.plugins.osde"
-            name="OpenSocial">
+            name="OSDE">
       </category>
       <view
             category="jp.eisbahn.eclipse.plugins.osde"
@@ -183,11 +183,11 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="jp.eisbahn.eclipse.plugins.osde.actionSet"
-            label="OpenSocial"
+            label="OSDE"
             visible="true">
          <menu
                id="opensocialMenu"
-               label="&amp;OpenSocial">
+               label="&amp;OSDE">
             <separator
                   name="opensocialGroup1">
             </separator>
@@ -263,7 +263,7 @@
          point="org.eclipse.ui.exportWizards">
       <category
             id="jp.eisbahn.eclipse.plugins.osde.export"
-            name="OpenSocial">
+            name="OSDE">
       </category>
       <wizard
             class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.OpenSocialApplicationExportWizard"
@@ -281,7 +281,7 @@
       <page
             class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
             id="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
-            name="OpenSocial">
+            name="OSDE">
       </page>
    </extension>
    <extension
