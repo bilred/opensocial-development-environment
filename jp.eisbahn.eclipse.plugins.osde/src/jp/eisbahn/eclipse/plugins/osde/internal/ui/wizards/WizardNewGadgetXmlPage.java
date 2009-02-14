@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
@@ -95,7 +96,7 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		layout.numColumns = 4;
 		infoGroup.setLayout(layout);
 		infoGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		createLabel(infoGroup, "Title:");
+		createLabel(infoGroup, "Title(*):");
 		titleText = createText(infoGroup);
 		titleText.addListener(SWT.Modify, modifyListener);
 		createLabel(infoGroup, "Title URL:");
@@ -109,13 +110,18 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		descriptionText.setFont(parent.getFont());
 		createLabel(infoGroup, "Author:");
 		authorText = createText(infoGroup);
-		createLabel(infoGroup, "Author Email:");
+		createLabel(infoGroup, "Author Email(*):");
 		authorEmailText = createText(infoGroup);
 		authorEmailText.addListener(SWT.Modify, modifyListener);
 		createLabel(infoGroup, "Screen Shot:");
 		screenshotText = createText(infoGroup);
 		createLabel(infoGroup, "Thumbnail:");
 		thumbnailText = createText(infoGroup);
+		Label noticeLabel = createLabel(infoGroup, "The fields which has (*) mark are required.");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalAlignment = GridData.END;
+		layoutData.horizontalSpan = 4;
+		noticeLabel.setLayoutData(layoutData);
 	}
 	
 	private void createFeaturesControls(Composite parent) {
