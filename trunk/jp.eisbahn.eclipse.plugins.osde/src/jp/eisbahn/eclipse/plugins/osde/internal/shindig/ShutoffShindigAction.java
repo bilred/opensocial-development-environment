@@ -75,6 +75,7 @@ public class ShutoffShindigAction extends Action implements IObjectActionDelegat
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
+		Activator.getDefault().setRunningShindig(false);
 		Job job = new Job("Shutting off Apache Shindig.") {
 			@Override
 			protected IStatus run(final IProgressMonitor monitor) {

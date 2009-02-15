@@ -22,6 +22,7 @@ import java.util.List;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLauncher;
 
 import org.apache.shindig.social.opensocial.model.Activity;
 import org.apache.shindig.social.opensocial.model.Person;
@@ -123,16 +124,20 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
 	}
 
 	private void updateActivityList() {
-		try {
-			ActivityService activityService = Activator.getDefault().getActivityService();
-			int index = peopleCombo.getSelectionIndex();
-			if (index != -1) {
-				Person person = (Person)peopleCombo.getData(peopleCombo.getItem(index));
-				List<Activity> activities = (List<Activity>)activityService.getActivities(person);
-				activityList.setInput(activities);
+		if (Activator.getDefault().isRunningShindig()) {
+			try {
+				ActivityService activityService = Activator.getDefault().getActivityService();
+				int index = peopleCombo.getSelectionIndex();
+				if (index != -1) {
+					Person person = (Person)peopleCombo.getData(peopleCombo.getItem(index));
+					List<Activity> activities = (List<Activity>)activityService.getActivities(person);
+					activityList.setInput(activities);
+				}
+			} catch (ConnectionException e) {
+				MessageDialog.openError(activitiesView.getSite().getShell(), "Error", "Shindig database not started yet.");
 			}
-		} catch (ConnectionException e) {
-			MessageDialog.openError(activitiesView.getSite().getShell(), "Error", "Shindig database not started yet.");
+		} else {
+			ShindigLauncher.launchWithConfirm(activitiesView.getSite().getShell(), activitiesView);
 		}
 	}
 
