@@ -82,6 +82,7 @@ public class Activator extends AbstractUIPlugin {
 	private AppDataService appDataService;
 	private ActivityService activityService;
 	private Session session;
+	private boolean runningShindig = false;
 
 	/**
 	 * The constructor
@@ -336,6 +337,14 @@ public class Activator extends AbstractUIPlugin {
 		} else {
 			throw new ConnectionException("Not connect yet.");
 		}
+	}
+	
+	public boolean isRunningShindig() {
+		return runningShindig;
+	}
+	
+	public void setRunningShindig(boolean runningShindig) {
+		this.runningShindig = runningShindig;
 	}
 
 }

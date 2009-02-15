@@ -24,6 +24,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.AppDataService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLauncher;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
@@ -189,45 +190,53 @@ public class AppDataView extends AbstractView {
 	}
 	
 	private void updateDataMap() {
-		try {
-			Person person = (Person)personCombo.getData(personCombo.getText());
-			ApplicationImpl application = (ApplicationImpl)applicationCombo.getData(applicationCombo.getText());
-			AppDataService appDataService = Activator.getDefault().getAppDataService();
-			Map<String, String> dataMap = appDataService.getApplicationDataMap(person, application);
-			keyList.removeAll();
-			valueText.setText("");
-			if (dataMap != null) {
-				for (Map.Entry<String, String> entry : dataMap.entrySet()) {
-					keyList.add(entry.getKey());
-					keyList.setData(entry.getKey(), entry.getValue());
+		if (Activator.getDefault().isRunningShindig()) {
+			try {
+				Person person = (Person)personCombo.getData(personCombo.getText());
+				ApplicationImpl application = (ApplicationImpl)applicationCombo.getData(applicationCombo.getText());
+				AppDataService appDataService = Activator.getDefault().getAppDataService();
+				Map<String, String> dataMap = appDataService.getApplicationDataMap(person, application);
+				keyList.removeAll();
+				valueText.setText("");
+				if (dataMap != null) {
+					for (Map.Entry<String, String> entry : dataMap.entrySet()) {
+						keyList.add(entry.getKey());
+						keyList.setData(entry.getKey(), entry.getValue());
+					}
 				}
+			} catch(ConnectionException e) {
+				MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
 			}
-		} catch(ConnectionException e) {
-			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+		} else {
+			ShindigLauncher.launchWithConfirm(getSite().getShell(), this);
 		}
 	}
 	
 	private void loadPeopleAndApplications() {
-		try {
-			PersonService personService = Activator.getDefault().getPersonService();
-			java.util.List<Person> people = personService.getPeople();
-			personCombo.removeAll();
-			for (Person person : people) {
-				personCombo.add(person.getId());
-				personCombo.setData(person.getId(), person);
+		if (Activator.getDefault().isRunningShindig()) {
+			try {
+				PersonService personService = Activator.getDefault().getPersonService();
+				java.util.List<Person> people = personService.getPeople();
+				personCombo.removeAll();
+				for (Person person : people) {
+					personCombo.add(person.getId());
+					personCombo.setData(person.getId(), person);
+				}
+				personCombo.select(0);
+				ApplicationService applicationService = Activator.getDefault().getApplicationService();
+				java.util.List<ApplicationImpl> applications = applicationService.getApplications();
+				applicationCombo.removeAll();
+				for (ApplicationImpl application : applications) {
+					applicationCombo.add(application.getTitle());
+					applicationCombo.setData(application.getTitle(), application);
+				}
+				applicationCombo.select(0);
+				updateDataMap();
+			} catch(ConnectionException e) {
+				MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
 			}
-			personCombo.select(0);
-			ApplicationService applicationService = Activator.getDefault().getApplicationService();
-			java.util.List<ApplicationImpl> applications = applicationService.getApplications();
-			applicationCombo.removeAll();
-			for (ApplicationImpl application : applications) {
-				applicationCombo.add(application.getTitle());
-				applicationCombo.setData(application.getTitle(), application);
-			}
-			applicationCombo.select(0);
-			updateDataMap();
-		} catch(ConnectionException e) {
-			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+		} else {
+			ShindigLauncher.launchWithConfirm(getSite().getShell(), this);
 		}
 	}
 

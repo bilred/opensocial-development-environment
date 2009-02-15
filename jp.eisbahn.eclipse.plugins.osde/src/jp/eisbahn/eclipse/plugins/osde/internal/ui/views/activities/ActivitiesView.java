@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLauncher;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
 
 import org.apache.shindig.social.opensocial.model.Person;
@@ -87,12 +88,16 @@ public class ActivitiesView extends AbstractView {
 	}
 	
 	private void loadPeople() {
-		try {
-			PersonService personService = Activator.getDefault().getPersonService();
-			java.util.List<Person> people = personService.getPeople();
-			block.setPeople(people);
-		} catch(ConnectionException e) {
-			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+		if (Activator.getDefault().isRunningShindig()) {
+			try {
+				PersonService personService = Activator.getDefault().getPersonService();
+				java.util.List<Person> people = personService.getPeople();
+				block.setPeople(people);
+			} catch(ConnectionException e) {
+				MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+			}
+		} else {
+			ShindigLauncher.launchWithConfirm(getSite().getShell(), this);
 		}
 	}
 
