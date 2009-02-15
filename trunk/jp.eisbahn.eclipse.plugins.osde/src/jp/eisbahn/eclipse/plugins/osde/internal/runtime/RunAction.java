@@ -31,6 +31,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLauncher;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
@@ -83,6 +84,22 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
+		if (!Activator.getDefault().isRunningShindig()) {
+			boolean result = ShindigLauncher.launchWithConfirm(shell, targetPart);
+			if (result) {
+				shell.getDisplay().timerExec(10000, new Runnable() {
+					public void run() {
+						launch();
+					}
+				});
+				return;
+			}
+		} else {
+			launch();
+		}
+	}
+	
+	private void launch() {
 		try {
 			ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(gadgetXmlFile);
 			ApplicationService applicationService = Activator.getDefault().getApplicationService();

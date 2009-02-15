@@ -34,9 +34,12 @@ import org.eclipse.ui.IWorkbenchPart;
 
 public class ShindigLauncher {
 
-	public static void launchWithConfirm(Shell shell, final IWorkbenchPart targetPart) {
+	public static boolean launchWithConfirm(Shell shell, final IWorkbenchPart targetPart) {
 		if (MessageDialog.openConfirm(shell, "Confirm", "Shindig not started yet. Would you like to start Shindig?")) {
 			ShindigLauncher.launch(shell, targetPart);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -69,6 +72,11 @@ public class ShindigLauncher {
 					});
 				}
 			}
+			shell.getDisplay().timerExec(3000, new Runnable() {
+				public void run() {
+					Activator.getDefault().connect(targetPart.getSite().getWorkbenchWindow());
+				}
+			});
 			for (int i = 0; i < configurations.length; i++) {
 				if (configurations[i].getName().equals("Apache Shindig")) {
 					final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
@@ -84,11 +92,6 @@ public class ShindigLauncher {
 					});
 				}
 			}
-			shell.getDisplay().timerExec(3000, new Runnable() {
-				public void run() {
-					Activator.getDefault().connect(targetPart.getSite().getWorkbenchWindow());
-				}
-			});
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
