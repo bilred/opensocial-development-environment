@@ -19,11 +19,16 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.social.opensocial.model.Person;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -42,6 +47,12 @@ public class AddRelationshipDialog extends TitleAreaDialog {
 	private TableViewer personList;
 	private String groupId;
 	private Person target;
+	
+	private ModifyListener modifyListener = new ModifyListener() {
+		public void modifyText(ModifyEvent e) {
+			validate();
+		}
+	};
 	
 	public AddRelationshipDialog(Shell shell, List<Person> people) {
 		super(shell);
@@ -66,6 +77,7 @@ public class AddRelationshipDialog extends TitleAreaDialog {
 		groupIdCombo.add("friends");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		groupIdCombo.setLayoutData(layoutData);
+		groupIdCombo.addModifyListener(modifyListener);
 		//
 		label = new Label(panel, SWT.NONE);
 		label.setText("Person:");
@@ -115,6 +127,24 @@ public class AddRelationshipDialog extends TitleAreaDialog {
 	
 	public Person getTarget() {
 		return target;
+	}
+	
+	@Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		super.createButtonsForButtonBar(parent);
+		getButton(IDialogConstants.OK_ID).setEnabled(false);
+	}
+	
+	private boolean validate() {
+		String groupId = groupIdCombo.getText().trim();
+		if (StringUtils.isEmpty(groupId)) {
+			setMessage("Group ID is required.", IMessageProvider.ERROR);
+			getButton(IDialogConstants.OK_ID).setEnabled(false);
+			return false;
+		}
+		setMessage(null);
+		getButton(IDialogConstants.OK_ID).setEnabled(true);
+		return true;
 	}
 
 }
