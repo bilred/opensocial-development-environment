@@ -32,7 +32,6 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLauncher;
-import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
@@ -50,20 +49,15 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.ui.PartInitException;
 
-public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+public class RunAction extends AbstractRunAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
-	private Shell shell;
-	IFile gadgetXmlFile;
-	IProject project;
-	private IWorkbenchPart targetPart;
+	private IFile gadgetXmlFile;
+	private IProject project;
 	
 	/**
 	 * Constructor for Action1.
@@ -126,6 +120,7 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 				job = new LaunchApplicationJob("Running application", information, shell);
 				job.schedule(1000);
 				notifyUserPrefsView(information);
+				Activator.getDefault().setLastApplicationInformation(information);
 			}
 		} catch(ConnectionException e) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
@@ -136,24 +131,6 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 		}
 	}
 	
-	private void notifyUserPrefsView(final LaunchApplicationInformation information) {
-		final String url = "http://localhost:8080/" + project.getName().replace(" ", "%20") + "/" + gadgetXmlFile.getName().replace(" ", "%20");
-		final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
-		shell.getDisplay().syncExec(new Runnable() {
-			public void run() {
-				try {
-					UserPrefsView userPrefsView;
-					userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
-					userPrefsView.showUserPrefFields(information, url);
-				} catch (PartInitException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					throw new IllegalStateException(e);
-				}
-			}
-		});
-	}
-
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
@@ -169,11 +146,6 @@ public class RunAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	}
 
 	public void dispose() {
-	}
-
-	public void init(IWorkbenchWindow window) {
-		targetPart = window.getActivePage().getActivePart();
-		shell = targetPart.getSite().getShell();
 	}
 
 	private class CreateWebContextJob extends Job {

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.AppDataService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
@@ -84,6 +85,7 @@ public class Activator extends AbstractUIPlugin {
 	private ActivityService activityService;
 	private Session session;
 	private boolean runningShindig = false;
+	private LaunchApplicationInformation lastApplicationInformation;
 
 	/**
 	 * The constructor
@@ -371,6 +373,14 @@ public class Activator extends AbstractUIPlugin {
 	public void storePreferences(IPreferenceStore store, OsdeConfig config) {
 		store.setValue(OsdeConfig.DEFAULT_COUNTRY, config.getDefaultCountry());
 		store.setValue(OsdeConfig.DEFAULT_LANGUAGE, config.getDefaultLanguage());
+	}
+
+	public LaunchApplicationInformation getLastApplicationInformation() {
+		return lastApplicationInformation;
+	}
+
+	public void setLastApplicationInformation(LaunchApplicationInformation lastApplicationInformation) {
+		this.lastApplicationInformation = lastApplicationInformation;
 	}
 	
 }

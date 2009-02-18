@@ -216,6 +216,15 @@
                tooltip="Run the application to locate external.">
          </action>
          <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAgainAction"
+               id="jp.eisbahn.eclipse.plugins.osde.runAgainAction1"
+               label="Run last launched application"
+               icon="icons/action_again.gif"
+               menubarPath="opensocialMenu/opensocialGroup2"
+               toolbarPath="opensocialGroup"
+               tooltip="Run the last launched application.">
+         </action>
+         <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.runAction2"
