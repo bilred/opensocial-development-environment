@@ -15,18 +15,30 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.ui;
+package jp.eisbahn.eclipse.plugins.osde.internal;
 
-import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
-
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-
-public class PreferenceInitializer extends AbstractPreferenceInitializer {
-
-	public void initializeDefaultPreferences() {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		// TODO set something
+public class OsdeConfig {
+	
+	public static final String DEFAULT_LANGUAGE = "language";
+	public static final String DEFAULT_COUNTRY = "country";
+	
+	private String defaultLanguage;
+	private String defaultCountry;
+	
+	public String getDefaultLanguage() {
+		return defaultLanguage;
+	}
+	
+	public void setDefaultLanguage(String defaultLanguage) {
+		this.defaultLanguage = defaultLanguage;
+	}
+	
+	public String getDefaultCountry() {
+		return defaultCountry;
+	}
+	
+	public void setDefaultCountry(String defaultCountry) {
+		this.defaultCountry = defaultCountry;
 	}
 
 }

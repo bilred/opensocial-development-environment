@@ -18,11 +18,11 @@
 package jp.eisbahn.eclipse.plugins.osde.internal;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
@@ -45,6 +45,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
@@ -347,4 +348,29 @@ public class Activator extends AbstractUIPlugin {
 		this.runningShindig = runningShindig;
 	}
 
+	public OsdeConfig getOsdeConfiguration() {
+		IPreferenceStore store = getPreferenceStore();
+		OsdeConfig config = new OsdeConfig();
+		config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
+		config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
+		return config;
+	}
+	
+	public void storePreferences(OsdeConfig config) {
+		storePreferences(getPreferenceStore(), config);
+	}
+	
+	public OsdeConfig getDefaultOsdeConfiguration() {
+		IPreferenceStore store = getPreferenceStore();
+		OsdeConfig config = new OsdeConfig();
+		config.setDefaultCountry(store.getDefaultString(OsdeConfig.DEFAULT_COUNTRY));
+		config.setDefaultLanguage(store.getDefaultString(OsdeConfig.DEFAULT_LANGUAGE));
+		return config;
+	}
+
+	public void storePreferences(IPreferenceStore store, OsdeConfig config) {
+		store.setValue(OsdeConfig.DEFAULT_COUNTRY, config.getDefaultCountry());
+		store.setValue(OsdeConfig.DEFAULT_LANGUAGE, config.getDefaultLanguage());
+	}
+	
 }

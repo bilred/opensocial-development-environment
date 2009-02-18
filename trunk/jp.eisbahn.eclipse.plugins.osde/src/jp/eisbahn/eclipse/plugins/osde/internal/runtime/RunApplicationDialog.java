@@ -20,6 +20,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -192,13 +193,30 @@ public class RunApplicationDialog extends TitleAreaDialog {
 
 	private void setDefaultValues() {
 		try {
+			OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
 			String prevCountry = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_COUNTRY));
 			if (StringUtils.isNumeric(prevCountry)) {
 				countries.select(Integer.parseInt(prevCountry));
+			} else {
+				for (int i = 0; i < countries.getItemCount(); i++) {
+					String country = countries.getItem(i);
+					if (country.substring(country.indexOf('(') + 1, country.length() - 1).equals(config.getDefaultCountry())) {
+						countries.select(i);
+						break;
+					}
+				}
 			}
 			String prevLang = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_LANG));
 			if (StringUtils.isNumeric(prevLang)) {
 				languages.select(Integer.parseInt(prevLang));
+			} else {
+				for (int i = 0; i < languages.getItemCount(); i++) {
+					String language = languages.getItem(i);
+					if (language.substring(language.indexOf('(') + 1, language.length() - 1).equals(config.getDefaultLanguage())) {
+						languages.select(i);
+						break;
+					}
+				}
 			}
 			String prevOwner = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_OWNER));
 			if (StringUtils.isNumeric(prevOwner)) {
