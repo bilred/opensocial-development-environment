@@ -14,7 +14,7 @@
           icon="./icons/opensocial.gif"
           project="true"
           finalPerspective="jp.eisbahn.eclipse.plugins.osde.perspective"
-          class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.NewOpenSocialProjectResourceWizard">
+          class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj.NewOpenSocialProjectResourceWizard">
           <description>
               Create an OpenSocial project.
           </description>
@@ -275,7 +275,7 @@
             name="OSDE">
       </category>
       <wizard
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.OpenSocialApplicationExportWizard"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.export.OpenSocialApplicationExportWizard"
             id="jp.eisbahn.eclipse.plugins.osde.ExportWizard"
             category="jp.eisbahn.eclipse.plugins.osde.export"
             icon="icons/opensocial.gif"

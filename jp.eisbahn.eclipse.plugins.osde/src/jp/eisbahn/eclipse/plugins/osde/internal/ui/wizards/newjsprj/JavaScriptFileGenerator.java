@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
+package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
+
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;

@@ -25,8 +25,8 @@ import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
-import jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.NewRestfulAccessProjectResourceWizard;
-import jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.SimpleConfigurationElementImpl;
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newrestprj.NewRestfulAccessProjectResourceWizard;
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newrestprj.SimpleConfigurationElementImpl;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 

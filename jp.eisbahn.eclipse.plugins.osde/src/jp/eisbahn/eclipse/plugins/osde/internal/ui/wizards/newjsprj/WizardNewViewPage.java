@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards;
+package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createCheckbox;
 import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createLabel;
@@ -24,6 +24,7 @@ import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils
 
 import java.util.EnumMap;
 import java.util.Set;
+
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
