@@ -18,6 +18,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationDataMapImpl;
@@ -26,6 +27,7 @@ import org.apache.shindig.social.opensocial.model.Person;
 import org.hibernate.CacheMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class AppDataService {
 	
@@ -50,6 +52,16 @@ public class AppDataService {
 		} else {
 			return null;
 		}
+	}
+	
+	public void removeAll() {
+		Transaction tx = session.beginTransaction();
+		Query query = session.createQuery("select a from ApplicationDataMapImpl a");
+		List<ApplicationDataMapImpl> appDatas = (List<ApplicationDataMapImpl>)query.list();
+		for (ApplicationDataMapImpl appData : appDatas) {
+			session.delete(appData);
+		}
+		tx.commit();
 	}
 
 }

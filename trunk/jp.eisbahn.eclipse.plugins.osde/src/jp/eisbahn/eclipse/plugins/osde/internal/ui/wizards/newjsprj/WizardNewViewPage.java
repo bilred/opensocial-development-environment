@@ -105,6 +105,15 @@ public class WizardNewViewPage extends WizardPage {
 					setMessage("Location URL for " + viewName.getDisplayName() + " view is empty.");
 					return false;
 				}
+			} else if (part.getHtmlButton().getSelection()) {
+				if (part.getSampleButton().getSelection()
+						&& !part.getPeopleButton().getSelection()
+						&& !part.getActivityButton().getSelection()
+						&& !part.getAppDataButton().getSelection()) {
+					setErrorMessage(null);
+					setMessage("It is necessary to select at least one type for generating sample code in " + viewName.getDisplayName() + " view.");
+					return false;
+				}
 			}
 		}
 		setErrorMessage(null);
@@ -132,6 +141,10 @@ public class WizardNewViewPage extends WizardPage {
 					data.setType(ViewType.html);
 					data.setCreateExternalJavaScript(part.getCreateJavaScriptFileButton().getSelection());
 					data.setCreateInitFunction(part.getInitFunctionButton().getSelection());
+					data.setCreateSampleCodeSet(part.getSampleButton().getSelection());
+					data.setCreatePeople(part.getPeopleButton().getSelection());
+					data.setCreateActivity(part.getActivityButton().getSelection());
+					data.setCreateAppData(part.getAppDataButton().getSelection());
 				} else if (part.urlButton.getSelection()) {
 					data.setType(ViewType.url);
 					data.setHref(part.getHrefText().getText().trim());
@@ -153,6 +166,10 @@ public class WizardNewViewPage extends WizardPage {
 		private Button urlButton;
 		private Text hrefText;
 		private Button notSupportButton;
+		private Button sampleButton;
+		private Button peopleButton;
+		private Button activityButton;
+		private Button appDataButton;
 
 		ViewSettingPart(Composite parent) {
 			super();
@@ -186,6 +203,54 @@ public class WizardNewViewPage extends WizardPage {
 		public Button getNotSupportButton() {
 			return notSupportButton;
 		}
+		
+		public Button getSampleButton() {
+			return sampleButton;
+		}
+
+		public Button getPeopleButton() {
+			return peopleButton;
+		}
+
+		public Button getActivityButton() {
+			return activityButton;
+		}
+
+		public Button getAppDataButton() {
+			return appDataButton;
+		}
+
+		private void setEnabledForGenerateFiles() {
+			sampleButton.setEnabled(true);
+			if (sampleButton.getSelection()) {
+				createJavaScriptFileButton.setEnabled(false);
+				initFunctionButton.setEnabled(false);
+				peopleButton.setEnabled(true);
+				activityButton.setEnabled(true);
+				appDataButton.setEnabled(true);
+			} else {
+				createJavaScriptFileButton.setEnabled(true);
+				boolean selection = createJavaScriptFileButton.getSelection();
+				initFunctionButton.setEnabled(selection);
+				peopleButton.setEnabled(false);
+				activityButton.setEnabled(false);
+				appDataButton.setEnabled(false);
+			}
+		}
+		
+		private void setEnabledForType() {
+			if (htmlButton.getSelection()) {
+				setEnabledForGenerateFiles();
+			} else {
+				createJavaScriptFileButton.setEnabled(false);
+				initFunctionButton.setEnabled(false);
+				sampleButton.setEnabled(false);
+				peopleButton.setEnabled(false);
+				activityButton.setEnabled(false);
+				appDataButton.setEnabled(false);
+			}
+			hrefText.setEnabled(urlButton.getSelection());
+		}
 
 		private void createViewControls(Composite parent) {
 			composite = new Composite(parent, SWT.NONE);
@@ -206,16 +271,36 @@ public class WizardNewViewPage extends WizardPage {
 			createJavaScriptFileButton.addListener(SWT.Selection, modifyListener);
 			initFunctionButton = createCheckbox(htmlGroup, "Generate the init() function that is called when this view is loaded.");
 			initFunctionButton.addListener(SWT.Selection, modifyListener);
-			createJavaScriptFileButton.setEnabled(false);
-			initFunctionButton.setEnabled(false);
 			createJavaScriptFileButton.addSelectionListener(new SelectionListener() {
 				public void widgetDefaultSelected(SelectionEvent e) {
 				}
 				public void widgetSelected(SelectionEvent e) {
-					boolean selection = createJavaScriptFileButton.getSelection();
-					initFunctionButton.setEnabled(selection);
+					setEnabledForGenerateFiles();
 				}
 			});
+			
+			sampleButton = createCheckbox(htmlGroup, "Generate a set of sample code.");
+			Group sampleGroup = new Group(htmlGroup, SWT.SHADOW_ETCHED_IN);
+			sampleGroup.setFont(parent.getFont());
+			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+			sampleGroup.setLayoutData(layoutData);
+			sampleGroup.setLayout(new GridLayout());
+			peopleButton = createCheckbox(sampleGroup, "Fetching a person data and friends.");
+			activityButton = createCheckbox(sampleGroup, "Posting an activity.");
+			appDataButton = createCheckbox(sampleGroup, "Sharing data with friends.");
+			sampleButton.addSelectionListener(new SelectionListener() {
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+				public void widgetSelected(SelectionEvent e) {
+					setEnabledForGenerateFiles();
+				}
+				
+			});
+			sampleButton.addListener(SWT.Selection, modifyListener);
+			peopleButton.addListener(SWT.Selection, modifyListener);
+			activityButton.addListener(SWT.Selection, modifyListener);
+			appDataButton.addListener(SWT.Selection, modifyListener);
+			
 			urlButton = createRadio(composite, "Type: URL");
 			urlButton.addListener(SWT.Selection, modifyListener);
 			Group urlGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
@@ -235,15 +320,14 @@ public class WizardNewViewPage extends WizardPage {
 				public void widgetDefaultSelected(SelectionEvent e) {
 				}
 				public void widgetSelected(SelectionEvent e) {
-					createJavaScriptFileButton.setEnabled(htmlButton.getSelection());
-					initFunctionButton.setEnabled(htmlButton.getSelection() & createJavaScriptFileButton.getSelection());
-					hrefText.setEnabled(urlButton.getSelection());
+					setEnabledForType();
 				}
 			};
 			htmlButton.addSelectionListener(selectionListener);
 			urlButton.addSelectionListener(selectionListener);
 			notSupportButton.addSelectionListener(selectionListener);
 			notSupportButton.setSelection(true);
+			setEnabledForType();
 		}
 
 	}

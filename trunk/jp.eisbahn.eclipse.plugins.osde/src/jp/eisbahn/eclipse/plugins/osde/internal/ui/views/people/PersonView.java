@@ -39,6 +39,7 @@ public class PersonView extends AbstractView {
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView";
 	
 	private Action reloadAction;
+	private Action removeAllAction;
 	
 	private PeopleBlock block;
 
@@ -49,18 +50,21 @@ public class PersonView extends AbstractView {
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 		manager.add(reloadAction);
+		manager.add(removeAllAction);
 	}
 
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		super.fillLocalPullDown(manager);
 		manager.add(reloadAction);
+		manager.add(removeAllAction);
 	}
 
 	@Override
 	protected void fillLocalToolBar(IToolBarManager manager) {
 		super.fillLocalToolBar(manager);
 		manager.add(reloadAction);
+		manager.add(removeAllAction);
 	}
 
 	@Override
@@ -76,6 +80,16 @@ public class PersonView extends AbstractView {
 		reloadAction.setToolTipText("Reload people.");
 		reloadAction.setImageDescriptor(
 				Activator.getDefault().getImageRegistry().getDescriptor("icons/action_refresh.gif"));
+		removeAllAction = new Action() {
+			@Override
+			public void run() {
+				removeAllPeople();
+			}
+		};
+		removeAllAction.setText("Remove all");
+		removeAllAction.setToolTipText("Remove all people.");
+		removeAllAction.setImageDescriptor(
+				Activator.getDefault().getImageRegistry().getDescriptor("icons/16-em-cross.gif"));
 	}
 	
 	protected void createForm(Composite parent) {
@@ -107,6 +121,18 @@ public class PersonView extends AbstractView {
 
 	public void disconnectedDatabase() {
 		block.setPeople(new ArrayList<Person>());
+	}
+	
+	private void removeAllPeople() {
+		try {
+			PersonService personService = Activator.getDefault().getPersonService();
+			if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to delete all people?")) {
+				personService.removeAll();
+				loadPeople();
+			}
+		} catch (ConnectionException e) {
+			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+		}
 	}
 	
 }

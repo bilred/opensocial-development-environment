@@ -94,4 +94,11 @@ public class PersonService {
 		tx.commit();
 	}
 
+	public void removeAll() {
+		List<Person> people = getPeople();
+		for (Person person : people) {
+			deletePerson(person);
+		}
+	}
+
 }
