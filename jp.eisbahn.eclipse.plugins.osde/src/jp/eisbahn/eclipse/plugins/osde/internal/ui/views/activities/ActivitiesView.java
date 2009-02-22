@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLauncher;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
@@ -42,6 +43,8 @@ public class ActivitiesView extends AbstractView {
 
 	private ActivitiesBlock block;
 	
+	private Action removeAllAction;
+	
 	public ActivitiesView() {
 	}
 	
@@ -49,18 +52,21 @@ public class ActivitiesView extends AbstractView {
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 		manager.add(reloadAction);
+		manager.add(removeAllAction);
 	}
 
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		super.fillLocalPullDown(manager);
 		manager.add(reloadAction);
+		manager.add(removeAllAction);
 	}
 
 	@Override
 	protected void fillLocalToolBar(IToolBarManager manager) {
 		super.fillLocalToolBar(manager);
 		manager.add(reloadAction);
+		manager.add(removeAllAction);
 	}
 
 	@Override
@@ -76,6 +82,16 @@ public class ActivitiesView extends AbstractView {
 		reloadAction.setToolTipText("Reload people.");
 		reloadAction.setImageDescriptor(
 				Activator.getDefault().getImageRegistry().getDescriptor("icons/action_refresh.gif"));
+		removeAllAction = new Action() {
+			@Override
+			public void run() {
+				removeAllActivities();
+			}
+		};
+		removeAllAction.setText("Remove all");
+		removeAllAction.setToolTipText("Remove all activities.");
+		removeAllAction.setImageDescriptor(
+				Activator.getDefault().getImageRegistry().getDescriptor("icons/16-em-cross.gif"));
 	}
 
 	protected void createForm(Composite parent) {
@@ -108,5 +124,17 @@ public class ActivitiesView extends AbstractView {
 	public void disconnectedDatabase() {
 		block.setPeople(new ArrayList<Person>());
 	}
-	
+
+	protected void removeAllActivities() {
+		try {
+			ActivityService activityService = Activator.getDefault().getActivityService();
+			if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to delete all activities?")) {
+				activityService.removeAll();
+				loadPeople();
+			}
+		} catch (ConnectionException e) {
+			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+		}
+	}
+
 }

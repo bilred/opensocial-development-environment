@@ -34,6 +34,14 @@ public class GadgetViewData implements Serializable {
 	private boolean createInitFunction;
 	
 	private String href;
+	
+	private boolean createSampleCodeSet;
+	
+	private boolean createPeople;
+	
+	private boolean createActivity;
+	
+	private boolean createAppData;
 
 	public ViewName getViewName() {
 		return viewName;
@@ -73,6 +81,38 @@ public class GadgetViewData implements Serializable {
 
 	public void setHref(String href) {
 		this.href = href;
+	}
+
+	public boolean isCreateSampleCodeSet() {
+		return createSampleCodeSet;
+	}
+
+	public void setCreateSampleCodeSet(boolean createSampleCodeSet) {
+		this.createSampleCodeSet = createSampleCodeSet;
+	}
+
+	public boolean isCreatePeople() {
+		return createPeople;
+	}
+
+	public void setCreatePeople(boolean createPeople) {
+		this.createPeople = createPeople;
+	}
+
+	public boolean isCreateActivity() {
+		return createActivity;
+	}
+
+	public void setCreateActivity(boolean createActivity) {
+		this.createActivity = createActivity;
+	}
+
+	public boolean isCreateAppData() {
+		return createAppData;
+	}
+
+	public void setCreateAppData(boolean createAppData) {
+		this.createAppData = createAppData;
 	}
 	
 }

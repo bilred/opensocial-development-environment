@@ -108,6 +108,7 @@ public class ContentPage implements IDetailsPage {
 		editor = new SourceViewer(contentPane, null, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.horizontalSpan = 2;
+		layoutData.heightHint = 250;
 		editor.getTextWidget().setLayoutData(layoutData);
 		Document document = new Document();
 		IDocumentPartitioner partitioner = new FastPartitioner(

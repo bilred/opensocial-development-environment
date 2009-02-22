@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
@@ -61,6 +62,7 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -192,6 +194,7 @@ public class Activator extends AbstractUIPlugin {
 		registIcon(registry, "icons/16-em-pencil.gif");
 		registIcon(registry, "icons/icon_settings.gif");
 		registIcon(registry, "icons/page_component.gif");
+		registIcon(registry, "icons/16-em-cross.gif");
 	}
 	
     public ImageDescriptor registIcon(ImageRegistry registry, String iconPath) {
@@ -273,7 +276,8 @@ public class Activator extends AbstractUIPlugin {
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask("Connect to Shindig database.", 4);
 				monitor.subTask("Building Hibernate SessionFactory.");
-				sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+				Configuration configure = new AnnotationConfiguration().configure();
+				sessionFactory = configure.buildSessionFactory();
 				monitor.worked(1);
 				monitor.subTask("Opening Hibernate session.");
 				session = sessionFactory.openSession();

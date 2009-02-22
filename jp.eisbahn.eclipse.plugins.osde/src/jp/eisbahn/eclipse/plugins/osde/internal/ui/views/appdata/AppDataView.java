@@ -60,6 +60,7 @@ public class AppDataView extends AbstractView {
 	private List keyList;
 	private Text valueText;
 	private Action reloadAction;
+	private Action removeAllAction;
 	
 	public AppDataView() {
 	}
@@ -68,18 +69,21 @@ public class AppDataView extends AbstractView {
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
 		manager.add(reloadAction);
+		manager.add(removeAllAction);
 	}
 
 	@Override
 	protected void fillLocalPullDown(IMenuManager manager) {
 		super.fillLocalPullDown(manager);
 		manager.add(reloadAction);
+		manager.add(removeAllAction);
 	}
 
 	@Override
 	protected void fillLocalToolBar(IToolBarManager manager) {
 		super.fillLocalToolBar(manager);
 		manager.add(reloadAction);
+		manager.add(removeAllAction);
 	}
 
 	@Override
@@ -95,6 +99,16 @@ public class AppDataView extends AbstractView {
 		reloadAction.setToolTipText("Reload people and applications.");
 		reloadAction.setImageDescriptor(
 				Activator.getDefault().getImageRegistry().getDescriptor("icons/action_refresh.gif"));
+		removeAllAction = new Action() {
+			@Override
+			public void run() {
+				removeAllAppData();
+			}
+		};
+		removeAllAction.setText("Remove all");
+		removeAllAction.setToolTipText("Remove all application data.");
+		removeAllAction.setImageDescriptor(
+				Activator.getDefault().getImageRegistry().getDescriptor("icons/16-em-cross.gif"));
 	}
 
 	protected void createForm(Composite parent) {
@@ -249,6 +263,18 @@ public class AppDataView extends AbstractView {
 		applicationCombo.removeAll();
 		keyList.removeAll();
 		valueText.setText("");
+	}
+	
+	public void removeAllAppData() {
+		try {
+			AppDataService appDataService = Activator.getDefault().getAppDataService();
+			if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to delete all application data?")) {
+				appDataService.removeAll();
+				loadPeopleAndApplications();
+			}
+		} catch (ConnectionException e) {
+			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+		}
 	}
 	
 }

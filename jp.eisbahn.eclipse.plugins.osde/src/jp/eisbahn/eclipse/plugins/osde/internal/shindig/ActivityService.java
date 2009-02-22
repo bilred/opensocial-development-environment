@@ -19,10 +19,12 @@ package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
 import java.util.List;
 
+import org.apache.shindig.social.opensocial.hibernate.entities.ActivityImpl;
 import org.apache.shindig.social.opensocial.model.Activity;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class ActivityService {
 	
@@ -37,6 +39,16 @@ public class ActivityService {
 		Query query = session.createQuery("select a from ActivityImpl a where a.userId = :userId order by a.postedTime desc");
 		query.setParameter("userId", person.getId());
 		return (List<Activity>)query.list();
+	}
+
+	public void removeAll() {
+		Transaction tx = session.beginTransaction();
+		Query query = session.createQuery("select a from ActivityImpl a");
+		List<ActivityImpl> activities = (List<ActivityImpl>)query.list();
+		for (ActivityImpl activity : activities) {
+			session.delete(activity);
+		}
+		tx.commit();
 	}
 	
 }
