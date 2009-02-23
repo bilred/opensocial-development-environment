@@ -141,7 +141,7 @@ public class Activator extends AbstractUIPlugin {
 		super.stop(context);
 	}
 	
-	private IProgressMonitor getStatusMonitor() {
+	public IProgressMonitor getStatusMonitor() {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench != null) {
 			WorkbenchWindow workbenchWindow = (WorkbenchWindow)workbench.getActiveWorkbenchWindow();
@@ -359,6 +359,7 @@ public class Activator extends AbstractUIPlugin {
 		OsdeConfig config = new OsdeConfig();
 		config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
 		config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
+		config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
 		return config;
 	}
 	
@@ -371,12 +372,14 @@ public class Activator extends AbstractUIPlugin {
 		OsdeConfig config = new OsdeConfig();
 		config.setDefaultCountry(store.getDefaultString(OsdeConfig.DEFAULT_COUNTRY));
 		config.setDefaultLanguage(store.getDefaultString(OsdeConfig.DEFAULT_LANGUAGE));
+		config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
 		return config;
 	}
 
 	public void storePreferences(IPreferenceStore store, OsdeConfig config) {
 		store.setValue(OsdeConfig.DEFAULT_COUNTRY, config.getDefaultCountry());
 		store.setValue(OsdeConfig.DEFAULT_LANGUAGE, config.getDefaultLanguage());
+		store.setValue(OsdeConfig.DATABASE_DIR, config.getDatabaseDir());
 	}
 
 	public LaunchApplicationInformation getLastApplicationInformation() {

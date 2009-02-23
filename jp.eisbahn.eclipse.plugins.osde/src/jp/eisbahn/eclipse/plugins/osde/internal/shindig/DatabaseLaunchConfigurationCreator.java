@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -85,7 +87,13 @@ public class DatabaseLaunchConfigurationCreator {
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "org.h2.tools.Server");
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "-tcp -tcpAllowOthers");
+			OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+			String args = "-tcp -tcpAllowOthers";
+			String databaseDir = config.getDatabaseDir();
+			if (StringUtils.isNotEmpty(databaseDir)) {
+				args += " -baseDir \"" + databaseDir + "\"";
+			}
+			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
 			wc.doSave();
 			monitor.worked(1);
 		} finally {
