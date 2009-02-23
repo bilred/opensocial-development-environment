@@ -18,6 +18,7 @@ public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 		Locale locale = Locale.getDefault();
 		node.put(OsdeConfig.DEFAULT_COUNTRY, locale.getCountry());
 		node.put(OsdeConfig.DEFAULT_LANGUAGE, locale.getLanguage());
+		node.put(OsdeConfig.DATABASE_DIR, System.getProperty("java.io.tmpdir"));
 	}
 
 }

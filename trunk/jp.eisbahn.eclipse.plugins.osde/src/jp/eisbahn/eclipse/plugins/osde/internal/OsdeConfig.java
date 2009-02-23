@@ -21,10 +21,20 @@ public class OsdeConfig {
 	
 	public static final String DEFAULT_LANGUAGE = "language";
 	public static final String DEFAULT_COUNTRY = "country";
+	public static final String DATABASE_DIR = "database_dir";
 	
 	private String defaultLanguage;
 	private String defaultCountry;
+	private String databaseDir;
 	
+	public String getDatabaseDir() {
+		return databaseDir;
+	}
+
+	public void setDatabaseDir(String databaseDir) {
+		this.databaseDir = databaseDir;
+	}
+
 	public String getDefaultLanguage() {
 		return defaultLanguage;
 	}
