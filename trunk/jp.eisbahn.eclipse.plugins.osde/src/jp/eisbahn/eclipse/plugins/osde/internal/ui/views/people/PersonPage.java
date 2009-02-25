@@ -83,7 +83,21 @@ public class PersonPage implements IDetailsPage {
 	private Text thumbnailUrlText;
 	private Combo genderCombo;
 	private Text nicknameText;
-	private Combo relationshipCombo;
+	private Text childrenText;
+	private Text ethnicityText;
+	private Text fashionText;
+	private Text happiestWhenText;
+	private Text relationshipStatusText;
+	private Text humorText;
+	private Text jobInterestsText;
+	private Text livingArrangementText;
+	private Text petsText;
+
+	private Text politicalViewsText;
+
+	private Text profileUrlText;
+
+	private Text religionText;
 
 	public PersonPage(PersonView personView) {
 		super();
@@ -131,16 +145,14 @@ public class PersonPage implements IDetailsPage {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		generalSection.setLayoutData(layoutData);
 		Composite generalPane = toolkit.createComposite(generalSection);
-		generalPane.setLayout(new GridLayout(4, false));
+		generalPane.setLayout(new GridLayout(2, false));
 		generalSection.setClient(generalPane);
 		final SectionPart generalPart = new SectionPart(generalSection);
 		ValueChangeListener generalValueChangeListener = new ValueChangeListener(generalPart);
 		//
 		toolkit.createLabel(generalPane, "About me:");
-		aboutMeText = toolkit.createText(generalPane, "", SWT.MULTI | SWT.BORDER);
+		aboutMeText = toolkit.createText(generalPane, "", SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = 3;
-		layoutData.heightHint = 50;
 		aboutMeText.setLayoutData(layoutData);
 		aboutMeText.addFocusListener(generalValueChangeListener);
 		//
@@ -172,16 +184,76 @@ public class PersonPage implements IDetailsPage {
 		nicknameText.addFocusListener(generalValueChangeListener);
 		//
 		toolkit.createLabel(generalPane, "Relationship");
-		relationshipCombo = new Combo(generalPane, SWT.READ_ONLY);
+		relationshipStatusText = toolkit.createText(generalPane, "", SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		relationshipCombo.setLayoutData(layoutData);
-		relationshipCombo.addSelectionListener(generalValueChangeListener);
-		relationshipCombo.add("");
-		relationshipCombo.add("Single");
-		relationshipCombo.add("Married");
-		relationshipCombo.add("Committed");
-		relationshipCombo.add("Open marriage");
-		relationshipCombo.add("Open relationship");
+		relationshipStatusText.setLayoutData(layoutData);
+		relationshipStatusText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Children:");
+		childrenText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		childrenText.setLayoutData(layoutData);
+		childrenText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Ethnicity:");
+		ethnicityText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		ethnicityText.setLayoutData(layoutData);
+		ethnicityText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Fashion:");
+		fashionText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		fashionText.setLayoutData(layoutData);
+		fashionText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Happiest when:");
+		happiestWhenText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		happiestWhenText.setLayoutData(layoutData);
+		happiestWhenText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Humor:");
+		humorText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		humorText.setLayoutData(layoutData);
+		humorText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Job interests:");
+		jobInterestsText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		jobInterestsText.setLayoutData(layoutData);
+		jobInterestsText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Living arrangement:");
+		livingArrangementText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		livingArrangementText.setLayoutData(layoutData);
+		livingArrangementText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Pets:");
+		petsText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		petsText.setLayoutData(layoutData);
+		petsText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Political views:");
+		politicalViewsText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		politicalViewsText.setLayoutData(layoutData);
+		politicalViewsText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Profile URL:");
+		profileUrlText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		profileUrlText.setLayoutData(layoutData);
+		profileUrlText.addFocusListener(generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Religion:");
+		religionText = toolkit.createText(generalPane, "", SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		religionText.setLayoutData(layoutData);
+		religionText.addFocusListener(generalValueChangeListener);
 		//
 		// Friends
 		Section friendsSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
@@ -275,17 +347,18 @@ public class PersonPage implements IDetailsPage {
 			}
 		}
 		nicknameText.setText(trim(person.getNickname()));
-		relationshipCombo.select(0);
-		String relationship = person.getRelationshipStatus();
-		if (relationship != null) {
-			String[] items = relationshipCombo.getItems();
-			for (int i = 0; i < items.length; i++) {
-				if (items[i].equals(relationship)) {
-					relationshipCombo.select(i);
-					break;
-				}
-			}
-		}
+		relationshipStatusText.setText(trim(person.getRelationshipStatus()));
+		childrenText.setText(trim(person.getChildren()));
+		ethnicityText.setText(trim(person.getEthnicity()));
+		fashionText.setText(trim(person.getFashion()));
+		happiestWhenText.setText(trim(person.getHappiestWhen()));
+		humorText.setText(trim(person.getHumor()));
+		jobInterestsText.setText(trim(person.getJobInterests()));
+		livingArrangementText.setText(trim(person.getLivingArrangement()));
+		petsText.setText(trim(person.getPets()));
+		politicalViewsText.setText(trim(person.getPoliticalViews()));
+		profileUrlText.setText(trim(person.getProfileUrl()));
+		religionText.setText(trim(person.getReligion()));
 		try {
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<RelationshipImpl> relationshipList = personService.getRelationshipList(person);
@@ -334,8 +407,18 @@ public class PersonPage implements IDetailsPage {
 				String gender = genderCombo.getText();
 				person.setGender(StringUtils.isNotEmpty(gender) ? Gender.valueOf(gender) : null);
 				person.setNickname(normalize(nicknameText.getText()));
-				String relationship = relationshipCombo.getText();
-				person.setRelationshipStatus(StringUtils.isNotEmpty(relationship) ? relationship : null);
+				person.setRelationshipStatus(normalize(relationshipStatusText.getText()));
+				person.setChildren(normalize(childrenText.getText()));
+				person.setEthnicity(normalize(ethnicityText.getText()));
+				person.setFashion(normalize(fashionText.getText()));
+				person.setHappiestWhen(normalize(happiestWhenText.getText()));
+				person.setHumor(normalize(humorText.getText()));
+				person.setJobInterests(normalize(jobInterestsText.getText()));
+				person.setLivingArrangement(normalize(livingArrangementText.getText()));
+				person.setPets(normalize(petsText.getText()));
+				person.setPoliticalViews(normalize(politicalViewsText.getText()));
+				person.setProfileUrl(normalize(profileUrlText.getText()));
+				person.setReligion(normalize(religionText.getText()));
 				//
 				PersonService personService = Activator.getDefault().getPersonService();
 				personService.store(person);
