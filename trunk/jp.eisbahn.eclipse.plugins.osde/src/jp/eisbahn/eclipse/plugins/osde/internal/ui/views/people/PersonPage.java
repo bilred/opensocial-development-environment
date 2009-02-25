@@ -31,8 +31,10 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.shindig.social.opensocial.hibernate.entities.NameImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
+import org.apache.shindig.social.opensocial.model.Name;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.apache.shindig.social.opensocial.model.Person.Gender;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -99,6 +101,26 @@ public class PersonPage implements IDetailsPage {
 
 	private Text religionText;
 
+	private Text romanceText;
+
+	private Text scaredOfText;
+
+	private Text sexualOrientationText;
+
+	private Text statusText;
+
+	private Text givenNameText;
+
+	private Text familyNameText;
+
+	private Text additionalNameText;
+
+	private Text honorificPrefixText;
+
+	private Text honorificSuffixText;
+
+	private Text nameUnstructuredText;
+
 	public PersonPage(PersonView personView) {
 		super();
 		this.personView = personView;
@@ -150,17 +172,8 @@ public class PersonPage implements IDetailsPage {
 		final SectionPart generalPart = new SectionPart(generalSection);
 		ValueChangeListener generalValueChangeListener = new ValueChangeListener(generalPart);
 		//
-		toolkit.createLabel(generalPane, "About me:");
-		aboutMeText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		aboutMeText.setLayoutData(layoutData);
-		aboutMeText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Age:");
-		ageText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		ageText.setLayoutData(layoutData);
-		ageText.addFocusListener(generalValueChangeListener);
+		aboutMeText = createText("About me:", generalPane, toolkit, generalValueChangeListener);
+		ageText = createText("Age:", generalPane, toolkit, generalValueChangeListener);
 		//
 		toolkit.createLabel(generalPane, "Birthday:");
 		birthdayText = new DateTime(generalPane, SWT.DATE | SWT.BORDER);
@@ -177,83 +190,40 @@ public class PersonPage implements IDetailsPage {
 		genderCombo.add("male");
 		genderCombo.add("female");
 		//
-		toolkit.createLabel(generalPane, "Nickname:");
-		nicknameText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		nicknameText.setLayoutData(layoutData);
-		nicknameText.addFocusListener(generalValueChangeListener);
+		nicknameText = createText("Nickname:", generalPane, toolkit, generalValueChangeListener);
+		relationshipStatusText = createText("Relationship status:", generalPane, toolkit, generalValueChangeListener);
+		childrenText = createText("Children:", generalPane, toolkit, generalValueChangeListener);
+		ethnicityText = createText("Ethnicity:", generalPane, toolkit, generalValueChangeListener);
+		fashionText = createText("Fashion:", generalPane, toolkit, generalValueChangeListener);
+		happiestWhenText = createText("Happiest when:", generalPane, toolkit, generalValueChangeListener);
+		humorText = createText("Humor:", generalPane, toolkit, generalValueChangeListener);
+		jobInterestsText = createText("Job interest:", generalPane, toolkit, generalValueChangeListener);
+		livingArrangementText = createText("Living arrangement:", generalPane, toolkit, generalValueChangeListener);
+		petsText = createText("Pets:", generalPane, toolkit, generalValueChangeListener);
+		politicalViewsText = createText("Political views:", generalPane, toolkit, generalValueChangeListener);
+		profileUrlText = createText("Profile URL:", generalPane, toolkit, generalValueChangeListener);
+		religionText = createText("Religion:", generalPane, toolkit, generalValueChangeListener);
+		romanceText = createText("Romance:", generalPane, toolkit, generalValueChangeListener);
+		scaredOfText = createText("Scared of:", generalPane, toolkit, generalValueChangeListener);
+		sexualOrientationText = createText("Sexual orientation:", generalPane, toolkit, generalValueChangeListener);
+		statusText = createText("Status:", generalPane, toolkit, generalValueChangeListener);
 		//
-		toolkit.createLabel(generalPane, "Relationship");
-		relationshipStatusText = toolkit.createText(generalPane, "", SWT.BORDER);
+		// Name
+		Section nameSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
+		nameSection.setText("Name");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		relationshipStatusText.setLayoutData(layoutData);
-		relationshipStatusText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Children:");
-		childrenText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		childrenText.setLayoutData(layoutData);
-		childrenText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Ethnicity:");
-		ethnicityText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		ethnicityText.setLayoutData(layoutData);
-		ethnicityText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Fashion:");
-		fashionText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		fashionText.setLayoutData(layoutData);
-		fashionText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Happiest when:");
-		happiestWhenText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		happiestWhenText.setLayoutData(layoutData);
-		happiestWhenText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Humor:");
-		humorText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		humorText.setLayoutData(layoutData);
-		humorText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Job interests:");
-		jobInterestsText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		jobInterestsText.setLayoutData(layoutData);
-		jobInterestsText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Living arrangement:");
-		livingArrangementText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		livingArrangementText.setLayoutData(layoutData);
-		livingArrangementText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Pets:");
-		petsText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		petsText.setLayoutData(layoutData);
-		petsText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Political views:");
-		politicalViewsText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		politicalViewsText.setLayoutData(layoutData);
-		politicalViewsText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Profile URL:");
-		profileUrlText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		profileUrlText.setLayoutData(layoutData);
-		profileUrlText.addFocusListener(generalValueChangeListener);
-		//
-		toolkit.createLabel(generalPane, "Religion:");
-		religionText = toolkit.createText(generalPane, "", SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		religionText.setLayoutData(layoutData);
-		religionText.addFocusListener(generalValueChangeListener);
+		nameSection.setLayoutData(layoutData);
+		Composite namePane = toolkit.createComposite(nameSection);
+		namePane.setLayout(new GridLayout(2, false));
+		nameSection.setClient(namePane);
+		final SectionPart namePart = new SectionPart(nameSection);
+		ValueChangeListener nameValueChangeListener = new ValueChangeListener(namePart);
+		givenNameText = createText("Given name:", namePane, toolkit, nameValueChangeListener);
+		familyNameText = createText("Family name:", namePane, toolkit, nameValueChangeListener);
+		additionalNameText = createText("Additional name:", namePane, toolkit, nameValueChangeListener);
+		honorificPrefixText = createText("Honorific prefix:", namePane, toolkit, nameValueChangeListener);
+		honorificSuffixText = createText("Honorific suffix:", namePane, toolkit, nameValueChangeListener);
+		nameUnstructuredText = createText("Unstructured:", namePane, toolkit, nameValueChangeListener);
 		//
 		// Friends
 		Section friendsSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
@@ -298,6 +268,15 @@ public class PersonPage implements IDetailsPage {
 		deleteButton.setLayoutData(layoutData);
 		deleteButton.addSelectionListener(new RemoveButtonSelectionListener());
 	}
+	
+	private Text createText(String label, Composite parent, FormToolkit toolkit, ValueChangeListener listener) {
+		toolkit.createLabel(parent, label);
+		Text text = toolkit.createText(parent, "", SWT.BORDER);
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		text.setLayoutData(layoutData);
+		text.addFocusListener(listener);
+		return text;
+	}
 
 	public void initialize(IManagedForm managedForm) {
 		this.managedForm = managedForm;
@@ -331,10 +310,11 @@ public class PersonPage implements IDetailsPage {
 		person = (Person)((IStructuredSelection)selection).getFirstElement();
 		idLabel.setText(trim(person.getId()));
 		displayNameText.setText(trim(person.getDisplayName()));
+		thumbnailUrlText.setText(trim(person.getThumbnailUrl()));
+		//
 		aboutMeText.setText(trim(person.getAboutMe()));
 		ageText.setText(string(person.getAge()));
 		setDate(birthdayText, person.getBirthday());
-		thumbnailUrlText.setText(trim(person.getThumbnailUrl()));
 		genderCombo.select(0);
 		Gender gender = person.getGender();
 		if (gender != null) {
@@ -359,6 +339,27 @@ public class PersonPage implements IDetailsPage {
 		politicalViewsText.setText(trim(person.getPoliticalViews()));
 		profileUrlText.setText(trim(person.getProfileUrl()));
 		religionText.setText(trim(person.getReligion()));
+		romanceText.setText(trim(person.getRomance()));
+		scaredOfText.setText(trim(person.getScaredOf()));
+		sexualOrientationText.setText(trim(person.getSexualOrientation()));
+		statusText.setText(trim(person.getStatus()));
+		//
+		Name name = person.getName();
+		if (name != null) {
+			givenNameText.setText(trim(name.getGivenName()));
+			familyNameText.setText(trim(name.getFamilyName()));
+			additionalNameText.setText(trim(name.getAdditionalName()));
+			honorificPrefixText.setText(trim(name.getHonorificPrefix()));
+			honorificSuffixText.setText(trim(name.getHonorificSuffix()));
+			nameUnstructuredText.setText(trim(name.getUnstructured()));
+		} else {
+			givenNameText.setText("");
+			familyNameText.setText("");
+			additionalNameText.setText("");
+			honorificPrefixText.setText("");
+			honorificSuffixText.setText("");
+			nameUnstructuredText.setText("");
+		}
 		try {
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<RelationshipImpl> relationshipList = personService.getRelationshipList(person);
@@ -400,10 +401,11 @@ public class PersonPage implements IDetailsPage {
 		private void updatePerson() {
 			try {
 				person.setDisplayName(normalize(displayNameText.getText()));
+				person.setThumbnailUrl(normalize(thumbnailUrlText.getText()));
+				//
 				person.setAboutMe(normalize(aboutMeText.getText()));
 				person.setAge(toInteger(ageText.getText()));
 				person.setBirthday(getDate(birthdayText));
-				person.setThumbnailUrl(normalize(thumbnailUrlText.getText()));
 				String gender = genderCombo.getText();
 				person.setGender(StringUtils.isNotEmpty(gender) ? Gender.valueOf(gender) : null);
 				person.setNickname(normalize(nicknameText.getText()));
@@ -419,6 +421,22 @@ public class PersonPage implements IDetailsPage {
 				person.setPoliticalViews(normalize(politicalViewsText.getText()));
 				person.setProfileUrl(normalize(profileUrlText.getText()));
 				person.setReligion(normalize(religionText.getText()));
+				person.setRomance(normalize(romanceText.getText()));
+				person.setScaredOf(normalize(scaredOfText.getText()));
+				person.setSexualOrientation(normalize(sexualOrientationText.getText()));
+				person.setStatus(normalize(statusText.getText()));
+				//
+				Name name = person.getName();
+				if (name == null) {
+					name = new NameImpl();
+					person.setName(name);
+				}
+				name.setAdditionalName(normalize(additionalNameText.getText()));
+				name.setFamilyName(normalize(familyNameText.getText()));
+				name.setGivenName(normalize(givenNameText.getText()));
+				name.setHonorificPrefix(normalize(honorificPrefixText.getText()));
+				name.setHonorificSuffix(normalize(honorificSuffixText.getText()));
+				name.setUnstructured(normalize(nameUnstructuredText.getText()));
 				//
 				PersonService personService = Activator.getDefault().getPersonService();
 				personService.store(person);
