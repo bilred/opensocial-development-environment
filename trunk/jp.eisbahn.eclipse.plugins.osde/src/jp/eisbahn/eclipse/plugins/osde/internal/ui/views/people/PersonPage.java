@@ -19,6 +19,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.normalize;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.string;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.toFloat;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.toInteger;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.trim;
 
@@ -31,9 +32,11 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.shindig.social.opensocial.hibernate.entities.BodyTypeImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.NameImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
+import org.apache.shindig.social.opensocial.model.BodyType;
 import org.apache.shindig.social.opensocial.model.Name;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.apache.shindig.social.opensocial.model.Person.Gender;
@@ -120,6 +123,16 @@ public class PersonPage implements IDetailsPage {
 	private Text honorificSuffixText;
 
 	private Text nameUnstructuredText;
+
+	private Text buildText;
+
+	private Text eyeColorText;
+
+	private Text hairColorText;
+
+	private Text heightText;
+
+	private Text weightText;
 
 	public PersonPage(PersonView personView) {
 		super();
@@ -218,12 +231,30 @@ public class PersonPage implements IDetailsPage {
 		nameSection.setClient(namePane);
 		final SectionPart namePart = new SectionPart(nameSection);
 		ValueChangeListener nameValueChangeListener = new ValueChangeListener(namePart);
+		//
 		givenNameText = createText("Given name:", namePane, toolkit, nameValueChangeListener);
 		familyNameText = createText("Family name:", namePane, toolkit, nameValueChangeListener);
 		additionalNameText = createText("Additional name:", namePane, toolkit, nameValueChangeListener);
 		honorificPrefixText = createText("Honorific prefix:", namePane, toolkit, nameValueChangeListener);
 		honorificSuffixText = createText("Honorific suffix:", namePane, toolkit, nameValueChangeListener);
 		nameUnstructuredText = createText("Unstructured:", namePane, toolkit, nameValueChangeListener);
+		//
+		// Body type
+		Section bodyTypeSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
+		bodyTypeSection.setText("Body type");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		bodyTypeSection.setLayoutData(layoutData);
+		Composite bodyTypePane = toolkit.createComposite(bodyTypeSection);
+		bodyTypePane.setLayout(new GridLayout(2, false));
+		bodyTypeSection.setClient(bodyTypePane);
+		final SectionPart bodyTypePart = new SectionPart(bodyTypeSection);
+		ValueChangeListener bodyTypeValueChangeListener = new ValueChangeListener(bodyTypePart);
+		//
+		buildText = createText("Build:", bodyTypePane, toolkit, bodyTypeValueChangeListener);
+		eyeColorText = createText("Eye color:", bodyTypePane, toolkit, bodyTypeValueChangeListener);
+		hairColorText = createText("Hair color:", bodyTypePane, toolkit, bodyTypeValueChangeListener);
+		heightText = createText("Height:", bodyTypePane, toolkit, bodyTypeValueChangeListener);
+		weightText = createText("Weight:", bodyTypePane, toolkit, bodyTypeValueChangeListener);
 		//
 		// Friends
 		Section friendsSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
@@ -360,6 +391,21 @@ public class PersonPage implements IDetailsPage {
 			honorificSuffixText.setText("");
 			nameUnstructuredText.setText("");
 		}
+		//
+		BodyType bodyType = person.getBodyType();
+		if (bodyType != null) {
+			buildText.setText(trim(bodyType.getBuild()));
+			eyeColorText.setText(trim(bodyType.getEyeColor()));
+			hairColorText.setText(trim(bodyType.getHairColor()));
+			heightText.setText(string(bodyType.getHeight()));
+			weightText.setText(string(bodyType.getWeight()));
+		} else {
+			buildText.setText("");
+			eyeColorText.setText("");
+			hairColorText.setText("");
+			heightText.setText("");
+			weightText.setText("");
+		}
 		try {
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<RelationshipImpl> relationshipList = personService.getRelationshipList(person);
@@ -437,6 +483,17 @@ public class PersonPage implements IDetailsPage {
 				name.setHonorificPrefix(normalize(honorificPrefixText.getText()));
 				name.setHonorificSuffix(normalize(honorificSuffixText.getText()));
 				name.setUnstructured(normalize(nameUnstructuredText.getText()));
+				//
+				BodyType bodyType = person.getBodyType();
+				if (bodyType == null) {
+					bodyType = new BodyTypeImpl();
+					person.setBodyType(bodyType);
+				}
+				bodyType.setBuild(normalize(buildText.getText()));
+				bodyType.setEyeColor(normalize(eyeColorText.getText()));
+				bodyType.setHairColor(normalize(hairColorText.getText()));
+				bodyType.setHeight(toFloat(heightText.getText()));
+				bodyType.setWeight(toFloat(weightText.getText()));
 				//
 				PersonService personService = Activator.getDefault().getPersonService();
 				personService.store(person);

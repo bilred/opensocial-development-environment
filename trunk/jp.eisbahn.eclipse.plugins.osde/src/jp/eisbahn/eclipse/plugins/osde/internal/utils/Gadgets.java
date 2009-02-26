@@ -84,6 +84,20 @@ public class Gadgets {
 			}
 		}
 	}
+
+	public static Float toFloat(String value) {
+		if (value == null) {
+			return null;
+		} else if (value.length() == 0) {
+			return null;
+		} else {
+			try {
+				return new Float(value);
+			} catch(NumberFormatException e) {
+				return null;
+			}
+		}
+	}
 	
 	public static String toHexString(byte[] arr) {
         StringBuffer buff = new StringBuffer(arr.length * 2);
