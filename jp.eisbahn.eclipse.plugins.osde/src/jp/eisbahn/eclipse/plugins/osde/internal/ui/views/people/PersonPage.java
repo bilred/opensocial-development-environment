@@ -33,12 +33,21 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.BodyTypeImpl;
+import org.apache.shindig.social.opensocial.hibernate.entities.DrinkerImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.NameImpl;
+import org.apache.shindig.social.opensocial.hibernate.entities.NetworkPresenceImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
+import org.apache.shindig.social.opensocial.hibernate.entities.SmokerImpl;
 import org.apache.shindig.social.opensocial.model.BodyType;
+import org.apache.shindig.social.opensocial.model.Enum;
 import org.apache.shindig.social.opensocial.model.Name;
 import org.apache.shindig.social.opensocial.model.Person;
+import org.apache.shindig.social.opensocial.model.Url;
+import org.apache.shindig.social.opensocial.model.Enum.Drinker;
+import org.apache.shindig.social.opensocial.model.Enum.EnumKey;
+import org.apache.shindig.social.opensocial.model.Enum.NetworkPresence;
+import org.apache.shindig.social.opensocial.model.Enum.Smoker;
 import org.apache.shindig.social.opensocial.model.Person.Gender;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -97,42 +106,30 @@ public class PersonPage implements IDetailsPage {
 	private Text jobInterestsText;
 	private Text livingArrangementText;
 	private Text petsText;
-
 	private Text politicalViewsText;
-
 	private Text profileUrlText;
-
 	private Text religionText;
-
 	private Text romanceText;
-
 	private Text scaredOfText;
-
 	private Text sexualOrientationText;
-
 	private Text statusText;
-
 	private Text givenNameText;
-
 	private Text familyNameText;
-
 	private Text additionalNameText;
-
 	private Text honorificPrefixText;
-
 	private Text honorificSuffixText;
-
 	private Text nameUnstructuredText;
-
 	private Text buildText;
-
 	private Text eyeColorText;
-
 	private Text hairColorText;
-
 	private Text heightText;
-
 	private Text weightText;
+
+	private Combo drinkerCombo;
+
+	private Combo networkPresenceCombo;
+
+	private Combo smokerCombo;
 
 	public PersonPage(PersonView personView) {
 		super();
@@ -206,12 +203,34 @@ public class PersonPage implements IDetailsPage {
 		nicknameText = createText("Nickname:", generalPane, toolkit, generalValueChangeListener);
 		relationshipStatusText = createText("Relationship status:", generalPane, toolkit, generalValueChangeListener);
 		childrenText = createText("Children:", generalPane, toolkit, generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Drinker:");
+		drinkerCombo = new Combo(generalPane, SWT.READ_ONLY);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		drinkerCombo.setLayoutData(layoutData);
+		drinkerCombo.addSelectionListener(generalValueChangeListener);
+		drinkerCombo.add("");
+		for (Drinker drinker: Drinker.values()) {
+			drinkerCombo.add(drinker.name());
+		}
+		//
 		ethnicityText = createText("Ethnicity:", generalPane, toolkit, generalValueChangeListener);
 		fashionText = createText("Fashion:", generalPane, toolkit, generalValueChangeListener);
 		happiestWhenText = createText("Happiest when:", generalPane, toolkit, generalValueChangeListener);
 		humorText = createText("Humor:", generalPane, toolkit, generalValueChangeListener);
 		jobInterestsText = createText("Job interest:", generalPane, toolkit, generalValueChangeListener);
 		livingArrangementText = createText("Living arrangement:", generalPane, toolkit, generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Network presence:");
+		networkPresenceCombo = new Combo(generalPane, SWT.READ_ONLY);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		networkPresenceCombo.setLayoutData(layoutData);
+		networkPresenceCombo.addSelectionListener(generalValueChangeListener);
+		networkPresenceCombo.add("");
+		for (NetworkPresence networkPresence: NetworkPresence.values()) {
+			networkPresenceCombo.add(networkPresence.name());
+		}
+		//
 		petsText = createText("Pets:", generalPane, toolkit, generalValueChangeListener);
 		politicalViewsText = createText("Political views:", generalPane, toolkit, generalValueChangeListener);
 		profileUrlText = createText("Profile URL:", generalPane, toolkit, generalValueChangeListener);
@@ -219,6 +238,17 @@ public class PersonPage implements IDetailsPage {
 		romanceText = createText("Romance:", generalPane, toolkit, generalValueChangeListener);
 		scaredOfText = createText("Scared of:", generalPane, toolkit, generalValueChangeListener);
 		sexualOrientationText = createText("Sexual orientation:", generalPane, toolkit, generalValueChangeListener);
+		//
+		toolkit.createLabel(generalPane, "Smoker:");
+		smokerCombo = new Combo(generalPane, SWT.READ_ONLY);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		smokerCombo.setLayoutData(layoutData);
+		smokerCombo.addSelectionListener(generalValueChangeListener);
+		smokerCombo.add("");
+		for (Smoker smoker: Smoker.values()) {
+			smokerCombo.add(smoker.name());
+		}
+		//
 		statusText = createText("Status:", generalPane, toolkit, generalValueChangeListener);
 		//
 		// Name
@@ -374,6 +404,39 @@ public class PersonPage implements IDetailsPage {
 		scaredOfText.setText(trim(person.getScaredOf()));
 		sexualOrientationText.setText(trim(person.getSexualOrientation()));
 		statusText.setText(trim(person.getStatus()));
+		drinkerCombo.select(0);
+		Enum<Drinker> drinker = person.getDrinker();
+		if (drinker != null) {
+			String[] items = drinkerCombo.getItems();
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].equals(drinker.getValue().name())) {
+					drinkerCombo.select(i);
+					break;
+				}
+			}
+		}
+		networkPresenceCombo.select(0);
+		Enum<NetworkPresence> networkPresence = person.getNetworkPresence();
+		if (networkPresence != null) {
+			String[] items = networkPresenceCombo.getItems();
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].equals(networkPresence.getValue().name())) {
+					networkPresenceCombo.select(i);
+					break;
+				}
+			}
+		}
+		smokerCombo.select(0);
+		Enum<Smoker> smoker = person.getSmoker();
+		if (smoker != null) {
+			String[] items = smokerCombo.getItems();
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].equals(smoker.getValue().name())) {
+					smokerCombo.select(i);
+					break;
+				}
+			}
+		}
 		//
 		Name name = person.getName();
 		if (name != null) {
@@ -406,6 +469,7 @@ public class PersonPage implements IDetailsPage {
 			heightText.setText("");
 			weightText.setText("");
 		}
+		//
 		try {
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<RelationshipImpl> relationshipList = personService.getRelationshipList(person);
@@ -471,6 +535,12 @@ public class PersonPage implements IDetailsPage {
 				person.setScaredOf(normalize(scaredOfText.getText()));
 				person.setSexualOrientation(normalize(sexualOrientationText.getText()));
 				person.setStatus(normalize(statusText.getText()));
+				String drinker = drinkerCombo.getText();
+				person.setDrinker(StringUtils.isNotEmpty(drinker) ? new DrinkerImpl(Drinker.valueOf(drinker), drinker) : null);
+				String networkPresence = networkPresenceCombo.getText();
+				person.setNetworkPresence(StringUtils.isNotEmpty(networkPresence) ? new NetworkPresenceImpl(NetworkPresence.valueOf(networkPresence), networkPresence) : null);
+				String smoker = smokerCombo.getText();
+				person.setSmoker(StringUtils.isNotEmpty(smoker) ? new SmokerImpl(Smoker.valueOf(smoker), smoker) : null);
 				//
 				Name name = person.getName();
 				if (name == null) {
