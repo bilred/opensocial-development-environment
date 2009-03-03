@@ -1,0 +1,11 @@
+= Screen cast =
+
+The following movies shows you some functions under OSDE development.
+
+ * [http://www.eisbahn.jp/yoichiro/osde20090125.swf Launch an external application in OSDE. (Jan 25, 2009)]
+ * [http://www.eisbahn.jp/yoichiro/osde20090121_02.swf Create a new Java project to develop the application for accessing to SNS with Restful Protocol by opensocial-java-client. (Jan 21, 2009)]
+ * [http://www.eisbahn.jp/yoichiro/osde20090121_01.swf Support to define UserPrefs and to set its values. (Jan 21, 2009)]
+ * [http://www.eisbahn.jp/yoichiro/osde20090112.swf Support Locale and Message bundle. (Jan 12, 2009)]
+ * [http://www.eisbahn.jp/yoichiro/osde20081226.swf Show to launch your application. (Dec 26, 2008)]
+ * [http://www.eisbahn.jp/yoichiro/osde20081212.swf Show a person's profile and modify it. (Dec 12, 2008)]
+ * [http://www.eisbahn.jp/yoichiro/osde2081125.swf Create a new OpenSocial project and run simple application. (Nov 25,2008)]
