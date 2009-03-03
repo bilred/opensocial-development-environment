@@ -1,0 +1,69 @@
+= Quick start =
+
+This page describes how to use OSDE quickly.
+
+== Start Apache Shindig ==
+
+First, you should start the Apache Shindig server.
+
+ * Push the button which have !OpenSocial icon in Eclipse toolbar.
+
+http://www.eisbahn.jp/osde/img/toolbar_button.gif
+
+Then, the Apache Shindig server is started, and H2 Database is started at same time. In addition, three views (People, !AppData, and Activities) will be opened.
+
+== Create people to Shindig database as sample data ==
+
+Before you create the !OpenSocial project, you should create people to Shindig database as sample data.
+
+* Select `[!OpenSocial`] -> `[Create sample data in Shindig`] menus.
+* Push `[OK`] button on the Confirm dialog.
+
+http://www.eisbahn.jp/osde/img/sample_data_menu.gif
+
+You'll be able to see created people in People view.
+
+http://www.eisbahn.jp/osde/img/created_people.gif
+
+== Create new project ==
+
+To develop your application, you should create a new !OpenSocial project to your workspace.
+
+ * Select `[File`] -> `[New`] -> `[Project...`] menus.
+
+http://www.eisbahn.jp/osde/img/project_menu.gif
+
+Then, you can see the dialog which select type.
+
+ * Select !OpenSocial project node after expanding the !OpenSocial node.
+ * Push `[Next`] button.
+
+http://www.eisbahn.jp/osde/img/select_opensocial.gif
+
+The wizard for creating new !OpenSocial project is started.
+
+ * Input the project name and push `[Next`] button.
+ * Input your application's information. Title and Author Email is required. Push `[Next`] button after input.
+ * Select the view type. At least, you need to support one and more views. Push `[Finish`] button after selecting.
+
+http://www.eisbahn.jp/osde/img/new_os_wizard.gif
+
+OSDE creates the new !OpenSocial project. You can see your gadget in opened Gadget Editor.
+
+== Run your application ==
+
+You can run your application for only one step.
+
+ * Click the mouse right button on gadget.xml file in Package Explorer view, and select `[!OpenSocial`] -> `[Launch this application`] menus.
+
+http://www.eisbahn.jp/osde/img/os_menus.gif
+
+The dialog to config about some parameters is opened.
+
+ * Select View, and push `[OK`] button.
+
+http://www.eisbahn.jp/osde/img/run_dialog.gif
+
+The internal browser is opened, and your application will be run in the browser.
+
+http://www.eisbahn.jp/osde/img/app.gif
