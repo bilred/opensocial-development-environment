@@ -1,0 +1,58 @@
+= Installation guide =
+
+The installation process is described in this page. You'll be able to install OSDE easily, because OSDE is distributed with the update site.
+
+== Required software ==
+
+You must install the following software before installing OSDE.
+
+ * Java SE Development Kit 5.0 or higher [http://java.sun.com/javase/downloads/index.jsp Download]
+ * Eclipse IDE 3.4.1 or higher [http://www.eclipse.org/downloads/ Download]
+
+ We have already known the problem at running on JDK1.6.0_03 (See #47). You should use the latest version of JDK.
+
+== Installation of OSDE ==
+
+You can install this OSDE with update-site.
+
+=== 1. Launch Eclipse IDE. ===
+
+Launch your Eclipse IDE after installing the required software.
+
+=== 2. Invoke Software Updates and Add-ons dialog. ===
+
+Due to open the dialog for installing plug-in, you select the following menus.
+
+ * [Help] -> [Software Updates]
+
+=== 3. Add the update-site ===
+
+Add the update-site to have OSDE.
+
+ * Select [Available Software] tab.
+ * Push [Add Site...] button.
+ * Input the following URL to Location field, and push [OK] button.
+  * http://www.eisbahn.jp/eclipse/update-site/site.xml
+
+Then, you can see to register the update-site in site list.
+
+=== 4. Install OSDE ===
+
+You can install OSDE from registered update-site.
+
+ * Expand the node of registered update-site.
+ * Select the node of !OpenSocial category.
+ * Push [Install...] button.
+
+After calculating requirements and dependencies, you'll see the Intall dialog.
+
+ * Push [Next] button.
+ * If you agree the OSDE license, then select [I accept ...] and push [Finish] button.
+
+Eclipse starts to download and install OSDE. If the intalling task has succeed, you can see the dialog to specify restarting Eclipse.
+
+ * Push [Yes] button.
+
+Install complete after restarting Eclipse. If installing OSDE is succeed, you'll be able to find the !OpenSocial icon in Eclipse toolbar.
+
+See [QuickStart Quick start] at next.
