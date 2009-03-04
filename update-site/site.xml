@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/jp.eisbahn.eclipse.features.osde_0.2.3.jar" id="jp.eisbahn.eclipse.features.osde" version="0.2.3">
+      <category name="jp.eisbahn.eclipse.plugins.osde.category" />
+   </feature>
+   <category-def name="jp.eisbahn.eclipse.plugins.osde.category" label="OpenSocial">
+      <description>
+         This category contains plug-ins regarding to OpenSocial
+      </description>
+   </category-def>
+</site>
