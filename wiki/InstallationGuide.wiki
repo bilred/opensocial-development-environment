@@ -32,7 +32,7 @@ Add the update-site to have OSDE.
  * Select `[Available Software`] tab.
  * Push `[Add Site...`] button.
  * Input the following URL to Location field, and push `[OK`] button.
-  * http://www.eisbahn.jp/eclipse/update-site/site.xml
+  * http://opensocial-development-environment.googlecode.com/svn/update-site/site.xml
 
 Then, you can see to register the update-site in site list.
 
