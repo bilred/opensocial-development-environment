@@ -1,5 +1,10 @@
 = Change log =
 
+=== Mar 4, 2009 ===
+ Version 0.2.3 has been released.
+
+ * The project site of OSDE has been moved from eisbahn.jp to code.google.com.
+
 === Mar 1, 2009 ===
  Version 0.2.2 has been released.
 
