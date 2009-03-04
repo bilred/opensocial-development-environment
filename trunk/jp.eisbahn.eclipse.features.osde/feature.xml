@@ -2,7 +2,7 @@
 <feature
       id="jp.eisbahn.eclipse.features.osde"
       label="OpenSocial Development Environment Feature"
-      version="0.2.2"
+      version="0.2.3"
       provider-name="Yoichiro Tanaka"
       plugin="jp.eisbahn.eclipse.plugins.osde">
 
@@ -792,7 +792,7 @@ for NSIS, however, are subject to the terms of the Common Public License version
    </license>
 
    <url>
-      <update url="http://www.eisbahn.jp/eclipse/update-site/site.xml"/>
+      <update url="http://opensocial-development-environment.googlecode.com/svn/update-site/site.xml"/>
    </url>
 
    <requires>
