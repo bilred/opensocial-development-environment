@@ -52,7 +52,7 @@ public class GadgetXmlFileGenerator {
 	public IFile generate(IProgressMonitor monitor) throws UnsupportedEncodingException, CoreException {
 		try {
 			monitor.beginTask("Generate Gadget XML file.", 100);
-			IFile gadgetXmlFile = project.getFile(new Path("gadget.xml"));
+			IFile gadgetXmlFile = project.getFile(new Path(gadgetXmlData.getGadgetSpecFilename()));
 			String content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 			content += "<Module>\n";
 			content += "  <ModulePrefs";
@@ -215,7 +215,7 @@ public class GadgetXmlFileGenerator {
 					} else {
 						if (viewData.isCreateExternalJavaScript()) {
 							content += "\n";
-							content += "<script type=\"text/javascript\" src=\"http://localhost:8080/" + project.getName() + "/" + viewName.toString() + ".js\"></script>\n";
+							content += "<script type=\"text/javascript\" src=\"http://localhost:8080/" + project.getName() + "/" + viewData.getFilename() + "\"></script>\n";
 							if (viewData.isCreateInitFunction()) {
 								content += "\n";
 								content += "<script type=\"text/javascript\">\n";
