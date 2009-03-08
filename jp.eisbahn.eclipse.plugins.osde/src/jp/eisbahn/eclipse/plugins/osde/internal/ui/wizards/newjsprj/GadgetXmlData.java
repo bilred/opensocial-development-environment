@@ -23,19 +23,19 @@ import java.io.Serializable;
 public class GadgetXmlData implements Serializable {
 
 	/** Title */
-	private String title;
+	private String title = "";
 	/** Title URL */
-	private String titleUrl;
+	private String titleUrl = "";
 	/** Description */
-	private String description;
+	private String description = "";
 	/** Author */
-	private String author;
+	private String author = "";
 	/** Author Email */
-	private String authorEmail;
+	private String authorEmail = "";
 	/** Screenshot */
-	private String screenshot;
+	private String screenshot = "";
 	/** Thumbnail */
-	private String thumbnail;
+	private String thumbnail = "";
 	/** opensocial-0.8 */
 	private boolean opensocial08;
 	/** opensocial-0.7 */
@@ -56,7 +56,17 @@ public class GadgetXmlData implements Serializable {
 	private boolean miniMessage;
 	/** Tabs */
 	private boolean tabs;
+	/** Gadget spec file name */
+	private String gadgetSpecFilename = "";
 	
+	public String getGadgetSpecFilename() {
+		return gadgetSpecFilename;
+	}
+
+	public void setGadgetSpecFilename(String gadgetSpecFilename) {
+		this.gadgetSpecFilename = gadgetSpecFilename;
+	}
+
 	public String getTitle() {
 		return title;
 	}

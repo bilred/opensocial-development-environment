@@ -69,7 +69,7 @@ public class JavaScriptFileGenerator {
 	}
 	
 	private IFile generateJavaScriptFile(IProgressMonitor monitor, ViewName viewName, GadgetViewData viewData) throws CoreException, UnsupportedEncodingException {
-		IFile generateJavaScriptFile = project.getFile(new Path(viewName.toString() + ".js"));
+		IFile generateJavaScriptFile = project.getFile(new Path(viewData.getFilename()));
 		String content = "/**\n";
 		content += " * " + gadgetXmlData.getTitle() + "\n";
 		content += " * This JavaScript file is for " + viewName.getDisplayName() + " view.\n";

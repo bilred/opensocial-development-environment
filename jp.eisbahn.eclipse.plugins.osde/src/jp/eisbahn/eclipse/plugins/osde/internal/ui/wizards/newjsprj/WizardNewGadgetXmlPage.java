@@ -37,12 +37,9 @@ import org.eclipse.swt.widgets.Text;
 public class WizardNewGadgetXmlPage extends WizardPage {
 
 	private Text titleText;
-	private Text titleUrlText;
 	private Text descriptionText;
-	private Text authorText;
 	private Text authorEmailText;
-	private Text screenshotText;
-	private Text thumbnailText;
+	private Text specFilenameText;
 	private Button opensocial08Button;
 	private Button opensocial07Button;
 	private Button pubsubButton;
@@ -72,6 +69,7 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		composite.setLayout(new GridLayout());
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		//
+		createFileNameControls(composite);
 		createModulePrefsControls(composite);
 		createFeaturesControls(composite);
 		//
@@ -81,11 +79,32 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
 	}
+	
+	private void createFileNameControls(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Group filenameGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
+		filenameGroup.setText("File name");
+		filenameGroup.setFont(parent.getFont());
+		filenameGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		layout = new GridLayout();
+		layout.numColumns = 2;
+		filenameGroup.setLayout(layout);
+		filenameGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		//
+		createLabel(filenameGroup, "Gadget spec file(*):");
+		specFilenameText = createText(filenameGroup);
+		specFilenameText.setText("gadget.xml");
+		specFilenameText.addListener(SWT.Modify, modifyListener);
+	}
 
 	private void createModulePrefsControls(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
+		layout.numColumns = 2;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Group infoGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
@@ -99,8 +118,9 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		createLabel(infoGroup, "Title(*):");
 		titleText = createText(infoGroup);
 		titleText.addListener(SWT.Modify, modifyListener);
-		createLabel(infoGroup, "Title URL:");
-		titleUrlText = createText(infoGroup);
+		createLabel(infoGroup, "Author Email(*):");
+		authorEmailText = createText(infoGroup);
+		authorEmailText.addListener(SWT.Modify, modifyListener);
 		createLabel(infoGroup, "Description:");
 		descriptionText = new Text(infoGroup, SWT.MULTI | SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -108,15 +128,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		layoutData.heightHint = 50;
 		descriptionText.setLayoutData(layoutData);
 		descriptionText.setFont(parent.getFont());
-		createLabel(infoGroup, "Author:");
-		authorText = createText(infoGroup);
-		createLabel(infoGroup, "Author Email(*):");
-		authorEmailText = createText(infoGroup);
-		authorEmailText.addListener(SWT.Modify, modifyListener);
-		createLabel(infoGroup, "Screen Shot:");
-		screenshotText = createText(infoGroup);
-		createLabel(infoGroup, "Thumbnail:");
-		thumbnailText = createText(infoGroup);
 		Label noticeLabel = createLabel(infoGroup, "The fields which has (*) mark are required.");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalAlignment = GridData.END;
@@ -152,6 +163,12 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 	}
 	
 	private boolean validatePage() {
+		String specFilename = specFilenameText.getText().trim();
+		if (specFilename.length() == 0) {
+			setErrorMessage(null);
+			setMessage("Gadget spec file name is empty.");
+			return false;
+		}
 		String title = titleText.getText().trim();
 		if (title.length() == 0) {
 			setErrorMessage(null);
@@ -171,7 +188,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 
 	public GadgetXmlData getInputedData() {
 		GadgetXmlData data = new GadgetXmlData();
-		data.setAuthor(authorText.getText().trim());
 		data.setAuthorEmail(authorEmailText.getText().trim());
 		data.setDescription(descriptionText.getText().trim());
 		data.setDynamicHeight(dynamicHeightButton.getSelection());
@@ -180,14 +196,12 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		data.setOpensocial07(opensocial07Button.getSelection());
 		data.setOpensocial08(opensocial08Button.getSelection());
 		data.setPubsub(pubsubButton.getSelection());
-		data.setScreenshot(screenshotText.getText().trim());
 		data.setSetTitle(setTitleButton.getSelection());
 		data.setSkins(skinsButton.getSelection());
 		data.setTabs(tabsButton.getSelection());
-		data.setThumbnail(thumbnailText.getText().trim());
 		data.setTitle(titleText.getText().trim());
-		data.setTitleUrl(titleUrlText.getText().trim());
 		data.setViews(viewsButton.getSelection());
+		data.setGadgetSpecFilename(specFilenameText.getText().trim());
 		return data;
 	}
 

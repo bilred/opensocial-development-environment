@@ -25,7 +25,6 @@ import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils
 import java.util.EnumMap;
 import java.util.Set;
 
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -114,6 +113,12 @@ public class WizardNewViewPage extends WizardPage {
 					setMessage("It is necessary to select at least one type for generating sample code in " + viewName.getDisplayName() + " view.");
 					return false;
 				}
+				if (part.getCreateJavaScriptFileButton().getSelection()
+						&& (part.getFilenameText().getText().trim().length() == 0)) {
+					setErrorMessage(null);
+					setMessage("The JavaScript file name for " + viewName.getDisplayName() + " view is empty.");
+					return false;
+				}
 			}
 		}
 		setErrorMessage(null);
@@ -124,7 +129,7 @@ public class WizardNewViewPage extends WizardPage {
 	private void createViewControls(Composite composite, ViewName viewName, TabFolder folder) {
 		TabItem item = new TabItem(folder, SWT.BORDER);
 		item.setText(viewName.getDisplayName());
-		ViewSettingPart part = new ViewSettingPart(folder);
+		ViewSettingPart part = new ViewSettingPart(folder, viewName);
 		item.setControl(part.getComposite());
 		partMap.put(viewName, part);
 	}
@@ -145,6 +150,7 @@ public class WizardNewViewPage extends WizardPage {
 					data.setCreatePeople(part.getPeopleButton().getSelection());
 					data.setCreateActivity(part.getActivityButton().getSelection());
 					data.setCreateAppData(part.getAppDataButton().getSelection());
+					data.setFilename(part.getFilenameText().getText().trim());
 				} else if (part.urlButton.getSelection()) {
 					data.setType(ViewType.url);
 					data.setHref(part.getHrefText().getText().trim());
@@ -170,9 +176,12 @@ public class WizardNewViewPage extends WizardPage {
 		private Button peopleButton;
 		private Button activityButton;
 		private Button appDataButton;
+		private Text filenameText;
+		private ViewName viewName;
 
-		ViewSettingPart(Composite parent) {
+		ViewSettingPart(Composite parent, ViewName viewName) {
 			super();
+			this.viewName = viewName;
 			createViewControls(parent);
 		}
 		
@@ -219,6 +228,10 @@ public class WizardNewViewPage extends WizardPage {
 		public Button getAppDataButton() {
 			return appDataButton;
 		}
+		
+		public Text getFilenameText() {
+			return filenameText;
+		}
 
 		private void setEnabledForGenerateFiles() {
 			sampleButton.setEnabled(true);
@@ -228,6 +241,7 @@ public class WizardNewViewPage extends WizardPage {
 				peopleButton.setEnabled(true);
 				activityButton.setEnabled(true);
 				appDataButton.setEnabled(true);
+				filenameText.setEnabled(false);
 			} else {
 				createJavaScriptFileButton.setEnabled(true);
 				boolean selection = createJavaScriptFileButton.getSelection();
@@ -235,6 +249,7 @@ public class WizardNewViewPage extends WizardPage {
 				peopleButton.setEnabled(false);
 				activityButton.setEnabled(false);
 				appDataButton.setEnabled(false);
+				filenameText.setEnabled(selection);
 			}
 		}
 		
@@ -248,6 +263,7 @@ public class WizardNewViewPage extends WizardPage {
 				peopleButton.setEnabled(false);
 				activityButton.setEnabled(false);
 				appDataButton.setEnabled(false);
+				filenameText.setEnabled(false);
 			}
 			hrefText.setEnabled(urlButton.getSelection());
 		}
@@ -264,13 +280,25 @@ public class WizardNewViewPage extends WizardPage {
 			htmlGroup.setFont(parent.getFont());
 			htmlGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			layout = new GridLayout();
-			layout.numColumns = 1;
+			layout.numColumns = 2;
 			htmlGroup.setLayout(layout);
 			htmlGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			createJavaScriptFileButton = createCheckbox(htmlGroup, "Create the external JavaScript file for this view.");
+			GridData layoutData = new GridData();
+			layoutData.horizontalSpan = 2;
+			createJavaScriptFileButton.setLayoutData(layoutData);
+			filenameText = createText(htmlGroup);
+			layoutData = new GridData(GridData.FILL_HORIZONTAL);
+			layoutData.horizontalIndent = 20;
+			filenameText.setLayoutData(layoutData);
+			filenameText.setText(viewName.name() + ".js");
+			filenameText.addListener(SWT.Modify, modifyListener);
 			createJavaScriptFileButton.addListener(SWT.Selection, modifyListener);
 			initFunctionButton = createCheckbox(htmlGroup, "Generate the init() function that is called when this view is loaded.");
 			initFunctionButton.addListener(SWT.Selection, modifyListener);
+			layoutData = new GridData();
+			layoutData.horizontalSpan = 2;
+			initFunctionButton.setLayoutData(layoutData);
 			createJavaScriptFileButton.addSelectionListener(new SelectionListener() {
 				public void widgetDefaultSelected(SelectionEvent e) {
 				}
@@ -278,12 +306,15 @@ public class WizardNewViewPage extends WizardPage {
 					setEnabledForGenerateFiles();
 				}
 			});
-			
 			sampleButton = createCheckbox(htmlGroup, "Generate a set of sample code.");
+			layoutData = new GridData();
+			layoutData.horizontalSpan = 2;
+			sampleButton.setLayoutData(layoutData);
 			Group sampleGroup = new Group(htmlGroup, SWT.SHADOW_ETCHED_IN);
 			sampleGroup.setFont(parent.getFont());
-			GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+			layoutData = new GridData(GridData.FILL_HORIZONTAL);
 			sampleGroup.setLayoutData(layoutData);
+			layoutData.horizontalSpan = 2;
 			sampleGroup.setLayout(new GridLayout());
 			peopleButton = createCheckbox(sampleGroup, "Fetching a person data and friends.");
 			activityButton = createCheckbox(sampleGroup, "Posting an activity.");
