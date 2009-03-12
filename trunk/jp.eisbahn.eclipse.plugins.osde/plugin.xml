@@ -178,6 +178,13 @@
             id="jp.eisbahn.eclipse.plugins.osde.internal.views.UserPrefsView"
             name="User Preferences">
       </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.docs.DocumentView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.DocumentView"
+            name="Docs">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">
