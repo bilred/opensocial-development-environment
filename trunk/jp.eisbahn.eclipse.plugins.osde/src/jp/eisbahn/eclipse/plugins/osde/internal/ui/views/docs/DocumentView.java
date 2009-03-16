@@ -17,21 +17,19 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.docs;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
 
-import org.apache.commons.codec.binary.Base64;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -59,6 +57,8 @@ public class DocumentView extends AbstractView {
 	private Action homeAction;
 	
 	private Map<String, String> siteMap;
+
+	private TableViewer siteListTable;
 
 	@Override
 	protected void createForm(Composite parent) {
@@ -129,42 +129,46 @@ public class DocumentView extends AbstractView {
 		column = new TableColumn(table, SWT.LEFT, 2);
 		column.setText("URL");
 		column.setWidth(400);
-		TableViewer siteList = new TableViewer(table);
-		siteList.setContentProvider(new SiteListContentProvider());
-		siteList.setLabelProvider(new SiteListLabelProvider());
+		siteListTable = new TableViewer(table);
+		siteListTable.setContentProvider(new SiteListContentProvider());
+		siteListTable.setLabelProvider(new SiteListLabelProvider());
 		//
 		composite = new Composite(composite, SWT.NONE);
 		composite.setLayout(new GridLayout());
+		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		composite.setLayoutData(layoutData);
 		Button addSiteButton = new Button(composite, SWT.PUSH);
 		addSiteButton.setText("Create");
 		Button delSiteButton = new Button(composite, SWT.PUSH);
 		delSiteButton.setText("Delete");
+		delSiteButton.addSelectionListener(new DelSiteButtonSelectionListenerImpl());
+		Button defaultSiteButton = new Button(composite, SWT.PUSH);
+		defaultSiteButton.setText("Default");
+//		defaultSiteButton.addSelectionListener(new DefaultSiteButtonSelectionListenerImpl());
 		//
 		loadSites();
+		tabFolder.setSelection(0);
 	}
 	
 	private void loadSites() {
-		siteMap = new TreeMap<String, String>();
-		siteMap.put("OpenSocial API Reference (0.8.1)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v081/opensocial-reference");
-		siteMap.put("Gadgets API Reference (v0.8)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v08/gadgets-reference08");
-		try {
-			String encodeSiteMap = encodeSiteMap(siteMap);
-			System.out.println(encodeSiteMap);
-			Map<String, String> decodeSiteMap = decodeSiteMap(encodeSiteMap);
-			System.out.println(decodeSiteMap);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+		Map<String, String> map = config.getDocsSiteMap();
+		if (map != null) {
+			siteMap = map;
+		} else {
+			siteMap = new LinkedHashMap<String, String>();
+			siteMap.put("OpenSocial API Reference (0.8.1)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v081/opensocial-reference");
+			siteMap.put("Gadgets API Reference (v0.8)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v08/gadgets-reference08");
+			config.setDocsSiteMap(siteMap);
+			Activator.getDefault().storePreferences(config);
 		}
+		siteListTable.setInput(siteMap);
 		//
 		sitesCombo.removeAll();
-		sitesCombo.add("OpenSocial API Reference (0.8.1)");
-		sitesCombo.setData("OpenSocial API Reference (0.8.1)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v081/opensocial-reference");
-		sitesCombo.add("Gadgets API Reference (v0.8)");
-		sitesCombo.setData("Gadgets API Reference (v0.8)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v08/gadgets-reference08");
+		for (Map.Entry<String, String> entry : siteMap.entrySet()) {
+			sitesCombo.add(entry.getKey());
+			sitesCombo.setData(entry.getKey(), entry.getValue());
+		}
 		sitesCombo.select(0);
 		changeUrl();
 	}
@@ -208,26 +212,36 @@ public class DocumentView extends AbstractView {
 
 	private void changeUrl() {
 		int idx = sitesCombo.getSelectionIndex();
-		String url = (String)sitesCombo.getData(sitesCombo.getItem(idx));
-		browser.setUrl(url);
+		if (idx != -1) {
+			String url = (String)sitesCombo.getData(sitesCombo.getItem(idx));
+			if (url != null && url.length() > 0) {
+				browser.setUrl(url);
+				return;
+			}
+		}
+		browser.setText("<html><head></head><body></body></html>");
 	}
 	
-	private String encodeSiteMap(Map<String, String> siteMap) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream out = new ObjectOutputStream(baos);
-		out.writeObject(siteMap);
-		out.flush();
-		byte[] bytes = baos.toByteArray();
-		byte[] encoded = Base64.encodeBase64(bytes);
-		return new String(encoded, "UTF-8");
+	private class DelSiteButtonSelectionListenerImpl implements SelectionListener {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			ISelection selection = siteListTable.getSelection();
+			if (!selection.isEmpty()) {
+				IStructuredSelection structured = (IStructuredSelection)selection;
+				Map.Entry<String, String> entry = (Map.Entry<String, String>)structured.getFirstElement();
+				if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to delete the site '" + entry.getKey() + "'?")) {
+					siteMap.remove(entry.getKey());
+					OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+					config.setDocsSiteMap(siteMap);
+					Activator.getDefault().storePreferences(config);
+					loadSites();
+				}
+			}
+		}
+		
 	}
-	
-	private Map<String, String> decodeSiteMap(String encodeSiteMap) throws IOException, ClassNotFoundException {
-		byte[] bytes = encodeSiteMap.getBytes("UTF-8");
-		byte[] decoded = Base64.decodeBase64(bytes);
-		ByteArrayInputStream bais = new ByteArrayInputStream(decoded);
-		ObjectInputStream in = new ObjectInputStream(bais);
-		return (Map<String, String>)in.readObject();
-	}
-	
+
 }
