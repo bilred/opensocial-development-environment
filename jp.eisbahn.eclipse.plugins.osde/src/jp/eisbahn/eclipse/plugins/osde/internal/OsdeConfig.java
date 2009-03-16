@@ -17,16 +17,28 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal;
 
+import java.util.Map;
+
 public class OsdeConfig {
 	
 	public static final String DEFAULT_LANGUAGE = "language";
 	public static final String DEFAULT_COUNTRY = "country";
 	public static final String DATABASE_DIR = "database_dir";
+	public static final String DOCS_SITE_MAP = "docs_site_map";
 	
 	private String defaultLanguage;
 	private String defaultCountry;
 	private String databaseDir;
+	private Map<String, String> docsSiteMap;
 	
+	public Map<String, String> getDocsSiteMap() {
+		return docsSiteMap;
+	}
+
+	public void setDocsSiteMap(Map<String, String> docsSiteMap) {
+		this.docsSiteMap = docsSiteMap;
+	}
+
 	public String getDatabaseDir() {
 		return databaseDir;
 	}

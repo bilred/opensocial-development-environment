@@ -17,14 +17,17 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
@@ -38,16 +41,17 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
@@ -112,6 +116,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		savePluginPreferences();
 		session.close();
 		sessionFactory.close();
 		personService = null;
@@ -136,8 +141,8 @@ public class Activator extends AbstractUIPlugin {
 				file.delete();
 			}
 		}
-		plugin = null;
 		disposeColors();
+		plugin = null;
 		super.stop(context);
 	}
 	
@@ -357,31 +362,55 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public OsdeConfig getOsdeConfiguration() {
-		IPreferenceStore store = getPreferenceStore();
-		OsdeConfig config = new OsdeConfig();
-		config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
-		config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
-		config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
-		return config;
+		try {
+			Preferences store = getPluginPreferences();
+			OsdeConfig config = new OsdeConfig();
+			config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
+			config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
+			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
+			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
+			return config;
+		} catch(IOException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		}
 	}
 	
 	public void storePreferences(OsdeConfig config) {
-		storePreferences(getPreferenceStore(), config);
+		storePreferences(getPluginPreferences(), config);
 	}
 	
 	public OsdeConfig getDefaultOsdeConfiguration() {
-		IPreferenceStore store = getPreferenceStore();
-		OsdeConfig config = new OsdeConfig();
-		config.setDefaultCountry(store.getDefaultString(OsdeConfig.DEFAULT_COUNTRY));
-		config.setDefaultLanguage(store.getDefaultString(OsdeConfig.DEFAULT_LANGUAGE));
-		config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
-		return config;
+		try {
+			Preferences store = getPluginPreferences();
+			OsdeConfig config = new OsdeConfig();
+			config.setDefaultCountry(store.getDefaultString(OsdeConfig.DEFAULT_COUNTRY));
+			config.setDefaultLanguage(store.getDefaultString(OsdeConfig.DEFAULT_LANGUAGE));
+			config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
+			config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
+			return config;
+		} catch(IOException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		}
 	}
 
-	public void storePreferences(IPreferenceStore store, OsdeConfig config) {
-		store.setValue(OsdeConfig.DEFAULT_COUNTRY, config.getDefaultCountry());
-		store.setValue(OsdeConfig.DEFAULT_LANGUAGE, config.getDefaultLanguage());
-		store.setValue(OsdeConfig.DATABASE_DIR, config.getDatabaseDir());
+	public void storePreferences(Preferences store, OsdeConfig config) {
+		try {
+			store.setValue(OsdeConfig.DEFAULT_COUNTRY, config.getDefaultCountry());
+			store.setValue(OsdeConfig.DEFAULT_LANGUAGE, config.getDefaultLanguage());
+			store.setValue(OsdeConfig.DATABASE_DIR, config.getDatabaseDir());
+			store.setValue(OsdeConfig.DOCS_SITE_MAP, encodeSiteMap(config.getDocsSiteMap()));
+		} catch(IOException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		}
 	}
 
 	public LaunchApplicationInformation getLastApplicationInformation() {
@@ -390,6 +419,28 @@ public class Activator extends AbstractUIPlugin {
 
 	public void setLastApplicationInformation(LaunchApplicationInformation lastApplicationInformation) {
 		this.lastApplicationInformation = lastApplicationInformation;
+	}
+	
+	private String encodeSiteMap(Map<String, String> siteMap) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream out = new ObjectOutputStream(baos);
+		out.writeObject(siteMap);
+		out.flush();
+		byte[] bytes = baos.toByteArray();
+		byte[] encoded = Base64.encodeBase64(bytes);
+		return new String(encoded, "UTF-8");
+	}
+	
+	private Map<String, String> decodeSiteMap(String encodeSiteMap) throws IOException, ClassNotFoundException {
+		if (encodeSiteMap != null && encodeSiteMap.length() > 0) {
+			byte[] bytes = encodeSiteMap.getBytes("UTF-8");
+			byte[] decoded = Base64.decodeBase64(bytes);
+			ByteArrayInputStream bais = new ByteArrayInputStream(decoded);
+			ObjectInputStream in = new ObjectInputStream(bais);
+			return (Map<String, String>)in.readObject();
+		} else {
+			return null;
+		}
 	}
 	
 }
