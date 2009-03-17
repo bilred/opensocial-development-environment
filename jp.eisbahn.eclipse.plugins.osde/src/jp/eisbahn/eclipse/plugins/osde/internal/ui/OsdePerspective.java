@@ -19,6 +19,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.docs.DocumentView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 
@@ -39,6 +40,7 @@ public class OsdePerspective implements IPerspectiveFactory {
 		bottom.addView(PersonView.ID);
 		bottom.addView(ActivitiesView.ID);
 		bottom.addView(AppDataView.ID);
+		bottom.addView(DocumentView.ID);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		//
 		IFolderLayout leftBottom = factory.createFolder("leftBottom", IPageLayout.BOTTOM, 0.6f, "left");
@@ -61,6 +63,8 @@ public class OsdePerspective implements IPerspectiveFactory {
 		factory.addShowViewShortcut(PersonView.ID);
 		factory.addShowViewShortcut(ActivitiesView.ID);
 		factory.addShowViewShortcut(AppDataView.ID);
+		factory.addShowViewShortcut(UserPrefsView.ID);
+		factory.addShowViewShortcut(DocumentView.ID);
 		factory.addShowViewShortcut("org.eclipse.team.ccvs.ui.AnnotateView");
 		factory.addShowViewShortcut("org.eclipse.team.ui.GenericHistoryView");
 		factory.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
