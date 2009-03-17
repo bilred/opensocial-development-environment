@@ -14,7 +14,7 @@ public class Main {
       server.setConnectors(new Connector[] {connector});
       //
       ContextDeployer deployer = new ContextDeployer();
-      deployer.setConfigurationDir(System.getProperty("java.io.tmpdir"));
+      deployer.setConfigurationDir(args[2]);
       deployer.setScanInterval(1);
       ContextHandlerCollection contexts = new ContextHandlerCollection();
       server.setHandler(contexts);
