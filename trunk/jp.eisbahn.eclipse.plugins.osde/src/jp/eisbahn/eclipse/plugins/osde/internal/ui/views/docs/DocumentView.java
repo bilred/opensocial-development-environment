@@ -139,12 +139,13 @@ public class DocumentView extends AbstractView {
 		composite.setLayoutData(layoutData);
 		Button addSiteButton = new Button(composite, SWT.PUSH);
 		addSiteButton.setText("Create");
+		addSiteButton.addSelectionListener(new AddSiteButtonSelectionListenerImpl());
 		Button delSiteButton = new Button(composite, SWT.PUSH);
 		delSiteButton.setText("Delete");
 		delSiteButton.addSelectionListener(new DelSiteButtonSelectionListenerImpl());
 		Button defaultSiteButton = new Button(composite, SWT.PUSH);
 		defaultSiteButton.setText("Default");
-//		defaultSiteButton.addSelectionListener(new DefaultSiteButtonSelectionListenerImpl());
+		defaultSiteButton.addSelectionListener(new DefaultSiteButtonSelectionListenerImpl());
 		//
 		loadSites();
 		tabFolder.setSelection(0);
@@ -157,8 +158,7 @@ public class DocumentView extends AbstractView {
 			siteMap = map;
 		} else {
 			siteMap = new LinkedHashMap<String, String>();
-			siteMap.put("OpenSocial API Reference (0.8.1)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v081/opensocial-reference");
-			siteMap.put("Gadgets API Reference (v0.8)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v08/gadgets-reference08");
+			setDefaultSites(siteMap);
 			config.setDocsSiteMap(siteMap);
 			Activator.getDefault().storePreferences(config);
 		}
@@ -211,6 +211,7 @@ public class DocumentView extends AbstractView {
 	}
 
 	private void changeUrl() {
+		browser.setText("<html><head></head><body></body></html>");
 		int idx = sitesCombo.getSelectionIndex();
 		if (idx != -1) {
 			String url = (String)sitesCombo.getData(sitesCombo.getItem(idx));
@@ -219,9 +220,28 @@ public class DocumentView extends AbstractView {
 				return;
 			}
 		}
-		browser.setText("<html><head></head><body></body></html>");
 	}
-	
+
+	private class AddSiteButtonSelectionListenerImpl implements SelectionListener {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			AddSiteDialog dialog = new AddSiteDialog(getSite().getShell());
+			if (dialog.open() == AddSiteDialog.OK) {
+				String name = dialog.getName();
+				String url = dialog.getUrl();
+				siteMap.put(name, url);
+				OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+				config.setDocsSiteMap(siteMap);
+				Activator.getDefault().storePreferences(config);
+				loadSites();
+			}
+		}
+		
+	}
+
 	private class DelSiteButtonSelectionListenerImpl implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -242,6 +262,40 @@ public class DocumentView extends AbstractView {
 			}
 		}
 		
+	}
+
+	private class DefaultSiteButtonSelectionListenerImpl implements SelectionListener {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to add default sites?")) {
+				setDefaultSites(siteMap);
+				OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+				config.setDocsSiteMap(siteMap);
+				Activator.getDefault().storePreferences(config);
+				loadSites();
+			}
+		}
+		
+	}
+	
+	private void setDefaultSites(Map<String, String> siteMap) {
+		siteMap.put("OpenSocial API Reference (0.8.1)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v081/opensocial-reference");
+		siteMap.put("Gadgets API Reference (v0.8)", "http://www.opensocial.org/Technical-Resources/opensocial-spec-v08/gadgets-reference08");
+		siteMap.put("OpenSocial API Blog", "http://blog.opensocial.org/");
+		siteMap.put("orkut Developer Blog", "http://orkutdeveloper.blogspot.com/");
+		siteMap.put("Blog - MySpace Developer Platform", "http://developer.myspace.com/community/blogs/");
+		siteMap.put("Blog - hi5 developer platform", "http://www.hi5networks.com/developer/newsblog.html");
+		siteMap.put("iGoogle Developer Blog", "http://igoogledeveloper.blogspot.com/");
+		siteMap.put("OpenSocial - Google Code", "http://code.google.com/apis/opensocial/");
+		siteMap.put("Orkut Developer Home", "http://code.google.com/apis/orkut/");
+		siteMap.put("MySpace Developer Platform", "http://developer.myspace.com/community/");
+		siteMap.put("hi5 developer platform", "http://www.hi5networks.com/developer/");
+		siteMap.put("iGoogle Developer Home", "http://code.google.com/apis/igoogle/");
+		siteMap.put("OpenSocial Java Client Library - Google code", "http://code.google.com/p/opensocial-java-client/");
+		siteMap.put("OpenSocial Development Environment - Google Code", "http://code.google.com/p/opensocial-development-environment/");
 	}
 
 }
