@@ -48,6 +48,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 	private Combo languages;
 	private Combo countries;
 	private Text databaseDirText;
+	private Text jettyDirText;
 
 	public OsdePreferencePage() {
 		super();
@@ -89,13 +90,13 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		createSeparator(composite);
 		//
 		group = new Group(composite, SWT.NONE);
-		group.setText("Shindig database");
+		group.setText("Directory settings");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayoutData(layoutData);
 		group.setLayout(new GridLayout(3, false));
 		//
 		Label databaseDirLabel = new Label(group, SWT.NONE);
-		databaseDirLabel.setText("Database directory:");
+		databaseDirLabel.setText("Shindig Database directory:");
 		databaseDirText = new Text(group, SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		databaseDirText.setLayoutData(layoutData);
@@ -114,6 +115,33 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 				}
 			}
 		});
+		//
+		Label jettyDirLabel = new Label(group, SWT.NONE);
+		jettyDirLabel.setText("Jetty context directory:");
+		jettyDirText = new Text(group, SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		jettyDirText.setLayoutData(layoutData);
+		browseButton = new Button(group, SWT.PUSH);
+		browseButton.setText("Browse...");
+		browseButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog dialog = new DirectoryDialog(getShell());
+				dialog.setText("Context directory");
+				dialog.setMessage("Please select the directory to store the Jetty context files.");
+				String dir = dialog.open();
+				if (dir != null) {
+					jettyDirText.setText(dir);
+				}
+			}
+		});
+		//
+		Label noticeLabel = new Label(group, SWT.NONE);
+		noticeLabel.setText("You need to restart Eclipse when this setting is changed.");
+		layoutData = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		layoutData.horizontalSpan = 3;
+		noticeLabel.setLayoutData(layoutData);
 		//
 		createSeparator(composite);
 		//
@@ -165,6 +193,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		String language = languages.getItem(languages.getSelectionIndex());
 		config.setDefaultLanguage(language.substring(language.indexOf('(') + 1, language.length() - 1));
 		config.setDatabaseDir(databaseDirText.getText());
+		config.setJettyDir(jettyDirText.getText());
 		Activator.getDefault().storePreferences(config);
 	}
 	
@@ -194,6 +223,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 			}
 		}
 		databaseDirText.setText(config.getDatabaseDir());
+		jettyDirText.setText(config.getJettyDir());
 	}
 
 }

@@ -134,7 +134,7 @@ public class Activator extends AbstractUIPlugin {
 		}
 		(new ShindigLaunchConfigurationCreator()).delete(getStatusMonitor());
 		(new DatabaseLaunchConfigurationCreator()).delete(getStatusMonitor());
-		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		File tmpDir = new File(getOsdeConfiguration().getJettyDir());
 		File[] files = tmpDir.listFiles();
 		for (File file : files) {
 			if (file.getName().startsWith("osde_context_")) {
@@ -369,6 +369,7 @@ public class Activator extends AbstractUIPlugin {
 			config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
 			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
 			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
+			config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
 			return config;
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -391,6 +392,7 @@ public class Activator extends AbstractUIPlugin {
 			config.setDefaultLanguage(store.getDefaultString(OsdeConfig.DEFAULT_LANGUAGE));
 			config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
 			config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
+			config.setJettyDir(store.getDefaultString(OsdeConfig.JETTY_DIR));
 			return config;
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -407,6 +409,7 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(OsdeConfig.DEFAULT_LANGUAGE, config.getDefaultLanguage());
 			store.setValue(OsdeConfig.DATABASE_DIR, config.getDatabaseDir());
 			store.setValue(OsdeConfig.DOCS_SITE_MAP, encodeSiteMap(config.getDocsSiteMap()));
+			store.setValue(OsdeConfig.JETTY_DIR, config.getJettyDir());
 		} catch(IOException e) {
 			e.printStackTrace();
 			throw new IllegalStateException(e);

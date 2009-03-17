@@ -20,6 +20,7 @@ public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 		node.put(OsdeConfig.DEFAULT_LANGUAGE, locale.getLanguage());
 		node.put(OsdeConfig.DATABASE_DIR, System.getProperty("java.io.tmpdir"));
 		node.put(OsdeConfig.DOCS_SITE_MAP, "");
+		node.put(OsdeConfig.JETTY_DIR, System.getProperty("java.io.tmpdir"));
 	}
 
 }
