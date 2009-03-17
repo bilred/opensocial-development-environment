@@ -25,12 +25,22 @@ public class OsdeConfig {
 	public static final String DEFAULT_COUNTRY = "country";
 	public static final String DATABASE_DIR = "database_dir";
 	public static final String DOCS_SITE_MAP = "docs_site_map";
+	public static final String JETTY_DIR = "jetty_dir";
 	
 	private String defaultLanguage;
 	private String defaultCountry;
 	private String databaseDir;
 	private Map<String, String> docsSiteMap;
+	private String jettyDir;
 	
+	public String getJettyDir() {
+		return jettyDir;
+	}
+
+	public void setJettyDir(String jettyDir) {
+		this.jettyDir = jettyDir;
+	}
+
 	public Map<String, String> getDocsSiteMap() {
 		return docsSiteMap;
 	}
