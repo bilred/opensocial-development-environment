@@ -44,6 +44,7 @@ public class OsdePerspective implements IPerspectiveFactory {
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		//
 		IFolderLayout leftBottom = factory.createFolder("leftBottom", IPageLayout.BOTTOM, 0.6f, "left");
+		leftBottom.addView(IPageLayout.ID_OUTLINE);
 		leftBottom.addView(UserPrefsView.ID);
 		//
 		factory.addPerspectiveShortcut("org.eclipse.ui.resourcePerspective");
