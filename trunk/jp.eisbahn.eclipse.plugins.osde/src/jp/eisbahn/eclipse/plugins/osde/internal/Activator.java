@@ -202,6 +202,12 @@ public class Activator extends AbstractUIPlugin {
 		registIcon(registry, "icons/16-em-cross.gif");
 		registIcon(registry, "icons/icon_home.gif");
 		registIcon(registry, "icons/list_settings.gif");
+		registIcon(registry, "icons/opensocial.gif");
+		registIcon(registry, "icons/i_require.gif");
+		registIcon(registry, "icons/i_optional.gif");
+		registIcon(registry, "icons/i_param.gif");
+		registIcon(registry, "icons/i_icon.gif");
+		registIcon(registry, "icons/i_enumvalue.gif");
 	}
 	
     public ImageDescriptor registIcon(ImageRegistry registry, String iconPath) {
