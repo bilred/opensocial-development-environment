@@ -2,7 +2,7 @@
 <feature
       id="jp.eisbahn.eclipse.features.osde"
       label="OpenSocial Development Environment Feature"
-      version="0.2.3"
+      version="0.2.4"
       provider-name="Yoichiro Tanaka"
       plugin="jp.eisbahn.eclipse.plugins.osde">
 
@@ -811,6 +811,7 @@ for NSIS, however, are subject to the terms of the Common Public License version
       <import plugin="org.eclipse.jdt.core" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jdt.ui" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.wst.sse.ui" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.views" version="3.3.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
