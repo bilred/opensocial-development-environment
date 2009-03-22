@@ -1,5 +1,16 @@
 = Change log =
 
+=== Mar 22, 2009 ===
+ Version 0.2.4 has been released.
+
+ * Allow you to specify a file name of Gadget spec XML file and JavaScript files at creating on a new project.
+ * Adding Docs view. Using this view, you can visit sites (API references, blogs, project home pages, and so on) regarding OpenSocial in your Eclipse.
+ * Allow you to change a context directory for Jetty on OSDE's preference page.
+ * Provide an Outline view for Gadget XML editor. By using this view, you can jump a place of a specified element in Gadget spec file on Gadget XML Editor directly.
+ * Fixed the issue which a launching Apache Shindig failed in the case of the database directory path which ends with '¥' character.
+
+ You can see more details: [http://code.google.com/p/opensocial-development-environment/issues/list?can=1&q=label%3AMilestone-Release0.2.4 Milestone-Release0.2.4]
+
 === Mar 4, 2009 ===
  Version 0.2.3 has been released.
 
