@@ -18,6 +18,8 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -213,19 +215,28 @@ public class GadgetXmlEditor extends FormEditor {
 		setActivePage(4);
 		IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
 		String content = document.get();
-		char[] chars = content.toCharArray();
-		int cnt = 0;
-		int pos = 0;
-		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == '\n') {
-				cnt++;
-				if (cnt == lineNumber) {
-					pos = i;
-					break;
-				}
-			}
+		Map<Integer, Integer> lineInfoMap = getLineInformation(content);
+		Integer pos = lineInfoMap.get(lineNumber);
+		if (pos == null) {
+			pos = 0;
 		}
 		sourceEditor.selectAndReveal(pos, 0);
+	}
+	
+	private Map<Integer, Integer> getLineInformation(String content) {
+		Map<Integer, Integer> resultMap = new HashMap<Integer, Integer>();
+		char[] chars = content.toCharArray();
+		int lineStart = 0;
+		int lineNumber = 0;
+		for (int i = 0; i < chars.length; i++) {
+			if (chars[i] == '\n') {
+				lineNumber++;
+				resultMap.put(lineNumber, lineStart);
+				lineStart = i + 1;
+			}
+		}
+		resultMap.put(lineNumber++, lineStart);
+		return resultMap;
 	}
 
 }
