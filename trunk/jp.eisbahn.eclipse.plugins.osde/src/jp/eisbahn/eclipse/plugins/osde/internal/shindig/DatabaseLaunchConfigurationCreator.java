@@ -91,6 +91,9 @@ public class DatabaseLaunchConfigurationCreator {
 			String args = "-tcp -tcpAllowOthers";
 			String databaseDir = config.getDatabaseDir();
 			if (StringUtils.isNotEmpty(databaseDir)) {
+				if (databaseDir.endsWith("\\")) {
+					databaseDir = databaseDir.substring(0, databaseDir.length() - 1);
+				}
 				args += " -baseDir \"" + databaseDir + "\"";
 			}
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
