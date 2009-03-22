@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OpenSocial Development Environment Plug-in
 Bundle-SymbolicName: jp.eisbahn.eclipse.plugins.osde;singleton:=true
-Bundle-Version: 0.2.3
+Bundle-Version: 0.2.4
 Bundle-Activator: jp.eisbahn.eclipse.plugins.osde.internal.Activator
 Bundle-Vendor: Yoichiro Tanaka
 Require-Bundle: org.eclipse.ui,
