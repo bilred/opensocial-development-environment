@@ -147,6 +147,19 @@ public class ShindigLauncher {
 					code = code.replace("$username$", config.getExternalDatabaseUsername());
 					code = code.replace("$password$", config.getExternalDatabasePassword());
 					code = code.replace("$dialect$", "MySQL");
+				} else if (config.getExternalDatabaseType().equals("Oracle")) {
+					code = code.replace("$driver_class$", "oracle.jdbc.driver.OracleDriver");
+					String url = "jdbc:oracle:thin:@";
+					url += config.getExternalDatabaseHost();
+					String port = config.getExternalDatabasePort();
+					if (StringUtils.isNotEmpty(port)) {
+						url += ":" + port;
+					}
+					url += ":" + config.getExternalDatabaseName();
+					code = code.replace("$url$", url);
+					code = code.replace("$username$", config.getExternalDatabaseUsername());
+					code = code.replace("$password$", config.getExternalDatabasePassword());
+					code = code.replace("$dialect$", "Oracle");
 				}
 			}
 			File file = new File(HibernateUtils.configFileDir, HibernateUtils.configFileName);
