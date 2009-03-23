@@ -44,11 +44,20 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class OsdePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-
+	
 	private Combo languages;
 	private Combo countries;
 	private Text databaseDirText;
 	private Text jettyDirText;
+	private Button internalDatabaseRadio;
+	private Button externalDatabaseRadio;
+	private Combo databaseTypeCombo;
+	private Text hostText;
+	private Text portText;
+	private Text usernameText;
+	private Text passwordText;
+	private Button databaseBrowseButton;
+	private Text nameText;
 
 	public OsdePreferencePage() {
 		super();
@@ -87,43 +96,21 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		countries.setLayoutData(layoutData);
 		//
-		createSeparator(composite);
 		//
 		group = new Group(composite, SWT.NONE);
-		group.setText("Directory settings");
+		group.setText("Web server settings");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayoutData(layoutData);
 		group.setLayout(new GridLayout(3, false));
-		//
-		Label databaseDirLabel = new Label(group, SWT.NONE);
-		databaseDirLabel.setText("Shindig Database directory:");
-		databaseDirText = new Text(group, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		databaseDirText.setLayoutData(layoutData);
-		Button browseButton = new Button(group, SWT.PUSH);
-		browseButton.setText("Browse...");
-		browseButton.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				DirectoryDialog dialog = new DirectoryDialog(getShell());
-				dialog.setText("Database directory");
-				dialog.setMessage("Please select the directory to store the Shindig database files.");
-				String dir = dialog.open();
-				if (dir != null) {
-					databaseDirText.setText(dir);
-				}
-			}
-		});
 		//
 		Label jettyDirLabel = new Label(group, SWT.NONE);
 		jettyDirLabel.setText("Jetty context directory:");
 		jettyDirText = new Text(group, SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		jettyDirText.setLayoutData(layoutData);
-		browseButton = new Button(group, SWT.PUSH);
-		browseButton.setText("Browse...");
-		browseButton.addSelectionListener(new SelectionListener() {
+		Button jettyBrowseButton = new Button(group, SWT.PUSH);
+		jettyBrowseButton.setText("Browse...");
+		jettyBrowseButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 			public void widgetSelected(SelectionEvent e) {
@@ -143,17 +130,107 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		layoutData.horizontalSpan = 3;
 		noticeLabel.setLayoutData(layoutData);
 		//
+		//
+		group = new Group(composite, SWT.NONE);
+		group.setText("Database settings");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		group.setLayoutData(layoutData);
+		GridLayout layout = new GridLayout(1, false);
+		layout.verticalSpacing = 2;
+		group.setLayout(layout);
+		//
+		internalDatabaseRadio = new Button(group, SWT.RADIO);
+		internalDatabaseRadio.setText("Use the internal H2 Database.");
+		internalDatabaseRadio.addSelectionListener(new DatabaseRadioSelectionListener());
+		//
+		Composite internalDatabasePanel = new Composite(group, SWT.NONE);
+		layout = new GridLayout(3, false);
+		layout.verticalSpacing = 2;
+		internalDatabasePanel.setLayout(layout);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalIndent = 20;
+		internalDatabasePanel.setLayoutData(layoutData);
+		//
+		Label databaseDirLabel = new Label(internalDatabasePanel, SWT.NONE);
+		databaseDirLabel.setText("Shindig Database directory:");
+		databaseDirText = new Text(internalDatabasePanel, SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		databaseDirText.setLayoutData(layoutData);
+		databaseBrowseButton = new Button(internalDatabasePanel, SWT.PUSH);
+		databaseBrowseButton.setText("Browse...");
+		databaseBrowseButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog dialog = new DirectoryDialog(getShell());
+				dialog.setText("Database directory");
+				dialog.setMessage("Please select the directory to store the Shindig database files.");
+				String dir = dialog.open();
+				if (dir != null) {
+					databaseDirText.setText(dir);
+				}
+			}
+		});
+		//
+		externalDatabaseRadio = new Button(group, SWT.RADIO);
+		externalDatabaseRadio.setText("Use the external database.");
+		externalDatabaseRadio.addSelectionListener(new DatabaseRadioSelectionListener());
+		//
+		Composite externalDatabasePanel = new Composite(group, SWT.NONE);
+		layout = new GridLayout(4, false);
+		layout.verticalSpacing = 2;
+		externalDatabasePanel.setLayout(layout);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalIndent = 20;
+		externalDatabasePanel.setLayoutData(layoutData);
+		//
+		Label typeLabel = new Label(externalDatabasePanel, SWT.NONE);
+		typeLabel.setText("Database type:");
+		databaseTypeCombo = new Combo(externalDatabasePanel, SWT.READ_ONLY);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		databaseTypeCombo.setLayoutData(layoutData);
+		databaseTypeCombo.add("MySQL");
+		databaseTypeCombo.select(0);
+		//
+		Label nameLabel = new Label(externalDatabasePanel, SWT.NONE);
+		nameLabel.setText("Database name:");
+		nameText = new Text(externalDatabasePanel, SWT.SINGLE | SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		nameText.setLayoutData(layoutData);
+		//
+		Label hostLabel = new Label(externalDatabasePanel, SWT.NONE);
+		hostLabel.setText("Host name:");
+		hostText = new Text(externalDatabasePanel, SWT.SINGLE | SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		hostText.setLayoutData(layoutData);
+		//
+		Label portLabel = new Label(externalDatabasePanel, SWT.NONE);
+		portLabel.setText("Port number:");
+		portText = new Text(externalDatabasePanel, SWT.SINGLE | SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		portText.setLayoutData(layoutData);
+		//
+		Label usernameLabel = new Label(externalDatabasePanel, SWT.NONE);
+		usernameLabel.setText("User name:");
+		usernameText = new Text(externalDatabasePanel, SWT.SINGLE | SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		usernameText.setLayoutData(layoutData);
+		//
+		Label passwordLabel = new Label(externalDatabasePanel, SWT.NONE);
+		passwordLabel.setText("Password:");
+		passwordText = new Text(externalDatabasePanel, SWT.SINGLE | SWT.BORDER);
+		passwordText.setEchoChar('*');
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		passwordText.setLayoutData(layoutData);
+		//
+		//
 		createSeparator(composite);
 		//
 		Activator activator = Activator.getDefault();
-		String version = (String)activator.getBundle().getHeaders().get(
-				org.osgi.framework.Constants.BUNDLE_VERSION);
-		String name = (String)activator.getBundle().getHeaders().get(
-				org.osgi.framework.Constants.BUNDLE_NAME);
+		String version = (String)activator.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
+		String name = (String)activator.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_NAME);
 		Label label = new Label(composite, SWT.NONE);
-		label.setText(name);
-		label = new Label(composite, SWT.NONE);
-		label.setText("Version " + version);
+		label.setText(name + " Version " + version);
 		//
 		initializeValues();
 		//
@@ -194,6 +271,13 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		config.setDefaultLanguage(language.substring(language.indexOf('(') + 1, language.length() - 1));
 		config.setDatabaseDir(databaseDirText.getText());
 		config.setJettyDir(jettyDirText.getText());
+		config.setUseInternalDatabase(internalDatabaseRadio.getSelection());
+		config.setExternalDatabaseHost(hostText.getText());
+		config.setExternalDatabasePassword(passwordText.getText());
+		config.setExternalDatabasePort(portText.getText());
+		config.setExternalDatabaseUsername(usernameText.getText());
+		config.setExternalDatabaseType(databaseTypeCombo.getText());
+		config.setExternalDatabaseName(nameText.getText());
 		Activator.getDefault().storePreferences(config);
 	}
 	
@@ -224,6 +308,43 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		}
 		databaseDirText.setText(config.getDatabaseDir());
 		jettyDirText.setText(config.getJettyDir());
+		internalDatabaseRadio.setSelection(config.isUseInternalDatabase());
+		externalDatabaseRadio.setSelection(!config.isUseInternalDatabase());
+		for (int i = 0; i < databaseTypeCombo.getItemCount(); i++) {
+			if (databaseTypeCombo.getItem(i).equals(config.getExternalDatabaseType())) {
+				databaseTypeCombo.select(i);
+				break;
+			}
+		}
+		hostText.setText(config.getExternalDatabaseHost());
+		portText.setText(config.getExternalDatabasePort());
+		usernameText.setText(config.getExternalDatabaseUsername());
+		passwordText.setText(config.getExternalDatabasePassword());
+		nameText.setText(config.getExternalDatabaseName());
+		//
+		changeDatabaseControlEnabled();
+	}
+	
+	private class DatabaseRadioSelectionListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			changeDatabaseControlEnabled();
+		}
+
 	}
 
+	private void changeDatabaseControlEnabled() {
+		boolean selection = internalDatabaseRadio.getSelection();
+		databaseDirText.setEnabled(selection);
+		databaseBrowseButton.setEnabled(selection);
+		hostText.setEnabled(!selection);
+		portText.setEnabled(!selection);
+		usernameText.setEnabled(!selection);
+		passwordText.setEnabled(!selection);
+		databaseTypeCombo.setEnabled(!selection);
+		nameText.setEnabled(!selection);
+	}
+	
 }

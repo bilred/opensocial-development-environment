@@ -26,13 +26,83 @@ public class OsdeConfig {
 	public static final String DATABASE_DIR = "database_dir";
 	public static final String DOCS_SITE_MAP = "docs_site_map";
 	public static final String JETTY_DIR = "jetty_dir";
+	public static final String USE_INTERNAL_DATABASE = "use_internal_database";
+	public static final String EXTERNAL_DATABASE_TYPE = "external_database_type";
+	public static final String EXTERNAL_DATABASE_HOST = "external_database_host";
+	public static final String EXTERNAL_DATABASE_PORT = "external_database_port";
+	public static final String EXTERNAL_DATABASE_USERNAME = "external_database_username";
+	public static final String EXTERNAL_DATABASE_PASSWORD = "external_database_password";
+	public static final String EXTERNAL_DATABASE_NAME = "external_database_name";
 	
 	private String defaultLanguage;
 	private String defaultCountry;
 	private String databaseDir;
 	private Map<String, String> docsSiteMap;
 	private String jettyDir;
+	private boolean useInternalDatabase;
+	private String externalDatabaseType;
+	private String externalDatabaseHost;
+	private String externalDatabasePort;
+	private String externalDatabaseUsername;
+	private String externalDatabasePassword;
+	private String externalDatabaseName;
 	
+	public String getExternalDatabaseName() {
+		return externalDatabaseName;
+	}
+
+	public void setExternalDatabaseName(String externalDatabaseName) {
+		this.externalDatabaseName = externalDatabaseName;
+	}
+
+	public boolean isUseInternalDatabase() {
+		return useInternalDatabase;
+	}
+
+	public void setUseInternalDatabase(boolean useInternalDatabase) {
+		this.useInternalDatabase = useInternalDatabase;
+	}
+
+	public String getExternalDatabaseType() {
+		return externalDatabaseType;
+	}
+
+	public void setExternalDatabaseType(String externalDatabaseType) {
+		this.externalDatabaseType = externalDatabaseType;
+	}
+
+	public String getExternalDatabaseHost() {
+		return externalDatabaseHost;
+	}
+
+	public void setExternalDatabaseHost(String externalDatabaseHost) {
+		this.externalDatabaseHost = externalDatabaseHost;
+	}
+
+	public String getExternalDatabasePort() {
+		return externalDatabasePort;
+	}
+
+	public void setExternalDatabasePort(String externalDatabasePort) {
+		this.externalDatabasePort = externalDatabasePort;
+	}
+
+	public String getExternalDatabaseUsername() {
+		return externalDatabaseUsername;
+	}
+
+	public void setExternalDatabaseUsername(String externalDatabaseUsername) {
+		this.externalDatabaseUsername = externalDatabaseUsername;
+	}
+
+	public String getExternalDatabasePassword() {
+		return externalDatabasePassword;
+	}
+
+	public void setExternalDatabasePassword(String externalDatabasePassword) {
+		this.externalDatabasePassword = externalDatabasePassword;
+	}
+
 	public String getJettyDir() {
 		return jettyDir;
 	}
