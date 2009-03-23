@@ -42,6 +42,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -52,6 +53,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
@@ -64,6 +66,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.hibernate.HibernateException;
+import org.hibernate.JDBCException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
@@ -137,7 +141,7 @@ public class Activator extends AbstractUIPlugin {
 		File tmpDir = new File(getOsdeConfiguration().getJettyDir());
 		File[] files = tmpDir.listFiles();
 		for (File file : files) {
-			if (file.getName().startsWith("osde_context_")) {
+			if (file.getName().startsWith("osde_")) {
 				file.delete();
 			}
 		}
@@ -289,7 +293,8 @@ public class Activator extends AbstractUIPlugin {
 			protected IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask("Connect to Shindig database.", 4);
 				monitor.subTask("Building Hibernate SessionFactory.");
-				Configuration configure = new AnnotationConfiguration().configure();
+				File configFile = new File(HibernateUtils.configFileDir, HibernateUtils.configFileName);
+				Configuration configure = new AnnotationConfiguration().configure(configFile);
 				sessionFactory = configure.buildSessionFactory();
 				monitor.worked(1);
 				monitor.subTask("Opening Hibernate session.");
@@ -316,6 +321,13 @@ public class Activator extends AbstractUIPlugin {
 						} catch (PartInitException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+						} catch(JDBCException e) {
+							MessageDialog.openError(
+									window.getShell(), "Error",
+									"Database connection failed.\n  Cause: " + e.getErrorCode() + ": " + e.getSQLException().getMessage());
+						} catch(HibernateException e) {
+							MessageDialog.openError(
+									window.getShell(), "Error", "Database connection failed.\n  Cause: " + e.getMessage());
 						}
 					}
 				});
@@ -376,6 +388,13 @@ public class Activator extends AbstractUIPlugin {
 			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
 			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
 			config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
+			config.setUseInternalDatabase(store.getBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
+			config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
+			config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
+			config.setExternalDatabasePort(store.getString(OsdeConfig.EXTERNAL_DATABASE_PORT));
+			config.setExternalDatabaseUsername(store.getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+			config.setExternalDatabasePassword(store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
 			return config;
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -399,6 +418,13 @@ public class Activator extends AbstractUIPlugin {
 			config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
 			config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
 			config.setJettyDir(store.getDefaultString(OsdeConfig.JETTY_DIR));
+			config.setUseInternalDatabase(store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
+			config.setExternalDatabaseType(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
+			config.setExternalDatabaseHost(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
+			config.setExternalDatabasePort(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PORT));
+			config.setExternalDatabaseUsername(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+			config.setExternalDatabasePassword(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+			config.setExternalDatabaseName(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
 			return config;
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -416,6 +442,13 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(OsdeConfig.DATABASE_DIR, config.getDatabaseDir());
 			store.setValue(OsdeConfig.DOCS_SITE_MAP, encodeSiteMap(config.getDocsSiteMap()));
 			store.setValue(OsdeConfig.JETTY_DIR, config.getJettyDir());
+			store.setValue(OsdeConfig.USE_INTERNAL_DATABASE, config.isUseInternalDatabase());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_HOST, config.getExternalDatabaseHost());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_PORT, config.getExternalDatabasePort());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_USERNAME, config.getExternalDatabaseUsername());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, config.getExternalDatabasePassword());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_TYPE, config.getExternalDatabaseType());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_NAME, config.getExternalDatabaseName());
 		} catch(IOException e) {
 			e.printStackTrace();
 			throw new IllegalStateException(e);
