@@ -190,6 +190,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		databaseTypeCombo.setLayoutData(layoutData);
 		databaseTypeCombo.add("MySQL");
+		databaseTypeCombo.add("Oracle");
 		databaseTypeCombo.select(0);
 		//
 		Label nameLabel = new Label(externalDatabasePanel, SWT.NONE);
