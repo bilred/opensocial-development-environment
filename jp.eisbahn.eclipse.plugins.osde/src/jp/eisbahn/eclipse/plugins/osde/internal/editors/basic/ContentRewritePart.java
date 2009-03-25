@@ -45,10 +45,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.GadgetFeatureType;
+import com.google.gadgets.Param;
 import com.google.gadgets.Module;
 import com.google.gadgets.ObjectFactory;
-import com.google.gadgets.GadgetFeatureType.Param;
+import com.google.gadgets.Param.Param;
 import com.google.gadgets.Module.ModulePrefs;
 
 public class ContentRewritePart extends AbstractFormPart {
@@ -125,8 +125,8 @@ public class ContentRewritePart extends AbstractFormPart {
 		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
 		for (JAXBElement<?> element : elements) {
 			Object value = element.getValue();
-			if (value instanceof GadgetFeatureType) {
-				GadgetFeatureType type = (GadgetFeatureType)value;
+			if (value instanceof Param) {
+				Param type = (Param)value;
 				QName name = element.getName();
 				String featureRealName = type.getFeature();
 				if (name.toString().equals("Optional") && featureRealName.equals("content-rewrite")) {
@@ -209,7 +209,7 @@ public class ContentRewritePart extends AbstractFormPart {
 			elements.remove(contentRewriteNode);
 		}
 		if (useButton.getSelection()) {
-			GadgetFeatureType type = objectFactory.createGadgetFeatureType();
+			Param type = objectFactory.createGadgetFeatureType();
 			type.setFeature("content-rewrite");
 			List<Param> params = type.getParam();
 			String includeUrls = includeUrlsText.getText();
@@ -237,7 +237,7 @@ public class ContentRewritePart extends AbstractFormPart {
 			param.setName("expires");
 			param.setValue(String.valueOf(expiresSpinner.getSelection()));
 			params.add(param);
-			JAXBElement<GadgetFeatureType> optional = objectFactory.createModuleModulePrefsOptional(type);
+			JAXBElement<Param> optional = objectFactory.createModuleModulePrefsOptional(type);
 			elements.add(optional);
 		}
 	}
@@ -245,9 +245,9 @@ public class ContentRewritePart extends AbstractFormPart {
 	private JAXBElement<?> getContentRewriteNode(List<JAXBElement<?>> elements) {
 		for (JAXBElement<?> element : elements) {
 			Object value = element.getValue();
-			if ((value instanceof GadgetFeatureType)
+			if ((value instanceof Param)
 					&& (element.getName().toString().equals("Optional"))
-					&& ((GadgetFeatureType)value).getFeature().equals("content-rewrite")) {
+					&& ((Param)value).getFeature().equals("content-rewrite")) {
 				return element;
 			}
 		}
