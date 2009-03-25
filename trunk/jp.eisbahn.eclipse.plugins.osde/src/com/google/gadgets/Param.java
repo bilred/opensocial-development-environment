@@ -17,42 +17,26 @@
  */
 package com.google.gadgets;
 
-public class OAuthResourceType {
+
+public class Param {
 	
-	protected String url;
-	protected String method;
-	protected String paramLocation;
+	protected String value;
+	protected String name;
 	
-	public String getUrl() {
-		return url;
+	public String getValue() {
+		return value;
 	}
 	
-	public void setUrl(String url) {
-		this.url = url;
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
-	public String getMethod() {
-		if (method == null) {
-			return "GET";
-		} else {
-			return method;
-		}
+	public String getName() {
+		return name;
 	}
 	
-	public void setMethod(String method) {
-		this.method = method;
-	}
-	
-	public String getParamLocation() {
-		if (paramLocation == null) {
-			return "auth-header";
-		} else {
-			return paramLocation;
-		}
-	}
-	
-	public void setParamLocation(String paramLocation) {
-		this.paramLocation = paramLocation;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

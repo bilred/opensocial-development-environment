@@ -41,7 +41,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.FeatureName;
-import com.google.gadgets.GadgetFeatureType;
+import com.google.gadgets.Param;
 import com.google.gadgets.Module;
 import com.google.gadgets.ObjectFactory;
 import com.google.gadgets.Module.ModulePrefs;
@@ -89,8 +89,8 @@ public class FeaturesPart extends AbstractFormPart {
 		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
 		for (JAXBElement<?> element : elements) {
 			Object value = element.getValue();
-			if (value instanceof GadgetFeatureType) {
-				GadgetFeatureType type = (GadgetFeatureType)value;
+			if (value instanceof Param) {
+				Param type = (Param)value;
 				String featureRealName = type.getFeature();
 				FeatureName feature = FeatureName.getFeatureName(featureRealName);
 				Button button = buttonMap.get(feature);
@@ -156,9 +156,9 @@ public class FeaturesPart extends AbstractFormPart {
 			FeatureName featureName = entry.getKey();
 			Button button = entry.getValue();
 			if (button.getSelection()) {
-				GadgetFeatureType featureType = objectFactory.createGadgetFeatureType();
+				Param featureType = objectFactory.createGadgetFeatureType();
 				featureType.setFeature(featureName.toString());
-				JAXBElement<GadgetFeatureType> require = objectFactory.createModuleModulePrefsRequire(featureType);
+				JAXBElement<Param> require = objectFactory.createModuleModulePrefsRequire(featureType);
 				requireOrOptionalOrPreload.add(require);
 			}
 		}
@@ -168,7 +168,7 @@ public class FeaturesPart extends AbstractFormPart {
 		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
 		for (int i = elements.size() - 1; i >= 0; i--) {
 			JAXBElement<?> element = elements.get(i);
-			if (element.getValue() instanceof GadgetFeatureType
+			if (element.getValue() instanceof Param
 					&& element.getName().toString().equals("Require")) {
 				elements.remove(i);
 			}
