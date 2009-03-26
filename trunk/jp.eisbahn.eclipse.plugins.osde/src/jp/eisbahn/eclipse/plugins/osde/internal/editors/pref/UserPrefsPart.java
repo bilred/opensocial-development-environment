@@ -47,7 +47,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.Module;
-import com.google.gadgets.ObjectFactory;
 import com.google.gadgets.Module.UserPref;
 import com.google.gadgets.Module.UserPref.EnumValue;
 
@@ -57,15 +56,12 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 	
 	private TableViewer userPrefsList;
 	
-	private ObjectFactory objectFactory;
-
 	public UserPrefsPart(Composite parent, IManagedForm managedForm, UserPrefsPage page) {
 		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
 		initialize(managedForm);
 		this.page = page;
 		createContents(getSection(), managedForm.getToolkit());
 		displayInitialValue();
-		objectFactory = new ObjectFactory();
 	}
 	
 	private void createContents(Section section, FormToolkit toolkit) {
@@ -146,7 +142,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 		userPrefList.clear();
 		List<UserPrefModel> models = (List<UserPrefModel>)userPrefsList.getInput();
 		for (UserPrefModel model : models) {
-			UserPref userPref = objectFactory.createModuleUserPref();
+			UserPref userPref = new UserPref();
 			userPref.setName(model.getName());
 			String displayName = model.getDisplayName();
 			if (StringUtils.isNotEmpty(displayName)) {
@@ -162,7 +158,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 			enumValueList.clear();
 			if (model.getDataType().equals(DataType.ENUM)) {
 				for (Map.Entry<String, String> entry : model.getEnumValueMap().entrySet()) {
-					EnumValue enumValue = objectFactory.createModuleUserPrefEnumValue();
+					EnumValue enumValue = new EnumValue();
 					enumValue.setValue(entry.getKey());
 					enumValue.setDisplayValue(entry.getValue());
 					enumValueList.add(enumValue);

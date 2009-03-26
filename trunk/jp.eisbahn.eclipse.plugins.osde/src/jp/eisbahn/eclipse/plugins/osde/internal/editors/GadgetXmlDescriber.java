@@ -20,25 +20,25 @@ package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescriber;
 import org.eclipse.core.runtime.content.IContentDescription;
+import org.xml.sax.SAXException;
 
-import com.google.gadgets.Module;
+import com.google.gadgets.GadgetXmlParser;
 
 public class GadgetXmlDescriber implements IContentDescriber {
 
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
 		try {
-			JAXBContext context = JAXBContext.newInstance(Module.class);
-			Unmarshaller um = context.createUnmarshaller();
-			Module module = (Module)um.unmarshal(contents);
+			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+			parser.parse(contents);
 			return IContentDescriber.VALID;
-		} catch (JAXBException e) {
+		} catch (IOException e) {
+			return IContentDescriber.INDETERMINATE;
+		} catch (SAXException e) {
 			return IContentDescriber.INDETERMINATE;
 		}
 		

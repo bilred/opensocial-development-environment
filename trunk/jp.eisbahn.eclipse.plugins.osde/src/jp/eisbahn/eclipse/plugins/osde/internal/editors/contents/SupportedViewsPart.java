@@ -45,7 +45,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.Module;
-import com.google.gadgets.ObjectFactory;
 import com.google.gadgets.ViewType;
 import com.google.gadgets.Module.Content;
 
@@ -55,15 +54,12 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 	
 	private TableViewer supportedViewList;
 	
-	private ObjectFactory objectFactory;
-
 	public SupportedViewsPart(Composite parent, IManagedForm managedForm, ContentsPage page) {
 		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
 		initialize(managedForm);
 		this.page = page;
 		createContents(getSection(), managedForm.getToolkit());
 		displayInitialValue();
-		objectFactory = new ObjectFactory();
 	}
 	
 	private void createContents(Section section, FormToolkit toolkit) {
@@ -158,7 +154,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 		List<Content> contents = module.getContent();
 		contents.clear();
 		for (ContentModel model : models) {
-			Content content = objectFactory.createModuleContent();
+			Content content = new Content();
 			content.setHref(model.getHref());
 			content.setType(model.getType().name());
 			content.setValue(model.getBody());

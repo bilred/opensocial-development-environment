@@ -27,8 +27,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets;
 
 import org.apache.commons.codec.binary.Base64;
@@ -53,15 +51,12 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.Module;
-import com.google.gadgets.ObjectFactory;
 import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.ModulePrefs.Icon;
 
 public class IconPart extends AbstractFormPart {
 
 	private ModulePrefsPage page;
-	
-	private ObjectFactory objectFactory;
 	
 	private boolean initializing;
 
@@ -96,7 +91,6 @@ public class IconPart extends AbstractFormPart {
 
 	public IconPart(ModulePrefsPage page) {
 		this.page = page;
-		objectFactory = new ObjectFactory();
 	}
 	
 	private Module getModule() {
@@ -138,9 +132,8 @@ public class IconPart extends AbstractFormPart {
 		base64Text.setText("");
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (JAXBElement<?> element : elements) {
-			Object value = element.getValue();
+		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		for (Object value : elements) {
 			if (value instanceof Icon) {
 				useButton.setSelection(true);
 				Icon icon = (Icon)value;
@@ -257,10 +250,10 @@ public class IconPart extends AbstractFormPart {
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
 		removeAllIcons(elements);
 		if (useButton.getSelection()) {
-			Icon icon = objectFactory.createModuleModulePrefsIcon();
+			Icon icon = new Icon();
 			if (urlRadio.getSelection()) {
 				icon.setValue(urlText.getText());
 			} else if (base64Radio.getSelection()) {
@@ -268,15 +261,13 @@ public class IconPart extends AbstractFormPart {
 				icon.setType(base64TypeText.getText());
 				icon.setValue(encodedIcon);
 			}
-			JAXBElement<Icon> modulePrefsIcon = objectFactory.createModuleModulePrefsIcon(icon);
-			elements.add(modulePrefsIcon);
+			elements.add(icon);
 		}
 	}
 	
-	private void removeAllIcons(List<JAXBElement<?>> elements) {
+	private void removeAllIcons(List<Object> elements) {
 		for (int i = elements.size() - 1; i >= 0; i--) {
-			JAXBElement<?> element = elements.get(i);
-			Object value = element.getValue();
+			Object value = elements.get(i);
 			if (value instanceof Icon) {
 				elements.remove(i);
 			}

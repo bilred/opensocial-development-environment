@@ -17,14 +17,12 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 
-import java.io.StringReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.basic.ModulePrefsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.contents.ContentsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.locale.LocalePage;
@@ -47,7 +45,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.xml.sax.SAXException;
 
+import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.Module;
 
@@ -56,7 +56,6 @@ public class GadgetXmlEditor extends FormEditor {
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor";
 	
 	private Module module;
-	private JAXBContext context;
 
 	private ModulePrefsPage modulePrefsPage;
 
@@ -77,12 +76,13 @@ public class GadgetXmlEditor extends FormEditor {
 		super.init(site, input);
 		try {
 			IFile file = (IFile)input.getAdapter(IResource.class);
-			context = JAXBContext.newInstance(Module.class);
-			Unmarshaller um = context.createUnmarshaller();
-			module = (Module)um.unmarshal(file.getContents());
+			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+			module = parser.parse(file.getContents());
 			setPartName(file.getName());
-		} catch (JAXBException e) {
-			throw new PartInitException(e.getErrorCode(), e);
+		} catch (IOException e) {
+			throw new PartInitException(e.getMessage(), e);
+		} catch (SAXException e) {
+			throw new PartInitException(e.getMessage(), e);
 		} catch (CoreException e) {
 			throw new PartInitException(e.getMessage(), e);
 		}
@@ -104,7 +104,9 @@ public class GadgetXmlEditor extends FormEditor {
 				public void doSave(IProgressMonitor progressMonitor) {
 					try {
 						reflectModel();
-					} catch (JAXBException e) {
+					} catch (IOException e) {
+						// Ignore
+					} catch (SAXException e) {
 						// Ignore
 					}
 					commitPages(true);
@@ -119,7 +121,11 @@ public class GadgetXmlEditor extends FormEditor {
 					if (sourceEditor.isDirty()) {
 						try {
 							reflectModel();
-						} catch (JAXBException e) {
+						} catch (IOException e) {
+							MessageDialog.openError(getSite().getShell(), "Error",
+									"Syntax error: " + e.getCause().getMessage());
+							setActiveEditor(sourceEditor);
+						} catch (SAXException e) {
 							MessageDialog.openError(getSite().getShell(), "Error",
 									"Syntax error: " + e.getCause().getMessage());
 							setActiveEditor(sourceEditor);
@@ -181,14 +187,13 @@ public class GadgetXmlEditor extends FormEditor {
 		return false;
 	}
 
-	private void reflectModel() throws JAXBException {
+	private void reflectModel() throws IOException, SAXException {
 		reflecting = true;
 		try {
+			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
 			IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
 			String content = document.get();
-			Unmarshaller um = context.createUnmarshaller();
-			StringReader in = new StringReader(content);
-			changeModel((Module)um.unmarshal(in));
+			changeModel(parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
 		} finally {
 			reflecting = false;
 		}
