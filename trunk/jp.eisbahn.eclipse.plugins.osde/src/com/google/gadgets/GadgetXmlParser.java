@@ -29,8 +29,15 @@ import org.xml.sax.SAXException;
 
 public class GadgetXmlParser {
 	
-	public static Module parse(InputStream in) throws IOException, SAXException {
-		Digester digester = new Digester();
+	protected Digester digester;
+	
+	public GadgetXmlParser() {
+		super();
+		init();
+	}
+	
+	protected void init() {
+		digester = new Digester();
 		//
 		digester.addRule("Module", new ObjectCreateRule(Module.class));
 		//
@@ -125,6 +132,27 @@ public class GadgetXmlParser {
 		digester.addRule("Module/ModulePrefs/Preload", new SetPropertiesRule(attributeNames, propertyNames));
 		digester.addRule("Module/ModulePrefs/Preload", new SetNextRule("addRequireOrOptionalOrPreload"));
 		//
+		digester.addRule("Module/UserPref", new ObjectCreateRule(Module.UserPref.class));
+		attributeNames = new String[]{"name", "display_name", "default_value", "required", "datatype"};
+		propertyNames = new String[]{"name", "displayName", "defaultValue", "required", "datatype"};
+		digester.addRule("Module/UserPref", new SetPropertiesRule(attributeNames, propertyNames));
+		digester.addRule("Module/UserPref", new SetNextRule("addUserPref"));
+		//
+		digester.addRule("Module/UserPref/EnumValue", new ObjectCreateRule(Module.UserPref.EnumValue.class));
+		attributeNames = new String[]{"value", "display_value"};
+		propertyNames = new String[]{"value", "displayValue"};
+		digester.addRule("Module/UserPref/EnumValue", new SetPropertiesRule(attributeNames, propertyNames));
+		digester.addRule("Module/UserPref/EnumValue", new SetNextRule("addEnumValue"));
+		//
+		digester.addRule("Module/Content", new ObjectCreateRule(Module.Content.class));
+		attributeNames = new String[]{"type", "href", "view", "preferred_width", "preferred_height"};
+		propertyNames = new String[]{"type", "href", "view", "preferredWidth", "preferredHeight"};
+		digester.addRule("Module/Content", new SetPropertiesRule(attributeNames, propertyNames));
+		digester.addRule("Module/Content", new CallMethodRule("setValue", 0));
+		digester.addRule("Module/Content", new SetNextRule("addContent"));
+	}
+
+	public Module parse(InputStream in) throws IOException, SAXException {
 		Module module = (Module)digester.parse(in);
 		return module;
 	}

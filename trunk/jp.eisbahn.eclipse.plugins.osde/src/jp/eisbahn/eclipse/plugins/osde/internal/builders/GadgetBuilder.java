@@ -18,18 +18,14 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.builders;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -43,7 +39,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.xml.sax.SAXException;
 
+import com.google.gadgets.GadgetXmlParser;
+import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.Module;
 import com.google.gadgets.ViewType;
 import com.google.gadgets.Module.Content;
@@ -96,9 +95,8 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 						orgFile.copy(destFile.getFullPath(), false, monitor);
 						if (OpenSocialUtil.isGadgetXml(destFile)) {
 							try {
-								JAXBContext context = JAXBContext.newInstance(Module.class);
-								Unmarshaller um = context.createUnmarshaller();
-								Module module = (Module)um.unmarshal(orgFile.getContents());
+								GadgetXmlParser gadgetXmlParser = Activator.getDefault().getGadgetXmlParser();
+								Module module = gadgetXmlParser.parse(orgFile.getContents());
 								List<Content> contents = module.getContent();
 								Random rnd = new Random();
 								for (Content content : contents) {
@@ -115,13 +113,13 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 										content.setValue(sb.toString());
 									}
 								}
-								Marshaller ma = context.createMarshaller();
-								ByteArrayOutputStream out = new ByteArrayOutputStream();
-								ma.marshal(module, out);
-								ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+								String serialize = GadgetXmlSerializer.serialize(module);
+								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								destFile.setContents(in, true, false, monitor);
-							} catch(JAXBException e) {
-							} catch(CoreException e) {
+							} catch (IOException e) {
+								e.printStackTrace();
+							} catch (SAXException e) {
+								e.printStackTrace();
 							}
 						}
 					}
