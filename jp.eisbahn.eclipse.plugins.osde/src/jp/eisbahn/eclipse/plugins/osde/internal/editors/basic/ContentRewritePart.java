@@ -22,9 +22,6 @@ import static jp.eisbahn.eclipse.plugins.osde.internal.editors.ComponentUtils.cr
 
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
-
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,15 +44,12 @@ import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.Param;
 import com.google.gadgets.Module;
-import com.google.gadgets.ObjectFactory;
-import com.google.gadgets.Param.Param;
 import com.google.gadgets.Module.ModulePrefs;
+import com.google.gadgets.Module.ModulePrefs.Optional;
 
 public class ContentRewritePart extends AbstractFormPart {
 
 	private ModulePrefsPage page;
-	
-	private ObjectFactory objectFactory;
 	
 	private boolean initializing;
 	
@@ -90,7 +84,6 @@ public class ContentRewritePart extends AbstractFormPart {
 	
 	public ContentRewritePart(ModulePrefsPage page) {
 		this.page = page;
-		objectFactory = new ObjectFactory();
 	}
 	
 	private Module getModule() {
@@ -122,13 +115,11 @@ public class ContentRewritePart extends AbstractFormPart {
 		expiresSpinner.setSelection(86400);
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (JAXBElement<?> element : elements) {
-			Object value = element.getValue();
-			if (value instanceof Param) {
-				Param type = (Param)value;
-				QName name = element.getName();
-				String featureRealName = type.getFeature();
+		List<?> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		for (Object element : elements) {
+			if (element instanceof Optional) {
+				Optional optional = (Optional)element;
+				
 				if (name.toString().equals("Optional") && featureRealName.equals("content-rewrite")) {
 					useButton.setSelection(true);
 					List<Param> params = type.getParam();

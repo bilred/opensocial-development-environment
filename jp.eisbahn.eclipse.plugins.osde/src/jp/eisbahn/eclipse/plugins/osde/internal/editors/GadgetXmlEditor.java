@@ -48,6 +48,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
+import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.Module;
 
 public class GadgetXmlEditor extends FormEditor {

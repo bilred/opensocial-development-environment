@@ -19,12 +19,15 @@ package com.google.gadgets.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigInteger;
 import java.util.List;
 
 import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.Module;
 import com.google.gadgets.Param;
+import com.google.gadgets.Module.Content;
 import com.google.gadgets.Module.ModulePrefs;
+import com.google.gadgets.Module.UserPref;
 import com.google.gadgets.Module.ModulePrefs.Icon;
 import com.google.gadgets.Module.ModulePrefs.Link;
 import com.google.gadgets.Module.ModulePrefs.Locale;
@@ -37,15 +40,30 @@ import com.google.gadgets.Module.ModulePrefs.OAuth.Service;
 import com.google.gadgets.Module.ModulePrefs.OAuth.Service.Access;
 import com.google.gadgets.Module.ModulePrefs.OAuth.Service.Authorization;
 import com.google.gadgets.Module.ModulePrefs.OAuth.Service.Request;
+import com.google.gadgets.Module.UserPref.EnumValue;
 
 import junit.framework.TestCase;
 
 public class GadgetXmlLoadTest extends TestCase {
 	
-	public void testGadgetXMLファイルの読み込み() throws Exception {
+	private GadgetXmlParser target;
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		target = new GadgetXmlParser();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		target = null;
+	}
+
+	public void testParseGadgetXml() throws Exception {
 		File file = new File("test/test_gadget.xml");
 		FileInputStream in = new FileInputStream(file);
-		Module module = GadgetXmlParser.parse(in);
+		Module module = target.parse(in);
 		assertNotNull(module);
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		assertNotNull(modulePrefs);
@@ -102,7 +120,34 @@ public class GadgetXmlLoadTest extends TestCase {
 		Authorization authorization = service.getAuthorization();
 		assertEquals("url3", authorization.getUrl());
 		Preload preload = (Preload)requireOrOptionalOrPreload.get(6);
-
+		assertEquals("href2", preload.getHref());
+		assertEquals("authz1", preload.getAuthz());
+		assertTrue(preload.isSignOwner());
+		assertTrue(preload.isSignViewer());
+		assertEquals("views1", preload.getViews());
+		assertEquals("oauthServiceName1", preload.getOauthServiceName());
+		assertEquals("oauthTokenName1", preload.getOauthTokenName());
+		assertEquals("oauthRequestToken1", preload.getOauthRequestToken());
+		assertEquals("oauthRequestTokenSecret1", preload.getOauthRequestTokenSecret());
+		List<UserPref> userPrefs = module.getUserPref();
+		UserPref userPref = userPrefs.get(0);
+		assertEquals("name5", userPref.getName());
+		assertEquals("displayName1", userPref.getDisplayName());
+		assertEquals("defaultValue1", userPref.getDefaultValue());
+		assertEquals("required1", userPref.getRequired());
+		assertEquals("datatype1", userPref.getDatatype());
+		List<EnumValue> enumValues = userPref.getEnumValue();
+		EnumValue enumValue = enumValues.get(0);
+		assertEquals("value5", enumValue.getValue());
+		assertEquals("displayValue1", enumValue.getDisplayValue());
+		List<Content> contents = module.getContent();
+		Content content = contents.get(0);
+		assertEquals("type2", content.getType());
+		assertEquals("href3", content.getHref());
+		assertEquals("view1", content.getView());
+		assertEquals(new BigInteger("123"), content.getPreferredWidth());
+		assertEquals(new BigInteger("456"), content.getPreferredHeight());
+		assertEquals("value6", content.getValue());
 		in.close();
 	}
 

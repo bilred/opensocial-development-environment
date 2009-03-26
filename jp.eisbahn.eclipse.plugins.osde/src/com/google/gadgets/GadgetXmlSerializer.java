@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.editors;
+package com.google.gadgets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,16 +24,16 @@ import jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.google.gadgets.Param;
-import com.google.gadgets.Module;
-import com.google.gadgets.Param.Param;
 import com.google.gadgets.Module.Content;
 import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.UserPref;
 import com.google.gadgets.Module.ModulePrefs.Icon;
 import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.Module.ModulePrefs.Optional;
+import com.google.gadgets.Module.ModulePrefs.Require;
 import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
 import com.google.gadgets.Module.UserPref.EnumValue;
+
 
 public class GadgetXmlSerializer {
 
@@ -43,7 +43,7 @@ public class GadgetXmlSerializer {
 		sb.append("<Module>\n");
 		sb.append("    <ModulePrefs");
 		sb.append(createModulePrefsAttributes(module));
-		sb.append(createRequires(module));
+		sb.append(createRequiresAndOptionals(module));
 		sb.append(createLocales(module));
 		sb.append(createIcon(module));
 		sb.append("    </ModulePrefs>\n");
@@ -149,18 +149,16 @@ public class GadgetXmlSerializer {
 		return sb.toString();
 	}
 
-	private static String createRequires(Module module) {
+	private static String createRequiresAndOptionals(Module module) {
 		StringBuilder sb = new StringBuilder();
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		List<?> elements = modulePrefs.getRequireOrOptionalOrPreload();
 		for (Object element : elements) {
 			Object value = element;
-			if (value instanceof Param) {
-				Param type = (Param)value;
-				String name = type.getName();
-				String featureRealName = type.getFeature();
-				sb.append("        <" + name + " feature=\"" + featureRealName + "\"");
-				List<Param> params = type.getParam();
+			if (value instanceof Require) {
+				Require require = (Require)value;
+				sb.append("        <Require feature=\"" + require.getFeature() + "\"");
+				List<Param> params = require.getParam();
 				if (params.isEmpty()) {
 					sb.append(" />\n");
 				} else {
@@ -172,7 +170,24 @@ public class GadgetXmlSerializer {
 						sb.append(escape(param.getValue()));
 						sb.append("</Param>\n");
 					}
-					sb.append("        </" + name.toString() + ">\n");
+					sb.append("        </Require>\n");
+				}
+			} else if (value instanceof Optional) {
+				Optional optional = (Optional)value;
+				sb.append("        <Optional feature=\"" + optional.getFeature() + "\"");
+				List<Param> params = optional.getParam();
+				if (params.isEmpty()) {
+					sb.append(" />\n");
+				} else {
+					sb.append(">\n");
+					for (Param param : params) {
+						sb.append("            <Param name=\"");
+						sb.append(param.getName());
+						sb.append("\">");
+						sb.append(escape(param.getValue()));
+						sb.append("</Param>\n");
+					}
+					sb.append("        </Optional>\n");
 				}
 			}
 		}

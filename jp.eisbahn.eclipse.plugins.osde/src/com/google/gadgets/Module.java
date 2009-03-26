@@ -42,11 +42,25 @@ public class Module {
 		return this.userPref;
 	}
 	
+	public void addUserPref(Module.UserPref value) {
+		if (userPref == null) {
+			userPref = new ArrayList<Module.UserPref>();
+		}
+		userPref.add(value);
+	}
+	
 	public List<Module.Content> getContent() {
 		if (content == null) {
 			content = new ArrayList<Module.Content>();
 		}
 		return this.content;
+	}
+	
+	public void addContent(Module.Content value) {
+		if (content == null) {
+			content = new ArrayList<Module.Content>();
+		}
+		content.add(value);
 	}
 	
 	public static class Content {
@@ -667,6 +681,13 @@ public class Module {
 				enumValue = new ArrayList<Module.UserPref.EnumValue>();
 			}
 			return this.enumValue;
+		}
+		
+		public void addEnumValue(Module.UserPref.EnumValue value) {
+			if (enumValue == null) {
+				enumValue = new ArrayList<Module.UserPref.EnumValue>();
+			}
+			enumValue.add(value);
 		}
 
 		public String getName() {
