@@ -24,9 +24,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import javax.xml.bind.JAXBElement;
-
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -41,18 +38,15 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.FeatureName;
-import com.google.gadgets.Param;
 import com.google.gadgets.Module;
-import com.google.gadgets.ObjectFactory;
 import com.google.gadgets.Module.ModulePrefs;
+import com.google.gadgets.Module.ModulePrefs.Require;
 
 public class FeaturesPart extends AbstractFormPart {
 
 	private ModulePrefsPage page;
 	
 	private Map<FeatureName, Button> buttonMap;
-	
-	private ObjectFactory objectFactory;
 	
 	private SelectionListener selectionListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -65,7 +59,6 @@ public class FeaturesPart extends AbstractFormPart {
 	public FeaturesPart(ModulePrefsPage page) {
 		this.page = page;
 		buttonMap = new EnumMap<FeatureName, Button>(FeatureName.class);
-		objectFactory = new ObjectFactory();
 	}
 	
 	private Module getModule() {
@@ -86,12 +79,11 @@ public class FeaturesPart extends AbstractFormPart {
 		}
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (JAXBElement<?> element : elements) {
-			Object value = element.getValue();
-			if (value instanceof Param) {
-				Param type = (Param)value;
-				String featureRealName = type.getFeature();
+		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		for (Object value : elements) {
+			if (value instanceof Require) {
+				Require require = (Require)value;
+				String featureRealName = require.getFeature();
 				FeatureName feature = FeatureName.getFeatureName(featureRealName);
 				Button button = buttonMap.get(feature);
 				if (button != null) {
@@ -150,26 +142,24 @@ public class FeaturesPart extends AbstractFormPart {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		clearFeatures(modulePrefs);
-		List<JAXBElement<?>> requireOrOptionalOrPreload = modulePrefs.getRequireOrOptionalOrPreload();
+		List<Object> requireOrOptionalOrPreload = modulePrefs.getRequireOrOptionalOrPreload();
 		Set<Entry<FeatureName,Button>> set = buttonMap.entrySet();
 		for (Entry<FeatureName, Button> entry : set) {
 			FeatureName featureName = entry.getKey();
 			Button button = entry.getValue();
 			if (button.getSelection()) {
-				Param featureType = objectFactory.createGadgetFeatureType();
-				featureType.setFeature(featureName.toString());
-				JAXBElement<Param> require = objectFactory.createModuleModulePrefsRequire(featureType);
+				Require require = new Require();
+				require.setFeature(featureName.toString());
 				requireOrOptionalOrPreload.add(require);
 			}
 		}
 	}
 	
 	private void clearFeatures(ModulePrefs modulePrefs) {
-		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
 		for (int i = elements.size() - 1; i >= 0; i--) {
-			JAXBElement<?> element = elements.get(i);
-			if (element.getValue() instanceof Param
-					&& element.getName().toString().equals("Require")) {
+			Object element = elements.get(i);
+			if (element instanceof Require) {
 				elements.remove(i);
 			}
 		}

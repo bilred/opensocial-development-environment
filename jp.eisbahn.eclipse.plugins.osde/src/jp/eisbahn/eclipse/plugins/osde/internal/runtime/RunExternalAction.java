@@ -17,9 +17,8 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
+import java.io.IOException;
 import java.util.List;
-
-import javax.xml.bind.JAXBException;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
@@ -40,6 +39,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
+import org.xml.sax.SAXException;
 
 public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 
@@ -77,13 +77,15 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 			}
 		} catch(ConnectionException e) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
-		} catch (JAXBException e) {
-			e.printStackTrace();
-			Throwable ex = e.getLinkedException() != null ? e.getLinkedException() : e;
-			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + ex.getMessage());
 		} catch (CoreException e) {
 			e.printStackTrace();
 			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + e.getMessage());
+		} catch (SAXException e) {
+			e.printStackTrace();
+			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + e.getMessage());
 		}
 	}
 	

@@ -17,9 +17,8 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
+import java.io.IOException;
 import java.util.List;
-
-import javax.xml.bind.JAXBException;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
@@ -31,7 +30,6 @@ import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
-import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.core.resources.IFile;
@@ -46,6 +44,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.xml.sax.SAXException;
 
 public class CreateJavaProjectAction implements IObjectActionDelegate {
 
@@ -93,12 +92,14 @@ public class CreateJavaProjectAction implements IObjectActionDelegate {
 			} else {
 				MessageDialog.openError(shell, "Error", "There is no person in Shindig database.");
 			}
-		} catch (JAXBException e) {
-			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
 		} catch (CoreException e) {
 			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
 		} catch (ConnectionException e) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
+		} catch (IOException e) {
+			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
+		} catch (SAXException e) {
+			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
 		}
 	}
 	

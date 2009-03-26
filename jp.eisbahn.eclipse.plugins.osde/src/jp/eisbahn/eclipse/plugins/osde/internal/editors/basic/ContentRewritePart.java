@@ -42,8 +42,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.Param;
 import com.google.gadgets.Module;
+import com.google.gadgets.Param;
 import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.ModulePrefs.Optional;
 
@@ -119,10 +119,10 @@ public class ContentRewritePart extends AbstractFormPart {
 		for (Object element : elements) {
 			if (element instanceof Optional) {
 				Optional optional = (Optional)element;
-				
-				if (name.toString().equals("Optional") && featureRealName.equals("content-rewrite")) {
+				String feature = optional.getFeature();
+				if (feature.equals("content-rewrite")) {
 					useButton.setSelection(true);
-					List<Param> params = type.getParam();
+					List<Param> params = optional.getParam();
 					for (Param param : params) {
 						if (param.getName().equals("include-urls")) {
 							includeUrlsText.setText(Gadgets.trim(param.getValue()));
@@ -194,52 +194,49 @@ public class ContentRewritePart extends AbstractFormPart {
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		JAXBElement<?> contentRewriteNode = getContentRewriteNode(elements);
+		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		Optional contentRewriteNode = getContentRewriteNode(elements);
 		if (contentRewriteNode != null) {
 			elements.remove(contentRewriteNode);
 		}
 		if (useButton.getSelection()) {
-			Param type = objectFactory.createGadgetFeatureType();
-			type.setFeature("content-rewrite");
-			List<Param> params = type.getParam();
+			Optional optional = new Optional();
+			optional.setFeature("content-rewrite");
+			List<Param> params = optional.getParam();
 			String includeUrls = includeUrlsText.getText();
 			if (StringUtils.isNotEmpty(includeUrls)) {
-				Param param = objectFactory.createGadgetFeatureTypeParam();
+				Param param = new Param();
 				param.setName("include-urls");
 				param.setValue(includeUrls);
 				params.add(param);
 			}
 			String excludeUrls = excludeUrlsText.getText();
 			if (StringUtils.isNotEmpty(excludeUrls)) {
-				Param param = objectFactory.createGadgetFeatureTypeParam();
+				Param param = new Param();
 				param.setName("exclude-urls");
 				param.setValue(excludeUrls);
 				params.add(param);
 			}
 			String includeTags = includeTagsText.getText();
 			if (StringUtils.isNotEmpty(includeTags)) {
-				Param param = objectFactory.createGadgetFeatureTypeParam();
+				Param param = new Param();
 				param.setName("include-tags");
 				param.setValue(includeTags);
 				params.add(param);
 			}
-			Param param = objectFactory.createGadgetFeatureTypeParam();
+			Param param = new Param();
 			param.setName("expires");
 			param.setValue(String.valueOf(expiresSpinner.getSelection()));
 			params.add(param);
-			JAXBElement<Param> optional = objectFactory.createModuleModulePrefsOptional(type);
 			elements.add(optional);
 		}
 	}
 	
-	private JAXBElement<?> getContentRewriteNode(List<JAXBElement<?>> elements) {
-		for (JAXBElement<?> element : elements) {
-			Object value = element.getValue();
-			if ((value instanceof Param)
-					&& (element.getName().toString().equals("Optional"))
-					&& ((Param)value).getFeature().equals("content-rewrite")) {
-				return element;
+	private Optional getContentRewriteNode(List<?> elements) {
+		for (Object value : elements) {
+			if ((value instanceof Optional)
+					&& ((Optional)value).getFeature().equals("content-rewrite")) {
+				return (Optional)value;
 			}
 		}
 		return null;

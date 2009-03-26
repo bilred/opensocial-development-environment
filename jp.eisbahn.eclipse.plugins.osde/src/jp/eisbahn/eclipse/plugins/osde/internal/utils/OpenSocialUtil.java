@@ -17,31 +17,31 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.xml.sax.SAXException;
 
+import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.Module;
 
 public class OpenSocialUtil {
 
-	public static ApplicationInformation createApplicationInformation(IFile file) throws JAXBException, CoreException {
+	public static ApplicationInformation createApplicationInformation(IFile file) throws CoreException, IOException, SAXException {
 		try {
-			JAXBContext context = JAXBContext.newInstance(Module.class);
-			Unmarshaller um = context.createUnmarshaller();
-			Module module = (Module)um.unmarshal(file.getContents());
+			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+			Module module = parser.parse(file.getContents());
 			String path = file.getFullPath().toPortableString();
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(path.getBytes("UTF-8"));
@@ -64,11 +64,10 @@ public class OpenSocialUtil {
 		}
 	}
 
-	public static ApplicationInformation createApplicationInformation(String url) throws JAXBException, CoreException {
+	public static ApplicationInformation createApplicationInformation(String url) throws CoreException, IOException, SAXException {
 		try {
-			JAXBContext context = JAXBContext.newInstance(Module.class);
-			Unmarshaller um = context.createUnmarshaller();
-			Module module = (Module)um.unmarshal(new URL(url));
+			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+			Module module = parser.parse(new URL(url).openStream());
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(url.getBytes("UTF-8"));
 			String appId = Gadgets.toHexString(hash);

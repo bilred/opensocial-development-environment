@@ -18,7 +18,6 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.export;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,11 +28,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
@@ -53,7 +48,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.xml.sax.SAXException;
 
+import com.google.gadgets.GadgetXmlParser;
+import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.Module;
 import com.google.gadgets.ViewType;
 import com.google.gadgets.Module.Content;
@@ -156,9 +154,8 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 						out.putNextEntry(entry);
 						if (OpenSocialUtil.isGadgetXml(orgFile)) {
 							try {
-								JAXBContext context = JAXBContext.newInstance(Module.class);
-								Unmarshaller um = context.createUnmarshaller();
-								Module module = (Module)um.unmarshal(orgFile.getContents());
+								GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+								Module module = parser.parse(orgFile.getContents());
 								List<Content> contents = module.getContent();
 								for (Content content : contents) {
 									if (ViewType.html.toString().equals(content.getType())) {
@@ -173,14 +170,12 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 										content.setValue(sb.toString());
 									}
 								}
-								Marshaller ma = context.createMarshaller();
-								ByteArrayOutputStream buf = new ByteArrayOutputStream();
-								ma.marshal(module, buf);
-								ByteArrayInputStream in = new ByteArrayInputStream(buf.toByteArray());
+								String serialize = GadgetXmlSerializer.serialize(module);
+								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								IOUtils.copy(in, out);
-							} catch(JAXBException e) {
-								e.printStackTrace();
 							} catch(CoreException e) {
+								e.printStackTrace();
+							} catch (SAXException e) {
 								e.printStackTrace();
 							}
 						} else {

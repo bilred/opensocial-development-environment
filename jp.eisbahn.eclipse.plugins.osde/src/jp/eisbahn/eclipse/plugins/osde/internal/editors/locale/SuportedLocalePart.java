@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBElement;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.eclipse.core.resources.IFile;
@@ -56,7 +54,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.Module;
-import com.google.gadgets.ObjectFactory;
 import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.ModulePrefs.Locale;
 import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
@@ -67,15 +64,12 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 	
 	private TableViewer supportedLocaleList;
 	
-	private ObjectFactory objectFactory;
-
 	public SuportedLocalePart(Composite parent, IManagedForm managedForm, LocalePage page) {
 		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
 		initialize(managedForm);
 		this.page = page;
 		createContents(getSection(), managedForm.getToolkit());
 		displayInitialValue();
-		objectFactory = new ObjectFactory();
 	}
 	
 	private void createContents(Section section, FormToolkit toolkit) {
@@ -130,9 +124,8 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		List<LocaleModel> models = new ArrayList<LocaleModel>();
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<JAXBElement<?>> list = modulePrefs.getRequireOrOptionalOrPreload();
-		for (JAXBElement<?> element : list) {
-			Object value = element.getValue();
+		List<Object> list = modulePrefs.getRequireOrOptionalOrPreload();
+		for (Object value : list) {
 			if (value instanceof Locale) {
 				Locale locale = (Locale)value;
 				LocaleModel model = new LocaleModel(locale, project);
@@ -164,14 +157,14 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<JAXBElement<?>> elements = modulePrefs.getRequireOrOptionalOrPreload();
+		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
 		elements = removeAllLocale(elements);
 		List<LocaleModel> models = (List<LocaleModel>)supportedLocaleList.getInput();
 		IFile file = (IFile)page.getEditorInput().getAdapter(IResource.class);
 		IProject project = file.getProject();
 		removeAllMessageBundleFiles(project);
 		for (LocaleModel model : models) {
-			Locale locale = objectFactory.createModuleModulePrefsLocale();
+			Locale locale = new Locale();
 			String country = model.getCountry();
 			if (!StringUtils.isEmpty(country)) {
 				locale.setCountry(country);
@@ -184,7 +177,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 			if (model.isInternal()) {
 				Map<String, String> messages = model.getMessages();
 				for (Map.Entry<String, String> entry : messages.entrySet()) {
-					Msg msg = objectFactory.createModuleModulePrefsLocaleMsg();
+					Msg msg = new Msg();
 					msg.setName(entry.getKey());
 					msg.setValue(entry.getValue());
 					msgs.add(msg);
@@ -213,7 +206,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 					e.printStackTrace();
 				}
 			}
-			elements.add(objectFactory.createModuleModulePrefsLocale(locale));
+			elements.add(locale);
 		}
 	}
 	
@@ -244,10 +237,10 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		}
 	}
 
-	private List<JAXBElement<?>> removeAllLocale(List<JAXBElement<?>> elements) {
-		List<JAXBElement<?>> targetList = new ArrayList<JAXBElement<?>>();
-		for (JAXBElement<?> element : elements) {
-			if (element.getValue() instanceof Locale) {
+	private List<Object> removeAllLocale(List<Object> elements) {
+		List<Object> targetList = new ArrayList<Object>();
+		for (Object element : elements) {
+			if (element instanceof Locale) {
 				targetList.add(element);
 			}
 		}
