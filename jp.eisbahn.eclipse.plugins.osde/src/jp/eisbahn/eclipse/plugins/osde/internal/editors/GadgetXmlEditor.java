@@ -123,11 +123,11 @@ public class GadgetXmlEditor extends FormEditor {
 							reflectModel();
 						} catch (IOException e) {
 							MessageDialog.openError(getSite().getShell(), "Error",
-									"Syntax error: " + e.getCause().getMessage());
+									"Syntax error: " + e.getMessage());
 							setActiveEditor(sourceEditor);
 						} catch (SAXException e) {
 							MessageDialog.openError(getSite().getShell(), "Error",
-									"Syntax error: " + e.getCause().getMessage());
+									"Syntax error: " + e.getMessage());
 							setActiveEditor(sourceEditor);
 						}
 					}
@@ -137,7 +137,9 @@ public class GadgetXmlEditor extends FormEditor {
 				public void documentAboutToBeChanged(DocumentEvent event) {
 				}
 				public void documentChanged(DocumentEvent event) {
-					outlinePage.refresh();
+					if (outlinePage != null) {
+						outlinePage.refresh();
+					}
 				}
 			});
 		} catch(PartInitException e) {
@@ -167,7 +169,9 @@ public class GadgetXmlEditor extends FormEditor {
 			if (!serialized.equals(now)) {
 				document.set(serialized);
 			}
-			outlinePage.refresh();
+			if (outlinePage != null) {
+				outlinePage.refresh();
+			}
 		}
 	}
 
