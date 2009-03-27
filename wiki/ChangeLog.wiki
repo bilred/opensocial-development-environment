@@ -1,5 +1,11 @@
 = Change log =
 
+=== Mar 27, 2009 ===
+ Version 0.2.5 has been released.
+
+ * External database connection. OSDE supports an external database (MySQL, Oracle) for storing data to be used by Apache Shindig and some views. You can use the external database when you configure an information for connecting your MySQL or Oracle instance with OSDE's preference panel in your Eclipse.
+ * Stopped using a JAXB, instead, a commons-digester is used for parsing a gadget spec file.This change is a solution for fixing a bug which JAXB conflicts between an implementation had OSDE and a standard implementation had JDK1.6.
+
 === Mar 22, 2009 ===
  Version 0.2.4 has been released.
 
