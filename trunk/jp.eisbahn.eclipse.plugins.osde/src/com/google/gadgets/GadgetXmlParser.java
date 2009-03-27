@@ -153,8 +153,12 @@ public class GadgetXmlParser {
 	}
 
 	public Module parse(InputStream in) throws IOException, SAXException {
-		Module module = (Module)digester.parse(in);
-		return module;
+		try {
+			Module module = (Module)digester.parse(in);
+			return module;
+		} finally {
+			digester.clear();
+		}
 	}
 
 }

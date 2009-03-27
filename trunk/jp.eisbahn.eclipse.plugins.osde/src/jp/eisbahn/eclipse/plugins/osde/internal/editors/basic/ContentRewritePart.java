@@ -114,35 +114,37 @@ public class ContentRewritePart extends AbstractFormPart {
 		includeTagsText.setText("");
 		expiresSpinner.setSelection(86400);
 		Module module = getModule();
-		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<?> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (Object element : elements) {
-			if (element instanceof Optional) {
-				Optional optional = (Optional)element;
-				String feature = optional.getFeature();
-				if (feature.equals("content-rewrite")) {
-					useButton.setSelection(true);
-					List<Param> params = optional.getParam();
-					for (Param param : params) {
-						if (param.getName().equals("include-urls")) {
-							includeUrlsText.setText(Gadgets.trim(param.getValue()));
-						}
-						if (param.getName().equals("exclude-urls")) {
-							excludeUrlsText.setText(Gadgets.trim(param.getValue()));
-						}
-						if (param.getName().equals("include-tags")) {
-							includeTagsText.setText(Gadgets.trim(param.getValue()));
-						}
-						if (param.getName().equals("expires")) {
-							Integer expiresValue = Gadgets.toInteger(param.getValue());
-							if (expiresValue != null) {
-								expiresSpinner.setSelection(expiresValue);
-							} else {
-								expiresSpinner.setSelection(86400);
+		if (module != null) {
+			ModulePrefs modulePrefs = module.getModulePrefs();
+			List<?> elements = modulePrefs.getRequireOrOptionalOrPreload();
+			for (Object element : elements) {
+				if (element instanceof Optional) {
+					Optional optional = (Optional)element;
+					String feature = optional.getFeature();
+					if (feature.equals("content-rewrite")) {
+						useButton.setSelection(true);
+						List<Param> params = optional.getParam();
+						for (Param param : params) {
+							if (param.getName().equals("include-urls")) {
+								includeUrlsText.setText(Gadgets.trim(param.getValue()));
+							}
+							if (param.getName().equals("exclude-urls")) {
+								excludeUrlsText.setText(Gadgets.trim(param.getValue()));
+							}
+							if (param.getName().equals("include-tags")) {
+								includeTagsText.setText(Gadgets.trim(param.getValue()));
+							}
+							if (param.getName().equals("expires")) {
+								Integer expiresValue = Gadgets.toInteger(param.getValue());
+								if (expiresValue != null) {
+									expiresSpinner.setSelection(expiresValue);
+								} else {
+									expiresSpinner.setSelection(86400);
+								}
 							}
 						}
+						return;
 					}
-					return;
 				}
 			}
 		}

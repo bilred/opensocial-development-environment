@@ -112,12 +112,14 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 	}
 
 	private void displayInitialValue() {
-		Module module = getModule();
-		List<UserPref> userPrefList = module.getUserPref();
 		List<UserPrefModel> models = new ArrayList<UserPrefModel>();
-		for (UserPref userPref : userPrefList) {
-			UserPrefModel model = new UserPrefModel(userPref);
-			models.add(model);
+		Module module = getModule();
+		if (module != null) {
+			List<UserPref> userPrefList = module.getUserPref();
+			for (UserPref userPref : userPrefList) {
+				UserPrefModel model = new UserPrefModel(userPref);
+				models.add(model);
+			}
 		}
 		userPrefsList.setInput(models);
 	}

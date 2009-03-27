@@ -122,14 +122,16 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 	private void displayInitialValue() {
 		List<ContentModel> models = new ArrayList<ContentModel>();
 		Module module = getModule();
-		List<Content> contents = module.getContent();
-		for (Content content : contents) {
-			ContentModel model = new ContentModel();
-			model.setType(ViewType.parse(content.getType()));
-			model.setHref(content.getHref());
-			model.setBody(content.getValue());
-			model.setView(content.getView());
-			models.add(model);
+		if (module != null) {
+			List<Content> contents = module.getContent();
+			for (Content content : contents) {
+				ContentModel model = new ContentModel();
+				model.setType(ViewType.parse(content.getType()));
+				model.setHref(content.getHref());
+				model.setBody(content.getValue());
+				model.setView(content.getView());
+				models.add(model);
+			}
 		}
 		supportedViewList.setInput(models);
 	}
