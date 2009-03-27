@@ -79,14 +79,16 @@ public class ApplicationInformationPart extends AbstractFormPart {
 	
 	private void displayInitialValue() {
 		Module module = getModule();
-		ModulePrefs modulePrefs = module.getModulePrefs();
-		titleText.setText(trim(modulePrefs.getTitle()));
-		titleUrlText.setText(trim(modulePrefs.getTitleUrl()));
-		descriptionText.setText(trim(modulePrefs.getDescription()));
-		authorText.setText(trim(modulePrefs.getAuthor()));
-		authorEmailText.setText(trim(modulePrefs.getAuthorEmail()));
-		screenshotText.setText(trim(modulePrefs.getScreenshot()));
-		thumbnailText.setText(trim(modulePrefs.getThumbnail()));
+		if (module != null) {
+			ModulePrefs modulePrefs = module.getModulePrefs();
+			titleText.setText(trim(modulePrefs.getTitle()));
+			titleUrlText.setText(trim(modulePrefs.getTitleUrl()));
+			descriptionText.setText(trim(modulePrefs.getDescription()));
+			authorText.setText(trim(modulePrefs.getAuthor()));
+			authorEmailText.setText(trim(modulePrefs.getAuthorEmail()));
+			screenshotText.setText(trim(modulePrefs.getScreenshot()));
+			thumbnailText.setText(trim(modulePrefs.getThumbnail()));
+		}
 	}
 
 	private void createControls(IManagedForm managedForm) {

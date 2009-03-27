@@ -71,18 +71,22 @@ public class GadgetXmlEditor extends FormEditor {
 	
 	private GadgetXmlOutlinePage outlinePage;
 	
+	private boolean initializeFailed = false;
+	
+	
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 		try {
 			IFile file = (IFile)input.getAdapter(IResource.class);
+			setPartName(file.getName());
 			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
 			module = parser.parse(file.getContents());
-			setPartName(file.getName());
 		} catch (IOException e) {
 			throw new PartInitException(e.getMessage(), e);
 		} catch (SAXException e) {
-			throw new PartInitException(e.getMessage(), e);
+//			throw new PartInitException(e.getMessage(), e);
+			initializeFailed = true;
 		} catch (CoreException e) {
 			throw new PartInitException(e.getMessage(), e);
 		}
@@ -105,8 +109,10 @@ public class GadgetXmlEditor extends FormEditor {
 					try {
 						reflectModel();
 					} catch (IOException e) {
+						e.printStackTrace();
 						// Ignore
 					} catch (SAXException e) {
+						e.printStackTrace();
 						// Ignore
 					}
 					commitPages(true);
@@ -118,6 +124,20 @@ public class GadgetXmlEditor extends FormEditor {
 			setPageText(4, "Source");
 			addPageChangedListener(new IPageChangedListener() {
 				public void pageChanged(PageChangedEvent event) {
+					try {
+						GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+						parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
+					} catch (IOException e) {
+						MessageDialog.openError(getSite().getShell(), "Error",
+								"Syntax error: " + e.getMessage());
+						setActiveEditor(sourceEditor);
+						return;
+					} catch (SAXException e) {
+						MessageDialog.openError(getSite().getShell(), "Error",
+								"Syntax error: " + e.getMessage());
+						setActiveEditor(sourceEditor);
+						return;
+					}
 					if (sourceEditor.isDirty()) {
 						try {
 							reflectModel();
@@ -142,6 +162,9 @@ public class GadgetXmlEditor extends FormEditor {
 					}
 				}
 			});
+			if (initializeFailed) {
+				setActiveEditor(sourceEditor);
+			}
 		} catch(PartInitException e) {
 			throw new IllegalStateException(e);
 		}
@@ -195,8 +218,7 @@ public class GadgetXmlEditor extends FormEditor {
 		reflecting = true;
 		try {
 			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-			IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
-			String content = document.get();
+			String content = getSource();
 			changeModel(parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
 		} finally {
 			reflecting = false;
@@ -223,8 +245,7 @@ public class GadgetXmlEditor extends FormEditor {
 	
 	public void activateSourceEditor(int lineNumber) {
 		setActivePage(4);
-		IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
-		String content = document.get();
+		String content = getSource();
 		Map<Integer, Integer> lineInfoMap = getLineInformation(content);
 		Integer pos = lineInfoMap.get(lineNumber);
 		if (pos == null) {

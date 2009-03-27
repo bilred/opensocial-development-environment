@@ -131,25 +131,27 @@ public class IconPart extends AbstractFormPart {
 		base64TypeText.setText("");
 		base64Text.setText("");
 		Module module = getModule();
-		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (Object value : elements) {
-			if (value instanceof Icon) {
-				useButton.setSelection(true);
-				Icon icon = (Icon)value;
-				String mode = icon.getMode();
-				if (StringUtils.isNotEmpty(mode)) {
-					urlRadio.setSelection(false);
-					base64Radio.setSelection(true);
-					base64TypeText.setText(Gadgets.trim(icon.getType()));
-					encodedIcon = Gadgets.trim(icon.getValue());
-					base64Text.setText(encodedIcon.substring(0, 20) + "...");
-				} else {
-					urlRadio.setSelection(true);
-					base64Radio.setSelection(false);
-					urlText.setText(Gadgets.trim(icon.getValue()));
+		if (module != null) {
+			ModulePrefs modulePrefs = module.getModulePrefs();
+			List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
+			for (Object value : elements) {
+				if (value instanceof Icon) {
+					useButton.setSelection(true);
+					Icon icon = (Icon)value;
+					String mode = icon.getMode();
+					if (StringUtils.isNotEmpty(mode)) {
+						urlRadio.setSelection(false);
+						base64Radio.setSelection(true);
+						base64TypeText.setText(Gadgets.trim(icon.getType()));
+						encodedIcon = Gadgets.trim(icon.getValue());
+						base64Text.setText(encodedIcon.substring(0, 20) + "...");
+					} else {
+						urlRadio.setSelection(true);
+						base64Radio.setSelection(false);
+						urlText.setText(Gadgets.trim(icon.getValue()));
+					}
+					break;
 				}
-				break;
 			}
 		}
 		setEnabledControls();

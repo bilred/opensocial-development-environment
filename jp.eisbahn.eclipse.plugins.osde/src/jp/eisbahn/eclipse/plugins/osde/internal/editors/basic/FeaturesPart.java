@@ -78,16 +78,18 @@ public class FeaturesPart extends AbstractFormPart {
 			button.setSelection(false);
 		}
 		Module module = getModule();
-		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (Object value : elements) {
-			if (value instanceof Require) {
-				Require require = (Require)value;
-				String featureRealName = require.getFeature();
-				FeatureName feature = FeatureName.getFeatureName(featureRealName);
-				Button button = buttonMap.get(feature);
-				if (button != null) {
-					button.setSelection(true);
+		if (module != null) {
+			ModulePrefs modulePrefs = module.getModulePrefs();
+			List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
+			for (Object value : elements) {
+				if (value instanceof Require) {
+					Require require = (Require)value;
+					String featureRealName = require.getFeature();
+					FeatureName feature = FeatureName.getFeatureName(featureRealName);
+					Button button = buttonMap.get(feature);
+					if (button != null) {
+						button.setSelection(true);
+					}
 				}
 			}
 		}

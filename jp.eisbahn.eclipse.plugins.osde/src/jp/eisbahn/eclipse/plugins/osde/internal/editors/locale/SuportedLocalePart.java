@@ -123,13 +123,15 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		IProject project = getProject();
 		List<LocaleModel> models = new ArrayList<LocaleModel>();
 		Module module = getModule();
-		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<Object> list = modulePrefs.getRequireOrOptionalOrPreload();
-		for (Object value : list) {
-			if (value instanceof Locale) {
-				Locale locale = (Locale)value;
-				LocaleModel model = new LocaleModel(locale, project);
-				models.add(model);
+		if (module != null) {
+			ModulePrefs modulePrefs = module.getModulePrefs();
+			List<Object> list = modulePrefs.getRequireOrOptionalOrPreload();
+			for (Object value : list) {
+				if (value instanceof Locale) {
+					Locale locale = (Locale)value;
+					LocaleModel model = new LocaleModel(locale, project);
+					models.add(model);
+				}
 			}
 		}
 		supportedLocaleList.setInput(models);
