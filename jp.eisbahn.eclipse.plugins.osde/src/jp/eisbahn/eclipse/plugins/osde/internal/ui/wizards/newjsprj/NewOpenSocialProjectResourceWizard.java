@@ -19,6 +19,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.util.EnumMap;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
@@ -29,6 +30,8 @@ import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -116,13 +119,22 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
 		if (newProject != null) {
 			return newProject;
 		}
-		final IProject newProjectHandle = mainPage.getProjectHandle();
+//		final IProject newProjectHandle = mainPage.getProjectHandle();
+		String projectName = mainPage.getProjectName();
+		URI location = null;
+		if (!mainPage.useDefaults()) {
+			location = mainPage.getLocationURI();
+		}
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		final IProject newProjectHandle = workspace.getRoot().getProject(projectName);
+		final IProjectDescription description = workspace.newProjectDescription(projectName);
+		description.setLocationURI(location);
 		final GadgetXmlData gadgetXmlData = gadgetXmlPage.getInputedData();
 		final EnumMap<ViewName, GadgetViewData> gadgetViewData = viewPage.getInputedData();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					newProjectHandle.create(monitor);
+					newProjectHandle.create(description, monitor);
 					newProjectHandle.open(monitor);
 					IProjectDescription description = newProjectHandle.getDescription();
 					if (!description.hasNature(OsdeProjectNature.ID)) {
