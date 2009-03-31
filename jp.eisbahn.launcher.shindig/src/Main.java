@@ -1,3 +1,5 @@
+import java.io.File;
+
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.deployer.ContextDeployer;
@@ -14,7 +16,7 @@ public class Main {
       server.setConnectors(new Connector[] {connector});
       //
       ContextDeployer deployer = new ContextDeployer();
-      deployer.setConfigurationDir(args[2]);
+      deployer.setConfigurationDir(new File(args[2]));
       deployer.setScanInterval(1);
       ContextHandlerCollection contexts = new ContextHandlerCollection();
       server.setHandler(contexts);
