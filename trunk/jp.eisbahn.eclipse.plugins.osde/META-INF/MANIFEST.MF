@@ -5,6 +5,7 @@ Bundle-SymbolicName: jp.eisbahn.eclipse.plugins.osde;singleton:=true
 Bundle-Version: 0.2.5
 Bundle-Activator: jp.eisbahn.eclipse.plugins.osde.internal.Activator
 Bundle-Vendor: Yoichiro Tanaka
+Bundle-Shindig-Revision: 735392
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.ide;bundle-version="3.4",

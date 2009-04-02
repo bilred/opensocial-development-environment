@@ -230,8 +230,11 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		Activator activator = Activator.getDefault();
 		String version = (String)activator.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
 		String name = (String)activator.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_NAME);
+		String shindigRevision = (String)activator.getBundle().getHeaders().get("Bundle-Shindig-Revision");
 		Label label = new Label(composite, SWT.NONE);
 		label.setText(name + " Version " + version);
+		label = new Label(composite, SWT.NONE);
+		label.setText("Revision of Apache Shindig: " + shindigRevision);
 		//
 		initializeValues();
 		//
