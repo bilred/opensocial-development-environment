@@ -41,6 +41,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
@@ -61,6 +62,8 @@ public class AppDataView extends AbstractView {
 	private Text valueText;
 	private Action reloadAction;
 	private Action removeAllAction;
+	private Button addButton;
+	private Button deleteButton;
 	
 	public AppDataView() {
 	}
@@ -124,7 +127,7 @@ public class AppDataView extends AbstractView {
 		section.setLayoutData(layoutData);
 		section.setText("AppData");
 		Composite composite = toolkit.createComposite(section);
-		layout = new GridLayout();
+		layout = new GridLayout(2, false);
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		composite.setLayout(layout);
@@ -137,6 +140,7 @@ public class AppDataView extends AbstractView {
 		layout.marginHeight = 0;
 		selectionPanel.setLayout(layout);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 2;
 		selectionPanel.setLayoutData(layoutData);
 		toolkit.createLabel(selectionPanel, "Person:");
 		personCombo = new Combo(selectionPanel, SWT.READ_ONLY);
@@ -193,6 +197,21 @@ public class AppDataView extends AbstractView {
 		valueText.setEditable(false);
 		valueText.setBackground(toolkit.getColors().getBackground());
 		sashForm.setWeights(new int[] {40, 60});
+		//
+		Composite buttonPane = toolkit.createComposite(composite);
+		buttonPane.setLayout(new GridLayout());
+		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		buttonPane.setLayoutData(layoutData);
+		addButton = toolkit.createButton(buttonPane, "Add", SWT.PUSH);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.verticalAlignment = GridData.BEGINNING;
+		addButton.setLayoutData(layoutData);
+		addButton.addSelectionListener(new AddButtonSelectionListener());
+		deleteButton = toolkit.createButton(buttonPane, "Delete", SWT.PUSH);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.verticalAlignment = GridData.BEGINNING;
+		deleteButton.setLayoutData(layoutData);
+		deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
 	}
 	
 	public void setFocus() {
@@ -274,6 +293,54 @@ public class AppDataView extends AbstractView {
 			}
 		} catch (ConnectionException e) {
 			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+		}
+	}
+	
+	private class DeleteButtonSelectionListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent evt) {
+			if (Activator.getDefault().isRunningShindig()) {
+				try {
+					Person person = (Person)personCombo.getData(personCombo.getText());
+					ApplicationImpl application = (ApplicationImpl)applicationCombo.getData(applicationCombo.getText());
+					String key = keyList.getItem(keyList.getSelectionIndex());
+					if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to delete the [" + key + "] value?")) {
+						AppDataService appDataService = Activator.getDefault().getAppDataService();
+						appDataService.removeApplicationData(person, application, key);
+						updateDataMap();
+					}
+				} catch(ConnectionException e) {
+					MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+				}
+			}
+		}
+	}
+
+	private class AddButtonSelectionListener implements SelectionListener {
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent evt) {
+			if (Activator.getDefault().isRunningShindig()) {
+				Person person = (Person)personCombo.getData(personCombo.getText());
+				ApplicationImpl application = (ApplicationImpl)applicationCombo.getData(applicationCombo.getText());
+				if (person != null && application != null) {
+					AddAppDataDialog dialog = new AddAppDataDialog(getSite().getShell());
+					if (dialog.open() == AddAppDataDialog.OK) {
+						try {
+							String key = dialog.getKey();
+							String value = dialog.getValue();
+							AppDataService appDataService = Activator.getDefault().getAppDataService();
+							appDataService.addApplicationData(person, application, key, value);
+							updateDataMap();
+						} catch(ConnectionException e) {
+							MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+						}
+					}
+				}
+			}
 		}
 	}
 	
