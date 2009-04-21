@@ -64,4 +64,37 @@ public class AppDataService {
 		tx.commit();
 	}
 
+	public void removeApplicationData(Person person, ApplicationImpl application, String key) {
+		Transaction tx = session.beginTransaction();
+		Query query = session.createQuery("select a from ApplicationDataMapImpl a where a.person = :person and a.application = :application");
+		query.setCacheMode(CacheMode.GET);
+		query.setParameter("person", person);
+		query.setParameter("application", application);
+		ApplicationDataMapImpl applicationDataMap = (ApplicationDataMapImpl)query.uniqueResult();
+		if (applicationDataMap != null) {
+			Map<String, String> dataMap = applicationDataMap.getDataMap();
+			dataMap.remove(key);
+			session.update(applicationDataMap);
+		}
+		tx.commit();
+	}
+
+	public void addApplicationData(Person person, ApplicationImpl application, String key, String value) {
+		Transaction tx = session.beginTransaction();
+		Query query = session.createQuery("select a from ApplicationDataMapImpl a where a.person = :person and a.application = :application");
+		query.setCacheMode(CacheMode.GET);
+		query.setParameter("person", person);
+		query.setParameter("application", application);
+		ApplicationDataMapImpl applicationDataMap = (ApplicationDataMapImpl)query.uniqueResult();
+		if (applicationDataMap == null) {
+			applicationDataMap = new ApplicationDataMapImpl();
+			applicationDataMap.setPerson(person);
+			applicationDataMap.setApplication(application);
+		}
+		Map<String, String> dataMap = applicationDataMap.getDataMap();
+		dataMap.put(key, value);
+		session.saveOrUpdate(applicationDataMap);
+		tx.commit();
+	}
+
 }

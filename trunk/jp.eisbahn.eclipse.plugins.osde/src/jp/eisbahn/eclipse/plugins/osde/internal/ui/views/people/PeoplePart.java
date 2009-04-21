@@ -164,33 +164,35 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			NewPersonDialog dialog = new NewPersonDialog(getSection().getShell());
-			if (dialog.open() == NewPersonDialog.OK) {
-				final String id = dialog.getId();
-				final String displayName = dialog.getDisplayName();
-				Job job = new Job("Create new person") {
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						monitor.beginTask("Creating new person to Shindig database.", 1);
-						personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
-							public void run() {
-								try {
-									PersonService service = Activator.getDefault().getPersonService();
-									Person person = service.createNewPerson(id, displayName);
-									List<Person> input = (List<Person>)personList.getInput();
-									input.add(person);
-									personList.refresh();
-								} catch(ConnectionException e) {
-									MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
+			if (Activator.getDefault().isRunningShindig()) {
+				NewPersonDialog dialog = new NewPersonDialog(getSection().getShell());
+				if (dialog.open() == NewPersonDialog.OK) {
+					final String id = dialog.getId();
+					final String displayName = dialog.getDisplayName();
+					Job job = new Job("Create new person") {
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							monitor.beginTask("Creating new person to Shindig database.", 1);
+							personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
+								public void run() {
+									try {
+										PersonService service = Activator.getDefault().getPersonService();
+										Person person = service.createNewPerson(id, displayName);
+										List<Person> input = (List<Person>)personList.getInput();
+										input.add(person);
+										personList.refresh();
+									} catch(ConnectionException e) {
+										MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
+									}
 								}
-							}
-						});
-						monitor.worked(1);
-						monitor.done();
-						return Status.OK_STATUS;
-					}
-				};
-				job.schedule();
+							});
+							monitor.worked(1);
+							monitor.done();
+							return Status.OK_STATUS;
+						}
+					};
+					job.schedule();
+				}
 			}
 		}
 	}
