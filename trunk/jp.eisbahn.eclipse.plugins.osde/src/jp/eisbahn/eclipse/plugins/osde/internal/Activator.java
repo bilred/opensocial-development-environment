@@ -125,8 +125,12 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		savePluginPreferences();
-		session.close();
-		sessionFactory.close();
+		if (session != null) {
+			session.close();
+		}
+		if (sessionFactory != null) {
+			sessionFactory.close();
+		}
 		personService = null;
 		applicationService = null;
 		appDataService = null;
