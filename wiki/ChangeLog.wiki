@@ -1,5 +1,24 @@
 = Change log =
 
+=== May 8, 2009 ===
+ Version 0.2.6 has been released.
+
+ * Adding, deleting and updating AppData. You can manipulate appdatas in AppData view.
+
+ * The target directory of a creating new project. Fixed the issue when you change the target directory at creating new OSDE project.
+
+ * New Project is always created to default location. This issue related on the previous issue.
+
+ * Error while booting up Apache Shinding Server. In this version, two temporary directories (Jetty and H2 Database) has been changed from OS temporary directory to its sub directory.
+
+ * Display the revision number of Apache Shindig.
+
+ * The parameters for navigating between views.
+
+ * retrieve activities not work.
+
+ You can see more details: [http://code.google.com/p/opensocial-development-environment/issues/list?can=1&q=label%3AMilestone-Release0.2.6 Milestone-Release0.2.6]
+
 === Mar 27, 2009 ===
  Version 0.2.5 has been released.
 
