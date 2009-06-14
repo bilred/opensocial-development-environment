@@ -218,8 +218,11 @@ public class AppDataView extends AbstractView {
 	}
 	
 	private void updateValue() {
-		String value = (String)keyList.getData(keyList.getItem(keyList.getSelectionIndex()));
-		valueText.setText(value);
+		int selectionIndex = keyList.getSelectionIndex();
+		if (selectionIndex >= 0) {
+			String value = (String)keyList.getData(keyList.getItem(selectionIndex));
+			valueText.setText(value);
+		}
 	}
 	
 	private void updateDataMap() {
