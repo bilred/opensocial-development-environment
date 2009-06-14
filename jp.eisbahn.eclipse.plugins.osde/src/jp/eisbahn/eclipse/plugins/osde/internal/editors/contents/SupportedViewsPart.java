@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -259,7 +260,20 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 	}
 
 	public void changeModel() {
+		ISelection selection = supportedViewList.getSelection();
+		IStructuredSelection structured = (IStructuredSelection)selection;
+		Object selected = structured.getFirstElement();
+		List<ContentModel> models = (List<ContentModel>)supportedViewList.getInput();
+		int selectedIndex = models.indexOf(selected);
+		int size = models.size();
+		//
 		displayInitialValue();
+		//
+		models = (List<ContentModel>)supportedViewList.getInput();
+		if (size == models.size()) {
+			ContentModel model = models.get(selectedIndex);
+			supportedViewList.setSelection(new StructuredSelection(model));
+		}
 	}
 
 }
