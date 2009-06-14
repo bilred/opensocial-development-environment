@@ -159,7 +159,7 @@ public class GadgetXmlFileGenerator {
 							content += "  opensocial.requestCreateActivity(\n";
 							content += "      activity, opensocial.CreateActivityPriority.HIGH, function(response) {\n";
 							content += "        if (response.hadError()) {\n";
-							content += "          document.getElementById('result_activity').innerHTML = response.getErrorCode();\n";
+							content += "          document.getElementById('result_activity').innerHTML = response.getErrorMessage();\n";
 							content += "        } else {\n";
 							content += "          document.getElementById('result_activity').innerHTML = 'Succeeded!';\n";
 							content += "        }\n";
@@ -185,7 +185,7 @@ public class GadgetXmlFileGenerator {
 							content += "  req.add(req.newUpdatePersonAppDataRequest(opensocial.IdSpec.PersonId.VIEWER, 'content', content));\n";
 							content += "  req.send(function(response) {\n";
 							content += "    if (response.hadError()) {\n";
-							content += "      document.getElementById('result_appdata').innerHTML = response.getErrorCode();\n";
+							content += "      document.getElementById('result_appdata').innerHTML = response.getErrorMessage();\n";
 							content += "    } else {\n";
 							content += "      document.getElementById('result_appdata').innerHTML = 'Succeeded!';\n";
 							content += "    }\n";
