@@ -220,6 +220,7 @@ public class Activator extends AbstractUIPlugin {
 		registIcon(registry, "icons/i_param.gif");
 		registIcon(registry, "icons/i_icon.gif");
 		registIcon(registry, "icons/i_enumvalue.gif");
+		registIcon(registry, "icons/icon_extension.gif");
 	}
 	
     public ImageDescriptor registIcon(ImageRegistry registry, String iconPath) {
