@@ -25,6 +25,10 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -252,16 +256,29 @@ public class FeaturesPart extends AbstractFormPart {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-//			AddContentDialog dialog = new AddContentDialog(page.getSite().getShell());
-//			if (dialog.open() == AddContentDialog.OK) {
-//				ContentModel model = new ContentModel();
-//				model.setView(dialog.getView());
-//				model.setType(dialog.getType());
-//				List<ContentModel> models = (List<ContentModel>)supportedViewList.getInput();
-//				models.add(model);
-//				supportedViewList.refresh();
-//				markDirty();
-//			}
+			InputDialog dialog = new InputDialog(
+					page.getSite().getShell(), "Add feature", "Please input the feature name.", "",
+					new IInputValidator() {
+						public String isValid(String newText) {
+							if (StringUtils.isBlank(newText)) {
+								return "The feature name is empty.";
+							} else {
+								return null;
+							}
+						}
+					}
+			);
+			if (dialog.open() == Dialog.OK) {
+				String featureRealName = dialog.getValue();
+				FeatureName featureName = FeatureName.getFeatureName(featureRealName);
+				if (featureName != null) {
+					buttonMap.get(featureName).setSelection(true);
+				} else {
+					((Set<String>)freeFraturesList.getInput()).add(featureRealName);
+					freeFraturesList.refresh();
+				}
+				markDirty();
+			}
 		}
 		
 	}
