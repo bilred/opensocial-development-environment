@@ -22,8 +22,15 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -31,8 +38,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -47,6 +57,8 @@ public class FeaturesPart extends AbstractFormPart {
 	private ModulePrefsPage page;
 	
 	private Map<FeatureName, Button> buttonMap;
+	
+	private TableViewer freeFraturesList;
 	
 	private SelectionListener selectionListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -77,6 +89,7 @@ public class FeaturesPart extends AbstractFormPart {
 		for (Button button : buttons) {
 			button.setSelection(false);
 		}
+		Set<String> freeFeatures = new TreeSet<String>();
 		Module module = getModule();
 		if (module != null) {
 			ModulePrefs modulePrefs = module.getModulePrefs();
@@ -89,10 +102,13 @@ public class FeaturesPart extends AbstractFormPart {
 					Button button = buttonMap.get(feature);
 					if (button != null) {
 						button.setSelection(true);
+					} else {
+						freeFeatures.add(featureRealName);
 					}
 				}
 			}
 		}
+		freeFraturesList.setInput(freeFeatures);
 	}
 
 	private void createControls(IManagedForm managedForm) {
@@ -106,30 +122,83 @@ public class FeaturesPart extends AbstractFormPart {
 		//
 		Composite sectionPanel = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 4;
+		layout.numColumns = 2;
 		sectionPanel.setLayout(layout);
 		section.setClient(sectionPanel);
 		sectionPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		Button opensocial08Button = createCheckbox(sectionPanel, "OpenSocial v0.8", toolkit);
+		//
+		Composite fixedFeaturesPanel = toolkit.createComposite(sectionPanel);
+		layout = new GridLayout();
+		layout.numColumns = 2;
+		fixedFeaturesPanel.setLayout(layout);
+		fixedFeaturesPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		//
+		Button opensocial08Button = createCheckbox(fixedFeaturesPanel, "OpenSocial v0.8", toolkit);
 		buttonMap.put(FeatureName.OPENSOCIAL_0_8, opensocial08Button);
-		Button opensocial07Button = createCheckbox(sectionPanel, "OpenSocial v0.7", toolkit);
+		Button opensocial07Button = createCheckbox(fixedFeaturesPanel, "OpenSocial v0.7", toolkit);
 		buttonMap.put(FeatureName.OPENSOCIAL_0_7, opensocial07Button);
-		Button pubsubButton = createCheckbox(sectionPanel, "PubSub", toolkit);
+		Button pubsubButton = createCheckbox(fixedFeaturesPanel, "PubSub", toolkit);
 		buttonMap.put(FeatureName.PUBSUB, pubsubButton);
-		Button viewsButton = createCheckbox(sectionPanel, "Views", toolkit);
+		Button viewsButton = createCheckbox(fixedFeaturesPanel, "Views", toolkit);
 		buttonMap.put(FeatureName.VIEWS, viewsButton);
-		Button flashButton = createCheckbox(sectionPanel, "Flash", toolkit);
+		Button flashButton = createCheckbox(fixedFeaturesPanel, "Flash", toolkit);
 		buttonMap.put(FeatureName.FLASH, flashButton);
-		Button skinsButton = createCheckbox(sectionPanel, "Skins", toolkit);
+		Button skinsButton = createCheckbox(fixedFeaturesPanel, "Skins", toolkit);
 		buttonMap.put(FeatureName.SKINS, skinsButton);
-		Button dynamicHeightButton = createCheckbox(sectionPanel, "Dynamic Height", toolkit);
+		Button dynamicHeightButton = createCheckbox(fixedFeaturesPanel, "Dynamic Height", toolkit);
 		buttonMap.put(FeatureName.DYNAMIC_HEIGHT, dynamicHeightButton);
-		Button setTitleButton = createCheckbox(sectionPanel, "Set Title", toolkit);
+		Button setTitleButton = createCheckbox(fixedFeaturesPanel, "Set Title", toolkit);
 		buttonMap.put(FeatureName.SET_TITLE, setTitleButton);
-		Button miniMessageButton = createCheckbox(sectionPanel, "Mini Message", toolkit);
+		Button miniMessageButton = createCheckbox(fixedFeaturesPanel, "Mini Message", toolkit);
 		buttonMap.put(FeatureName.MINI_MESSAGE, miniMessageButton);
-		Button tabsButton = createCheckbox(sectionPanel, "Tabs", toolkit);
+		Button tabsButton = createCheckbox(fixedFeaturesPanel, "Tabs", toolkit);
 		buttonMap.put(FeatureName.TABS, tabsButton);
+		//
+		Composite freeFeaturesPanel = toolkit.createComposite(sectionPanel);
+		layout = new GridLayout();
+		layout.numColumns = 2;
+		freeFeaturesPanel.setLayout(layout);
+		freeFeaturesPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+		//
+		Composite freeFeaturesTablePanel = toolkit.createComposite(freeFeaturesPanel);
+		freeFeaturesTablePanel.setLayout(layout);
+		freeFeaturesTablePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+		//
+		Table table = toolkit.createTable(freeFeaturesTablePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		GridData layoutData = new GridData(GridData.FILL_BOTH);
+		table.setLayoutData(layoutData);
+		TableColumn column = new TableColumn(table, SWT.LEFT, 0);
+		column.setText("");
+		column.setWidth(20);
+		column = new TableColumn(table, SWT.LEFT, 1);
+		column.setText("Name");
+		column.setWidth(200);
+		freeFraturesList = new TableViewer(table);
+		freeFraturesList.setContentProvider(new FreeFeaturesListContentProvider());
+		freeFraturesList.setLabelProvider(new FreeFeaturesListLabelProvider());
+		final SectionPart part = new SectionPart(section);
+		freeFraturesList.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				getManagedForm().fireSelectionChanged(part, event.getSelection());
+			}
+		});
+		//
+		Composite buttonPane = toolkit.createComposite(freeFeaturesPanel);
+		buttonPane.setLayout(new GridLayout());
+		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		buttonPane.setLayoutData(layoutData);
+		Button addButton = toolkit.createButton(buttonPane, "Add", SWT.PUSH);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.verticalAlignment = GridData.BEGINNING;
+		addButton.setLayoutData(layoutData);
+		addButton.addSelectionListener(new AddButtonSelectionListener());
+		Button deleteButton = toolkit.createButton(buttonPane, "Delete", SWT.PUSH);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.verticalAlignment = GridData.BEGINNING;
+		deleteButton.setLayoutData(layoutData);
+		deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
 	}
 	
 	private Button createCheckbox(Composite parent, String text, FormToolkit toolkit) {
@@ -155,6 +224,12 @@ public class FeaturesPart extends AbstractFormPart {
 				requireOrOptionalOrPreload.add(require);
 			}
 		}
+		Set<String> freeFeatures = (Set<String>)freeFraturesList.getInput();
+		for (String featureName : freeFeatures) {
+			Require require = new Require();
+			require.setFeature(featureName);
+			requireOrOptionalOrPreload.add(require);
+		}
 	}
 	
 	private void clearFeatures(ModulePrefs modulePrefs) {
@@ -169,6 +244,48 @@ public class FeaturesPart extends AbstractFormPart {
 
 	public void changeModel() {
 		displayInitialValue();
+	}
+	
+	private class AddButtonSelectionListener implements SelectionListener {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+//			AddContentDialog dialog = new AddContentDialog(page.getSite().getShell());
+//			if (dialog.open() == AddContentDialog.OK) {
+//				ContentModel model = new ContentModel();
+//				model.setView(dialog.getView());
+//				model.setType(dialog.getType());
+//				List<ContentModel> models = (List<ContentModel>)supportedViewList.getInput();
+//				models.add(model);
+//				supportedViewList.refresh();
+//				markDirty();
+//			}
+		}
+		
+	}
+	
+	private class DeleteButtonSelectionListener implements SelectionListener {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			ISelection selection = freeFraturesList.getSelection();
+			if (!selection.isEmpty()) {
+				IStructuredSelection structured = (IStructuredSelection)selection;
+				final String feature = (String)structured.getFirstElement();
+				if (MessageDialog.openConfirm(page.getSite().getShell(),
+						"Deleting feature", "Do you want to delete the feature '" + feature + "'?")) {
+					Set<String> models = (Set<String>)freeFraturesList.getInput();
+					models.remove(feature);
+					freeFraturesList.refresh();
+					markDirty();
+				}
+			}
+		}
+		
 	}
 
 }
