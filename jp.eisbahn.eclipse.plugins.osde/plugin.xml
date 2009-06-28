@@ -185,6 +185,13 @@
             id="jp.eisbahn.eclipse.plugins.osde.internal.views.DocumentView"
             name="Docs">
       </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.monitor.ShindigMonitorView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.ShindigMonitorView"
+            name="Monitor">
+      </view>
    </extension>
    
    <extension
