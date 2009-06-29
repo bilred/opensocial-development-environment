@@ -3,11 +3,11 @@
 === June 29, 2009 ===
  Version 0.2.7 has been released.
 
- * Support the keyboard shortcut for launching your gadget on the gadget editor directly.
+ * Support the keyboard shortcut for launching your gadget on the gadget editor directly. You can launch your gadget by pressing Ctrl+R or Alt+R.
 
  * Fixed the issue that selected view is unselected after saving changes in OSDE editor.
 
- * Fixed the issue that AppData can be removed by the other user.
+ * Fixed the issue that !AppData can be removed by the other user.
 
  * Fixed the issue that undefined error occurred in a sample code.
 
