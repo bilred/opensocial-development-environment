@@ -1,5 +1,24 @@
 = Change log =
 
+=== June 29, 2009 ===
+ Version 0.2.7 has been released.
+
+ * Support the keyboard shortcut for launching your gadget on the gadget editor directly.
+
+ * Fixed the issue that selected view is unselected after saving changes in OSDE editor.
+
+ * Fixed the issue that AppData can be removed by the other user.
+
+ * Fixed the issue that undefined error occurred in a sample code.
+
+ * Fixed the issue that for Person populated with newFetchPersonRequest, both Person.isOwner() and Person.isViewer() returning false.
+
+ * You can input a feature name freely.
+
+ * Implemented HTTP Traffic View.
+
+ You can see more details: [http://code.google.com/p/opensocial-development-environment/issues/list?can=1&q=label%3AMilestone-Release0.2.7 Milestone-Release0.2.7]
+
 === May 8, 2009 ===
  Version 0.2.6 has been released.
 
