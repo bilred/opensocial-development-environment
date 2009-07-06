@@ -270,7 +270,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 		displayInitialValue();
 		//
 		models = (List<ContentModel>)supportedViewList.getInput();
-		if (size == models.size()) {
+		if ((selectedIndex != -1) && (size == models.size())) {
 			ContentModel model = models.get(selectedIndex);
 			supportedViewList.setSelection(new StructuredSelection(model));
 		}
