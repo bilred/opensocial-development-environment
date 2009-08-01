@@ -122,7 +122,12 @@ public abstract class AbstractRunAction {
 				code = code.replace("$project_name$", project.getName());
 				IPath location = project.getFolder("target").getLocation();
 				code = code.replace("$context_dir$", location.toOSString());
-				File file = new File(Activator.getDefault().getOsdeConfiguration().getJettyDir(), "osde_context_" + project.getName() + ".xml");
+				String jettyDir = Activator.getDefault().getOsdeConfiguration().getJettyDir();
+				File jettyDirFile = new File(jettyDir);
+				if (!jettyDirFile.isDirectory()) {
+					jettyDirFile.mkdirs();
+				}
+				File file = new File(jettyDirFile, "osde_context_" + project.getName() + ".xml");
 				fos = new FileOutputStream(file);
 				ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
 				IOUtils.copy(bytes, fos);
