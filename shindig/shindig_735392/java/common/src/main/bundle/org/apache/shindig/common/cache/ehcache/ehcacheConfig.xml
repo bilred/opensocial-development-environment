@@ -37,7 +37,7 @@
 
   <!-- By default do not cache any parsed documents. This is experimental -->
   <cache name="parsedDocuments"
-    maxElementsInMemory="0"
+    maxElementsInMemory="1000"
     eternal="true"
     overflowToDisk="false"
     diskPersistent="false"
