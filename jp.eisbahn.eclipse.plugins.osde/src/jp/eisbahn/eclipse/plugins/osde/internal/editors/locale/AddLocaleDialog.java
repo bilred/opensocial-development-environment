@@ -63,7 +63,7 @@ public class AddLocaleDialog extends TitleAreaDialog {
 		panel.setLayoutData(layoutData);
 		//
 		Label label = new Label(panel, SWT.NONE);
-		label.setText("Contry:");
+		label.setText("Country:");
 		countryCombo = new Combo(panel, SWT.READ_ONLY);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		countryCombo.setLayoutData(layoutData);
