@@ -89,7 +89,7 @@ public class AppDataServiceImpl extends AbstractServiceImpl implements AppDataSe
 	}
 	
 	private Map<String, String> filterMap(Map<String, String> map, Set<String> fields) {
-		if (fields.contains("*")) {
+		if (fields.contains("*") || fields.isEmpty()) {
 			return map;
 		} else {
 			Map<String, String> resultMap = new HashMap<String, String>();
