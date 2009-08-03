@@ -37,7 +37,6 @@ import org.eclipse.ui.forms.IPartSelectionListener;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.json.simple.JSONObject;
 
 public class HttpLogsPart extends SectionPart implements IPartSelectionListener {
 	
