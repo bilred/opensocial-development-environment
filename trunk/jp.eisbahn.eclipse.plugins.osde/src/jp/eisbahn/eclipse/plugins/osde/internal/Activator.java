@@ -38,7 +38,6 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationCreator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
-import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.monitor.ShindigMonitorView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 

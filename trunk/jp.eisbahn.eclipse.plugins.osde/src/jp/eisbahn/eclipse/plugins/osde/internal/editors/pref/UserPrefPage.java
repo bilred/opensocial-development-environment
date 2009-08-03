@@ -17,7 +17,6 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.pref;
 
-import java.util.List;
 import java.util.Map;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
