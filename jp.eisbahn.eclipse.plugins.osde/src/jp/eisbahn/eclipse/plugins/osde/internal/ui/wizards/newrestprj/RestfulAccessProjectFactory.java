@@ -29,8 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.model.Person;
