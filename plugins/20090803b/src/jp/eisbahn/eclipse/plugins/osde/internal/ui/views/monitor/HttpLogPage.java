@@ -35,7 +35,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -76,7 +75,6 @@ public class HttpLogPage implements IDetailsPage {
 		Composite basicPane = toolkit.createComposite(basicSection);
 		basicPane.setLayout(new GridLayout(2, false));
 		basicSection.setClient(basicPane);
-		final SectionPart basicPart = new SectionPart(basicSection);
 		//
 		toolkit.createLabel(basicPane, "Request URI:");
 		requestURILabel = toolkit.createLabel(basicPane, "");

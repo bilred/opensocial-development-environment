@@ -18,7 +18,6 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.shindig.social.opensocial.model.MediaItem;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
