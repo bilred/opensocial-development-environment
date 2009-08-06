@@ -17,10 +17,10 @@
  * Sun's code conventions: http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
 
  * indentation
- ** to yoichiro: should it be a tab or fixed number (say, 2) of spaces?
+  * to yoichiro: should it be a tab or fixed number (say, 2) of spaces?
 
  * javadoc
- ** required: classes and public methods
+  * required: classes and public methods
 
  * unit test
 
