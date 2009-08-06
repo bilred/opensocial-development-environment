@@ -10,13 +10,15 @@
 
 (To Be Done)
 
-== Coding Convention. ==
+== Code Conventions ==
 
-(To Be Done)
+http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
 
-== Code review/submit guidelines. ==
+== Code Review/Submit Guidelines ==
 
-(To Be Done)
+ * Please follow instructions at: http://code.google.com/p/support/wiki/CodeReviews
+
+ * For people who want to contribute code but don't have submit privilege on OSDE's SVN server: please file a new issue of "review request" and attach your code as a SVN patch.
 
 = For general contribution =
 
