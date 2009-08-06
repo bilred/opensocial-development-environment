@@ -4,13 +4,13 @@
 
 == How to setup your development environment. ==
 
- * setup eclipse
+ * install eclipse
 
  * install SVN plugin for eclipse: subclipse or subversive
 
 == How to test your OSDE plugin during development. ==
 
-Please see:
+ * Please see:
 http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.pde.doc.user/guide/intro/pde_overview.htm
 
 == Code Conventions ==
@@ -18,10 +18,10 @@ http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.pde.doc.user/guide
  * Sun's code conventions: http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
 
  * indentation
-  * to yoichiro: should it be a tab or fixed number (say, 2) of spaces?
+   * to yoichiro: should it be a tab or fixed number (say, 2) of spaces?
 
  * javadoc
-  * required: classes and public methods
+   * required: classes and public methods
 
  * unit test
 
