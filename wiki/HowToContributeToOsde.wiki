@@ -48,6 +48,12 @@ Notes:
 
  * Your code for review should be placed under: /branches/your_name/your_feature/yyyymmddx/
 
+== Understand the infrastructure of OSDE ==
+
+ * *what each folder is used for? (To Be Done)*
+
+ * *design doc for OSDE (To Be Done)*
+
 ----
 
 = For general contribution =
