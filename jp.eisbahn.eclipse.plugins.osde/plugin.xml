@@ -35,7 +35,7 @@
    </extension>
    
    <extension
-         point="org.eclipse.core.runtime.contentTypes">
+         point="org.eclipse.core.contenttype.contentTypes">
       <content-type
             base-type="org.eclipse.core.runtime.xml"
             describer="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlDescriber"
