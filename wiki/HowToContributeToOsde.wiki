@@ -11,7 +11,7 @@
 == How to test your OSDE plugin during development. ==
 
  * Please see:
-   http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.pde.doc.user/guide/intro/pde_overview.htm
+ http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.pde.doc.user/guide/intro/pde_overview.htm
 
 == Code Conventions ==
 
