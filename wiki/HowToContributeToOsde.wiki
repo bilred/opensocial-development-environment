@@ -1,0 +1,16 @@
+#summary How To Contribute To OSDE
+
+= For developing OSDE application =
+
+How to setup your development environment.
+
+How to test your OSDE plugin during development.
+
+Coding Convention.
+
+Code review/submit guidelines.
+
+= For general contribution =
+
+* File an issue: It could a an issue for bug reporting, new feature request, a code patch, or whatever.
+* Update Wiki pages: Please request for access rights if needed.
