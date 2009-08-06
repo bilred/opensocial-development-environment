@@ -27,6 +27,16 @@
 == Code Review/Submit Guidelines ==
 
  * Please follow instructions at: http://code.google.com/p/support/wiki/CodeReviews
+   Here is a summary:
+   * A developer creates a new branch with svn cp trunk branches/hot-new-stuff.
+   * The developer writes, tests, and commits several changes to that branch.
+   * The developer clicks "Request Code Review" and fills in the username of a teammate, a description of what the reviewer should look for, and the path to the branch.
+   * The reviewer gets a regular issue notification email about the new code review issue.
+   * The reviewer follows a link from the issue to the branch page and sees a summary of all the work that has been done on the branch and can view diffs.
+   * The reviewer enters review comments, publishes them, and continues the discussion with the developer.
+   * The developer may make additional changes to the code based on feedback from the reviewer.
+   * When the reviewer is satisfied, he/she sets the review issue status to "Done" and the issue is closed.
+   * The developer would then merge the work done on the branch into /trunk. 
 
  * For people who want to contribute code but don't have submit privilege on OSDE's SVN server: please file a new issue of "review request" and attach your code as a SVN patch.
 
