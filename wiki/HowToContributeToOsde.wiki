@@ -16,11 +16,19 @@
 
  * Sun's code conventions: http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
 
+ * indentation
+
+ * javadoc
+
+ * unit test
+
 == Code Review/Submit Guidelines ==
 
  * Please follow instructions at: http://code.google.com/p/support/wiki/CodeReviews
 
  * For people who want to contribute code but don't have submit privilege on OSDE's SVN server: please file a new issue of "review request" and attach your code as a SVN patch.
+
+ * Your code for review should be placed under: /branches/your_name/your_feature/yyyymmddx/
 
 = For general contribution =
 
