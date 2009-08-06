@@ -2,13 +2,13 @@
 
 = For developing OSDE application =
 
-== How to setup your development environment. ==
+== Setup your development environment ==
 
  * install eclipse
 
  * install SVN plugin for eclipse: subclipse or subversive
 
-== How to test your OSDE plugin during development. ==
+== Test your OSDE plugin during development ==
 
  * Please see:
  http://help.eclipse.org/ganymede/index.jsp?topic=/org.eclipse.pde.doc.user/guide/intro/pde_overview.htm
@@ -26,6 +26,7 @@
  * unit test
 
 == Code Review/Submit Guidelines ==
+
 Please follow instructions at: http://code.google.com/p/support/wiki/CodeReviews
 
 Here is a summary:
