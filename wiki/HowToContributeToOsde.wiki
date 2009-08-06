@@ -2,15 +2,25 @@
 
 = For developing OSDE application =
 
-How to setup your development environment.
+== How to setup your development environment. ==
 
-How to test your OSDE plugin during development.
+(To Be Done)
 
-Coding Convention.
+== How to test your OSDE plugin during development. ==
 
-Code review/submit guidelines.
+(To Be Done)
+
+== Coding Convention. ==
+
+(To Be Done)
+
+== Code review/submit guidelines. ==
+
+(To Be Done)
 
 = For general contribution =
+
+(To Be Done)
 
  * File an issue: It could a an issue for bug reporting, new feature request, a code patch, or whatever.
  * Update Wiki pages: Please request for access rights if needed.
