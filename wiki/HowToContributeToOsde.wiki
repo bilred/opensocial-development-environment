@@ -1,5 +1,7 @@
 #summary How To Contribute To OSDE
 
+----
+
 = For developing OSDE application =
 
 == Setup your development environment ==
@@ -45,6 +47,8 @@ Notes:
  * For people who want to contribute code but don't have submit privilege on OSDE's SVN server: please file a new issue of "review request" and attach your code as a SVN patch.
 
  * Your code for review should be placed under: /branches/your_name/your_feature/yyyymmddx/
+
+----
 
 = For general contribution =
 
