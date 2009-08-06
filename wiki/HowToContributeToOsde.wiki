@@ -25,9 +25,8 @@
  * unit test
 
 == Code Review/Submit Guidelines ==
-
- * Please follow instructions at: http://code.google.com/p/support/wiki/CodeReviews
-   Here is a summary:
+Please follow instructions at: http://code.google.com/p/support/wiki/CodeReviews
+Here is a summary:
    * A developer creates a new branch with svn cp trunk branches/hot-new-stuff.
    * The developer writes, tests, and commits several changes to that branch.
    * The developer clicks "Request Code Review" and fills in the username of a teammate, a description of what the reviewer should look for, and the path to the branch.
