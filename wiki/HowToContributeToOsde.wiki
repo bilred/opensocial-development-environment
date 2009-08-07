@@ -23,7 +23,7 @@
    * please use 4-spaces and avoid using tabs.
 
  * javadoc
-   * required: classes and public methods
+   * required for classes and public methods
 
  * unit test
 
