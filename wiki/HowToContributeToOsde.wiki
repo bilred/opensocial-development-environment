@@ -20,7 +20,7 @@
  * Sun's code conventions: http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
 
  * indentation
-   * to yoichiro: should it be a tab or fixed number (say, 2) of spaces?
+   * please use 4-spaces and avoid using tabs.
 
  * javadoc
    * required: classes and public methods
@@ -45,6 +45,9 @@ Here is a summary:
 Notes:
 
  * For people who want to contribute code but don't have submit privilege on OSDE's SVN server: please file a new issue of "review request" and attach your code as a SVN patch.
+   * For reviewers: when the review request comes with a SVN patch, you have two ways to review the code:
+      * Simply reply with comments in plain text.
+      * Utilize the review feature provided by google code. In this case, the reviewer needs to commit the patch to a folder under /branches/contributor/feature/yyyymmddx/. Once the review is done, then the reviewer needs to merge the code into /trunk.
 
  * Your code for review should be placed under: /branches/your_name/your_feature/yyyymmddx/
 
