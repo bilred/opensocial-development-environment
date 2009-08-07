@@ -45,6 +45,7 @@ Here is a summary:
 Notes:
 
  * For people who want to contribute code but don't have submit privilege on OSDE's SVN server: please file a new issue of "review request" and attach your code as a SVN patch.
+  * Please type in "/branches/patches" as the branch path  when creating the new issue.
   * For reviewers: when the review request comes with a SVN patch, you have two ways to review the code:
     * Simply reply with comments in plain text.
     * Utilize the review feature provided by google code. In this case, the reviewer needs to commit the patch to a folder under /branches/contributor/feature/yyyymmddx/. Once the review is done, then the reviewer needs to merge the code into /trunk.
