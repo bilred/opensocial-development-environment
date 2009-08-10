@@ -15,7 +15,7 @@ Development Process: (Refer the following section for more details)
 
 == Setup your development environment ==
 
- * install eclipse
+ * Download and install eclipse from http://www.eclipse.org/
 
  * install SVN plugin for eclipse: subclipse or subversive
 
