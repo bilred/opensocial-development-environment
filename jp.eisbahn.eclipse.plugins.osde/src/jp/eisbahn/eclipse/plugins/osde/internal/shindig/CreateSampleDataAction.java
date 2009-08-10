@@ -84,16 +84,16 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 					protected IStatus run(IProgressMonitor monitor) {
 						monitor.beginTask("Create sample data", 6);
 						Person canonical = createCanonicalPerson();
-						personService.store(canonical);
+						personService.storePerson(canonical);
 						monitor.worked(1);
 						Person john = createJohnPerson();
-						personService.store(john);
+						personService.storePerson(john);
 						monitor.worked(1);
 						Person jane = createJanePerson();
-						personService.store(jane);
+						personService.storePerson(jane);
 						monitor.worked(1);
 						Person george = createGeorgePerson();
-						personService.store(george);
+						personService.storePerson(george);
 						monitor.worked(1);
 						setRelations(canonical, john, jane, george, personService);
 						monitor.worked(1);
@@ -117,7 +117,7 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 				job.setUser(true);
 				job.schedule();
 			}
-		} catch (ConnectionException e) {
+		} catch (ConnectionException ce) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
 		}
 	}
@@ -321,6 +321,8 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 	}
 
 	public void dispose() {
+		shell = null;
+		targetPart = null;
 	}
 
 	public void init(IWorkbenchWindow window) {
