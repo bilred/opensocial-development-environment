@@ -62,7 +62,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
-import org.hibernate.HibernateException;
 
 public class CreateSampleDataAction extends Action implements IWorkbenchWindowActionDelegate {
 
@@ -120,8 +119,6 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 			}
 		} catch (ConnectionException ce) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
-		} catch (HibernateException he) {
-			MessageDialog.openError(shell, "Error", "Error when creating new persons in Shindig");
 		}
 	}
 
