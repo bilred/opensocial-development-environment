@@ -43,21 +43,21 @@ public class PersonService {
 		return (List<Person>)people;
 	}
 
-	public Person storePerson(Person person) throws HibernateException {
+	public Person storePerson(Person person) {
 		Transaction tx = session.beginTransaction();
 		session.saveOrUpdate(person);
 		tx.commit();
 		return person;
 	}
 	
-	public Person createNewPerson(String id, String displayName) throws HibernateException {
+	public Person createNewPerson(String id, String displayName) {
 		Person person = new PersonImpl();
 		person.setId(id);
 		person.setDisplayName(displayName);
 		return storePerson(person);
 	}
 	
-	public void deletePerson(Person person) throws HibernateException {
+	public void deletePerson(Person person) {
 		Transaction tx = session.beginTransaction();
 		Query query = session.createQuery("select r from RelationshipImpl r where r.person = :person or r.target = :target");
 		query.setParameter("person", person);
@@ -89,13 +89,13 @@ public class PersonService {
 		return relationship;
 	}
 
-	public void deleteRelationship(RelationshipImpl relation) throws HibernateException {
+	public void deleteRelationship(RelationshipImpl relation) {
 		Transaction tx = session.beginTransaction();
 		session.delete(relation);
 		tx.commit();
 	}
 
-	public void removeAll() throws HibernateException {
+	public void removeAll() {
 		List<Person> people = getPeople();
 		for (Person person : people) {
 			deletePerson(person);
