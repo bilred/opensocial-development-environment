@@ -17,7 +17,7 @@ Development Process: (Refer the following section for more details)
 
  * Download and install eclipse from http://www.eclipse.org/
 
- * install SVN plugin for eclipse: subclipse or subversive
+ * Install SVN plugin for eclipse: subclipse (http://subclipse.tigris.org/) or subversive (http://www.eclipse.org/subversive/)
 
 == Test your OSDE plugin during development ==
 
