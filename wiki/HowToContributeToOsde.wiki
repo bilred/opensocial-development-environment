@@ -7,6 +7,7 @@
 == An Overview of the Contributing Process ==
 
 Development Environment: eclipse 3.X + subclipse/subversive for contributing to OSDE
+
 Development Process: (Refer the following section for more details)
  * Make a branch of the trunk
  * Checkout the branch, make your changes, and then commit your changes
