@@ -36,7 +36,7 @@
    * Download and extract the archive of H2 Database (1.1.104): http://h2database.googlecode.com/files/h2-2008-11-28.zip
     * You can find the jar file "h2-1.1.104.jar" in a bin directory
    * Register the jar file to a local repository
-    * {{{ mvn install:install-file -DgroupId=org.h2 -DartifactId=h2 -Dversion="1.1.104 -Dpackaging=jar -Dfile=h2-1.1.104.jar }}}
+    * {{{ mvn install:install-file -DgroupId=org.h2 -DartifactId=h2 -Dversion=1.1.104 -Dpackaging=jar -Dfile=h2-1.1.104.jar }}}
 
  * Check out the Apache Shindig for OSDE from the code repository
   * trunk of shindig: https://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_735392
