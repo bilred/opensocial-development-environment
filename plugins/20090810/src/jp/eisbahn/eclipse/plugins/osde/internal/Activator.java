@@ -115,7 +115,7 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
-		registIcon();
+		registerIcon();
 		gadgetXmlParser = new GadgetXmlParser();
 	}
 
@@ -199,34 +199,34 @@ public class Activator extends AbstractUIPlugin {
 		}
 	}
 	
-	private void registIcon() {
+	private void registerIcon() {
 		ImageRegistry registry = getImageRegistry();
-		registIcon(registry, "icons/icon_user.gif");
-		registIcon(registry, "icons/icon_component.gif");
-		registIcon(registry, "icons/action_refresh.gif");
-		registIcon(registry, "icons/comment_yellow.gif");
-		registIcon(registry, "icons/project.gif");
-		registIcon(registry, "icons/icon_key.gif");
-		registIcon(registry, "icons/icon_world.gif");
-		registIcon(registry, "icons/16-em-pencil.gif");
-		registIcon(registry, "icons/icon_settings.gif");
-		registIcon(registry, "icons/page_component.gif");
-		registIcon(registry, "icons/16-em-cross.gif");
-		registIcon(registry, "icons/icon_home.gif");
-		registIcon(registry, "icons/list_settings.gif");
-		registIcon(registry, "icons/opensocial.gif");
-		registIcon(registry, "icons/i_require.gif");
-		registIcon(registry, "icons/i_optional.gif");
-		registIcon(registry, "icons/i_param.gif");
-		registIcon(registry, "icons/i_icon.gif");
-		registIcon(registry, "icons/i_enumvalue.gif");
-		registIcon(registry, "icons/icon_extension.gif");
-		registIcon(registry, "icons/16-arrow-right.gif");
-		registIcon(registry, "icons/16-circle-red-remove.gif");
-		registIcon(registry, "icons/16-circle-blue.gif");
+		registerIcon(registry, "icons/icon_user.gif");
+		registerIcon(registry, "icons/icon_component.gif");
+		registerIcon(registry, "icons/action_refresh.gif");
+		registerIcon(registry, "icons/comment_yellow.gif");
+		registerIcon(registry, "icons/project.gif");
+		registerIcon(registry, "icons/icon_key.gif");
+		registerIcon(registry, "icons/icon_world.gif");
+		registerIcon(registry, "icons/16-em-pencil.gif");
+		registerIcon(registry, "icons/icon_settings.gif");
+		registerIcon(registry, "icons/page_component.gif");
+		registerIcon(registry, "icons/16-em-cross.gif");
+		registerIcon(registry, "icons/icon_home.gif");
+		registerIcon(registry, "icons/list_settings.gif");
+		registerIcon(registry, "icons/opensocial.gif");
+		registerIcon(registry, "icons/i_require.gif");
+		registerIcon(registry, "icons/i_optional.gif");
+		registerIcon(registry, "icons/i_param.gif");
+		registerIcon(registry, "icons/i_icon.gif");
+		registerIcon(registry, "icons/i_enumvalue.gif");
+		registerIcon(registry, "icons/icon_extension.gif");
+		registerIcon(registry, "icons/16-arrow-right.gif");
+		registerIcon(registry, "icons/16-circle-red-remove.gif");
+		registerIcon(registry, "icons/16-circle-blue.gif");
 	}
 	
-    public ImageDescriptor registIcon(ImageRegistry registry, String iconPath) {
+    public ImageDescriptor registerIcon(ImageRegistry registry, String iconPath) {
         ImageDescriptor descriptor = createSystemImageDescriptor(iconPath);
         registry.put(iconPath, descriptor);
         return descriptor;
