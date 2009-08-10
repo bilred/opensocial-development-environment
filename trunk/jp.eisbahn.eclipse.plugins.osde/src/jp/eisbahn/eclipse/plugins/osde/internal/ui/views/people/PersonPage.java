@@ -564,7 +564,7 @@ public class PersonPage implements IDetailsPage {
 				bodyType.setWeight(toFloat(weightText.getText()));
 				//
 				PersonService personService = Activator.getDefault().getPersonService();
-				personService.store(person);
+				personService.storePerson(person);
 				managedForm.fireSelectionChanged(part, new StructuredSelection(person));
 			} catch(ConnectionException e) {
 				MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");

@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
 import org.apache.shindig.social.opensocial.model.Person;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -42,7 +43,7 @@ public class PersonService {
 		return (List<Person>)people;
 	}
 
-	public Person store(Person person) {
+	public Person storePerson(Person person) {
 		Transaction tx = session.beginTransaction();
 		session.saveOrUpdate(person);
 		tx.commit();
@@ -53,7 +54,7 @@ public class PersonService {
 		Person person = new PersonImpl();
 		person.setId(id);
 		person.setDisplayName(displayName);
-		return store(person);
+		return storePerson(person);
 	}
 	
 	public void deletePerson(Person person) {
@@ -77,7 +78,7 @@ public class PersonService {
 		return (List<RelationshipImpl>)results;
 	}
 
-	public RelationshipImpl createRelationship(String groupId, Person person, Person target) {
+	public RelationshipImpl createRelationship(String groupId, Person person, Person target) throws HibernateException {
 		Transaction tx = session.beginTransaction();
 		RelationshipImpl relationship = new RelationshipImpl();
 		relationship.setGroupId(groupId);
