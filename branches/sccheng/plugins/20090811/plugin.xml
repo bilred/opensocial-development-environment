@@ -214,8 +214,8 @@
             </separator>
          </menu>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCerAction"
-               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCerAction"
+               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCertificateAction"
+               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCertificateAction"
                icon="icons/icon_key.gif"
                label="Show &amp;Public Certificate"
                menubarPath="opensocialMenu/opensocialGroup3"
