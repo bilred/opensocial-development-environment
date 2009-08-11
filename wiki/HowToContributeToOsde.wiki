@@ -43,7 +43,7 @@
 
  * Build and package
   * cd shindig_735392
-  * mvn package
+  * mvn install package
    * If you get a warning about compiling, try to execute the mvn command again
   * You can find a war file in shindig_735392/java/server/target, if no any errors
 
