@@ -36,7 +36,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class ShowPublicCerAction extends Action implements IWorkbenchWindowActionDelegate {
+public class ShowPublicCertificateAction extends Action implements IWorkbenchWindowActionDelegate {
 
 	private Shell shell;
 	private IWorkbenchPart targetPart;
@@ -56,7 +56,7 @@ public class ShowPublicCerAction extends Action implements IWorkbenchWindowActio
 		+ "WThZt1a1SCmWx1Ne2a5O6qeQPtFPSL/BEe6xFWE+0RHYWEK+JcDRhv5MDW0DrJjT\n"
 		+ "-----END CERTIFICATE-----";
 	
-	public ShowPublicCerAction() {
+	public ShowPublicCertificateAction() {
 		super();
 	}
 	
