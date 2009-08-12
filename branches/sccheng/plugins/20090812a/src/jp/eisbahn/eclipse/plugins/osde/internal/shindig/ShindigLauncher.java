@@ -72,9 +72,10 @@ public class ShindigLauncher {
 			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
 			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
 			int delay = 0;
-			// launch shindig & database
+			
+			// Launch Shindig & database
 			if (config.isUseInternalDatabase()) {
-				for (int i = 0; i < configurations.length; i++) {
+				for (int i = 0; i < configurations.length; ++i) {
 					if (configurations[i].getName().equals("Shindig Database")) {
 						final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
 						shell.getDisplay().syncExec(new Runnable() {
@@ -96,6 +97,7 @@ public class ShindigLauncher {
 					Activator.getDefault().connect(targetPart.getSite().getWorkbenchWindow());
 				}
 			});
+			
 			for (int i = 0; i < configurations.length; i++) {
 				if (configurations[i].getName().equals("Apache Shindig")) {
 					final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
