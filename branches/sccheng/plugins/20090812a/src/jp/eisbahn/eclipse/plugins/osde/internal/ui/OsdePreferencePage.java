@@ -291,7 +291,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 	}
 	
 	private void initializeDefaults() {
-		OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+		OsdeConfig config = Activator.getDefault().getDefaultOsdeConfiguration();
 		setConfigurationToDisplay(config);
 	}
 	
