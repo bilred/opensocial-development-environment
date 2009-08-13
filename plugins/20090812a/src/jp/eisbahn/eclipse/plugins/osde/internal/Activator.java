@@ -126,7 +126,6 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		(new DefaultScope()).getNode(Activator.PLUGIN_ID).flush();
-		savePluginPreferences();
 		if (session != null) {
 			session.close();
 		}
@@ -394,6 +393,32 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public OsdeConfig getOsdeConfiguration() {
+		try {
+			IPreferenceStore store = getPreferenceStore();
+			OsdeConfig config = new OsdeConfig();
+			config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
+			config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
+			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
+			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
+			config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
+			config.setUseInternalDatabase(store.getBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
+			config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
+			config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
+			config.setExternalDatabasePort(store.getString(OsdeConfig.EXTERNAL_DATABASE_PORT));
+			config.setExternalDatabaseUsername(store.getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+			config.setExternalDatabasePassword(store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
+			return config;
+		} catch(IOException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		}
+	}
+	
+	public OsdeConfig getDefaultOsdeConfiguration() {
 		try {
 			IPreferenceStore store = getPreferenceStore();
 			OsdeConfig config = new OsdeConfig();

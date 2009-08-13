@@ -73,7 +73,9 @@ public class ShindigLauncher {
 			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
 			int delay = 0;
 			
-			// Launch Shindig & database
+			// The following codes launch Database and then launch Shindig
+			// If the user specifies an external database, we won't launch internal database
+			// Launch Database for Shindig to connect to
 			if (config.isUseInternalDatabase()) {
 				for (int i = 0; i < configurations.length; ++i) {
 					if (configurations[i].getName().equals("Shindig Database")) {
@@ -98,6 +100,7 @@ public class ShindigLauncher {
 				}
 			});
 			
+			// Launch Shindig container
 			for (int i = 0; i < configurations.length; i++) {
 				if (configurations[i].getName().equals("Apache Shindig")) {
 					final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
