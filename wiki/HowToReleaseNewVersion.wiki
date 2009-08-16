@@ -104,7 +104,7 @@ For managing issues, adjust items for an issue tracking.
  * Add the next milestone. For example, you have to add 'Milestone-Release(next version number) = For next release'. You also remove '= For next version' from the previous milestone.
   * If you released the version '0.2.8', you have to add 'Milestone-Release0.2.9'.
  * Add the next version. For example, you have to add 'Version-(next version number)'. You also remove '= Current version' from the previous version.
-  * If you released the version '0.2.8', you have to add 'Version-0.2.9'.
+  * If you released the version '0.2.8', you have to add 'Version-0.2.8'.
  * Replace the latest version which templates have.
 
 ==Write a change log==
