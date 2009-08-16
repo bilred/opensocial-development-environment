@@ -5,7 +5,7 @@
 
  * Selected view is unselected after saving changes in OSDE editor
  * makeRequest does not work anymore in OSDE 0.2.7
- * Fetching app data using "*" doesn't work
+ * Fetching app data using "`*`" doesn't work
  * typo "Contry" while adding a new supported locale
  * maxElementsInMemory for parsedDocument needs more than 1.
  * The context directory for jetty doesn't be made.
