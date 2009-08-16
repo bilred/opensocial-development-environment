@@ -1,5 +1,18 @@
 = Change log =
 
+=== August 16, 2009 ===
+ Version 0.2.8 has been released.
+
+ * Selected view is unselected after saving changes in OSDE editor
+ * makeRequest does not work anymore in OSDE 0.2.7
+ * Fetching app data using "*" doesn't work
+ * typo "Contry" while adding a new supported locale
+ * maxElementsInMemory for parsedDocument needs more than 1.
+ * The context directory for jetty doesn't be made.
+ * org.apache.shindig.gadgets.GadgetException: url parameter is missing
+
+ You can see more details: [http://code.google.com/p/opensocial-development-environment/issues/list?can=1&q=label%3AMilestone-Release0.2.8 Milestone-Release0.2.8]
+
 === June 29, 2009 ===
  Version 0.2.7 has been released.
 
