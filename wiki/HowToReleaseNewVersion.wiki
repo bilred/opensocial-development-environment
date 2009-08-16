@@ -94,3 +94,9 @@ Copy the files under /svn/trunk to a /svn/tags with a new version number.
 ==Announce about released==
 
 Announce to users that the new version of OSDE has been released in the Google Groups. Users can know it soon!
+
+It will be better to write the changes on the post.
+
+==Write a change log==
+
+Finally, write a change log on this project site. The page of the change log is [ChangeLog here].
