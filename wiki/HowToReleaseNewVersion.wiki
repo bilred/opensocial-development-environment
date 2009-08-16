@@ -10,9 +10,9 @@ Announce about starting to release a new version of OSDE in Google Groups. Users
 
 For changing the version number, check out /svn/trunk.
 
- * svn checkout https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.plugins.osde --username `[`your mail address`]`
- * svn checkout https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.features.osde --username `[`your mail address`]`
- * svn checkout https://opensocial-development-environment.googlecode.com/svn/update-site --username `[`your mail address`]`
+ * svn checkout https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.plugins.osde --username (your mail address)
+ * svn checkout https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.features.osde --username (your mail address)
+ * svn checkout https://opensocial-development-environment.googlecode.com/svn/update-site --username (your mail address)
 
 Import these project into your Eclipse workspace.
 
@@ -51,8 +51,8 @@ Using the generated build.xml file, build OSDE. When you build the feature proje
 
 You can see the generated far files in both the feature and plugin projects, if building was done successfully.
 
- * jp.eisbahn.eclipse.features.osde`_``[`Version number`]`.jar
- * jp.eisbahn.eclipse.plugins.osde`_``[`Version number`]`.jar
+ * jp.eisbahn.eclipse.features.osde`_`(Version number).jar
+ * jp.eisbahn.eclipse.plugins.osde`_`(Version number).jar
 
 ==Add the new version into the update-site==
 
@@ -62,9 +62,9 @@ Put the built jar files into the update-site project, and write a definition for
 
 Copy the two built jar files from each projects to the update-site project.
 
- * jp.eisbahn.eclipse.features.osde`_``[`Version number`]`.jar in the feature project
+ * jp.eisbahn.eclipse.features.osde`_`(Version number).jar in the feature project
   * Copy into update-site/features
- * jp.eisbahn.eclipse.plugins.osde`_``[`Version number`]`.jar
+ * jp.eisbahn.eclipse.plugins.osde`_`(Version number).jar
   * Copy into update-site/plugins
 
 ===Edit the site.xml file===
@@ -72,9 +72,9 @@ Copy the two built jar files from each projects to the update-site project.
 Edit the site.xml for adding a new definition of the new version of OSDE under a `<`site`>` tag.
 
 {{{
-<feature url="features/jp.eisbahn.eclipse.features.osde_[Version number].jar"
+<feature url="features/jp.eisbahn.eclipse.features.osde_(Version number).jar"
          id="jp.eisbahn.eclipse.features.osde"
-         version="[Version number]">
+         version="(Version number)">
    <category name="jp.eisbahn.eclipse.plugins.osde.category" />
 </feature>
 }}}
@@ -85,8 +85,12 @@ Commit the site.xml file and two jar files.
 
 Copy the files under /svn/trunk to a /svn/tags with a new version number.
 
- * svn mkdir https://opensocial-development-environment.googlecode.com/svn/tags/`[`Version number`]` -m "Make a directory for a new version"
- * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.features.osde https://opensocial-development-environment.googlecode.com/svn/tags/`[`Version number`]` -m "Tag the new version"
- * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.plugins.osde https://opensocial-development-environment.googlecode.com/svn/tags/`[`Version number`]` -m "Tag the new version"
- * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.launcher.shindig https://opensocial-development-environment.googlecode.com/svn/tags/`[`Version number`]` -m "Tag the new version"
- * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/shindig https://opensocial-development-environment.googlecode.com/svn/tags/`[`Version number`]` -m "Tag the new version"
+ * svn mkdir https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Make a directory for a new version"
+ * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.features.osde https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Tag the new version"
+ * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.plugins.osde https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Tag the new version"
+ * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.launcher.shindig https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Tag the new version"
+ * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/shindig https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Tag the new version"
+
+==Announce about released==
+
+Announce to users that the new version of OSDE has been released in the Google Groups. Users can know it soon!
