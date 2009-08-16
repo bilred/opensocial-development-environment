@@ -14,7 +14,7 @@
 	<classpathentry excluding="**" kind="src" output="social-api/target/classes" path="social-api/target/maven-shared-archive-resources"/>
 	<classpathentry kind="src" output="social-api/target/test-classes" path="social-api/src/test/java"/>
 	<classpathentry excluding="**" kind="src" output="social-api/target/test-classes" path="social-api/src/test/resources"/>
-	<classpathentry excluding="**" kind="src" output="Users/yoichiro/Documents/osde/shindig_osde/features/target/classes" path="Users/yoichiro/Documents/osde/shindig_osde/features"/>
+	<classpathentry excluding="**" kind="src" output="Users/yoichiro/Documents/osde/opensocial-development-environment/trunk/shindig/shindig_735392/features/target/classes" path="Users/yoichiro/Documents/osde/opensocial-development-environment/trunk/shindig/shindig_735392/features"/>
 	<classpathentry kind="src" output="hibernate/target/classes" path="hibernate/src/main/java"/>
 	<classpathentry excluding="**" kind="src" output="hibernate/target/classes" path="hibernate/src/main/resources"/>
 	<classpathentry excluding="**" kind="src" output="hibernate/target/classes" path="hibernate/target/maven-shared-archive-resources"/>
