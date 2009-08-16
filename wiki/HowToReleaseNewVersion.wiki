@@ -2,4 +2,24 @@
 
 This page describes a way for releasing a new version of OSDE.
 
+==Check out /svn/trunk==
+
+For changing the version number, check out /svn/trunk.
+
+ * svn checkout https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.plugins.osde --username [your mail address]
+ * svn checkout https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.features.osde --username [your mail address]
+
+Import these project into your Eclipse workspace.
+
+==Change a version number==
+
+Re-write a new version number in some codes.
+
+ * Bundle-Version in [http://code.google.com/p/opensocial-development-environment/source/browse/trunk/jp.eisbahn.eclipse.plugins.osde/META-INF/MANIFEST.MF jp.eisbahn.eclipse.plugins.osde/META-INF/MANIFEST.MF] file.
+  * ex) Bundle-Version: 0.2.7 => Bundle-Version: 0.2.8
+ * feature@version in [http://code.google.com/p/opensocial-development-environment/source/browse/trunk/jp.eisbahn.eclipse.features.osde/feature.xml jp.eisbahn.eclipse.features.osde/feature.xml] file.
+  * ex) version="0.2.7" => version="0.2.8"
+
+Commit the modified files into the svn repository.
+
 TODO
