@@ -97,6 +97,16 @@ Announce to users that the new version of OSDE has been released in the Google G
 
 It will be better to write the changes on the post.
 
+==Adjust items for an issue tracking==
+
+For managing issues, adjust items for an issue tracking.
+
+ * Add the next milestone. For example, you have to add 'Milestone-Release(next version number) = For next release'. You also remove '= For next version' from the previous milestone.
+  * If you released the version '0.2.8', you have to add 'Milestone-Release0.2.9'.
+ * Add the next version. For example, you have to add 'Version-(next version number)'. You also remove '= Current version' from the previous version.
+  * If you released the version '0.2.8', you have to add 'Version-0.2.9'.
+ * Replace the latest version which templates have.
+
 ==Write a change log==
 
-Finally, write a change log on this project site. The page of the change log is [ChangeLog here].
+Finally, write a change log on this project site. The page of the change log is [ChangeLog here]. In addition, re-write the latest version on the top page of this project site.
