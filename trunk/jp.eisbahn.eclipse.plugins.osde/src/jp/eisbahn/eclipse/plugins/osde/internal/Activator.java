@@ -45,15 +45,16 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
@@ -124,7 +125,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		savePluginPreferences();
+		(new DefaultScope()).getNode(Activator.PLUGIN_ID).flush();
 		if (session != null) {
 			session.close();
 		}
@@ -393,7 +394,33 @@ public class Activator extends AbstractUIPlugin {
 
 	public OsdeConfig getOsdeConfiguration() {
 		try {
-			Preferences store = getPluginPreferences();
+			IPreferenceStore store = getPreferenceStore();
+			OsdeConfig config = new OsdeConfig();
+			config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
+			config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
+			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
+			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
+			config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
+			config.setUseInternalDatabase(store.getBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
+			config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
+			config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
+			config.setExternalDatabasePort(store.getString(OsdeConfig.EXTERNAL_DATABASE_PORT));
+			config.setExternalDatabaseUsername(store.getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+			config.setExternalDatabasePassword(store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
+			return config;
+		} catch(IOException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		}
+	}
+	
+	public OsdeConfig getDefaultOsdeConfiguration() {
+		try {
+			IPreferenceStore store = getPreferenceStore();
 			OsdeConfig config = new OsdeConfig();
 			config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
 			config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
@@ -418,36 +445,10 @@ public class Activator extends AbstractUIPlugin {
 	}
 	
 	public void storePreferences(OsdeConfig config) {
-		storePreferences(getPluginPreferences(), config);
-	}
-	
-	public OsdeConfig getDefaultOsdeConfiguration() {
-		try {
-			Preferences store = getPluginPreferences();
-			OsdeConfig config = new OsdeConfig();
-			config.setDefaultCountry(store.getDefaultString(OsdeConfig.DEFAULT_COUNTRY));
-			config.setDefaultLanguage(store.getDefaultString(OsdeConfig.DEFAULT_LANGUAGE));
-			config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
-			config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
-			config.setJettyDir(store.getDefaultString(OsdeConfig.JETTY_DIR));
-			config.setUseInternalDatabase(store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
-			config.setExternalDatabaseType(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
-			config.setExternalDatabaseHost(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
-			config.setExternalDatabasePort(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PORT));
-			config.setExternalDatabaseUsername(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
-			config.setExternalDatabasePassword(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
-			config.setExternalDatabaseName(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
-			return config;
-		} catch(IOException e) {
-			e.printStackTrace();
-			throw new IllegalStateException(e);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new IllegalStateException(e);
-		}
+		storePreferences(getPreferenceStore(), config);
 	}
 
-	public void storePreferences(Preferences store, OsdeConfig config) {
+	public void storePreferences(IPreferenceStore store, OsdeConfig config) {
 		try {
 			store.setValue(OsdeConfig.DEFAULT_COUNTRY, config.getDefaultCountry());
 			store.setValue(OsdeConfig.DEFAULT_LANGUAGE, config.getDefaultLanguage());
