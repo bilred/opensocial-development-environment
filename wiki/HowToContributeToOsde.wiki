@@ -41,6 +41,8 @@
  * Check out the Apache Shindig for OSDE from the code repository
   * trunk of shindig: https://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_735392
 
+ * Modify something...
+
  * Build and package
   * cd shindig_735392
   * mvn install package
