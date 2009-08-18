@@ -53,7 +53,7 @@
   * shindig_735392/java/server/target/shindig-server-1.1-SNAPSHOT.war to jp.eisbahn.eclipse.plugins.osde/shindig
   * shindig_735392/social-api/target/shindig-social-api-1.1-SNAPSHOT.jar to jp.eisbahn.eclipse.plugins.osde/libs
   * shindig_735392/hibernate/target/shindig-hibernate-1.1-SNAPSHOT.jar to jp.eisbahn.eclipse.plugins.osde/libs
-  * Commit them to svn repository.
+  * Test and commit them to svn repository.
 
 == Test your OSDE plugin during development ==
 
