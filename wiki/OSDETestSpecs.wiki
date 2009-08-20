@@ -1,0 +1,28 @@
+#summary One-sentence summary of this page.
+
+This page is created for <a href=http://code.google.com/p/opensocial-development-environment/issues/detail?can=2&q=60&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&id=60>issues 60</a> to define some test specs.
+
+=Introduction=
+
+There are three general operation systems to test. 
+Windows XP, Windows Vista and Linux.
+See issues <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=49">49</a>, <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=50">50</a>, <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=51">51</a>.
+
+This page is used to describe what items need to test.
+You should define items here before test, 
+or test by items described here to be familiar with OSDE.
+
+Moreover, you can write anything should test but not described here,
+or even any improvement on next generation OSDE if you're responsible for it.
+
+= OSDE 0.2.8 =
+
+[OSDETestSpecs#Windows_XP]
+[OSDETestSpecs#Windows_Vista]
+[OSDETestSpecs#Linux]
+
+==Windows XP==
+
+== Windows Vista ==
+
+== Linux ==
