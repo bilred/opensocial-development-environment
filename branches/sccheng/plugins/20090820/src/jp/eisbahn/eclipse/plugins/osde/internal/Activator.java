@@ -40,6 +40,9 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesVi
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.LogListener;
+
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
@@ -105,6 +108,7 @@ public class Activator extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public Activator() {
+		
 	}
 
 	/*
@@ -114,6 +118,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		getLog().addLogListener(new LogListener());
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
 		registerIcon();
@@ -301,10 +306,11 @@ public class Activator extends AbstractUIPlugin {
     }
     
 	public void connect(final IWorkbenchWindow window) {
-		Job job = new Job("Connect to Shindig database.") {
+		Logging.info("Connecting to Shindig database");
+		Job job = new Job("Connecting to Shindig database.") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Connect to Shindig database.", 4);
+				monitor.beginTask("Connecting to Shindig database.", 4);
 				monitor.subTask("Building Hibernate SessionFactory.");
 				File configFile = new File(HibernateUtils.configFileDir, HibernateUtils.configFileName);
 				Configuration configure = new AnnotationConfiguration().configure(configFile);
@@ -410,7 +416,7 @@ public class Activator extends AbstractUIPlugin {
 			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
 			return config;
 		} catch(IOException e) {
-			e.printStackTrace();
+			Logging.error("Something went wrong while getting OSDE configurations.", e);
 			throw new IllegalStateException(e);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -503,3 +509,4 @@ public class Activator extends AbstractUIPlugin {
 	}
 	
 }
+
