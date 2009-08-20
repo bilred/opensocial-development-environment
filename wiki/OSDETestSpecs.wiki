@@ -1,4 +1,4 @@
-#summary This page is created for issues 60 to define some test specs.
+#summary This page is created for issue 60 to define some test specs.
 
 [#OSDE_0.2.8]
 
@@ -6,7 +6,7 @@
 
 There are three general operation systems to test. <br />
 Windows XP, Windows Vista and Linux.<br />
-See issues <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=49">49</a>, <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=50">50</a>, <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=51">51</a>.
+See issue <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=49">49</a>, <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=50">50</a>, <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=51">51</a>.
 
 This page is used to describe what items need to test.<br />
 You should define items here before test, <br />
