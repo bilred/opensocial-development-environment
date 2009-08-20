@@ -21,7 +21,18 @@ or even any improvement on next generation OSDE if you're responsible for it.
 [#Windows_Vista]<br />
 [#Linux]
 
-==Windows XP==
+== Windows XP==
+
+===(C) Common features to be tested in Windows XP ===
+====Common features that will be Implemented and Tested for OSDE 0.2.8 release ====
+
+# A built in Shindig server for local testing and debugging.
+# An integrated database based on the Java H2 for storing and managing social data.
+# Simple project and gadget code generation wizards to quickly generate your OpenSocial application projects and application code.
+# A multi-paned gadget spec editor that facilitates productive gadget development.
+# A new "OpenSocial" Eclipse perspective that provides enhanced editing and debugging with easy access and control of the local Shindig and social database.
+# An OpenSocial REST Java client wizard that can quickly generate a new project along with sample code that uses the OpenSocial RESTful Java client library to connect to the local OpenSocial server.
+
 
 == Windows Vista ==
 
