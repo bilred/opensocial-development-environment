@@ -81,7 +81,7 @@ _TODO: common test specs is not finished_
                 # Windows XP
                 # Eclipse for RCP/Plug-in Developers Build id: 20090619-0625
             </td>
-            <td>&nbsp;</td>
+            <td> </td>
         </tr>
     </tbody>
 </table>
