@@ -17,8 +17,8 @@ or even any improvement on next generation OSDE if you're responsible for it.
 
 = OSDE 0.2.8 =
 
-[OSDETestSpecs#Windows_XP]
-[OSDETestSpecs#Windows_Vista]
+[OSDETestSpecs#Windows_XP]<br />
+[OSDETestSpecs#Windows_Vista]<br />
 [OSDETestSpecs#Linux]
 
 ==Windows XP==
