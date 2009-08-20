@@ -4,22 +4,22 @@ This page is created for <a href=http://code.google.com/p/opensocial-development
 
 =Introduction=
 
-There are three general operation systems to test. 
-Windows XP, Windows Vista and Linux.
+There are three general operation systems to test. <br />
+Windows XP, Windows Vista and Linux.<br />
 See issues <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=49">49</a>, <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=50">50</a>, <a href="http://code.google.com/p/opensocial-development-environment/issues/detail?id=51">51</a>.
 
-This page is used to describe what items need to test.
-You should define items here before test, 
+This page is used to describe what items need to test.<br />
+You should define items here before test, <br />
 or test by items described here to be familiar with OSDE.
 
-Moreover, you can write anything should test but not described here,
+Moreover, you can write anything should test but not described here,<br />
 or even any improvement on next generation OSDE if you're responsible for it.
 
 = OSDE 0.2.8 =
 
-[OSDETestSpecs#Windows_XP]<br />
-[OSDETestSpecs#Windows_Vista]<br />
-[OSDETestSpecs#Linux]
+[#Windows_XP]<br />
+[#Windows_Vista]<br />
+[#Linux]
 
 ==Windows XP==
 
