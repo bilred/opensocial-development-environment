@@ -28,10 +28,10 @@ or even any improvement on next generation OSDE if you're responsible for it.
 
   * A built in Shindig server for local testing and debugging.
   * An integrated database based on the Java H2 for storing and managing social data.
-  * Simple project and gadget code generation wizards to quickly generate your [ http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial] application projects and application code.
+  * Simple project and gadget code generation wizards to quickly generate your [http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial] application projects and application code.
   * A multi-paned gadget spec editor that facilitates productive gadget development.
   * A new "[http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial]" Eclipse perspective that provides enhanced editing and debugging with easy access and control of the local Shindig and social database.
-  * An OpenSocial REST Java client wizard that can quickly generate a new project along with sample code that uses the [http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial] RESTful Java client library to connect to the local OpenSocial server.
+  * An [http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial] REST Java client wizard that can quickly generate a new project along with sample code that uses the [http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial] RESTful Java client library to connect to the local OpenSocial server.
 
 
 == Windows Vista ==
