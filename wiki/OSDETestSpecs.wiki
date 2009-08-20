@@ -46,6 +46,7 @@ or even any improvement on next generation OSDE if you're responsible for it.
   
 === Test Cases Detail/Procedure ===  
 
+_TODO: commons test specs not finished_
 <table border="1" cellspacing="0">
     <thead>
         <tr>
@@ -86,5 +87,7 @@ or even any improvement on next generation OSDE if you're responsible for it.
 </table>
 
 == Windows Vista ==
+_TODO: test spec in windows vista_
 
 == Linux ==
+_TODO: test spec in linux_
