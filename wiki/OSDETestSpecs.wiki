@@ -80,7 +80,7 @@ or even any improvement on next generation OSDE if you're responsible for it.
                 # Windows XP
                 # Eclipse for RCP/Plug-in Developers Build id: 20090619-0625
             </td>
-            <td> </td>
+            <td>&nbsp;</td>
         </tr>
     </tbody>
 </table>
