@@ -23,8 +23,7 @@ or even any improvement on next generation OSDE if you're responsible for it.
 
 == Windows XP==
 
-===(C) Common features to be tested in Windows XP ===
-====Common features that will be Implemented and Tested for OSDE 0.2.8 release ====
+===Common features that will be Implemented and Tested for OSDE 0.2.8 release===
 
   * A built in Shindig server for local testing and debugging.
   * An integrated database based on the Java H2 for storing and managing social data.
@@ -33,6 +32,58 @@ or even any improvement on next generation OSDE if you're responsible for it.
   * A new "[http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial]" Eclipse perspective that provides enhanced editing and debugging with easy access and control of the local Shindig and social database.
   * An [http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial] REST Java client wizard that can quickly generate a new project along with sample code that uses the [http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial] RESTful Java client library to connect to the local [http://code.google.com/intl/zh-TW/apis/opensocial/ OpenSocial] server.
 
+=== Related documentation. ===
+
+  * <a href="http://wiki.opensocial.org/index.php?title=OSDE_Tutorial">OSDE Tutorial</a>
+  * <a href="http://code.google.com/p/opensocial-development-environment/w/list">OSDE Wiki</a>
+  
+=== Test Identification (Test Areas) ===  
+
+  * Installation
+  * Building a Simple OpenSocial App in OSDE
+  * Running an OpenSocial app in OSDE
+  * Creating a Java RESTful Client Project
+  
+=== Test Cases Detail/Procedure ===  
+
+<table border="1" cellspacing="0">
+    <thead>
+        <tr>
+            <td colspan="6">
+                Installation
+            </td>
+        </tr>
+        <tr>
+            <td>Test Id</td>
+            <td>Test Item</td>
+            <td>Input Spec</td>
+            <td>Output Spec</td>
+            <td>Env needs</td>
+            <td>Dependencies/ Notes</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>installation_01</td>
+            <td>Show OSDE menus</td>
+            <td>
+                # Download OSDE 0.2.8 plugin library
+                # Copy OSDE 0.2.8 library to eclipse plugin folder
+                # Restart eclipse
+            </td>
+            <td>
+                # Show OSDE menu bar and items
+                # Show OSDE tree node in Preference
+                # Show OSDE tree node in New Project
+            </td>
+            <td>
+                # Windows XP
+                # Eclipse for RCP/Plug-in Developers Build id: 20090619-0625
+            </td>
+            <td> </td>
+        </tr>
+    </tbody>
+</table>
 
 == Windows Vista ==
 
