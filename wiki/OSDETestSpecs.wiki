@@ -1,6 +1,4 @@
-#summary One-sentence summary of this page.
-
-This page is created for <a href=http://code.google.com/p/opensocial-development-environment/issues/detail?can=2&q=60&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&id=60>issues 60</a> to define some test specs.
+#summary This page is created for <a href=http://code.google.com/p/opensocial-development-environment/issues/detail?can=2&q=60&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&id=60>issues 60</a> to define some test specs.
 
 =Introduction=
 
