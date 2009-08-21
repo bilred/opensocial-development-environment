@@ -68,7 +68,9 @@
    * please use 4-spaces and avoid using tabs.
 
  * javadoc
-   * required for classes and public methods
+   * required for classes and public methods (except getters and setters)
+
+ * code line length should not exceed 100 characters
 
  * unit test
 
