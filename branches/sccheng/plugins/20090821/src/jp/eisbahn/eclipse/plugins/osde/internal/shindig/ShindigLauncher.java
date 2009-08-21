@@ -138,7 +138,7 @@ public class ShindigLauncher {
 				code = code.replace("$password$", "");
 				code = code.replace("$dialect$", "H2");
 			} else {
-				if (prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_TYPE).equals("MySQL")) {
+				if ("MySQL".equals(prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_TYPE))) {
 					code = code.replace("$driver_class$", "com.mysql.jdbc.Driver");
 					String url = "jdbc:mysql://";
 					url += prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_HOST);
@@ -151,7 +151,7 @@ public class ShindigLauncher {
 					code = code.replace("$username$", prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_USERNAME));
 					code = code.replace("$password$", prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_PASSWORD));
 					code = code.replace("$dialect$", "MySQL");
-				} else if (prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_TYPE).equals("Oracle")) {
+				} else if ("Oracle".equals(prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_TYPE))) {
 					code = code.replace("$driver_class$", "oracle.jdbc.driver.OracleDriver");
 					String url = "jdbc:oracle:thin:@";
 					url += prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_HOST);
