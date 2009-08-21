@@ -16,7 +16,7 @@
 
 == Setup your development environment ==
 
- * Download and install eclipse from http://www.eclipse.org/
+ * Download and install eclipse from http://www.eclipse.org/ (*Eclipse for RCP/Plug-in Developers* packages is recommended)
 
  * Install SVN plugin for eclipse: subclipse (http://subclipse.tigris.org/) or subversive (http://www.eclipse.org/subversive/)
 
@@ -25,28 +25,45 @@
 == How to build Apache Shindig for OSDE ==
 
  * Download and install Apache Maven2 (2.0.8 or higher): http://maven.apache.org/
+   * Run maven to check installation correctly. If you do not see results like below, please check *PATH* enviroment variable contains Maven's bin path.
 
- * Install some libraries doesn't exists in the maven's central repository
-  * Java Transaction API
-   * Download the archive of "Class Files 1.0.1B": http://java.sun.com/javaee/technologies/jta/index.jsp
-   * Rename the file to "jta-1.0.1B.jar"
-   * Register the jar file to a local repository
-    * {{{ mvn install:install-file -DgroupId=javax.transaction -DartifactId=jta -Dversion=1.0.1B -Dpackaging=jar -Dfile=jta-1_0_1B.jar }}}
-  * H2 Database
-   * Download and extract the archive of H2 Database (1.1.104): http://h2database.googlecode.com/files/h2-2008-11-28.zip
-    * You can find the jar file "h2-1.1.104.jar" in a bin directory
-   * Register the jar file to a local repository
-    * {{{ mvn install:install-file -DgroupId=org.h2 -DartifactId=h2 -Dversion=1.1.104 -Dpackaging=jar -Dfile=h2-1.1.104.jar }}}
+{{{
+   # mvn -v
+   Maven version: 2.0.8
+   Java version: 1.6.0_14
+   OS name: "linux" version: "2.6.24-24-server" arch: "amd64" Family: "unix"
+}}}
 
  * Check out the Apache Shindig for OSDE from the code repository
   * trunk of shindig: https://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_735392
+  * if you use a svn command line client, try this:
+  
+    for commiter:
+{{{
+   svn co https://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_735392 shindig_735392
+}}}
 
- * Modify something...
+	for others:	
+{{{
+   svn co http://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_735392 shindig_735392
+}}}
 
- * Build and package
-  * cd shindig_735392
-  * mvn install package
-   * If you get a warning about compiling, try to execute the mvn command again
+	svn will check out working copy to shindig_735392 folder/path.
+
+ * In shell/console, go to the working copy of shindig where you can find pom.xml. Maven will use this pom.xml build the project. If you check out everything, please check the pom.xml contains these messages:
+{{{
+  <groupId>org.apache.shindig</groupId>
+  <artifactId>shindig-project</artifactId>
+  <version>1.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+}}}
+ 
+ * Build and Install Shinding to Maven Local Reposiotry
+{{{
+  mvn install package
+}}}
+ 
+  * If you get a warning about compiling, try to execute the mvn command again
   * You can find a war file in shindig_735392/java/server/target, if no any errors
 
  * Copy the built files into the plug-in project
