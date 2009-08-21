@@ -27,6 +27,7 @@ import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
+import jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceConstants;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
@@ -122,7 +123,7 @@ public abstract class AbstractRunAction {
 				code = code.replace("$project_name$", project.getName());
 				IPath location = project.getFolder("target").getLocation();
 				code = code.replace("$context_dir$", location.toOSString());
-				String jettyDir = Activator.getDefault().getOsdeConfiguration().getJettyDir();
+				String jettyDir = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.JETTY_DIR);
 				File jettyDirFile = new File(jettyDir);
 				if (!jettyDirFile.isDirectory()) {
 					jettyDirFile.mkdirs();

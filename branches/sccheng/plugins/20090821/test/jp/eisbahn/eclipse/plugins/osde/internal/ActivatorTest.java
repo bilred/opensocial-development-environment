@@ -152,38 +152,6 @@ public class ActivatorTest {
     }
 
     /**
-     * Test method for {@link Activator#getOsdeConfiguration()}.
-     */
-    @Test
-    public void testGetOsdeConfiguration() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link Activator#getDefaultOsdeConfiguration()}.
-     */
-    @Test
-    public void testGetDefaultOsdeConfiguration() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link Activator#storePreferences(jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig)}.
-     */
-    @Test
-    public void testStorePreferencesOsdeConfig() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link Activator#storePreferences(org.eclipse.jface.preference.IPreferenceStore, jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig)}.
-     */
-    @Test
-    public void testStorePreferencesIPreferenceStoreOsdeConfig() {
-        // TODO: implement test method
-    }
-
-    /**
      * Test method for {@link Activator#getLastApplicationInformation()}.
      */
     @Test

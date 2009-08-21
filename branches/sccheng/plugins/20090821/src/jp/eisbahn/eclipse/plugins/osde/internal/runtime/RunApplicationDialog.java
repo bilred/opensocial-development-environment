@@ -20,7 +20,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
+import jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceConstants;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +29,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -193,14 +194,14 @@ public class RunApplicationDialog extends TitleAreaDialog {
 
 	private void setDefaultValues() {
 		try {
-			OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+			IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
 			String prevCountry = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_COUNTRY));
 			if (StringUtils.isNumeric(prevCountry)) {
 				countries.select(Integer.parseInt(prevCountry));
 			} else {
 				for (int i = 0; i < countries.getItemCount(); i++) {
 					String country = countries.getItem(i);
-					if (country.substring(country.indexOf('(') + 1, country.length() - 1).equals(config.getDefaultCountry())) {
+					if (country.substring(country.indexOf('(') + 1, country.length() - 1).equals(prefs.getDefaultString(PreferenceConstants.DEFAULT_COUNTRY))) {
 						countries.select(i);
 						break;
 					}
@@ -212,7 +213,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			} else {
 				for (int i = 0; i < languages.getItemCount(); i++) {
 					String language = languages.getItem(i);
-					if (language.substring(language.indexOf('(') + 1, language.length() - 1).equals(config.getDefaultLanguage())) {
+					if (language.substring(language.indexOf('(') + 1, language.length() - 1).equals(prefs.getDefaultString(PreferenceConstants.DEFAULT_LANGUAGE))) {
 						languages.select(i);
 						break;
 					}
