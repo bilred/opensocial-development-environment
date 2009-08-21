@@ -1,0 +1,8 @@
+#summary OpenSocial project
+
+= Introduction =
+
+http://code.google.com/intl/zh-TW/apis/opensocial/
+
+
+= Details =
