@@ -376,9 +376,6 @@
       <initializer
             class="jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceInitializer">
       </initializer>
-      <initializer
-            class="jp.eisbahn.eclipse.plugins.osde.internal.OsdePreferenceInitializer">
-      </initializer>
    </extension>
    
 </plugin>
