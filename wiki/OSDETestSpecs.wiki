@@ -23,7 +23,7 @@ or even any improvement on next generation OSDE if you're responsible for it.
 
 == Windows XP==
 
-# Env : Windows XP, Eclipse for RCP/Plug-in Developers Build id: 20090619-0625, JDK1.6
+  * Env : Windows XP, Eclipse for RCP/Plug-in Developers Build id: 20090619-0625, JDK1.6
 
 ===Common features that will be Implemented and Tested for OSDE 0.2.8 release===
 
