@@ -38,6 +38,12 @@ public class PreferenceConstants {
 	public static final String EXTERNAL_DATABASE_NAME = "external_database_name";
 	
 	private static Map<String, String> docsSiteMap;
+	
+	/**
+	 * This getter method will not have synchronization issues because it is only called
+	 * once in the lifetime of the whole plugin.
+	 * @return docsSiteMap
+	 */
 	public static Map<String, String> getDocsSiteMap() {
 		return docsSiteMap;
 	}

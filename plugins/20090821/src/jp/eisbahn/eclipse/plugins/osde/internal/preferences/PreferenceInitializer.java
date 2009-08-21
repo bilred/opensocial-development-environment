@@ -33,10 +33,9 @@ import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
+	/**
+	 * Sets default values for all configuration variables.
+	 * Note that this function also accesses outside files for storing database related information
 	 */
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();

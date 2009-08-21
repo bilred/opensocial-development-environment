@@ -21,8 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceConstants;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
-import jp.eisbahn.eclipse.plugins.osde.internal.preferences.*;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -247,6 +247,7 @@ public class DocumentView extends AbstractView {
 			ISelection selection = siteListTable.getSelection();
 			if (!selection.isEmpty()) {
 				IStructuredSelection structured = (IStructuredSelection)selection;
+				@SuppressWarnings("unchecked")
 				Map.Entry<String, String> entry = (Map.Entry<String, String>)structured.getFirstElement();
 				if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to delete the site '" + entry.getKey() + "'?")) {
 					siteMap.remove(entry.getKey());

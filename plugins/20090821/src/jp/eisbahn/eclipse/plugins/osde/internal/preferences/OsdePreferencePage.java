@@ -26,7 +26,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 /**
  * This class represents a preference page that
  * is contributed to the Preferences dialog. By 
- * subclassing <samp>FieldEditorPreferencePage</samp>, we
+ * subclassing <code>FieldEditorPreferencePage</code>, we
  * can use the field support built into JFace that allows
  * us to create a page that is small and knows how to 
  * save, restore and apply itself.
@@ -91,8 +91,8 @@ public class OsdePreferencePage
 				   					   getFieldEditorParent()));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	/**
+	 * The initializer does nothing here
 	 */
 	public void init(IWorkbench workbench) {
 	}
