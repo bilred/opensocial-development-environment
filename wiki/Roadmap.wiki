@@ -1,0 +1,25 @@
+=Roadmap for OSDE=
+
+The following plans are Road map we think.
+
+==v0.2==
+
+This version is a current stream. Supporting OpenSocial Specification 0.8.1.
+
+===v0.2.9===
+
+ * Purpose: Minor version up.
+ * Release date: 2009-09-**
+ * Supported features and fixed issues:
+  * abc
+
+==v0.3==
+
+This version is a next major version, and will be supported OpenSocial Specification 0.9.
+
+===v0.3.0===
+
+ * Purpose: First major version up. Supporting OS 0.9 (integrating Shindig 1.1).
+ * Release date: 2009-10-**
+ * Supported features and fixed issues:
+  * abc
