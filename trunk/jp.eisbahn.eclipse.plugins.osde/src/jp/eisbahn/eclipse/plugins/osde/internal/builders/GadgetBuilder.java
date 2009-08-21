@@ -55,6 +55,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 		super();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		IProject project = getProject();
