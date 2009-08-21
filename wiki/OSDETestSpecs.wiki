@@ -125,6 +125,24 @@ _TODO: common test spec is not finished_
             </td>
             <td>database interface windows in the console add people 'shooeugenesea'</td>
         </tr>
+        <tr>
+            <td>build_sample_05</td>
+            <td>create a new OSDE project</td>
+            <td>
+                # select 'Create new project...-> OpenSocial Project' from the main menu
+                # input project name 'OSDETest' -> 'Next'
+                # input title 'OSDETestTitle' 
+                # input Author Email 'tester@test.com' -> 'Next'
+                # select 'Type: HTML'
+                # select 'Create the external JavaScript file for this view' -> 'Finish'
+            </td>
+            <td>
+                # A project named OSDETest
+                # a file named '.project'
+                # a file named canvas.js
+                # a file named gedget.xml
+            </td>
+        </tr>
     </tbody>    
 </table>
 
