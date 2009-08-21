@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
+import jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceConstants;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +40,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -65,10 +66,10 @@ public class ShindigLauncher {
 					launch.terminate();
 				}
 			}
-			//
-			OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
-			createConfigFileForHibernate(config);
-			//
+			
+			IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+			createConfigFileForHibernate(prefs);
+			
 			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
 			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
 			int delay = 0;
@@ -76,7 +77,7 @@ public class ShindigLauncher {
 			// The following codes launch Database and then launch Shindig
 			// If the user specifies an external database, we won't launch internal database
 			// Launch Database for Shindig to connect to
-			if (config.isUseInternalDatabase()) {
+			if (prefs.getBoolean(PreferenceConstants.USE_INTERNAL_DATABASE)) {
 				for (int i = 0; i < configurations.length; ++i) {
 					if (configurations[i].getName().equals("Shindig Database")) {
 						final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
@@ -122,7 +123,7 @@ public class ShindigLauncher {
 		}
 	}
 
-	private static void createConfigFileForHibernate(OsdeConfig config) {
+	private static void createConfigFileForHibernate(IPreferenceStore prefs) {
 		FileOutputStream fos = null;
 		try {
 			InputStreamReader in = new InputStreamReader(
@@ -130,38 +131,38 @@ public class ShindigLauncher {
 			StringWriter out = new StringWriter();
 			IOUtils.copy(in, out);
 			String code = out.toString();
-			if (config.isUseInternalDatabase()) {
+			if (prefs.getBoolean(PreferenceConstants.USE_INTERNAL_DATABASE)) {
 				code = code.replace("$driver_class$", "org.h2.Driver");
 				code = code.replace("$url$", "jdbc:h2:tcp://localhost:9092/shindig");
 				code = code.replace("$username$", "sa");
 				code = code.replace("$password$", "");
 				code = code.replace("$dialect$", "H2");
 			} else {
-				if (config.getExternalDatabaseType().equals("MySQL")) {
+				if (prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_TYPE).equals("MySQL")) {
 					code = code.replace("$driver_class$", "com.mysql.jdbc.Driver");
 					String url = "jdbc:mysql://";
-					url += config.getExternalDatabaseHost();
-					String port = config.getExternalDatabasePort();
+					url += prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_HOST);
+					String port = prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_PORT);
 					if (StringUtils.isNotEmpty(port)) {
 						url += ":" + port;
 					}
-					url += "/" + config.getExternalDatabaseName();
+					url += "/" + prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_NAME);
 					code = code.replace("$url$", url);
-					code = code.replace("$username$", config.getExternalDatabaseUsername());
-					code = code.replace("$password$", config.getExternalDatabasePassword());
+					code = code.replace("$username$", prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_USERNAME));
+					code = code.replace("$password$", prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_PASSWORD));
 					code = code.replace("$dialect$", "MySQL");
-				} else if (config.getExternalDatabaseType().equals("Oracle")) {
+				} else if (prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_TYPE).equals("Oracle")) {
 					code = code.replace("$driver_class$", "oracle.jdbc.driver.OracleDriver");
 					String url = "jdbc:oracle:thin:@";
-					url += config.getExternalDatabaseHost();
-					String port = config.getExternalDatabasePort();
+					url += prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_HOST);
+					String port = prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_PORT);
 					if (StringUtils.isNotEmpty(port)) {
 						url += ":" + port;
 					}
-					url += ":" + config.getExternalDatabaseName();
+					url += ":" + prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_NAME);
 					code = code.replace("$url$", url);
-					code = code.replace("$username$", config.getExternalDatabaseUsername());
-					code = code.replace("$password$", config.getExternalDatabasePassword());
+					code = code.replace("$username$", prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_USERNAME));
+					code = code.replace("$password$", prefs.getString(PreferenceConstants.EXTERNAL_DATABASE_PASSWORD));
 					code = code.replace("$dialect$", "Oracle");
 				}
 			}
@@ -170,7 +171,6 @@ public class ShindigLauncher {
 			ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
 			IOUtils.copy(bytes, fos);
 		} catch(IOException e) {
-			// TODO
 			e.printStackTrace();
 			throw new IllegalStateException(e);
 		} finally {
