@@ -23,6 +23,8 @@ or even any improvement on next generation OSDE if you're responsible for it.
 
 == Windows XP==
 
+# Env : Windows XP, Eclipse for RCP/Plug-in Developers Build id: 20090619-0625, JDK1.6
+
 ===Common features that will be Implemented and Tested for OSDE 0.2.8 release===
 
   * A built in Shindig server for local testing and debugging.
@@ -59,8 +61,6 @@ _TODO: common test spec is not finished_
             <td>Test Item</td>
             <td>Input Spec</td>
             <td>Output Spec</td>
-            <td>Env needs</td>
-            <td>Dependencies/ Notes</td>
         </tr>
     </thead>
     <tbody>
@@ -77,12 +77,6 @@ _TODO: common test spec is not finished_
                 # Show OSDE tree node in Preference
                 # Show OSDE tree node in New Project
             </td>
-            <td>
-                # JDK 1.6
-                # Windows XP
-                # Eclipse for RCP/Plug-in Developers Build id: 20090619-0625
-            </td>
-            <td> </td>
         </tr>
     </tbody>
 </table>
@@ -99,8 +93,6 @@ _TODO: common test spec is not finished_
             <td>Test Item</td>
             <td>Input Spec</td>
             <td>Output Spec</td>
-            <td>Env needs</td>
-            <td>Dependencies/ Notes</td>
         </tr>
     </thead>
     <tbody>
@@ -109,24 +101,18 @@ _TODO: common test spec is not finished_
             <td>Launch Apache Shindig server</td>
             <td>clicking the "Launch Apache Shindig server" button on Eclipse's main toolbar</td>
             <td>Shindig start up in the console</td>
-            <td> </td>
-            <td> </td>
         </tr>
         <tr>
             <td>build_sample_02</td>
             <td>Launch Apache Shindig server</td>
             <td>selecting 'Launch Apache Shindig' from the OSDE menu</td>
             <td>Shindig start up in the console</td>
-            <td> </td>
-            <td> </td>
         </tr>
         <tr>
             <td>build_sample_03</td>
             <td>populate the database</td>
             <td>selecting 'Create sample data in Shindig' from the OSDE menu</td>
             <td>database interface windows in the console add people 'canonical', 'john.doe', 'jane.doe', 'george.doe'</td>
-            <td> </td>
-            <td> </td>
         </tr>
         <tr>
             <td>build_sample_04</td>
@@ -138,8 +124,6 @@ _TODO: common test spec is not finished_
                 # input Display Name: shooeugenesea
             </td>
             <td>database interface windows in the console add people 'shooeugenesea'</td>
-            <td> </td>
-            <td> </td>
         </tr>
     </tbody>    
 </table>
@@ -147,7 +131,7 @@ _TODO: common test spec is not finished_
 <table border="1" cellspacing="0">
     <thead>
         <tr>
-            <td colspan="6">
+            <td colspan="4">
                 Running an OpenSocial app in OSDE
             </td>
         </tr>
@@ -156,8 +140,6 @@ _TODO: common test spec is not finished_
             <td>Test Item</td>
             <td>Input Spec</td>
             <td>Output Spec</td>
-            <td>Env needs</td>
-            <td>Dependencies/ Notes</td>
         </tr>
     </thead>
 </table>
@@ -165,7 +147,7 @@ _TODO: common test spec is not finished_
 <table border="1" cellspacing="0">
     <thead>
         <tr>
-            <td colspan="6">
+            <td colspan="4">
                 Creating a Java RESTful Client Project
             </td>
         </tr>
@@ -174,8 +156,6 @@ _TODO: common test spec is not finished_
             <td>Test Item</td>
             <td>Input Spec</td>
             <td>Output Spec</td>
-            <td>Env needs</td>
-            <td>Dependencies/ Notes</td>
         </tr>
     </thead>
 </table>
