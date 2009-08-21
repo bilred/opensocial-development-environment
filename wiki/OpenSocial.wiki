@@ -1,6 +1,6 @@
 #summary OpenSocial project
 
-= Introduction =
+= go to =
 
 http://code.google.com/intl/zh-TW/apis/opensocial/
 
