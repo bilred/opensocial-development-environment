@@ -78,12 +78,106 @@ _TODO: common test spec is not finished_
                 # Show OSDE tree node in New Project
             </td>
             <td>
+                # JDK 1.6
                 # Windows XP
                 # Eclipse for RCP/Plug-in Developers Build id: 20090619-0625
             </td>
             <td> </td>
         </tr>
     </tbody>
+</table>
+
+<table border="1" cellspacing="0">
+    <thead>
+        <tr>
+            <td colspan="6">
+                Building a Simple OpenSocial App in OSDE
+            </td>
+        </tr>
+        <tr>
+            <td>Test Id</td>
+            <td>Test Item</td>
+            <td>Input Spec</td>
+            <td>Output Spec</td>
+            <td>Env needs</td>
+            <td>Dependencies/ Notes</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>build_sample_01</td>
+            <td>Launch Apache Shindig server</td>
+            <td>clicking the "Launch Apache Shindig server" button on Eclipse's main toolbar</td>
+            <td>Shindig start up in the console</td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>build_sample_02</td>
+            <td>Launch Apache Shindig server</td>
+            <td>selecting 'Launch Apache Shindig' from the OSDE menu</td>
+            <td>Shindig start up in the console</td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>build_sample_03</td>
+            <td>populate the database</td>
+            <td>selecting 'Create sample data in Shindig' from the OSDE menu</td>
+            <td>database interface windows in the console add people 'canonical', 'john.doe', 'jane.doe', 'george.doe'</td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>build_sample_04</td>
+            <td>populate the database</td>
+            <td>
+                # use the database interface windows in the console to create custom data 'shooeugensea'
+                # click 'New'
+                # input ID: shooeugenesea
+                # input Display Name: shooeugenesea
+            </td>
+            <td>database interface windows in the console add people 'shooeugenesea'</td>
+            <td> </td>
+            <td> </td>
+        </tr>
+    </tbody>    
+</table>
+
+<table border="1" cellspacing="0">
+    <thead>
+        <tr>
+            <td colspan="6">
+                Running an OpenSocial app in OSDE
+            </td>
+        </tr>
+        <tr>
+            <td>Test Id</td>
+            <td>Test Item</td>
+            <td>Input Spec</td>
+            <td>Output Spec</td>
+            <td>Env needs</td>
+            <td>Dependencies/ Notes</td>
+        </tr>
+    </thead>
+</table>
+
+<table border="1" cellspacing="0">
+    <thead>
+        <tr>
+            <td colspan="6">
+                Creating a Java RESTful Client Project
+            </td>
+        </tr>
+        <tr>
+            <td>Test Id</td>
+            <td>Test Item</td>
+            <td>Input Spec</td>
+            <td>Output Spec</td>
+            <td>Env needs</td>
+            <td>Dependencies/ Notes</td>
+        </tr>
+    </thead>
 </table>
 
 == Windows Vista ==
