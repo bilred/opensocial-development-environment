@@ -1,8 +1,10 @@
-#summary OpenSocial project
+#summary OpenSocial project site
 
 = go to =
 
-http://code.google.com/intl/zh-TW/apis/opensocial/
-
-
-= Details =
+ * English
+  * http://code.google.com/intl/en/apis/opensocial/
+ * 中文(繁體)
+  * http://code.google.com/intl/zh-TW/apis/opensocial/
+ * 日本語
+  * http://code.google.com/intl/ja/apis/opensocial/
