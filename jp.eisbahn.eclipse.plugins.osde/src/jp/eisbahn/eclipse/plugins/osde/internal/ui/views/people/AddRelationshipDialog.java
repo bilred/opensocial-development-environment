@@ -116,7 +116,12 @@ public class AddRelationshipDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed() {
 		groupId = groupIdCombo.getText();
-		target = (Person)((IStructuredSelection)personList.getSelection()).getFirstElement();;
+		target = (Person)((IStructuredSelection)personList.getSelection()).getFirstElement();
+		if (target == null) {
+			setMessage("Person is required.", IMessageProvider.ERROR);
+			setReturnCode(CANCEL);
+			return;
+		}
 		setReturnCode(OK);
 		close();
 	}
