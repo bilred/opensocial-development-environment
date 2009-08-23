@@ -84,7 +84,7 @@ public abstract class AbstractRunAction {
 				String language = dialog.getLanguage();
 				LaunchApplicationInformation information = new LaunchApplicationInformation(
 						viewer, owner, view, width, appId, useExternalBrowser,
-						country, language, project, gadgetXmlFile.getName(),
+						country, language, project, gadgetXmlFile.getProjectRelativePath().toPortableString(),
 						project.getName() + ":" + gadgetXmlFile.getName());
 				job = new LaunchApplicationJob("Running application", information, shell);
 				job.schedule(1000);
