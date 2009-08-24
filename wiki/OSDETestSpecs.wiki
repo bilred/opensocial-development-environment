@@ -141,6 +141,7 @@ _TODO: common test spec is not finished_
                 # a file named '.project'
                 # a file named canvas.js
                 # a file named gedget.xml
+                # the gadget editor appears in the main window of Eclipse
             </td>
         </tr>
     </tbody>    
@@ -160,12 +161,78 @@ _TODO: common test spec is not finished_
             <td>Output Spec</td>
         </tr>
     </thead>
-</table>
+    <tbody>
+        <tr>
+            <td>run_app_01</td>
+            <td>
+                Run application and show friend names
+            </td>
+            <td>
+                # open gadget.xml -> Contents view -> Choose canvas.html
+                # edit canvas.html value to 
+                    {{{
+<script type="text/javascript" src="http://localhost:8080/OSDETest/canvas.js"></script>
 
+<script type="text/javascript">
+gadgets.util.registerOnLoadHandler(init);
+</script>
+
+Your friends:<div id='friends'></div>                    
+                    }}}
+                # edit canvas.js value to 
+                    {{{
+function loadFriends() {
+    var req = opensocial.newDataRequest();
+    req.add(req.newFetchPersonRequest(opensocial.IdSpec.PersonId.VIEWER), 'viewer');
+    var viewerFriends = opensocial.newIdSpec({ "userId" : "VIEWER", "groupId" : "FRIENDS" });
+    var opt_params = {};
+    opt_params[opensocial.DataRequest.PeopleRequestFields.MAX] = 100;
+    req.add(req.newFetchPeopleRequest(viewerFriends, opt_params), 'viewerFriends'); 
+    req.send(onLoadFriends);
+}
+ 
+function onLoadFriends(data) {
+    var viewer = data.get('viewer').getData();
+    var viewerFriends = data.get('viewerFriends').getData();
+    html = new Array();
+    html.push('<ul>');
+    viewerFriends.each(function(person) {
+        html.push('<li>', person.getId(), '</li>');
+    });
+    html.push('</ul>');
+    document.getElementById('friends').innerHTML = html.join('');
+    gadgets.window.adjustHeight();
+} 
+ 
+function init() {
+    loadFriends();
+} 
+                    }}}
+                # right-clicking the gadget file (gadget.xml) and selecting OSDE->'Run this application'
+                # select View: Canvas
+                # select width: 100
+                # select Owner: john.doe
+                # select Viewer: george.doe
+                # select TAIWAN
+                # select Language: Chinese (zh)
+                # click OK
+            </td>
+            <td>
+                Browser shows:
+                {{{
+Your friends:
+george.doe
+jane.doe
+john.doe
+                }}}
+            </td>
+        </tr>
+    </tbody>
+</table>
 <table border="1" cellspacing="0">
     <thead>
         <tr>
-            <td colspan="4">
+            <td colspan="5">
                 Creating a Java RESTful Client Project
             </td>
         </tr>
@@ -174,9 +241,46 @@ _TODO: common test spec is not finished_
             <td>Test Item</td>
             <td>Input Spec</td>
             <td>Output Spec</td>
+            <td>Note</td>
         </tr>
     </thead>
+    <tbody>
+        <tr>
+            <td>create_restful_01</td>
+            <td>create a new Java client application that uses the Java client libraries</td>
+            <td>
+                # right-click the gadget spec (gadget.xml) and select OSDE->Create Java Project for Restful Protocol
+                # enter project name 'OSDERestfulTest'
+            </td>
+            <td>
+                # show new created project named 'OSDERestfuTest' with OpenSocual Java Client Library and a Sample.java
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>create_restful_02</td>
+            <td>Show friends by modifying the variable 'VIEWER_ID'</td>
+            <td>
+                # change the variable 'VIEWER_ID' value to 'canonical'
+                # run the application
+            </td>
+            <td>
+                # show new created project named 'OSDERestfuTest' with OpenSocual Java Client Library and a Sample.java
+                # Console shows 
+                    {{{
+Viewer: canonical
+Friend: george.doe
+Friend: jane.doe
+Friend: john.doe                    
+                    }}}
+            </td>
+            <td>
+                Shindig server should remain running for the client application to work
+            </td>
+        </tr>
+    </tbody>
 </table>
+
 
 == Windows Vista ==
 _TODO: test spec in windows vista_
