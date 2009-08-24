@@ -27,6 +27,7 @@ import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
+import jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceConstants;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
@@ -43,6 +44,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -122,7 +124,8 @@ public abstract class AbstractRunAction {
 				code = code.replace("$project_name$", project.getName());
 				IPath location = project.getFolder("target").getLocation();
 				code = code.replace("$context_dir$", location.toOSString());
-				String jettyDir = Activator.getDefault().getOsdeConfiguration().getJettyDir();
+				IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+				String jettyDir = prefs.getString(PreferenceConstants.JETTY_DIR);
 				File jettyDirFile = new File(jettyDir);
 				if (!jettyDirFile.isDirectory()) {
 					jettyDirFile.mkdirs();

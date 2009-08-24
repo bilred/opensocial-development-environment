@@ -303,21 +303,7 @@
       </wizard>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
-            name="OSDE">
-      </page>
-   </extension>
    
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="jp.eisbahn.eclipse.plugins.osde.internal.OsdePreferenceInitializer">
-      </initializer>
-   </extension>
    
    <extension
          point="org.eclipse.ui.perspectives">
@@ -377,5 +363,19 @@
                definitionId="jp.eisbahn.eclipse.plugins.osde.commands.runGadgetCommand" /> 
       </editorContribution>
  </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="jp.eisbahn.eclipse.plugins.osde.internal.preferences.OsdePreferencePage"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.preferences.OsdePreferencePage"
+            name="OSDE Preferences">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
    
 </plugin>
