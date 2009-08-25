@@ -50,7 +50,7 @@ import com.google.gadgets.Module.Content;
 public class GadgetBuilder extends IncrementalProjectBuilder {
 	
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.gadgetBuilder";
-	private static final String IGNORE_FOLDERS = "\\.svn$";
+	private static final String IGNORE_FOLDERS = "(\\.svn$)|(\\.git$)|(\\.hg$)|(\\.cvs$)|(\\.bzr$)";
 	
 	private Pattern ignoreFolderPattern;
 
@@ -150,7 +150,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 		});
 	}
 	
-	private boolean shouldCopyFolder(IFolder folder) {
+	protected boolean shouldCopyFolder(IFolder folder) {
 		String name = folder.getName();
 		Matcher matcher = ignoreFolderPattern.matcher(name);
 		return !matcher.matches();
