@@ -48,7 +48,6 @@ or even any improvement on next generation OSDE if you're responsible for it.
   
 === Test Cases Detail/Procedure ===  
 
-_TODO: common test spec is not finished_
 <table border="1" cellspacing="0">
     <thead>
         <tr>
