@@ -253,7 +253,7 @@ john.doe
                 # enter project name 'OSDERestfulTest'
             </td>
             <td>
-                # show new created project named 'OSDERestfuTest' with OpenSocual Java Client Library and a Sample.java
+                # show new created project named 'OSDERestfuTest' with OpenSocial Java Client Library and a Sample.java
             </td>
             <td></td>
         </tr>
@@ -265,7 +265,7 @@ john.doe
                 # run the application
             </td>
             <td>
-                # show new created project named 'OSDERestfuTest' with OpenSocual Java Client Library and a Sample.java
+                # show new created project named 'OSDERestfuTest' with OpenSocial Java Client Library and a Sample.java
                 # Console shows 
                     {{{
 Viewer: canonical
