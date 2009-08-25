@@ -50,9 +50,13 @@ import com.google.gadgets.Module.Content;
 public class GadgetBuilder extends IncrementalProjectBuilder {
 	
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.gadgetBuilder";
+	private static final String IGNORE_FOLDERS = "(\\.svn$)|(\\.git$)|(\\.hg$)|(\\.cvs$)|(\\.bzr$)";
+	
+	private Pattern ignoreFolderPattern;
 
 	public GadgetBuilder() {
 		super();
+		ignoreFolderPattern = Pattern.compile(IGNORE_FOLDERS);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -130,16 +134,26 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 						return false;
 					} else {
 						IFolder orgFolder = (IFolder)resource;
-						IFolder newFolder = targetDirectory.getFolder(orgFolder.getProjectRelativePath());
-						newFolder.create(false, true, monitor);
-						newFolder.setDerived(true);
-						return true;
+						if (shouldCopyFolder(orgFolder)) {
+							IFolder newFolder = targetDirectory.getFolder(orgFolder.getProjectRelativePath());
+							newFolder.create(false, true, monitor);
+							newFolder.setDerived(true);
+							return true;
+						} else {
+							return false;
+						}
 					}
 				default:
 					return true;
 				}
 			}
 		});
+	}
+	
+	protected boolean shouldCopyFolder(IFolder folder) {
+		String name = folder.getName();
+		Matcher matcher = ignoreFolderPattern.matcher(name);
+		return !matcher.matches();
 	}
 	
 }
