@@ -213,6 +213,7 @@ public class FeaturesPart extends AbstractFormPart {
 		return button;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
@@ -255,6 +256,7 @@ public class FeaturesPart extends AbstractFormPart {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		@SuppressWarnings("unchecked")
 		public void widgetSelected(SelectionEvent e) {
 			InputDialog dialog = new InputDialog(
 					page.getSite().getShell(), "Add feature", "Please input the feature name.", "",
@@ -288,6 +290,7 @@ public class FeaturesPart extends AbstractFormPart {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		@SuppressWarnings("unchecked")
 		public void widgetSelected(SelectionEvent e) {
 			ISelection selection = freeFraturesList.getSelection();
 			if (!selection.isEmpty()) {
