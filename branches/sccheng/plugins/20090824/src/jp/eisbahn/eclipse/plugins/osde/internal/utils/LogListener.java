@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * Listener class that listens to logging event.
- * This listener will write logs into a file.
+ * This listener writes logs into a file.
  * 
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  *
@@ -65,5 +65,18 @@ public class LogListener implements ILogListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Closes the file writer to ensure there will be no memory leak
+     * This function is called before the activator detaches the log listener
+     */
+    public void dispose() {
+    	try {
+    		fout.close();
+    	} catch (IOException ioe) {
+    		System.err.println("Can't close the file writer in the log listener.");
+    		ioe.printStackTrace();
+    	}
     }
 }
