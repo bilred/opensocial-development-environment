@@ -65,7 +65,7 @@ public class Translator {
 			URLConnection connection = url.openConnection();
 			connection.addRequestProperty("Referer", "http://code.google.com/p/opensocial-development-environment");
 			
-			// read in the response from google translate and construct a string to store it
+			// read in the response from Google translate and construct a string to store it
 			String line;
 			StringBuilder builder = new StringBuilder();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
