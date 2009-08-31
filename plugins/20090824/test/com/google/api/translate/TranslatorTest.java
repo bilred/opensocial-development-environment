@@ -22,7 +22,7 @@ import com.google.api.translate.Translator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Provides test cases for testing Translator using Google Translate API
