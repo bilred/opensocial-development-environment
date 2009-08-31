@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OSDE_Testing
+Bundle-SymbolicName: OSDE_Testing
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: jp.eisbahn.eclipse.plugins.osde;bundle-version="0.2.8"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
