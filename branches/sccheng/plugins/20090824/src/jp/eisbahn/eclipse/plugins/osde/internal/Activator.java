@@ -171,8 +171,8 @@ public class Activator extends AbstractUIPlugin {
 			}
 		}
 		disposeColors();
-		logger.dispose();
 		getLog().removeLogListener(logger);
+		logger.dispose();
 		plugin = null;
 		super.stop(context);
 	}
