@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.newWizards">
-      <category
-        id="jp.eisbahn.eclipse.plugins.osde.newWizards"
-        name="OSDE">
-      </category>
-      <wizard
-          id="jp.eisbahn.eclipse.plugins.osde.newWizards.NewOpenSocialProjectWizard"
-          name="OpenSocial Project"
-          category="jp.eisbahn.eclipse.plugins.osde.newWizards"
-          icon="./icons/opensocial.gif"
-          project="true"
-          finalPerspective="jp.eisbahn.eclipse.plugins.osde.perspective"
-          class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj.NewOpenSocialProjectResourceWizard">
-          <description>
-              Create an OpenSocial project.
-          </description>
-      </wizard> 
-   </extension>
-   
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor"
-            default="false"
-            extensions="xml"
-            icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor"
-            name="Gadget XML Editor">
-         <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetXml" />
-      </editor>
-   </extension>
    
    <extension
          point="org.eclipse.core.contenttype.contentTypes">
@@ -74,67 +42,6 @@
    </extension>
    
    <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            id="jp.eisbahn.eclipse.plugins.osde.contribution2"
-            objectClass="org.eclipse.core.resources.IFile">
-         <menu
-               id="jp.eisbahn.eclipse.plugins.osde.menu2"
-               label="OSDE"
-               path="additions">
-            <separator
-                  name="group2">
-            </separator>
-            <separator
-                  name="group3">
-            </separator>
-         </menu>
-         <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.CreateJavaProjectAction"
-               enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.createJavaProjectAction"
-               label="Create Java Project for Restful Protocol"
-               icon="icons/icon_wand.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
-            <enablement>
-               <objectState
-                     name="contentTypeId"
-                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
-               </objectState>
-            </enablement>
-         </action>
-         <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.ShowKeysAction"
-               enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.showKeysAction"
-               label="Show keys"
-               icon="icons/icon_key.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
-            <enablement>
-               <objectState
-                     name="contentTypeId"
-                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
-               </objectState>
-            </enablement>
-         </action>
-         <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
-               enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.runAction"
-               label="Run this application"
-               icon="icons/action_go.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
-            <enablement>
-               <objectState
-                     name="contentTypeId"
-                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
-               </objectState>
-            </enablement>
-         </action>
-      </objectContribution>
-   </extension>
-   
-   <extension
          id="gadgetBuilder"
          point="org.eclipse.core.resources.builders">
       <builder>
@@ -145,54 +52,53 @@
    </extension>
    
    <extension
-         point="org.eclipse.ui.views">
+         point="org.eclipse.ui.exportWizards">
       <category
-            id="jp.eisbahn.eclipse.plugins.osde"
+            id="jp.eisbahn.eclipse.plugins.osde.export"
             name="OSDE">
       </category>
-      <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView"
+      <wizard
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.export.OpenSocialApplicationExportWizard"
+            id="jp.eisbahn.eclipse.plugins.osde.ExportWizard"
+            category="jp.eisbahn.eclipse.plugins.osde.export"
             icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
-            name="People">
-      </view>
-      <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView"
-            icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.AppDataView"
-            name="AppData">
-      </view>
-      <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView"
-            icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.ActivitiesView"
-            name="Activities">
-      </view>
-      <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView"
-            icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.UserPrefsView"
-            name="User Preferences">
-      </view>
-      <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.docs.DocumentView"
-            icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.DocumentView"
-            name="Docs">
-      </view>
-      <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.monitor.ShindigMonitorView"
-            icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.ShindigMonitorView"
-            name="Monitor">
-      </view>
+            name="OpenSocial application">
+         <description>
+            Export the selected OpenSocial application.
+         </description>
+      </wizard>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+        id="jp.eisbahn.eclipse.plugins.osde.newWizards"
+        name="OSDE">
+      </category>
+      <wizard
+          id="jp.eisbahn.eclipse.plugins.osde.newWizards.NewOpenSocialProjectWizard"
+          name="OpenSocial Project"
+          category="jp.eisbahn.eclipse.plugins.osde.newWizards"
+          icon="./icons/opensocial.gif"
+          project="true"
+          finalPerspective="jp.eisbahn.eclipse.plugins.osde.perspective"
+          class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj.NewOpenSocialProjectResourceWizard">
+          <description>
+              Create an OpenSocial project.
+          </description>
+      </wizard> 
+   </extension>
+   
+   <extension
+         point = "org.eclipse.ui.editorActions">
+      <editorContribution 
+            id="jp.eisbahn.eclipse.plugins.osde.editorActions"
+            targetID="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor">
+         <action id="jp.eisbahn.eclipse.plugins.osde.editorActions.runAction"
+               label="Run this application"
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunFromEditorAction"
+               definitionId="jp.eisbahn.eclipse.plugins.osde.commands.runGadgetCommand" /> 
+      </editorContribution>
+ </extension>
    
    <extension
          point="org.eclipse.ui.actionSets">
@@ -286,44 +192,6 @@
    </extension>
    
    <extension
-         point="org.eclipse.ui.exportWizards">
-      <category
-            id="jp.eisbahn.eclipse.plugins.osde.export"
-            name="OSDE">
-      </category>
-      <wizard
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.export.OpenSocialApplicationExportWizard"
-            id="jp.eisbahn.eclipse.plugins.osde.ExportWizard"
-            category="jp.eisbahn.eclipse.plugins.osde.export"
-            icon="icons/opensocial.gif"
-            name="OpenSocial application">
-         <description>
-            Export the selected OpenSocial application.
-         </description>
-      </wizard>
-   </extension>
-   
-   
-   
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePerspective"
-            id="jp.eisbahn.eclipse.plugins.osde.perspective"
-            icon="icons/opensocial.gif"
-            name="OpenSocial">
-      </perspective>
-   </extension>
-   
-   <extension
-         point="org.eclipse.help.toc">
-      <toc
-            file="toc.xml"
-            primary="true">
-      </toc>
-   </extension>
-   
-   <extension
          point="org.eclipse.ui.commands">
       <category
             id="jp.eisbahn.eclipse.plugins.osde.commands.category1"
@@ -341,6 +209,151 @@
       </command>
    </extension>
    
+   
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePerspective"
+            id="jp.eisbahn.eclipse.plugins.osde.perspective"
+            icon="icons/opensocial.gif"
+            name="OpenSocial">
+      </perspective>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="jp.eisbahn.eclipse.plugins.osde.contribution2"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="jp.eisbahn.eclipse.plugins.osde.menu2"
+               label="OSDE"
+               path="additions">
+            <separator
+                  name="group2">
+            </separator>
+            <separator
+                  name="group3">
+            </separator>
+         </menu>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.CreateJavaProjectAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.createJavaProjectAction"
+               label="Create Java Project for Restful Protocol"
+               icon="icons/icon_wand.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
+               </objectState>
+            </enablement>
+         </action>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.ShowKeysAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.showKeysAction"
+               label="Show keys"
+               icon="icons/icon_key.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
+               </objectState>
+            </enablement>
+         </action>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.runAction"
+               label="Run this application"
+               icon="icons/action_go.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
+               </objectState>
+            </enablement>
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="jp.eisbahn.eclipse.plugins.osde.internal.preferences.OsdePreferencePage"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.preferences.OsdePreferencePage"
+            name="OSDE Preferences">
+      </page>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="jp.eisbahn.eclipse.plugins.osde"
+            name="OSDE">
+      </category>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
+            name="People">
+      </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.AppDataView"
+            name="AppData">
+      </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.ActivitiesView"
+            name="Activities">
+      </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.UserPrefsView"
+            name="User Preferences">
+      </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.docs.DocumentView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.DocumentView"
+            name="Docs">
+      </view>
+      <view
+            category="jp.eisbahn.eclipse.plugins.osde"
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.monitor.ShindigMonitorView"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.views.ShindigMonitorView"
+            name="Monitor">
+      </view>
+   </extension>
+   
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml"
+            primary="true">
+      </toc>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   
    <extension point="org.eclipse.ui.bindings">
       <key sequence="M1+R"
             commandId="jp.eisbahn.eclipse.plugins.osde.commands.runGadgetCommand"
@@ -353,29 +366,16 @@
    </extension>
    
    <extension
-         point = "org.eclipse.ui.editorActions">
-      <editorContribution 
-            id="jp.eisbahn.eclipse.plugins.osde.editorActions"
-            targetID="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor">
-         <action id="jp.eisbahn.eclipse.plugins.osde.editorActions.runAction"
-               label="Run this application"
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunFromEditorAction"
-               definitionId="jp.eisbahn.eclipse.plugins.osde.commands.runGadgetCommand" /> 
-      </editorContribution>
- </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="jp.eisbahn.eclipse.plugins.osde.internal.preferences.OsdePreferencePage"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.preferences.OsdePreferencePage"
-            name="OSDE Preferences">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceInitializer">
-      </initializer>
+         point="org.eclipse.ui.editors">
+      <editor
+            class="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor"
+            default="false"
+            extensions="xml"
+            icon="icons/opensocial.gif"
+            id="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor"
+            name="Gadget XML Editor">
+         <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetXml" />
+      </editor>
    </extension>
    
 </plugin>

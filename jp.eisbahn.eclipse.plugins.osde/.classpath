@@ -13,7 +13,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/dom4j-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/easymock-2.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/google-api-translate-java-0.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/h2-1.1.117.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/hibernate-3.2.2.ga.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/hibernate-annotations-3.2.1.ga.jar"/>
@@ -28,6 +27,7 @@
 	<classpathentry exported="true" kind="lib" path="libs/persistence-api-1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/shindig-hibernate-1.1-SNAPSHOT.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/shindig-social-api-1.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/json.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
