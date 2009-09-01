@@ -83,6 +83,10 @@ import com.google.gadgets.GadgetXmlParser;
 
 /**
  * The activator class controls the plug-in life cycle
+ * 
+ * Note that when the plug-in shuts down, AbstractUIPlugin automatically
+ * saves any plug-in preferences. So anything specified in the preference
+ * page will persist next time you activate this plug-in.
  */
 public class Activator extends AbstractUIPlugin {
 
@@ -91,6 +95,9 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+	
+	// For writing logs to files
+	private static LogListener logger;
 	
 	private Map<RGB, Color> colorMap = new HashMap<RGB, Color>();
 
@@ -111,23 +118,27 @@ public class Activator extends AbstractUIPlugin {
 		
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	/**
+	 * This method is called upon plug-in activation
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		getLog().addLogListener(new LogListener());
+		
+		// Attach a log listener to write logs to the file
+		// Note that the logging events are still written to the default Error Log
+		// This Listener is for backing up the logs
+		logger = new LogListener();
+		getLog().addLogListener(logger);
+		
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
 		registerIcon();
 		gadgetXmlParser = new GadgetXmlParser();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	/**
+	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
 		(new DefaultScope()).getNode(Activator.PLUGIN_ID).flush();
@@ -160,6 +171,8 @@ public class Activator extends AbstractUIPlugin {
 			}
 		}
 		disposeColors();
+		getLog().removeLogListener(logger);
+		logger.dispose();
 		plugin = null;
 		super.stop(context);
 	}
