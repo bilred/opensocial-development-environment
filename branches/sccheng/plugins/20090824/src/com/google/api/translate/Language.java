@@ -127,7 +127,7 @@ public enum Language {
 	 */
 	public static boolean isSupported(String lanCode) {
 		for (Language language : values()) {
-			if (lanCode.equals(Enum.valueOf(Language.class, language.toString()))) {
+			if (lanCode.equals(language.lanCode)) {
 				return true;
 			}
 		}
@@ -135,11 +135,29 @@ public enum Language {
 	}
 	
 	/**
+	 * Returns a Language object given a language code, null otherwise
+	 * The logic in this method is similar to isSupported() method,
+	 * except that isSupported() returns true or false to indicate if a given language
+	 * code is supported. And this method returns explicitly a Language object or null. 
+	 * 
+	 * @param lanCode a String that represents the language code
+	 * @return Language object of the language code
+	 */
+	public static Language fromString(String lanCode) {
+		for (Language language : values()) {
+			if (lanCode.equals(language.lanCode)) {
+				return language;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Returns the language code of the language
 	 * 
 	 * @return language code of this language
 	 */
-	public String getLanguageCode() {
+	public String getLanCode() {
 		return this.lanCode;
 	}
 }

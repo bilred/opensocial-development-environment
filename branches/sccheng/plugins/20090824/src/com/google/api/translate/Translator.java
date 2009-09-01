@@ -63,26 +63,31 @@ public class Translator {
 			String queryURL = constructQueryURL(text, from, to);
 			URL url = new URL(queryURL);
 			URLConnection connection = url.openConnection();
-			connection.addRequestProperty("Referer", "http://code.google.com/p/opensocial-development-environment");
+			connection.addRequestProperty("Referer",
+					"http://code.google.com/p/opensocial-development-environment");
 			
 			// read in the response from Google translate and construct a string to store it
 			String line;
 			StringBuilder builder = new StringBuilder();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			while((line = reader.readLine()) != null) {
-			 builder.append(line);
+				builder.append(line);
 			}
-
+			reader.close();
+			
 			// parse the response string into JSON object and return the desired result
 			JSONObject json = new JSONObject(builder.toString());
-			String result = json.getJSONObject("responseData").getString("translatedText"); 
+			String result = json.getJSONObject("responseData").getString("translatedText");
 			return result;
 		} catch (MalformedURLException ex) {
 			System.err.println("Invalid server url for Google Translate API");
+			ex.printStackTrace();
 		} catch (IOException ioe) {
 			System.err.println("Can't establish connections to Google Translate service");
+			ioe.printStackTrace();
 		} catch (JSONException jse) {
 			System.err.println("Can't parse the response from Google Translate service into JSON object");
+			jse.printStackTrace();
 		}
 		return null;
 	}
@@ -95,9 +100,9 @@ public class Translator {
 			System.err.println("Error during encoding the text to be tranlated.");
 		}
 		result.append("&langpair=");
-		result.append(from.getLanguageCode());
-		result.append("%7C");
-		result.append(to.getLanguageCode());
+		result.append(from.getLanCode());
+		result.append("%7C"); // %7C is the character "|" in the encoded url
+		result.append(to.getLanCode());
 
 		return result.toString();
 	}
