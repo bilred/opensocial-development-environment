@@ -48,17 +48,17 @@ public class MessageBundleXMLParserTest {
 		fout = new FileWriter("test.txt");
 		fout.write("<messagebundle>");
 		fout.write("  <msg name=\"hello_world\">"); 
-	    fout.write("    Hello World."); 
-	    fout.write("  </msg>"); 
-	    fout.write("  <msg name=\"color\">Color</msg>"); 
-	    fout.write("  <msg name=\"red\">Red</msg>"); 
-	    fout.write("  <msg name=\"green\">Green</msg>"); 
-	    fout.write("  <msg name=\"blue\">Blue</msg>"); 
-	    fout.write("  <msg name=\"gray\">Gray</msg>"); 
-	    fout.write("  <msg name=\"purple\">Purple</msg>"); 
-	    fout.write("  <msg name=\"black\">Black</msg>"); 
-		fout.write("</messagebundle>");
-		fout.close();
+		fout.write("    Hello World."); 
+		fout.write("  </msg>");
+		fout.write("  <msg name=\"color\">Color</msg>");
+		fout.write("  <msg name=\"red\">Red</msg>"); 
+	    fout.write("  <msg name=\"green\">Green</msg>");
+	    fout.write("  <msg name=\"blue\">Blue</msg>");
+	    fout.write("  <msg name=\"gray\">Gray</msg>");
+	    fout.write("  <msg name=\"purple\">Purple</msg>");
+	    fout.write("  <msg name=\"black\">Black</msg>");
+	    fout.write("</messagebundle>");
+	    fout.close();
 	}
 
 	@Test
