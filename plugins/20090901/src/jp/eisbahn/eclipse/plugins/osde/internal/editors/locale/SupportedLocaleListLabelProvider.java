@@ -25,9 +25,11 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import com.google.gadgets.Module.ModulePrefs.Locale;
+
 class SupportedLocaleListLabelProvider extends LabelProvider implements ITableLabelProvider {
 	
-	private static final String ANY = "(any)";
+	private static final String ALL = "ALL";
 
 	public Image getColumnImage(Object element, int columnIndex) {
 		switch(columnIndex) {
@@ -40,21 +42,21 @@ class SupportedLocaleListLabelProvider extends LabelProvider implements ITableLa
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		LocaleModel model = (LocaleModel)element;
+		Locale locale = (Locale) element;
 		switch(columnIndex) {
 		case 1:
-			String country = model.getCountry();
-			if (StringUtils.isEmpty(country)) {
-				return ANY;
-			} else {
-				return country;
-			}
-		case 2:
-			String language = model.getLang();
+			String language = locale.getLang();
 			if (StringUtils.isEmpty(language)) {
-				return ANY;
+				return ALL;
 			} else {
 				return language;
+			}
+		case 2:
+			String country = locale.getCountry();
+			if (StringUtils.isEmpty(country)) {
+				return ALL;
+			} else {
+				return country;
 			}
 		default:
 			return null;

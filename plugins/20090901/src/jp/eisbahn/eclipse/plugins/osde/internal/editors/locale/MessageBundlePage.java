@@ -20,8 +20,13 @@ package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 import java.util.List;
 import java.util.Map;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+
+import com.google.gadgets.Module.ModulePrefs.Locale;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -47,11 +52,9 @@ public class MessageBundlePage implements IDetailsPage {
 	private IManagedForm managedForm;
 	
 	private LocalePage page;
-	private LocaleModel model;
+	private Locale locale;
 	
 	private TableViewer messagesList;
-
-	private Button internalButton;
 	
 	public MessageBundlePage(LocalePage page) {
 		super();
@@ -64,28 +67,27 @@ public class MessageBundlePage implements IDetailsPage {
 		layout.marginHeight = 0;
 		parent.setLayout(layout);
 		FormToolkit toolkit = managedForm.getToolkit();
-		// Message bundle
+
+		// Message bundle section
 		Section messagesSection = toolkit.createSection(parent, Section.TITLE_BAR);
-		messagesSection.setText("Message bundle");
+		messagesSection.setText("Message Bundle");
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		messagesSection.setLayoutData(layoutData);
+		
+		// Message bundle pane
 		Composite messagesPane = toolkit.createComposite(messagesSection);
 		messagesPane.setLayout(new GridLayout(2, false));
 		messagesSection.setClient(messagesPane);
 		final SectionPart messagesPart = new SectionPart(messagesSection);
-		//
-		internalButton = new Button(messagesPane, SWT.CHECK);
-		internalButton.setText("Define this message bundle in Gadget XML file.");
-		layoutData = new GridData();
-		layoutData.horizontalSpan = 2;
-		internalButton.setLayoutData(layoutData);
-		internalButton.addSelectionListener(new InternalButtonSelectionListener(messagesPart));
-		//
+
+		// Create the table
 		Table messagesTable = toolkit.createTable(messagesPane, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 		messagesTable.setHeaderVisible(true);
 		messagesTable.setLinesVisible(true);
 		layoutData = new GridData(GridData.FILL_BOTH);
 		messagesTable.setLayoutData(layoutData);
+		
+		// Create table columns
 		TableColumn column = new TableColumn(messagesTable, SWT.LEFT, 0);
 		column.setText("");
 		column.setWidth(20);
@@ -95,10 +97,13 @@ public class MessageBundlePage implements IDetailsPage {
 		column = new TableColumn(messagesTable, SWT.LEFT, 2);
 		column.setText("Text");
 		column.setWidth(150);
+		
+		// Table Viewer in the table
 		messagesList = new TableViewer(messagesTable);
-		messagesList.setContentProvider(new MessagesListContentProvider());
+		messagesList.setContentProvider(new ArrayContentProvider());
 		messagesList.setLabelProvider(new MessagesListLabelProvider());
-		//
+		
+		// Button pane
 		Composite buttonPane = toolkit.createComposite(messagesPane);
 		buttonPane.setLayout(new GridLayout());
 		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
@@ -115,33 +120,14 @@ public class MessageBundlePage implements IDetailsPage {
 		deleteButton.addSelectionListener(new RemoveButtonSelectionListener(messagesPart));
 	}
 
+
 	public void initialize(IManagedForm managedForm) {
 		this.managedForm = managedForm;
 	}
 
 	public void selectionChanged(IFormPart part, ISelection selection) {
-		model = (LocaleModel)((IStructuredSelection)selection).getFirstElement();
-		messagesList.setInput(model.getMessages());
-		internalButton.setSelection(model.isInternal());
-	}
-	
-	private class InternalButtonSelectionListener implements SelectionListener {
-		
-		private SectionPart sectionPart;
-		
-		public InternalButtonSelectionListener(SectionPart sectionPart) {
-			this.sectionPart = sectionPart;
-		}
-		
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-
-		public void widgetSelected(SelectionEvent e) {
-			model.setInternal(internalButton.getSelection());
-			managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
-			makeDirty();
-		}
-
+		locale = (Locale)((IStructuredSelection)selection).getFirstElement();
+		messagesList.setInput(locale.getMessageBundle().getMessages());
 	}
 
 	private void makeDirty() {
@@ -159,7 +145,9 @@ public class MessageBundlePage implements IDetailsPage {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		// TODO: Add button for new messages given the selected locale
 		public void widgetSelected(SelectionEvent e) {
+			/*
 			List<LocaleModel> localeModels = page.getLocaleModels();
 			AddMessageDialog dialog = new AddMessageDialog(page.getSite().getShell(), localeModels, model);
 			if (dialog.open() == AddMessageDialog.OK) {
@@ -176,6 +164,7 @@ public class MessageBundlePage implements IDetailsPage {
 				managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
 				makeDirty();
 			}
+			*/
 		}
 		
 	}
@@ -192,6 +181,7 @@ public class MessageBundlePage implements IDetailsPage {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
+			/*
 			ISelection selection = messagesList.getSelection();
 			if (!selection.isEmpty()) {
 				IStructuredSelection structured = (IStructuredSelection)selection;
@@ -207,6 +197,7 @@ public class MessageBundlePage implements IDetailsPage {
 					makeDirty();
 				}
 			}
+			*/
 		}
 		
 	}

@@ -150,6 +150,16 @@ public class Module {
 			}
 			requireOrOptionalOrPreload.add(obj);
 		}
+		
+		public List<Locale> getLocales() {
+			List<Locale> locales = new ArrayList<Locale>();
+			for (Object element : requireOrOptionalOrPreload) {
+				if (element instanceof Locale) {
+					locales.add((Locale)element);
+				}
+			}
+			return locales;
+		}
 
 		public String getTitle() {
 			return title;
@@ -324,27 +334,14 @@ public class Module {
 		}
 		
 		public static class Locale {
-			
-			protected List<Module.ModulePrefs.Locale.Msg> msg;
+
 			protected String lang;
 			protected String country;
 			protected String messages;
 			protected String languageDirection;
 			
-			public List<Module.ModulePrefs.Locale.Msg> getMsg() {
-				if (msg == null) {
-					msg = new ArrayList<Module.ModulePrefs.Locale.Msg>();
-				}
-				return this.msg;
-			}
+			protected MessageBundle msgBundle;
 			
-			public void addMsg(Module.ModulePrefs.Locale.Msg value) {
-				if (msg == null) {
-					msg = new ArrayList<Module.ModulePrefs.Locale.Msg>();
-				}
-				msg.add(value);
-			}
-
 			public String getLang() {
 				return lang;
 			}
@@ -377,38 +374,25 @@ public class Module {
 				this.languageDirection = languageDirection;
 			}
 			
-			public static class Msg {
-				
-				protected String value;
-				protected String name;
-				protected String desc;
-				
-				public String getValue() {
-					return value;
-				}
-				
-				public void setValue(String value) {
-					this.value = value;
-				}
-				
-				public String getName() {
-					return name;
-				}
-				
-				public void setName(String name) {
-					this.name = name;
-				}
-				
-				public String getDesc() {
-					return desc;
-				}
-				
-				public void setDesc(String desc) {
-					this.desc = desc;
-				}
-				
+			public void setMessageBundle(MessageBundle msgBundle) {
+				this.msgBundle = msgBundle;
 			}
 			
+			public MessageBundle getMessageBundle() {
+				return msgBundle;
+			}
+			
+			@Override
+			public boolean equals(Object inObj) {
+				if (this == inObj) return true;
+				if (!(inObj instanceof Locale)) return false;
+				
+				Locale inLocale = (Locale) inObj;
+				if (this.lang == null || this.country == null ||
+					inLocale.lang == null || inLocale.country == null) 
+					return false;
+				return (this.lang.equals(inLocale.lang) && this.country.equals(inLocale.country));
+			}
 		}
 		
 		public static class OAuth {

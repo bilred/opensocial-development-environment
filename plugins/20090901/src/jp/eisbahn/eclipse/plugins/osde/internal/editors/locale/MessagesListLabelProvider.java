@@ -17,7 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
-import java.util.Map;
+import com.google.gadgets.MessageBundle.Msg;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 
@@ -39,12 +39,12 @@ class MessagesListLabelProvider extends LabelProvider implements ITableLabelProv
 	}
 
 	public String getColumnText(Object element, int columnIndex) {
-		Map.Entry<String, String> entry = (Map.Entry<String, String>)element;
+		Msg msg = (Msg) element; 
 		switch(columnIndex) {
 		case 1:
-			return entry.getKey();
+			return msg.getName();
 		case 2:
-			return entry.getValue();
+			return msg.getContent();
 		default:
 			return null;
 		}

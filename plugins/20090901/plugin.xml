@@ -23,6 +23,24 @@
    </extension>
    
    <extension
+         id="gadgetBuilder"
+         point="org.eclipse.core.resources.builders">
+      <builder>
+         <run
+               class="jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder">
+         </run>
+      </builder>
+   </extension>
+   
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml"
+            primary="true">
+      </toc>
+   </extension>
+   
+   <extension
          point="org.eclipse.ui.decorators">
       <decorator
             lightweight="true"
@@ -39,16 +57,6 @@
             </objectState>
          </enablement>
       </decorator>
-   </extension>
-   
-   <extension
-         id="gadgetBuilder"
-         point="org.eclipse.core.resources.builders">
-      <builder>
-         <run
-               class="jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder">
-         </run>
-      </builder>
    </extension>
    
    <extension
@@ -338,14 +346,6 @@
             id="jp.eisbahn.eclipse.plugins.osde.internal.views.ShindigMonitorView"
             name="Monitor">
       </view>
-   </extension>
-   
-   <extension
-         point="org.eclipse.help.toc">
-      <toc
-            file="toc.xml"
-            primary="true">
-      </toc>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

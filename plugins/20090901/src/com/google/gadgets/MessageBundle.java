@@ -57,7 +57,7 @@ public class MessageBundle {
 			strBuilder.append(iter.next().toString());
 			strBuilder.append("\n");
 		}
-		strBuilder.append("</messageBundle>");
+		strBuilder.append("</messagebundle>");
 		
 		return strBuilder.toString();
 	}

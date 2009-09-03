@@ -17,13 +17,18 @@
  */
 package com.google.gadgets;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.google.gadgets.MessageBundle;
 import com.google.gadgets.Module.Content;
 import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.UserPref;
@@ -31,10 +36,15 @@ import com.google.gadgets.Module.ModulePrefs.Icon;
 import com.google.gadgets.Module.ModulePrefs.Locale;
 import com.google.gadgets.Module.ModulePrefs.Optional;
 import com.google.gadgets.Module.ModulePrefs.Require;
-import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
 import com.google.gadgets.Module.UserPref.EnumValue;
 
-
+/**
+ * Writes gadget contents into files
+ * 
+ * @author Yoichiro Tanaka
+ * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
+ *
+ */
 public class GadgetXmlSerializer {
 
 	public static String serialize(Module module) {
@@ -122,31 +132,59 @@ public class GadgetXmlSerializer {
 		return sb.toString();
 	}
 
-	private static Object createLocales(Module module) {
-		StringBuilder sb = new StringBuilder();
+	private static String createLocales(Module module) {
+		StringBuilder strBuilder = new StringBuilder();
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		List<?> elements = modulePrefs.getRequireOrOptionalOrPreload();
 		for (Object element : elements) {
-			Object value = element;
-			if (value instanceof Locale) {
-				Locale locale = (Locale)value;
-				sb.append("        <Locale");
-				createAttribute("lang", locale.getLang(), sb);
-				createAttribute("country", locale.getCountry(), sb);
-				createAttribute("messages", locale.getMessages(), sb);
-				List<Msg> msgs = locale.getMsg();
-				if (msgs != null && !msgs.isEmpty()) {
-					sb.append(">\n");
-					for (Msg msg : msgs) {
-						sb.append("            <msg name=\"" + msg.getName() + "\">" + escape(msg.getValue()) + "</msg>\n");
-					}
-					sb.append("        </Locale>\n");
-				} else {
-					sb.append(" />\n");
-				}
+			if (element instanceof Locale) {
+				Locale locale = (Locale) element;
+				strBuilder.append("    <Locale");
+				createAttribute("lang", locale.getLang(), strBuilder);
+				createAttribute("country", locale.getCountry(), strBuilder);
+				createAttribute("messages", locale.getMessages(), strBuilder);
+				createAttribute("language_direction", locale.getLanguageDirection(), strBuilder);
+				strBuilder.append(" />\n");
 			}
 		}
-		return sb.toString();
+		return strBuilder.toString();
+	}
+	
+	/**
+	 * Given a message bundle Java Bean, this method serializes its contents out into a
+	 * file consistent with the specification of gadget message bundle XML.
+	 * Refer to http://code.google.com/intl/zh-TW/apis/gadgets/docs/i18n.html
+	 * for more details.
+	 * 
+	 * @param msgBundle Message bundle java bean to be written to the file
+	 * @param filePath Path of the written file (not including the file name)
+	 * @param lang Language of this message bundle
+	 * @param country Country of this message bundle
+	 * 
+	 * @return true if the file is written successfully
+	 * 		   false otherwise
+	 */
+	public static boolean writeMessageBundleFile(MessageBundle msgBundle, String filePath, String lang, String country) {
+		// Construct the full path of the file and checks if it already exists
+		// If it does, delete it
+		File path = new File(filePath);
+		String fileName = path.getAbsolutePath() + File.separator + lang + "_" + country + ".xml";
+		File targetFile = new File(fileName);
+		if (targetFile.exists()) {
+			targetFile.delete();
+		}
+		
+		try {
+			FileWriter fout = new FileWriter(fileName);
+			fout.write(msgBundle.toString());
+			fout.flush();
+			fout.close();
+		} catch (IOException ioe) {
+			Logging.error("Error writing message bundle file: " + fileName);
+			Logging.error(ioe.toString());
+			return false;
+		}
+		return true;
 	}
 
 	private static String createRequiresAndOptionals(Module module) {
@@ -227,9 +265,9 @@ public class GadgetXmlSerializer {
 		return result;
 	}
 	
-	private static void createAttribute(String name, String value, StringBuilder sb) {
+	private static void createAttribute(String name, String value, StringBuilder strBuilder) {
 		if (StringUtils.isNotEmpty(value)) {
-			sb.append(" " + name + "=\"" + escape(value) + "\"");
+			strBuilder.append(" " + name + "=\"" + escape(value) + "\"");
 		}
 	}
 	
