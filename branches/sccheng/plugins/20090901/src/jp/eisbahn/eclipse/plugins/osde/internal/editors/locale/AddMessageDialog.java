@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.api.translate.Language;
+import com.google.api.translate.Translator;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -38,14 +41,20 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class AddMessageDialog extends TitleAreaDialog {
-	
+	/*
 	private ModifyListener modifyListener = new ModifyListener() {
 		public void modifyText(ModifyEvent e) {
+			if (e.getSource() == nameText) {
+				String message = nameText.getText();
+				// Translator.translate(message, from, to);
+			}
 			validate();
 		}
 	};
 
+	// text field for message name
 	private Text nameText;
+	
 	private Map<LocaleModel, Text> contentTextMap;
 	
 	private String name;
@@ -54,7 +63,13 @@ public class AddMessageDialog extends TitleAreaDialog {
 	private List<LocaleModel> localeModels;
 
 	private LocaleModel localeModel;
+	*/
 	
+	public AddMessageDialog(Shell shell) {
+		super(shell);
+	}
+
+	/*
 	public AddMessageDialog(Shell shell, List<LocaleModel> localeModels, LocaleModel localeModel) {
 		super(shell);
 		this.localeModels = localeModels;
@@ -62,7 +77,7 @@ public class AddMessageDialog extends TitleAreaDialog {
 		contentTextMap = new HashMap<LocaleModel, Text>();
 		contentMap = new HashMap<LocaleModel, String>();
 	}
-	
+
 	private boolean validate() {
 		String name = nameText.getText();
 		if (StringUtils.isEmpty(name)) {
@@ -82,8 +97,8 @@ public class AddMessageDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setTitle("Add the localized message");
-		setMessage("Please input the name and content.");
+		setTitle("Add Localized Messages");
+		setMessage("Please type in the message and its translations");
 		Composite composite = (Composite)super.createDialogArea(parent);
 		Composite panel = new Composite(composite, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -91,14 +106,14 @@ public class AddMessageDialog extends TitleAreaDialog {
 		panel.setLayout(layout);
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		panel.setLayoutData(layoutData);
-		//
+
 		Label label = new Label(panel, SWT.NONE);
 		label.setText("Name:");
 		nameText = new Text(panel, SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		nameText.setLayoutData(layoutData);
 		nameText.addModifyListener(modifyListener);
-		//
+
 		label = new Label(panel, SWT.NONE);
 		label.setText(getLabelText(localeModel));
 		Text text = new Text(panel, SWT.BORDER);
@@ -106,7 +121,7 @@ public class AddMessageDialog extends TitleAreaDialog {
 		text.setLayoutData(layoutData);
 		text.addModifyListener(modifyListener);
 		contentTextMap.put(localeModel, text);
-		//
+
 		for (LocaleModel model : localeModels) {
 			if (!localeModel.equals(model)) {
 				label = new Label(panel, SWT.NONE);
@@ -118,7 +133,7 @@ public class AddMessageDialog extends TitleAreaDialog {
 				contentTextMap.put(model, text);
 			}
 		}
-		//
+
 		return composite;
 	}
 	
@@ -153,5 +168,5 @@ public class AddMessageDialog extends TitleAreaDialog {
 	public Map<LocaleModel, String> getContentMap() {
 		return contentMap;
 	}
-
+	*/
 }

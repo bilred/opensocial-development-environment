@@ -17,7 +17,6 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
-
 import java.util.List;
 
 import org.eclipse.ui.forms.IManagedForm;
@@ -25,6 +24,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
 import com.google.gadgets.Module;
+import com.google.gadgets.Module.ModulePrefs.Locale;
 
 public class LocalePage extends FormPage {
 
@@ -37,7 +37,7 @@ public class LocalePage extends FormPage {
 	}
 
 	public LocalePage(FormEditor editor, Module module) {
-		super(editor, null, "Locale");
+		super(editor, null, "i18n (Message Bundle)");
 		this.module = module;
 		block = new MessageBundleBlock(this);
 	}
@@ -51,16 +51,16 @@ public class LocalePage extends FormPage {
 		block.updateLocaleModel();
 	}
 	
-	public List<LocaleModel> getLocaleModels() {
-		return block.getLocaleModels();
+	public List<Locale> getLocales() {
+		return module.getModulePrefs().getLocales();
 	}
 
 	public void updateModel() {
 		block.updateModel();
 	}
 
-	public void changeModel(Module model) {
-		this.module = model;
+	public void changeModel(Module module) {
+		this.module = module;
 		block.changeModel();
 	}
 	

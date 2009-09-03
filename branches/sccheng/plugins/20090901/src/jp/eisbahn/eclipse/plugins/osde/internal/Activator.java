@@ -80,6 +80,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 import com.google.gadgets.GadgetXmlParser;
+import com.google.gadgets.MessageBundleXMLParser;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -110,6 +111,7 @@ public class Activator extends AbstractUIPlugin {
 	private boolean runningShindig = false;
 	private LaunchApplicationInformation lastApplicationInformation;
 	private GadgetXmlParser gadgetXmlParser;
+	private MessageBundleXMLParser messageBundleXMLParser;
 
 	/**
 	 * The constructor
@@ -135,6 +137,7 @@ public class Activator extends AbstractUIPlugin {
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
 		registerIcon();
 		gadgetXmlParser = new GadgetXmlParser();
+		messageBundleXMLParser = new MessageBundleXMLParser();
 	}
 
 	/**
@@ -443,6 +446,10 @@ public class Activator extends AbstractUIPlugin {
 	
 	public GadgetXmlParser getGadgetXmlParser() {
 		return gadgetXmlParser;
+	}
+	
+	public MessageBundleXMLParser getMessageBundleXMLParser() {
+		return messageBundleXMLParser;
 	}
 	
 }

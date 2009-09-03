@@ -18,6 +18,8 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.editors.contents.ContentsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.locale.LocalePage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.outline.GadgetXmlOutlinePage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefsPage;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -49,7 +52,10 @@ import org.xml.sax.SAXException;
 
 import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.GadgetXmlSerializer;
+import com.google.gadgets.MessageBundle;
+import com.google.gadgets.MessageBundleXMLParser;
 import com.google.gadgets.Module;
+import com.google.gadgets.Module.ModulePrefs.Locale;
 
 public class GadgetXmlEditor extends FormEditor {
 	
@@ -78,14 +84,37 @@ public class GadgetXmlEditor extends FormEditor {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
 		try {
-			IFile file = (IFile)input.getAdapter(IResource.class);
+			IFile file = (IFile) input.getAdapter(IResource.class);
 			setPartName(file.getName());
+			Logging.info(file.getName());
+			Logging.info(file.getProject().getFullPath().toString());
 			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+			MessageBundleXMLParser messageBundleParser = Activator.getDefault().getMessageBundleXMLParser();
 			module = parser.parse(file.getContents());
+			
+			// For each locale, parse its message bundle file
+			String projectPath = file.getLocation().toString();
+			projectPath = projectPath.substring(0, projectPath.lastIndexOf("/"));
+			for (Locale locale : module.getModulePrefs().getLocales()) {
+				String fileName = projectPath + File.separator + locale.getLang() + "_" + locale.getCountry() + ".xml";
+				File messageBundleFile = new File(fileName);
+				Logging.info(messageBundleFile.getAbsolutePath());
+				if (!messageBundleFile.exists()) {
+					messageBundleFile.createNewFile();
+					MessageBundle msgBundle = new MessageBundle();
+					FileWriter fout = new FileWriter(messageBundleFile);
+					fout.write(msgBundle.toString());
+					fout.flush();
+					fout.close();
+					locale.setMessageBundle(msgBundle);
+				} else {
+					MessageBundle parsedMessageBundle = messageBundleParser.parse(messageBundleFile);
+					locale.setMessageBundle(parsedMessageBundle);
+				}
+			}
 		} catch (IOException e) {
 			throw new PartInitException(e.getMessage(), e);
 		} catch (SAXException e) {
-//			throw new PartInitException(e.getMessage(), e);
 			initializeFailed = true;
 		} catch (CoreException e) {
 			throw new PartInitException(e.getMessage(), e);

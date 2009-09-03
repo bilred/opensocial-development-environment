@@ -91,6 +91,7 @@ public class OpenSocialUtil {
 		}
 	}
 
+	/*
 	public static boolean isGadgetXml(IFile file) {
 		IContentTypeManager manager = Platform.getContentTypeManager();
 		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
@@ -101,8 +102,13 @@ public class OpenSocialUtil {
 		}
 		return false;
 	}
+	*/
+	
+	public static boolean isGadgetXml(IFile file) {
+		return "gadget.xml".equals(file.getName());
+	}
 
-	public static final String ANY = "--- any ---";
+	public static final String ANY = "(ALL)";
 
 	public static final String[] COUNTRIES = {
 		ANY,
