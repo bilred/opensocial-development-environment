@@ -92,12 +92,13 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 				int type = resource.getType();
 				switch(type) {
 				case IResource.FILE:
-					IFile orgFile = (IFile)resource;
+					IFile orgFile = (IFile) resource;
 					if (!orgFile.getName().equals(".project")) {
 						IPath parent = orgFile.getParent().getProjectRelativePath();
 						IFolder destFolder = project.getFolder(targetDirectory.getProjectRelativePath() + "/" + parent);
 						IFile destFile = destFolder.getFile(orgFile.getName());
-						orgFile.copy(destFile.getFullPath(), false, monitor);
+						// TODO: Make sure it's ok to set FORCR to true here
+						orgFile.copy(destFile.getFullPath(), true, monitor);
 						if (OpenSocialUtil.isGadgetXml(destFile)) {
 							try {
 								GadgetXmlParser gadgetXmlParser = Activator.getDefault().getGadgetXmlParser();

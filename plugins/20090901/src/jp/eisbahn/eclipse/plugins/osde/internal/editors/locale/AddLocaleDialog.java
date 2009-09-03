@@ -24,7 +24,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -35,11 +34,9 @@ public class AddLocaleDialog extends TitleAreaDialog {
 	
 	private Combo countryCombo;
 	private Combo languageCombo;
-	private Button inlineButton;
 	
 	private String selectedCountry;
 	private String selectedLanguage;
-	private boolean inlined;
 	
 	public AddLocaleDialog(Shell shell) {
 		super(shell);
@@ -82,33 +79,17 @@ public class AddLocaleDialog extends TitleAreaDialog {
 		}
 		languageCombo.select(0);
 
-		inlineButton = new Button(panel, SWT.CHECK);
-		inlineButton.setText("Inline the message bundle in Gadget XML file. (not recommended)");
-		layoutData = new GridData();
-		layoutData.horizontalSpan = 2;
-		inlineButton.setLayoutData(layoutData);
-		inlineButton.setSelection(true);
-
 		return composite;
 	}
 
 	@Override
 	protected void okPressed() {
 		selectedCountry = countryCombo.getText();
-		if (selectedCountry.equals(OpenSocialUtil.ANY)) {
-			selectedCountry = "";
-		} else {
-			selectedCountry = selectedCountry.substring(selectedCountry.indexOf('(') + 1, selectedCountry.length() - 1);
-		}
+		selectedCountry = selectedCountry.substring(selectedCountry.indexOf('(') + 1, selectedCountry.length() - 1);
 		
 		selectedLanguage = languageCombo.getText();
-		if (selectedLanguage.equals(OpenSocialUtil.ANY)) {
-			selectedLanguage = "";
-		} else {
-			selectedLanguage = selectedLanguage.substring(selectedLanguage.indexOf('(') + 1, selectedLanguage.length() - 1);
-		}
+		selectedLanguage = selectedLanguage.substring(selectedLanguage.indexOf('(') + 1, selectedLanguage.length() - 1);
 		
-		inlined = inlineButton.getSelection();
 		setReturnCode(OK);
 		close();
 	}
@@ -120,9 +101,4 @@ public class AddLocaleDialog extends TitleAreaDialog {
 	public String getSelectedLanguage() {
 		return selectedLanguage;
 	}
-	
-	public boolean isInlined() {
-		return inlined;
-	}
-	
 }

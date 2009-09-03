@@ -55,6 +55,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.MessageBundle;
+import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.ModulePrefs.Locale;
 
 /**
@@ -168,12 +169,12 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		List<Locale> supportedLocales = (List<Locale>) supportedLocaleList.getInput();
 		IProject project = getProject();
 		removeAllMessageBundleFiles(project);
-		
+		removeAllLocalesFromModule();
+		ModulePrefs modulePrefs = page.getModule().getModulePrefs();
 		for (Locale locale : supportedLocales) {
 			try {
 				String fileName = locale.getLang() + "_" + locale.getCountry() + ".xml";
-				String filePath = project.getFullPath() + File.separator + fileName;
-				IFile bundleFile = project.getFile(filePath);
+				IFile bundleFile = project.getFile(fileName);
 				if (bundleFile.exists()) {
 					bundleFile.delete(true, new NullProgressMonitor());
 				}
@@ -183,12 +184,28 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 				
 				// TODO: messages URI should actually be a location on the web
 				// This will cause problems once the gadget is submitted to production environment
-				locale.setMessages(filePath);
+				locale.setMessages(fileName);
 			} catch (CoreException e) {
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
+			modulePrefs.addRequireOrOptionalOrPreload(locale);
+		}
+	}
+	
+	// TODO: Change this ugly logic, which requires refactoring of ModulePrefs
+	public void removeAllLocalesFromModule() {
+		List<Object> elements = page.getModule().getModulePrefs().getRequireOrOptionalOrPreload();
+		List<Object> tmp = new ArrayList<Object>();
+		for (Object element : elements) {
+			if (!(element instanceof Locale)) {
+				tmp.add(element);
+			}
+		}
+		elements.clear();
+		for (Object element : tmp) {
+			elements.add(element);
 		}
 	}
 	
@@ -237,21 +254,23 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 				Locale newLocale = new Locale();
 				String lang = dialog.getSelectedLanguage();
 				String country = dialog.getSelectedCountry();
-				String filePath = getProject().getFullPath().toString();
+				String filePath = getProject().getLocation().toString();
 				
 				newLocale.setLang(lang);
 				newLocale.setCountry(country);
 				newLocale.setMessages(filePath + File.separator + lang + "_" + country + ".xml");
 				newLocale.setLanguageDirection("ltr");
+				MessageBundle msgBundle = new MessageBundle();
 				newLocale.setMessageBundle(new MessageBundle());
-				// TODO: let the user set language direction for this locale
+				
+				// TODO: let the user choose language direction for this locale
 				
 				List<Locale> supportedLocales = (ArrayList<Locale>) supportedLocaleList.getInput();
 				if (!supportedLocales.contains(newLocale)) {
 					supportedLocales.add(newLocale);
 					supportedLocaleList.refresh();
+					GadgetXmlSerializer.writeMessageBundleFile(msgBundle, filePath, lang, country);
 					markDirty();
-					GadgetXmlSerializer.writeMessageBundleFile(null, filePath, lang, country);
 				}
 			}
 		}
@@ -277,7 +296,10 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 					List<Locale> supportedLocales = (ArrayList<Locale>) supportedLocaleList.getInput();
 					supportedLocales.remove(selectedLocale);
 					
-					// TODO: delete corresponding message bundle file for this locale
+					String filePath = getProject().getLocation().toString();
+					filePath = filePath.substring(0, filePath.lastIndexOf("/"));
+					File file = new File(filePath + File.separator + lang + "_" + country + ".xml");
+					file.delete();				
 					
 					supportedLocaleList.refresh();
 					markDirty();
