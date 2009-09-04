@@ -68,8 +68,8 @@ public class ModulePrefsPage extends FormPage {
 		}
 	}
 
-	public void changeModel(Module model) {
-		this.module = model;
+	public void changeModule(Module module) {
+		this.module = module;
 		applicationInformationPart.changeModel();
 		featuresPart.changeModel();
 		contentRewritePart.changeModel();

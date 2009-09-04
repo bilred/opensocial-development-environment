@@ -134,15 +134,20 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
 		
 		// All UIs done, now set the input of the table
-		changeModel();
+		supportedLocaleTableViewer.setInput(page.getModule().getModulePrefs().getLocales());
 
 		section.setClient(composite);
 	}
 	
-	public void changeModel() {
+	/**
+	 * This method is called by LocalePage to notify SupportedLocalePart
+	 * that the module has been changed. SupportedLocalePart then writes new 
+	 * message bundle files according the new module and refresh its display.
+	 */
+	public void refreshModule() {
+		updateMessageBundleFiles();
 		supportedLocaleTableViewer.setInput(page.getModule().getModulePrefs().getLocales());
 		supportedLocaleTableViewer.refresh();
-		setValuesToModule();
 	}
 	
 	private IProject getProject() {
@@ -168,11 +173,9 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 	 * More specifically, once the markDirty() is called. This method will be invoked.
 	 * 
 	 * TODO: use writeMessageBundleFile() in GadgetXmlSerializer.java
-	 * TODO: the method name is not correct, should be something like updateMessageBundleFiles()
 	 */
-	@SuppressWarnings(value = "unchecked")
-	public void setValuesToModule() {
-		List<Locale> supportedLocales = (List<Locale>) supportedLocaleTableViewer.getInput();
+	public void updateMessageBundleFiles() {
+		List<Locale> supportedLocales = (List<Locale>) page.getModule().getModulePrefs().getLocales();
 		IProject project = getProject();
 		removeAllMessageBundleFiles(project);
 		removeAllLocalesFromModule();
@@ -253,7 +256,6 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
-		@SuppressWarnings(value = { "unchecked" })
 		public void widgetSelected(SelectionEvent e) {
 			AddLocaleDialog dialog = new AddLocaleDialog(page.getSite().getShell());
 			if (dialog.open() == AddLocaleDialog.OK) {
@@ -270,10 +272,9 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 				
 				// TODO: let the user choose language direction for this locale
 				
-				List<Locale> supportedLocales = (ArrayList<Locale>) supportedLocaleTableViewer.getInput();
+				List<Locale> supportedLocales = (ArrayList<Locale>) page.getModule().getModulePrefs().getLocales();
 				if (!supportedLocales.contains(newLocale)) {
-					supportedLocales.add(newLocale);
-					supportedLocaleTableViewer.refresh();
+					page.getModule().getModulePrefs().addRequireOrOptionalOrPreload(newLocale);
 					markDirty();
 				}
 			}
@@ -285,7 +286,6 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
-		@SuppressWarnings(value = "unchecked")
 		public void widgetSelected(SelectionEvent e) {
 			ISelection selection = supportedLocaleTableViewer.getSelection();
 			if (!selection.isEmpty()) {
@@ -297,9 +297,17 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 				country = StringUtils.isEmpty(country) ? "ALL" : country;
 				if (MessageDialog.openConfirm(page.getSite().getShell(),
 						"Deleting Locale", "Do you want to delete locale '" + lang + "_" + country + "'?")) {
-					List<Locale> supportedLocales = (ArrayList<Locale>) supportedLocaleTableViewer.getInput();
-					supportedLocales.remove(selectedLocale);
-					supportedLocaleTableViewer.refresh();
+
+					// TODO: change this ugly logic by refactoring Module.java
+					List<?> modulePrefs = page.getModule().getModulePrefs().getRequireOrOptionalOrPreload();
+					for (Object element : modulePrefs) {
+						if (element instanceof Locale) {
+							if (((Locale)element).equals(selectedLocale)) {
+								modulePrefs.remove(element);
+								break;
+							}
+						}
+					}
 					markDirty();
 				}
 			}

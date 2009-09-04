@@ -52,8 +52,8 @@ public class UserPrefsPage extends FormPage {
 		block.updateModel();
 	}
 
-	public void changeModel(Module model) {
-		this.module = model;
+	public void changeModule(Module module) {
+		this.module = module;
 		block.changeModel();
 	}
 	

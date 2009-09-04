@@ -130,10 +130,6 @@ public class MessageBundlePage implements IDetailsPage {
 		messagesList.setInput(locale.getMessageBundle().getMessages());
 	}
 
-	private void markDirty() {
-		page.updateLocaleModel();
-	}
-
 	private class AddButtonSelectionListener implements SelectionListener {
 		
 		private SectionPart sectionPart;
