@@ -340,7 +340,7 @@ public class Module {
 			protected String messages;
 			protected String languageDirection;
 			
-			protected MessageBundle msgBundle;
+			protected MessageBundle msgBundle = new MessageBundle();
 			
 			public String getLang() {
 				return lang;

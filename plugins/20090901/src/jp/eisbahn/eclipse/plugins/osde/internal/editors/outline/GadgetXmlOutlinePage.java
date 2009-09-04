@@ -59,7 +59,7 @@ public class GadgetXmlOutlinePage extends ContentOutlinePage {
 		});
 		//
 		try {
-			String source = editor.getSource();
+			String source = editor.getSourceEditorContents();
 			ElementModel module = new GadgetXmlParser().parse(source);
 			treeViewer.setInput(module);
 			treeViewer.expandAll();
@@ -77,7 +77,7 @@ public class GadgetXmlOutlinePage extends ContentOutlinePage {
 	public void refresh() {
 		TreeViewer treeViewer = getTreeViewer();
 		try {
-			String source = editor.getSource();
+			String source = editor.getSourceEditorContents();
 			ElementModel module = new GadgetXmlParser().parse(source);
 			treeViewer.setInput(module);
 			treeViewer.expandAll();

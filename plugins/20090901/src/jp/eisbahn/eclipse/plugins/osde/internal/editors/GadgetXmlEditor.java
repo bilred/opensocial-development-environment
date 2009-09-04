@@ -37,7 +37,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangedListener;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -73,7 +72,7 @@ public class GadgetXmlEditor extends FormEditor {
 
 	private StructuredTextEditor sourceEditor;
 	
-	private boolean reflecting = false;
+	private boolean refreshing = false;
 	
 	private GadgetXmlOutlinePage outlinePage;
 	
@@ -86,8 +85,6 @@ public class GadgetXmlEditor extends FormEditor {
 		try {
 			IFile file = (IFile) input.getAdapter(IResource.class);
 			setPartName(file.getName());
-			Logging.info(file.getName());
-			Logging.info(file.getProject().getFullPath().toString());
 			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
 			MessageBundleXMLParser messageBundleParser = Activator.getDefault().getMessageBundleXMLParser();
 			module = parser.parse(file.getContents());
@@ -98,7 +95,6 @@ public class GadgetXmlEditor extends FormEditor {
 			for (Locale locale : module.getModulePrefs().getLocales()) {
 				String fileName = projectPath + File.separator + locale.getLang() + "_" + locale.getCountry() + ".xml";
 				File messageBundleFile = new File(fileName);
-				Logging.info(messageBundleFile.getAbsolutePath());
 				if (!messageBundleFile.exists()) {
 					messageBundleFile.createNewFile();
 					MessageBundle msgBundle = new MessageBundle();
@@ -132,56 +128,25 @@ public class GadgetXmlEditor extends FormEditor {
 			addPage(messageBundlePage);
 			userPrefsPage = new UserPrefsPage(this, module);
 			addPage(userPrefsPage);
-			sourceEditor = new StructuredTextEditor() {
-				@Override
-				public void doSave(IProgressMonitor progressMonitor) {
-					try {
-						reflectModel();
-					} catch (IOException e) {
-						e.printStackTrace();
-						// Ignore
-					} catch (SAXException e) {
-						e.printStackTrace();
-						// Ignore
-					}
-					commitPages(true);
-					super.doSave(progressMonitor);
-					editorDirtyStateChanged();
-				}
-			};
+			
+			// Text editor for gadget.xml source codes
+			sourceEditor = new StructuredTextEditor();
 			addPage(sourceEditor, getEditorInput());
-			setPageText(4, "Source");
+			setPageText(4, "Source Codes");
+			
+			/**
+			 * If the source editor is edited and the user switches the page,
+			 * parses the source codes and then updates the Module for all pages.
+			 * Also refreshes the display of all pages by calling refreshModule()
+			 */
 			addPageChangedListener(new IPageChangedListener() {
 				public void pageChanged(PageChangedEvent event) {
-					try {
-						GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-						parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
-					} catch (IOException e) {
-						MessageDialog.openError(getSite().getShell(), "Error",
-								"Syntax error: " + e.getMessage());
-						setActiveEditor(sourceEditor);
-						return;
-					} catch (SAXException e) {
-						MessageDialog.openError(getSite().getShell(), "Error",
-								"Syntax error: " + e.getMessage());
-						setActiveEditor(sourceEditor);
-						return;
-					}
 					if (sourceEditor.isDirty()) {
-						try {
-							reflectModel();
-						} catch (IOException e) {
-							MessageDialog.openError(getSite().getShell(), "Error",
-									"Syntax error: " + e.getMessage());
-							setActiveEditor(sourceEditor);
-						} catch (SAXException e) {
-							MessageDialog.openError(getSite().getShell(), "Error",
-									"Syntax error: " + e.getMessage());
-							setActiveEditor(sourceEditor);
-						}
+						parseSourceCodesAndRefreshPages();
 					}
 				}
 			});
+			
 			sourceEditor.getDocumentProvider().getDocument(getEditorInput()).addDocumentListener(new IDocumentListener() {
 				public void documentAboutToBeChanged(DocumentEvent event) {
 				}
@@ -198,29 +163,42 @@ public class GadgetXmlEditor extends FormEditor {
 			throw new IllegalStateException(e);
 		}
 	}
-
-	protected void changeModel(Module model) {
-		this.module = model;
-		modulePrefsPage.changeModel(model);
-		contentsPage.changeModel(model);
-		messageBundlePage.changeModel(model);
-		userPrefsPage.changeModel(model);
+	
+	/**
+	 * Retrieve the source codes from source editor and parse it.
+	 * If the source codes are successfully parsed, refresh the module and all pages
+	 */
+	protected void parseSourceCodesAndRefreshPages() {
+		try {
+			String contents = getSourceEditorContents();
+			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+			Module module = parser.parse(new ByteArrayInputStream(contents.getBytes("UTF-8")));
+			refreshModule(module);
+		} catch (IOException ioe) {
+			Logging.error("IO error parsing source codes from source editor, details: ");
+			Logging.error(ioe.toString());
+		} catch (SAXException saxe) {
+			Logging.error("Syntax error parsing source codes from source editor, details: ");
+			Logging.error(saxe.toString());
+		}
 	}
 
 	@Override
 	public void editorDirtyStateChanged() {
-		super.editorDirtyStateChanged();
-		if (isDirty() && !reflecting) {
+		if (isDirty() && !refreshing) {
 			modulePrefsPage.updateModel();
 			contentsPage.updateModel();
 			userPrefsPage.updateModel();
 			messageBundlePage.updateModel();
-			String serialized = GadgetXmlSerializer.serialize(module);
+			
+			// The following codes update the source codes in the source editor
+			String newSourceCodes = GadgetXmlSerializer.serialize(module);
 			IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
-			String now = document.get();
-			if (!serialized.equals(now)) {
-				document.set(serialized);
+			String oldSourceCodes = document.get();
+			if (!newSourceCodes.equals(oldSourceCodes)) {
+				document.set(newSourceCodes);
 			}
+			
 			if (outlinePage != null) {
 				outlinePage.refresh();
 			}
@@ -230,8 +208,11 @@ public class GadgetXmlEditor extends FormEditor {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		commitPages(true);
+		if (getActivePage() == 4 && sourceEditor.isDirty()) {
+			parseSourceCodesAndRefreshPages();
+		}
 		sourceEditor.doSave(monitor);
-		editorDirtyStateChanged();
+		// Logging.info((this.isDirty())? "dirty" : "clean");
 	}
 
 	@Override
@@ -243,18 +224,24 @@ public class GadgetXmlEditor extends FormEditor {
 		return false;
 	}
 
-	private void reflectModel() throws IOException, SAXException {
-		reflecting = true;
-		try {
-			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-			String content = getSource();
-			changeModel(parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
-		} finally {
-			reflecting = false;
-		}
+	/**
+	 * Updates module and refreshes display of all pages except source editor
+	 * 
+	 * @throws IOException
+	 * @throws SAXException
+	 */
+	// TODO: using a flag might not be a good way for potential threading problem
+	protected void refreshModule(Module module) {
+		refreshing = true;
+		// point to the new module and refresh the display of all pages
+		modulePrefsPage.changeModel(module);
+		contentsPage.changeModel(module);
+		messageBundlePage.changeModel(module);
+		userPrefsPage.changeModel(module);
+		refreshing = false;
 	}
 	
-	public String getSource() {
+	public String getSourceEditorContents() {
 		IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
 		String content = document.get();
 		return content;
@@ -274,7 +261,7 @@ public class GadgetXmlEditor extends FormEditor {
 	
 	public void activateSourceEditor(int lineNumber) {
 		setActivePage(4);
-		String content = getSource();
+		String content = getSourceEditorContents();
 		Map<Integer, Integer> lineInfoMap = getLineInformation(content);
 		Integer pos = lineInfoMap.get(lineNumber);
 		if (pos == null) {
