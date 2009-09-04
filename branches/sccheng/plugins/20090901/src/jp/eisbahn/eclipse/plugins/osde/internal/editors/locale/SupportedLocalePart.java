@@ -53,7 +53,6 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.MessageBundle;
 import com.google.gadgets.Module.ModulePrefs;
 import com.google.gadgets.Module.ModulePrefs.Locale;
@@ -69,7 +68,7 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 	
 	private LocalePage page;
 	
-	private TableViewer supportedLocaleList;
+	private TableViewer supportedLocaleTableViewer;
 	
 	public SupportedLocalePart(Composite parent, IManagedForm managedForm, LocalePage page) {
 		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
@@ -103,11 +102,11 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		column.setWidth(100);
 		
 		// Populate the table with supported locales
-		supportedLocaleList = new TableViewer(table);
-		supportedLocaleList.setContentProvider(new ArrayContentProvider());
-		supportedLocaleList.setLabelProvider(new SupportedLocaleListLabelProvider());
+		supportedLocaleTableViewer = new TableViewer(table);
+		supportedLocaleTableViewer.setContentProvider(new ArrayContentProvider());
+		supportedLocaleTableViewer.setLabelProvider(new SupportedLocaleListLabelProvider());
 		final SectionPart part = new SectionPart(section);
-		supportedLocaleList.addSelectionChangedListener(new ISelectionChangedListener() {
+		supportedLocaleTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				getManagedForm().fireSelectionChanged(part, event.getSelection());
 			}
@@ -141,7 +140,9 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 	}
 	
 	public void changeModel() {
-		supportedLocaleList.setInput(page.getModule().getModulePrefs().getLocales());
+		supportedLocaleTableViewer.setInput(page.getModule().getModulePrefs().getLocales());
+		supportedLocaleTableViewer.refresh();
+		setValuesToModule();
 	}
 	
 	private IProject getProject() {
@@ -156,17 +157,22 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		if (!(selection instanceof IStructuredSelection)) {
 			return;
 		}
-		supportedLocaleList.refresh((Locale)((IStructuredSelection)selection).getFirstElement());
+		supportedLocaleTableViewer.refresh((Locale)((IStructuredSelection)selection).getFirstElement());
 	}
 	
 
 	/**
 	 * Outputs all message bundles to files
+	 * 
+	 * This method is called as a result of user interaction with Add or Remove button.
+	 * More specifically, once the markDirty() is called. This method will be invoked.
+	 * 
 	 * TODO: use writeMessageBundleFile() in GadgetXmlSerializer.java
+	 * TODO: the method name is not correct, should be something like updateMessageBundleFiles()
 	 */
 	@SuppressWarnings(value = "unchecked")
 	public void setValuesToModule() {
-		List<Locale> supportedLocales = (List<Locale>) supportedLocaleList.getInput();
+		List<Locale> supportedLocales = (List<Locale>) supportedLocaleTableViewer.getInput();
 		IProject project = getProject();
 		removeAllMessageBundleFiles(project);
 		removeAllLocalesFromModule();
@@ -179,7 +185,7 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 					bundleFile.delete(true, new NullProgressMonitor());
 				}
 				
-				ByteArrayInputStream in = new ByteArrayInputStream(locale.getMessageBundle().toString().getBytes("UTF8"));
+				ByteArrayInputStream in = new ByteArrayInputStream(locale.getMessageBundle().toString().getBytes("UTF-8"));
 				bundleFile.create(in, true, new NullProgressMonitor());
 				
 				// TODO: messages URI should actually be a location on the web
@@ -260,16 +266,14 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 				newLocale.setCountry(country);
 				newLocale.setMessages(filePath + File.separator + lang + "_" + country + ".xml");
 				newLocale.setLanguageDirection("ltr");
-				MessageBundle msgBundle = new MessageBundle();
 				newLocale.setMessageBundle(new MessageBundle());
 				
 				// TODO: let the user choose language direction for this locale
 				
-				List<Locale> supportedLocales = (ArrayList<Locale>) supportedLocaleList.getInput();
+				List<Locale> supportedLocales = (ArrayList<Locale>) supportedLocaleTableViewer.getInput();
 				if (!supportedLocales.contains(newLocale)) {
 					supportedLocales.add(newLocale);
-					supportedLocaleList.refresh();
-					GadgetXmlSerializer.writeMessageBundleFile(msgBundle, filePath, lang, country);
+					supportedLocaleTableViewer.refresh();
 					markDirty();
 				}
 			}
@@ -283,7 +287,7 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 
 		@SuppressWarnings(value = "unchecked")
 		public void widgetSelected(SelectionEvent e) {
-			ISelection selection = supportedLocaleList.getSelection();
+			ISelection selection = supportedLocaleTableViewer.getSelection();
 			if (!selection.isEmpty()) {
 				IStructuredSelection structured = (IStructuredSelection) selection;
 				final Locale selectedLocale = (Locale) structured.getFirstElement();
@@ -293,15 +297,9 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 				country = StringUtils.isEmpty(country) ? "ALL" : country;
 				if (MessageDialog.openConfirm(page.getSite().getShell(),
 						"Deleting Locale", "Do you want to delete locale '" + lang + "_" + country + "'?")) {
-					List<Locale> supportedLocales = (ArrayList<Locale>) supportedLocaleList.getInput();
+					List<Locale> supportedLocales = (ArrayList<Locale>) supportedLocaleTableViewer.getInput();
 					supportedLocales.remove(selectedLocale);
-					
-					String filePath = getProject().getLocation().toString();
-					filePath = filePath.substring(0, filePath.lastIndexOf("/"));
-					File file = new File(filePath + File.separator + lang + "_" + country + ".xml");
-					file.delete();				
-					
-					supportedLocaleList.refresh();
+					supportedLocaleTableViewer.refresh();
 					markDirty();
 				}
 			}

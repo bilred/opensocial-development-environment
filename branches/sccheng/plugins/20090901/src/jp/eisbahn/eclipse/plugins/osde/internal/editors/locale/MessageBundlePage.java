@@ -130,7 +130,7 @@ public class MessageBundlePage implements IDetailsPage {
 		messagesList.setInput(locale.getMessageBundle().getMessages());
 	}
 
-	private void makeDirty() {
+	private void markDirty() {
 		page.updateLocaleModel();
 	}
 

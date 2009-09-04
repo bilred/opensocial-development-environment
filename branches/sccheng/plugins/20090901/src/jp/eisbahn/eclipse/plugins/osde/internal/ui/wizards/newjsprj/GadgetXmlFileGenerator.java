@@ -235,7 +235,7 @@ public class GadgetXmlFileGenerator {
 			}
 			content += "</Module>";
 			monitor.worked(30);
-			InputStream in = new ByteArrayInputStream(content.getBytes("UTF8"));
+			InputStream in = new ByteArrayInputStream(content.getBytes("UTF-8"));
 			monitor.worked(20);
 			gadgetXmlFile.create(in, false, monitor);
 			monitor.worked(50);

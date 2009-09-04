@@ -80,7 +80,7 @@ public class JavaScriptFileGenerator {
 			content += "}\n\n";
 		}
 		content += "// TODO: Write the code for " + viewName.getDisplayName() + " view.\n";
-		InputStream in = new ByteArrayInputStream(content.getBytes("UTF8"));
+		InputStream in = new ByteArrayInputStream(content.getBytes("UTF-8"));
 		generateJavaScriptFile.create(in, false, monitor);
 		return generateJavaScriptFile;
 	}
