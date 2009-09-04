@@ -92,10 +92,10 @@ public class MessageBundlePage implements IDetailsPage {
 		column.setText("");
 		column.setWidth(20);
 		column = new TableColumn(messagesTable, SWT.LEFT, 1);
-		column.setText("Name");
+		column.setText("Message Name");
 		column.setWidth(130);
 		column = new TableColumn(messagesTable, SWT.LEFT, 2);
-		column.setText("Text");
+		column.setText("Message Content");
 		column.setWidth(150);
 		
 		// Table Viewer in the table
@@ -197,6 +197,10 @@ public class MessageBundlePage implements IDetailsPage {
 		}
 		
 	}
+	
+	private void makeDirty() {
+        page.refreshModule();
+    }
 
 	public void commit(boolean onSave) {
 	}

@@ -19,6 +19,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
 import java.util.List;
 
+import com.google.gadgets.MessageBundle.Msg;
 import com.google.gadgets.Module.ModulePrefs.Locale;
 
 import org.eclipse.swt.widgets.Composite;
@@ -52,7 +53,7 @@ public class MessageBundleBlock extends MasterDetailsBlock {
 	@Override
 	protected void registerPages(DetailsPart detailsPart) {
 		final IDetailsPage detailsPage = new MessageBundlePage(page);
-		detailsPart.registerPage(Locale.class, detailsPage);
+		detailsPart.registerPage(Msg.class, detailsPage);
 		detailsPart.setPageProvider(new IDetailsPageProvider() {
 			public IDetailsPage getPage(Object key) {
 				if (key.equals(Locale.class)) {
