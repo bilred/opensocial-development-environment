@@ -17,12 +17,9 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.api.translate.Language;
 import com.google.api.translate.Translator;
+import com.google.gadgets.Module.ModulePrefs.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -41,47 +38,38 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class AddMessageDialog extends TitleAreaDialog {
-	/*
+
 	private ModifyListener modifyListener = new ModifyListener() {
 		public void modifyText(ModifyEvent e) {
-			if (e.getSource() == nameText) {
-				String message = nameText.getText();
-				// Translator.translate(message, from, to);
+			if (e.getSource() == nameField) {
+				// TODO: integrate with Google Translate
 			}
 			validate();
 		}
 	};
 
-	// text field for message name
-	private Text nameText;
+	private Text nameField;
+	private Text contentField;
 	
-	private Map<LocaleModel, Text> contentTextMap;
-	
-	private String name;
-	private Map<LocaleModel, String> contentMap;
+	private String messageName;
+	private String messageContent;
 
-	private List<LocaleModel> localeModels;
-
-	private LocaleModel localeModel;
-	*/
+	private Locale locale;
 	
 	public AddMessageDialog(Shell shell) {
 		super(shell);
 	}
 
-	/*
-	public AddMessageDialog(Shell shell, List<LocaleModel> localeModels, LocaleModel localeModel) {
+	public AddMessageDialog(Shell shell, Locale locale) {
 		super(shell);
-		this.localeModels = localeModels;
-		this.localeModel = localeModel;
-		contentTextMap = new HashMap<LocaleModel, Text>();
-		contentMap = new HashMap<LocaleModel, String>();
+		this.locale = locale;
 	}
 
 	private boolean validate() {
-		String name = nameText.getText();
-		if (StringUtils.isEmpty(name)) {
-			setMessage("Please fill the name field.", IMessageProvider.ERROR);
+		String name = nameField.getText();
+		String content = contentField.getText();
+		if (StringUtils.isEmpty(name) || StringUtils.isEmpty(content)) {
+			setMessage("Please fill in the name and the content", IMessageProvider.ERROR);
 			getButton(IDialogConstants.OK_ID).setEnabled(false);
 			return false;
 		}
@@ -99,6 +87,7 @@ public class AddMessageDialog extends TitleAreaDialog {
 	protected Control createDialogArea(Composite parent) {
 		setTitle("Add Localized Messages");
 		setMessage("Please type in the message and its translations");
+		
 		Composite composite = (Composite)super.createDialogArea(parent);
 		Composite panel = new Composite(composite, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -108,51 +97,20 @@ public class AddMessageDialog extends TitleAreaDialog {
 		panel.setLayoutData(layoutData);
 
 		Label label = new Label(panel, SWT.NONE);
-		label.setText("Name:");
-		nameText = new Text(panel, SWT.BORDER);
+		label.setText("Message Name:");
+		nameField = new Text(panel, SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		nameText.setLayoutData(layoutData);
-		nameText.addModifyListener(modifyListener);
+		nameField.setLayoutData(layoutData);
+		nameField.addModifyListener(modifyListener);
 
 		label = new Label(panel, SWT.NONE);
-		label.setText(getLabelText(localeModel));
-		Text text = new Text(panel, SWT.BORDER);
+		label.setText("Message Content:");
+		contentField = new Text(panel, SWT.BORDER);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		text.setLayoutData(layoutData);
-		text.addModifyListener(modifyListener);
-		contentTextMap.put(localeModel, text);
-
-		for (LocaleModel model : localeModels) {
-			if (!localeModel.equals(model)) {
-				label = new Label(panel, SWT.NONE);
-				label.setText(getLabelText(model));
-				text = new Text(panel, SWT.BORDER);
-				layoutData = new GridData(GridData.FILL_HORIZONTAL);
-				text.setLayoutData(layoutData);
-				text.addModifyListener(modifyListener);
-				contentTextMap.put(model, text);
-			}
-		}
-
+		contentField.setLayoutData(layoutData);
+		contentField.addModifyListener(modifyListener);
+		
 		return composite;
-	}
-	
-	private String getLabelText(LocaleModel localeModel) {
-		String country = localeModel.getCountry();
-		country = StringUtils.isEmpty(country) ? "(any)" : country;
-		String lang = localeModel.getLang();
-		lang = StringUtils.isEmpty(lang) ? "(any)" : lang;
-		return lang + "_" + country;
-	}
-
-	@Override
-	protected void okPressed() {
-		name = nameText.getText();
-		for (Map.Entry<LocaleModel, Text> entry : contentTextMap.entrySet()) {
-			contentMap.put(entry.getKey(), entry.getValue().getText());
-		}
-		setReturnCode(OK);
-		close();
 	}
 	
 	@Override
@@ -161,12 +119,20 @@ public class AddMessageDialog extends TitleAreaDialog {
 		getButton(IDialogConstants.OK_ID).setEnabled(false);
 	}
 
-	public String getName() {
-		return name;
+	@Override
+	protected void okPressed() {
+		messageName = nameField.getText();
+		messageContent = contentField.getText();
+		setReturnCode(OK);
+		close();
 	}
 	
-	public Map<LocaleModel, String> getContentMap() {
-		return contentMap;
+	public String getMessageName() {
+		return messageName;
 	}
-	*/
+	
+	public String getMessageContent() {
+		return messageContent;
+	}
+	
 }
