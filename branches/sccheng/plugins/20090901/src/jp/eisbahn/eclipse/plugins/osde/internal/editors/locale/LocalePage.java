@@ -46,22 +46,17 @@ public class LocalePage extends FormPage {
 	protected void createFormContent(IManagedForm managedForm) {
 		block.createContent(managedForm);
 	}
-
-	public void updateLocaleModel() {
-		block.updateLocaleModel();
-	}
 	
 	public List<Locale> getLocales() {
 		return module.getModulePrefs().getLocales();
 	}
 
-	public void updateModel() {
-		block.updateModel();
-	}
-
-	public void changeModel(Module module) {
+	public void changeModule(Module module) {
 		this.module = module;
-		block.changeModel();
+		block.refreshModule();
 	}
 	
+	public void refreshModule() {
+		block.refreshModule();
+	}
 }

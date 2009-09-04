@@ -30,7 +30,7 @@ import org.eclipse.ui.forms.MasterDetailsBlock;
 
 public class MessageBundleBlock extends MasterDetailsBlock {
 	
-	private SupportedLocalePart messageBundlesPart;
+	private SupportedLocalePart supportedLocalePart;
 	
 	private LocalePage page;
 	
@@ -41,8 +41,8 @@ public class MessageBundleBlock extends MasterDetailsBlock {
 
 	@Override
 	protected void createMasterPart(IManagedForm managedForm, Composite parent) {
-		messageBundlesPart = new SupportedLocalePart(parent, managedForm, page);
-		managedForm.addPart(messageBundlesPart);
+		supportedLocalePart = new SupportedLocalePart(parent, managedForm, page);
+		managedForm.addPart(supportedLocalePart);
 	}
 
 	@Override
@@ -54,7 +54,6 @@ public class MessageBundleBlock extends MasterDetailsBlock {
 		final IDetailsPage detailsPage = new MessageBundlePage(page);
 		detailsPart.registerPage(Locale.class, detailsPage);
 		detailsPart.setPageProvider(new IDetailsPageProvider() {
-
 			public IDetailsPage getPage(Object key) {
 				if (key.equals(Locale.class)) {
 					return detailsPage;
@@ -72,24 +71,14 @@ public class MessageBundleBlock extends MasterDetailsBlock {
 		});
 		sashForm.setWeights(new int[]{45, 55});
 	}
-
-	public void updateLocaleModel() {
-		messageBundlesPart.markDirty();
-	}
 	
 	public List<Locale> getLocales() {
 		return page.getModule().getModulePrefs().getLocales();
 	}
 
-	public void updateModel() {
-		if (messageBundlesPart != null) {
-			messageBundlesPart.setValuesToModule();
-		}
-	}
-
-	public void changeModel() {
-		if (messageBundlesPart != null) {
-			messageBundlesPart.changeModel();
+	public void refreshModule() {
+		if (supportedLocalePart != null) {
+			supportedLocalePart.refreshModule();
 		}
 	}
 }

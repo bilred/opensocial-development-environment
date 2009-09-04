@@ -66,7 +66,7 @@ public class GadgetXmlEditor extends FormEditor {
 
 	private ContentsPage contentsPage;
 
-	private LocalePage messageBundlePage;
+	private LocalePage localePage;
 
 	private UserPrefsPage userPrefsPage;
 
@@ -124,8 +124,8 @@ public class GadgetXmlEditor extends FormEditor {
 			addPage(modulePrefsPage);
 			contentsPage = new ContentsPage(this, module);
 			addPage(contentsPage);
-			messageBundlePage = new LocalePage(this, module);
-			addPage(messageBundlePage);
+			localePage = new LocalePage(this, module);
+			addPage(localePage);
 			userPrefsPage = new UserPrefsPage(this, module);
 			addPage(userPrefsPage);
 			
@@ -167,13 +167,16 @@ public class GadgetXmlEditor extends FormEditor {
 	/**
 	 * Retrieve the source codes from source editor and parse it.
 	 * If the source codes are successfully parsed, refresh the module and all pages
+	 * by calling refreshModule().
 	 */
 	protected void parseSourceCodesAndRefreshPages() {
 		try {
 			String contents = getSourceEditorContents();
 			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-			Module module = parser.parse(new ByteArrayInputStream(contents.getBytes("UTF-8")));
-			refreshModule(module);
+			Logging.info("Got reference for parser.");
+			module = parser.parse(new ByteArrayInputStream(contents.getBytes("UTF-8")));
+			Logging.info("Done parsing gadget XML file.");
+			refreshModule(module); // notifies all pages that the module has been updated
 		} catch (IOException ioe) {
 			Logging.error("IO error parsing source codes from source editor, details: ");
 			Logging.error(ioe.toString());
@@ -182,6 +185,20 @@ public class GadgetXmlEditor extends FormEditor {
 			Logging.error(saxe.toString());
 		}
 	}
+	
+	/**
+	 * Updates module and refreshes display of all pages except source editor
+	 */
+	// TODO: using a flag might not be a good way for potential threading problem
+	protected void refreshModule(Module module) {
+		refreshing = true;
+		// point to the new module and refresh the display of all pages
+		modulePrefsPage.changeModule(module);
+		contentsPage.changeModule(module);
+		localePage.changeModule(module);
+		userPrefsPage.changeModule(module);
+		refreshing = false;
+	}
 
 	@Override
 	public void editorDirtyStateChanged() {
@@ -189,7 +206,7 @@ public class GadgetXmlEditor extends FormEditor {
 			modulePrefsPage.updateModel();
 			contentsPage.updateModel();
 			userPrefsPage.updateModel();
-			messageBundlePage.updateModel();
+			localePage.refreshModule();
 			
 			// The following codes update the source codes in the source editor
 			String newSourceCodes = GadgetXmlSerializer.serialize(module);
@@ -209,10 +226,10 @@ public class GadgetXmlEditor extends FormEditor {
 	public void doSave(IProgressMonitor monitor) {
 		commitPages(true);
 		if (getActivePage() == 4 && sourceEditor.isDirty()) {
+			Logging.info("Parsing source codes ...");
 			parseSourceCodesAndRefreshPages();
 		}
 		sourceEditor.doSave(monitor);
-		// Logging.info((this.isDirty())? "dirty" : "clean");
 	}
 
 	@Override
@@ -222,23 +239,6 @@ public class GadgetXmlEditor extends FormEditor {
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
-	}
-
-	/**
-	 * Updates module and refreshes display of all pages except source editor
-	 * 
-	 * @throws IOException
-	 * @throws SAXException
-	 */
-	// TODO: using a flag might not be a good way for potential threading problem
-	protected void refreshModule(Module module) {
-		refreshing = true;
-		// point to the new module and refresh the display of all pages
-		modulePrefsPage.changeModel(module);
-		contentsPage.changeModel(module);
-		messageBundlePage.changeModel(module);
-		userPrefsPage.changeModel(module);
-		refreshing = false;
 	}
 	
 	public String getSourceEditorContents() {

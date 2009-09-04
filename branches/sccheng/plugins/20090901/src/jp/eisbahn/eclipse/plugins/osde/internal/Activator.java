@@ -444,11 +444,11 @@ public class Activator extends AbstractUIPlugin {
 		}
 	}
 	
-	public GadgetXmlParser getGadgetXmlParser() {
+	public synchronized GadgetXmlParser getGadgetXmlParser() {
 		return gadgetXmlParser;
 	}
 	
-	public MessageBundleXMLParser getMessageBundleXMLParser() {
+	public synchronized MessageBundleXMLParser getMessageBundleXMLParser() {
 		return messageBundleXMLParser;
 	}
 	
