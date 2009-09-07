@@ -17,6 +17,9 @@
  */
 package com.google.gadgets.parser;
 
+import java.io.File;
+import java.io.InputStream;
+
 /**
  * A dummy interface for parsers
  * 
@@ -28,5 +31,7 @@ package com.google.gadgets.parser;
  *
  */
 public interface IParser {
-
+	public Object parse(String str);
+	public Object parse(InputStream in);
+	public Object parse(File fin);
 }
