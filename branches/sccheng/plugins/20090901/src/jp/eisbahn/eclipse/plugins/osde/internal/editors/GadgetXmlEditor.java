@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.basic.ModulePrefsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.contents.ContentsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.locale.LocalePage;
@@ -47,14 +46,14 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.xml.sax.SAXException;
 
-import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.MessageBundle;
-import com.google.gadgets.MessageBundleXMLParser;
 import com.google.gadgets.Module;
 import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserFactory;
+import com.google.gadgets.parser.ParserType;
 
 public class GadgetXmlEditor extends FormEditor {
 	
@@ -85,9 +84,9 @@ public class GadgetXmlEditor extends FormEditor {
 		try {
 			IFile file = (IFile) input.getAdapter(IResource.class);
 			setPartName(file.getName());
-			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-			MessageBundleXMLParser messageBundleParser = Activator.getDefault().getMessageBundleXMLParser();
-			module = parser.parse(file.getContents());
+			IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+			IParser messageBundleXMLParser = ParserFactory.createParser(ParserType.MESSAGE_BUNDLE_XML_PARSER);
+			module = (Module)gadgetXMLParser.parse(file.getContents());
 			
 			// For each locale, parse its message bundle file
 			String projectPath = file.getLocation().toString();
@@ -104,14 +103,12 @@ public class GadgetXmlEditor extends FormEditor {
 					fout.close();
 					locale.setMessageBundle(msgBundle);
 				} else {
-					MessageBundle parsedMessageBundle = messageBundleParser.parse(messageBundleFile);
+					MessageBundle parsedMessageBundle = (MessageBundle)messageBundleXMLParser.parse(messageBundleFile);
 					locale.setMessageBundle(parsedMessageBundle);
 				}
 			}
 		} catch (IOException e) {
 			throw new PartInitException(e.getMessage(), e);
-		} catch (SAXException e) {
-			initializeFailed = true;
 		} catch (CoreException e) {
 			throw new PartInitException(e.getMessage(), e);
 		}
@@ -172,17 +169,14 @@ public class GadgetXmlEditor extends FormEditor {
 	protected void parseSourceCodesAndRefreshPages() {
 		try {
 			String contents = getSourceEditorContents();
-			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			Logging.info("Got reference for parser.");
-			module = parser.parse(new ByteArrayInputStream(contents.getBytes("UTF-8")));
+			module = (Module)parser.parse(new ByteArrayInputStream(contents.getBytes("UTF-8")));
 			Logging.info("Done parsing gadget XML file.");
 			refreshModule(module); // notifies all pages that the module has been updated
 		} catch (IOException ioe) {
 			Logging.error("IO error parsing source codes from source editor, details: ");
 			Logging.error(ioe.toString());
-		} catch (SAXException saxe) {
-			Logging.error("Syntax error parsing source codes from source editor, details: ");
-			Logging.error(saxe.toString());
 		}
 	}
 	

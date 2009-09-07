@@ -76,7 +76,7 @@ public class ParserFactoryTest extends TestCase {
 	
 	class GadgetConsumer implements Runnable {
 		public void run() {
-			IParser parser = ParserFactory.createParser(ParserFactory.ParserType.GADGET_XML_PARSER);
+			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			assertFalse(parser == null);
 			Module module = (Module)parser.parse(fin);
 			assertFalse(module == null);

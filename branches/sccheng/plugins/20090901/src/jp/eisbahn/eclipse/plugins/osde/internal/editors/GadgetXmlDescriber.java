@@ -20,28 +20,20 @@ package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 import java.io.IOException;
 import java.io.InputStream;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescriber;
 import org.eclipse.core.runtime.content.IContentDescription;
-import org.xml.sax.SAXException;
 
-import com.google.gadgets.GadgetXmlParser;
+import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserFactory;
+import com.google.gadgets.parser.ParserType;
 
 public class GadgetXmlDescriber implements IContentDescriber {
 
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
-		try {
-			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-			parser.parse(contents);
-			return IContentDescriber.VALID;
-		} catch (IOException e) {
-			return IContentDescriber.INDETERMINATE;
-		} catch (SAXException e) {
-			return IContentDescriber.INDETERMINATE;
-		}
-		
+		IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+		parser.parse(contents);
+		return IContentDescriber.VALID;
 	}
 
 	public QualifiedName[] getSupportedOptions() {

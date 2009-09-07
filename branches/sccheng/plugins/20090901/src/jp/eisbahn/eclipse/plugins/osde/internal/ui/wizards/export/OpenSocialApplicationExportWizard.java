@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
@@ -48,13 +47,14 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
-import org.xml.sax.SAXException;
 
-import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.Module;
-import com.google.gadgets.ViewType;
 import com.google.gadgets.Module.Content;
+import com.google.gadgets.ViewType;
+import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserFactory;
+import com.google.gadgets.parser.ParserType;
 
 public class OpenSocialApplicationExportWizard extends Wizard implements IExportWizard {
 
@@ -154,8 +154,8 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 						out.putNextEntry(entry);
 						if (OpenSocialUtil.isGadgetXml(orgFile)) {
 							try {
-								GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-								Module module = parser.parse(orgFile.getContents());
+								IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+								Module module = (Module)parser.parse(orgFile.getContents());
 								List<Content> contents = module.getContent();
 								for (Content content : contents) {
 									if (ViewType.html.toString().equals(content.getType())) {
@@ -174,8 +174,6 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								IOUtils.copy(in, out);
 							} catch(CoreException e) {
-								e.printStackTrace();
-							} catch (SAXException e) {
 								e.printStackTrace();
 							}
 						} else {

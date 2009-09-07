@@ -25,7 +25,6 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -39,13 +38,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.xml.sax.SAXException;
 
-import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.Module;
 import com.google.gadgets.ViewType;
 import com.google.gadgets.Module.Content;
+import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserFactory;
+import com.google.gadgets.parser.ParserType;
 
 public class GadgetBuilder extends IncrementalProjectBuilder {
 	
@@ -101,8 +101,8 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 						orgFile.copy(destFile.getFullPath(), true, monitor);
 						if (OpenSocialUtil.isGadgetXml(destFile)) {
 							try {
-								GadgetXmlParser gadgetXmlParser = Activator.getDefault().getGadgetXmlParser();
-								Module module = gadgetXmlParser.parse(orgFile.getContents());
+								IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+								Module module = (Module)gadgetXMLParser.parse(orgFile.getContents());
 								List<Content> contents = module.getContent();
 								Random rnd = new Random();
 								for (Content content : contents) {
@@ -123,8 +123,6 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								destFile.setContents(in, true, false, monitor);
 							} catch (IOException e) {
-								e.printStackTrace();
-							} catch (SAXException e) {
 								e.printStackTrace();
 							}
 						}
