@@ -79,7 +79,6 @@ import org.hibernate.classic.Session;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.MessageBundleXMLParser;
 
 /**
@@ -110,7 +109,6 @@ public class Activator extends AbstractUIPlugin {
 	private Session session;
 	private boolean runningShindig = false;
 	private LaunchApplicationInformation lastApplicationInformation;
-	private GadgetXmlParser gadgetXmlParser;
 	private MessageBundleXMLParser messageBundleXMLParser;
 
 	/**
@@ -136,8 +134,6 @@ public class Activator extends AbstractUIPlugin {
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
 		registerIcon();
-		gadgetXmlParser = new GadgetXmlParser();
-		messageBundleXMLParser = new MessageBundleXMLParser();
 	}
 
 	/**
@@ -443,14 +439,5 @@ public class Activator extends AbstractUIPlugin {
 			return null;
 		}
 	}
-	
-	public synchronized GadgetXmlParser getGadgetXmlParser() {
-		return gadgetXmlParser;
-	}
-	
-	public synchronized MessageBundleXMLParser getMessageBundleXMLParser() {
-		return messageBundleXMLParser;
-	}
-	
 }
 

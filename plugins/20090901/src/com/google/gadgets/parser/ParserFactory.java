@@ -31,7 +31,6 @@ package com.google.gadgets.parser;
  *
  */
 public class ParserFactory {
-	enum ParserType {GADGET_XML_PARSER, MESSAGE_BUNDLE_XML_PARSER};
 
 	// disable instance construction
 	private ParserFactory() {}
