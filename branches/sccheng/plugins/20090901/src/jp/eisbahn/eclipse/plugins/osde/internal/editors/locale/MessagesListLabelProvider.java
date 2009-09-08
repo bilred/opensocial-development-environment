@@ -45,6 +45,8 @@ class MessagesListLabelProvider extends LabelProvider implements ITableLabelProv
 			return msg.getName();
 		case 2:
 			return msg.getContent();
+		case 3:
+			return msg.getDesc();
 		default:
 			return null;
 		}

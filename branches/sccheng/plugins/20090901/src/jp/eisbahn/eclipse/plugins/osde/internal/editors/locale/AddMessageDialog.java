@@ -50,9 +50,11 @@ public class AddMessageDialog extends TitleAreaDialog {
 
 	private Text nameField;
 	private Text contentField;
+	private Text descField;
 	
 	private String messageName;
 	private String messageContent;
+	private String messageDesc;
 
 	private Locale locale;
 	
@@ -85,7 +87,7 @@ public class AddMessageDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setTitle("Add Localized Messages");
+		setTitle("Add Localized Messages for Locale " + locale.getLang() + "_" + locale.getCountry());
 		setMessage("Please type in the message and its translations");
 		
 		Composite composite = (Composite)super.createDialogArea(parent);
@@ -110,6 +112,12 @@ public class AddMessageDialog extends TitleAreaDialog {
 		contentField.setLayoutData(layoutData);
 		contentField.addModifyListener(modifyListener);
 		
+		label = new Label(panel, SWT.NONE);
+		label.setText("(Optional) Message Description:");
+		descField = new Text(panel, SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		descField.setLayoutData(layoutData);
+		
 		return composite;
 	}
 	
@@ -123,6 +131,8 @@ public class AddMessageDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		messageName = nameField.getText();
 		messageContent = contentField.getText();
+		messageDesc = descField.getText();
+		
 		setReturnCode(OK);
 		close();
 	}
@@ -135,4 +145,7 @@ public class AddMessageDialog extends TitleAreaDialog {
 		return messageContent;
 	}
 	
+	public String getDescription() {
+		return messageDesc;
+	}
 }

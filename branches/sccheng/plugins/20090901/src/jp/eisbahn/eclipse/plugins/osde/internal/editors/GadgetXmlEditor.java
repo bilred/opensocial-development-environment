@@ -88,23 +88,28 @@ public class GadgetXmlEditor extends FormEditor {
 			IParser messageBundleXMLParser = ParserFactory.createParser(ParserType.MESSAGE_BUNDLE_XML_PARSER);
 			module = (Module)gadgetXMLParser.parse(file.getContents());
 			
-			// For each locale, parse its message bundle file
+			// For each locale, parse its message bundle file if it is not inlined
 			String projectPath = file.getLocation().toString();
 			projectPath = projectPath.substring(0, projectPath.lastIndexOf("/"));
 			for (Locale locale : module.getModulePrefs().getLocales()) {
-				String fileName = projectPath + File.separator + locale.getLang() + "_" + locale.getCountry() + ".xml";
-				File messageBundleFile = new File(fileName);
-				if (!messageBundleFile.exists()) {
-					messageBundleFile.createNewFile();
-					MessageBundle msgBundle = new MessageBundle();
-					FileWriter fout = new FileWriter(messageBundleFile);
-					fout.write(msgBundle.toString());
-					fout.flush();
-					fout.close();
-					locale.setMessageBundle(msgBundle);
+				if (locale.getMessages() != null && locale.getMessages().length() > 0) {
+					locale.setInlined(false);
+					String fileName = projectPath + File.separator + locale.getLang() + "_" + locale.getCountry() + ".xml";
+					File messageBundleFile = new File(fileName);
+					if (!messageBundleFile.exists()) {
+						messageBundleFile.createNewFile();
+						MessageBundle msgBundle = new MessageBundle();
+						FileWriter fout = new FileWriter(messageBundleFile);
+						fout.write(msgBundle.toString());
+						fout.flush();
+						fout.close();
+						locale.setMessageBundle(msgBundle);
+					} else {
+						MessageBundle parsedMessageBundle = (MessageBundle)messageBundleXMLParser.parse(messageBundleFile);
+						locale.setMessageBundle(parsedMessageBundle);
+					}
 				} else {
-					MessageBundle parsedMessageBundle = (MessageBundle)messageBundleXMLParser.parse(messageBundleFile);
-					locale.setMessageBundle(parsedMessageBundle);
+					locale.setInlined(true);
 				}
 			}
 		} catch (IOException e) {
