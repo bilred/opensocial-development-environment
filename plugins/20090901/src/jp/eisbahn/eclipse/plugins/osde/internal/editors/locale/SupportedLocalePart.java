@@ -53,6 +53,8 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.MessageBundle.Msg;
 import com.google.gadgets.model.Module.ModulePrefs;
 import com.google.gadgets.model.Module.ModulePrefs.Locale;
 
@@ -104,7 +106,7 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		column.setWidth(100);
 		column = new TableColumn(table, SWT.LEFT, 4);
 		column.setText("Language Direction");
-		column.setWidth(100);
+		column.setWidth(150);
 		
 		// Populate the table with supported locales
 		supportedLocaleTableViewer = new TableViewer(table);
@@ -124,12 +126,12 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		buttonPane.setLayoutData(layoutData);
 		
-		// Create add button
-		Button addButton = toolkit.createButton(buttonPane, "Add", SWT.PUSH);
+		// Create add new locale button
+		Button addLocaleButton = toolkit.createButton(buttonPane, "Add New Locale", SWT.PUSH);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
-		addButton.setLayoutData(layoutData);
-		addButton.addSelectionListener(new AddButtonSelectionListener());
+		addLocaleButton.setLayoutData(layoutData);
+		addLocaleButton.addSelectionListener(new AddButtonSelectionListener());
 		
 		// Create deleting button
 		Button deleteButton = toolkit.createButton(buttonPane, "Delete", SWT.PUSH);
@@ -137,6 +139,13 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		layoutData.verticalAlignment = GridData.BEGINNING;
 		deleteButton.setLayoutData(layoutData);
 		deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
+		
+		// Create add new message button
+		Button addMessageButton = toolkit.createButton(buttonPane, "Add New Message", SWT.PUSH);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.verticalAlignment = GridData.BEGINNING;
+		addMessageButton.setLayoutData(layoutData);
+		addMessageButton.addSelectionListener(new AddMessageButtonSelectionListener());
 		
 		// All UIs done, now set the input of the table
 		supportedLocaleTableViewer.setInput(page.getModule().getModulePrefs().getLocales());
@@ -321,6 +330,43 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 					}
 					markDirty();
 				}
+			}
+		}
+	}
+	
+	private class AddMessageButtonSelectionListener implements SelectionListener {
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			ISelection selection = supportedLocaleTableViewer.getSelection();
+			if (!selection.isEmpty()) {
+				IStructuredSelection structured = (IStructuredSelection) selection;
+				final Locale selectedLocale = (Locale) structured.getFirstElement();
+				AddMessageDialog dialog = new AddMessageDialog(page.getSite().getShell(), selectedLocale);
+				if (dialog.open() == AddMessageDialog.OK) {
+					String messageName = dialog.getMessageName();
+					String messageContent = dialog.getMessageContent();
+					String messageDesc = dialog.getDescription();
+					
+					// TODO: ugly logic
+					Module module = page.getModule();
+					for (Object element : module.getModulePrefs().getRequireOrOptionalOrPreload()) {
+						if (element instanceof Locale) {
+							Locale locale = (Locale)element;
+							if (locale.equals(selectedLocale)) {
+								Msg msg = new Msg(messageName, messageContent, messageDesc);
+								if (locale.isInlined()) {
+									locale.addInlineMessage(msg);
+								} else {
+									locale.getMessageBundle().addMessage(msg);
+								}
+							}
+						}
+					}
+				}
+				markDirty();
 			}
 		}
 	}

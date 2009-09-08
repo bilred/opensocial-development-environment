@@ -433,6 +433,14 @@ public class Module {
 					return false;
 				return (this.lang.equals(inLocale.lang) && this.country.equals(inLocale.country));
 			}
+			
+			public void removeMessage(Msg msg) {
+				if (this.isInlined) {
+					this.getInlineMessages().remove(msg);
+				} else {
+					this.getMessageBundle().removeMessage(msg);
+				}
+			}
 		}
 		
 		public static class OAuth {

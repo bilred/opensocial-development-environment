@@ -69,6 +69,22 @@ public class MessageBundle {
 				
 		protected String content; // enclosed content of <msg></msg>
 		protected String name; 	  // attribute "name" of <msg> tag
+		protected String desc;
+		
+		
+		public Msg() {} // required for parser to automatically fill in details as a java bean
+		
+		public Msg(String name, String content, String desc) {
+			this.name = name;
+			this.content = content;
+			this.desc = desc;
+		}
+		
+		public Msg(String name, String content) {
+			this.name = name;
+			this.content = content;
+			this.desc = "";
+		}
 		
 		public String getContent() {
 			return content;
@@ -86,6 +102,14 @@ public class MessageBundle {
 			this.name = name;
 		}
 		
+		public String getDesc() {
+			return desc;
+		}
+		
+		public void setDesc(String desc) {
+			this.desc = desc;
+		}
+		
 		@Override
 		public boolean equals(Object in) {
 			if (this == in) return true;
@@ -100,8 +124,9 @@ public class MessageBundle {
 		@Override
 		public String toString() {
 			StringBuilder strBuilder = new StringBuilder("<msg");
-			strBuilder.append(" name=");
+			strBuilder.append(" name=\"");
 			strBuilder.append(name);
+			strBuilder.append("\"");
 			strBuilder.append(">");
 			strBuilder.append(content);
 			strBuilder.append("</msg>");

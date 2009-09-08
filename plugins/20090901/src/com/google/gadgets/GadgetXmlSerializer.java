@@ -156,6 +156,7 @@ public class GadgetXmlSerializer {
 					createAttribute("language_direction", locale.getLanguageDirection(), strBuilder);
 					strBuilder.append(">\n");
 					for (Msg msg : locale.getInlineMessages()) {
+						strBuilder.append("      ");
 						strBuilder.append(msg.toString());
 						strBuilder.append("\n");
 					}

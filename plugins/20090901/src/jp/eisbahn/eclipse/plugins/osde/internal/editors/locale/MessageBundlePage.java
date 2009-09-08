@@ -22,6 +22,8 @@ import java.util.Map;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.MessageBundle.Msg;
 import com.google.gadgets.model.Module.ModulePrefs.Locale;
 
 import org.apache.commons.lang.StringUtils;
@@ -97,10 +99,13 @@ public class MessageBundlePage implements IDetailsPage {
 		column = new TableColumn(messagesTable, SWT.LEFT, 2);
 		column.setText("Message Content");
 		column.setWidth(150);
+		column = new TableColumn(messagesTable, SWT.LEFT, 3);
+		column.setText("Message Description");
+		column.setWidth(150);
 		
 		// Table Viewer in the table
 		messagesList = new TableViewer(messagesTable);
-		messagesList.setContentProvider(new ArrayContentProvider());
+		messagesList.setContentProvider(new MessagesListContentProvider());
 		messagesList.setLabelProvider(new MessagesListLabelProvider());
 		
 		// Button pane
@@ -108,11 +113,7 @@ public class MessageBundlePage implements IDetailsPage {
 		buttonPane.setLayout(new GridLayout());
 		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		buttonPane.setLayoutData(layoutData);
-		Button addButton = toolkit.createButton(buttonPane, "Add", SWT.PUSH);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.verticalAlignment = GridData.BEGINNING;
-		addButton.setLayoutData(layoutData);
-		addButton.addSelectionListener(new AddButtonSelectionListener(messagesPart));
+		
 		Button deleteButton = toolkit.createButton(buttonPane, "Remove", SWT.PUSH);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
@@ -127,42 +128,7 @@ public class MessageBundlePage implements IDetailsPage {
 
 	public void selectionChanged(IFormPart part, ISelection selection) {
 		locale = (Locale)((IStructuredSelection)selection).getFirstElement();
-		messagesList.setInput(locale.getMessageBundle().getMessages());
-	}
-
-	private class AddButtonSelectionListener implements SelectionListener {
-		
-		private SectionPart sectionPart;
-		
-		public AddButtonSelectionListener(SectionPart sectionPart) {
-			this.sectionPart = sectionPart;
-		}
-
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-
-		// TODO: Add button for new messages given the selected locale
-		public void widgetSelected(SelectionEvent e) {
-			/*
-			List<LocaleModel> localeModels = page.getLocaleModels();
-			AddMessageDialog dialog = new AddMessageDialog(page.getSite().getShell(), localeModels, model);
-			if (dialog.open() == AddMessageDialog.OK) {
-				String name = dialog.getName();
-				Map<LocaleModel, String> contentMap = dialog.getContentMap();
-				for (LocaleModel localeModel : localeModels) {
-					String content = contentMap.get(localeModel);
-					if (!StringUtils.isEmpty(content)) {
-						localeModel.getMessages().put(name, content);
-					} else {
-						localeModel.getMessages().remove(name);
-					}
-				}
-				managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
-				makeDirty();
-			}
-			*/
-		}
-		
+		messagesList.setInput(locale);
 	}
 	
 	private class RemoveButtonSelectionListener implements SelectionListener {
@@ -177,30 +143,35 @@ public class MessageBundlePage implements IDetailsPage {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			/*
 			ISelection selection = messagesList.getSelection();
 			if (!selection.isEmpty()) {
 				IStructuredSelection structured = (IStructuredSelection)selection;
-				final Map.Entry<String, String> message = (Map.Entry<String, String>)structured.getFirstElement();
+				Msg msg = (Msg) structured.getFirstElement();
 				if (MessageDialog.openConfirm(page.getSite().getShell(),
-						"Deleting message", "Do you want to delete message '" + message.getKey() + "'?")) {
-					List<LocaleModel> localeModels = page.getLocaleModels();
-					for (LocaleModel localeModel : localeModels) {
-						localeModel.getMessages().remove(message.getKey());
+						"Deleting message", "Do you really want to delete this message?")) {
+					
+					// Delete selected message
+					// TODO: ugly logic
+					Locale currentLocale = (Locale)messagesList.getInput();
+					Module module = page.getModule();
+					for (Object element : module.getModulePrefs().getRequireOrOptionalOrPreload()) {
+						if (element instanceof Locale) {
+							Locale locale = (Locale)element;
+							if (locale.equals(currentLocale)) {
+								locale.removeMessage(msg);
+							}
+						}
 					}
+					
 					messagesList.refresh();
-					managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
-					makeDirty();
+					// managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
+					// notify the LocalePage that Module has been changed
+					((SectionPart)managedForm.getParts()[0]).markDirty();
 				}
 			}
-			*/
 		}
 		
 	}
-	
-	private void makeDirty() {
-        page.refreshModule();
-    }
 
 	public void commit(boolean onSave) {
 	}
