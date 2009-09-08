@@ -23,8 +23,8 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
-import com.google.gadgets.Module;
-import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
 
 public class LocalePage extends FormPage {
 

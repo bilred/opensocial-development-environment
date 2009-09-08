@@ -28,15 +28,18 @@ import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.google.gadgets.MessageBundle;
-import com.google.gadgets.Module.Content;
-import com.google.gadgets.Module.ModulePrefs;
-import com.google.gadgets.Module.UserPref;
-import com.google.gadgets.Module.ModulePrefs.Icon;
-import com.google.gadgets.Module.ModulePrefs.Locale;
-import com.google.gadgets.Module.ModulePrefs.Optional;
-import com.google.gadgets.Module.ModulePrefs.Require;
-import com.google.gadgets.Module.UserPref.EnumValue;
+import com.google.gadgets.model.MessageBundle;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.MessageBundle.Msg;
+import com.google.gadgets.model.Module.Content;
+import com.google.gadgets.model.Module.ModulePrefs;
+import com.google.gadgets.model.Module.UserPref;
+import com.google.gadgets.model.Module.ModulePrefs.Icon;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.Module.ModulePrefs.Optional;
+import com.google.gadgets.model.Module.ModulePrefs.Require;
+import com.google.gadgets.model.Param;
+import com.google.gadgets.model.Module.UserPref.EnumValue;
 
 /**
  * Writes gadget contents into files
@@ -51,12 +54,12 @@ public class GadgetXmlSerializer {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 		sb.append("<Module>\n");
-		sb.append("    <ModulePrefs");
+		sb.append("  <ModulePrefs");
 		sb.append(createModulePrefsAttributes(module));
 		sb.append(createRequiresAndOptionals(module));
 		sb.append(createLocales(module));
 		sb.append(createIcon(module));
-		sb.append("    </ModulePrefs>\n");
+		sb.append("  </ModulePrefs>\n");
 		sb.append(createUserPrefs(module));
 		sb.append(createContents(module));
 		sb.append("</Module>");
@@ -139,12 +142,25 @@ public class GadgetXmlSerializer {
 		for (Object element : elements) {
 			if (element instanceof Locale) {
 				Locale locale = (Locale) element;
-				strBuilder.append("    <Locale");
-				createAttribute("lang", locale.getLang(), strBuilder);
-				createAttribute("country", locale.getCountry(), strBuilder);
-				createAttribute("messages", locale.getMessages(), strBuilder);
-				createAttribute("language_direction", locale.getLanguageDirection(), strBuilder);
-				strBuilder.append(" />\n");
+				if (!locale.isInlined()) {
+					strBuilder.append("    <Locale");
+					createAttribute("lang", locale.getLang(), strBuilder);
+					createAttribute("country", locale.getCountry(), strBuilder);
+					createAttribute("messages", locale.getMessages(), strBuilder);
+					createAttribute("language_direction", locale.getLanguageDirection(), strBuilder);
+					strBuilder.append(" />\n");
+				} else {
+					strBuilder.append("    <Locale");
+					createAttribute("lang", locale.getLang(), strBuilder);
+					createAttribute("country", locale.getCountry(), strBuilder);
+					createAttribute("language_direction", locale.getLanguageDirection(), strBuilder);
+					strBuilder.append(">\n");
+					for (Msg msg : locale.getInlineMessages()) {
+						strBuilder.append(msg.toString());
+						strBuilder.append("\n");
+					}
+					strBuilder.append("    </Locale>\n");
+				}
 			}
 		}
 		return strBuilder.toString();

@@ -17,7 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
-import com.google.gadgets.MessageBundle.Msg;
+import com.google.gadgets.model.MessageBundle.Msg;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 

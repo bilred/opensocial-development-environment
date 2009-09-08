@@ -22,7 +22,7 @@ import java.util.Map;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
-import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;

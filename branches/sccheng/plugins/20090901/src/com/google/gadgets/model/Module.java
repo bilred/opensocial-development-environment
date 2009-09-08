@@ -15,11 +15,13 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.google.gadgets;
+package com.google.gadgets.model;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gadgets.model.MessageBundle.Msg;
 
 public class Module {
 	
@@ -333,6 +335,18 @@ public class Module {
 			
 		}
 		
+		/**
+		 * Definition of Locale is a bit confusing because there are messages and inlineMessages.
+		 * - messages, as defined in gadget API specification, is a URI describing where
+		 * the message bundle file is.
+		 * - inlineMessage, on the other hand, are messages that are inlined in gadget.xml
+		 * rather than put in a separate message bundle file.
+		 * The variable msgBundle thus refers to outside message bundle model.
+		 * 
+		 * At any given time, a Locale can only have either msgBundle or inlineMessages defined,
+		 * but not both.
+		 *
+		 */
 		public static class Locale {
 
 			protected String lang;
@@ -341,6 +355,9 @@ public class Module {
 			protected String languageDirection;
 			
 			protected MessageBundle msgBundle = new MessageBundle();
+			protected List<Msg> inlineMessages = new ArrayList<Msg>();
+			
+			protected boolean isInlined = false;
 			
 			public String getLang() {
 				return lang;
@@ -382,6 +399,29 @@ public class Module {
 				return msgBundle;
 			}
 			
+			public void setInlineMessages(List<Msg> inlineMessages) {
+				this.inlineMessages = inlineMessages;
+			}
+
+			public List<Msg> getInlineMessages() {
+				return inlineMessages;
+			}
+			
+			public void addInlineMessage(Msg inlineMessage) {
+				inlineMessages.add(inlineMessage);
+			}
+			
+			public boolean isInlined() {
+				return this.isInlined;
+			}
+			
+			public void setInlined(boolean isInlined) {
+				this.isInlined = isInlined;
+			}
+			
+			/**
+			 * Two locales are considered equal if they have the same lang and country
+			 */
 			@Override
 			public boolean equals(Object inObj) {
 				if (this == inObj) return true;

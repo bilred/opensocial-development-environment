@@ -24,6 +24,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -34,9 +35,14 @@ public class AddLocaleDialog extends TitleAreaDialog {
 	
 	private Combo countryCombo;
 	private Combo languageCombo;
+	private Combo languageDirectionCombo;
+	private Button inlinedButton;
 	
 	private String selectedCountry;
 	private String selectedLanguage;
+	private String languageDirection;
+	
+	private boolean isInlined;
 	
 	public AddLocaleDialog(Shell shell) {
 		super(shell);
@@ -78,6 +84,21 @@ public class AddLocaleDialog extends TitleAreaDialog {
 			languageCombo.add(OpenSocialUtil.LANGUAGES[i]);
 		}
 		languageCombo.select(0);
+		
+		label = new Label(panel, SWT.NONE);
+		label.setText("Language Direction:");
+		languageDirectionCombo = new Combo(panel, SWT.READ_ONLY);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		languageDirectionCombo.add("left to right");
+		languageDirectionCombo.add("right to left");
+		languageDirectionCombo.select(0);
+		
+		inlinedButton = new Button(panel, SWT.CHECK);
+		inlinedButton.setText("Inline this message bundle (not recommended)");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 2;
+		inlinedButton.setLayoutData(layoutData);
+		inlinedButton.setSelection(false);
 
 		return composite;
 	}
@@ -90,6 +111,11 @@ public class AddLocaleDialog extends TitleAreaDialog {
 		selectedLanguage = languageCombo.getText();
 		selectedLanguage = selectedLanguage.substring(selectedLanguage.indexOf('(') + 1, selectedLanguage.length() - 1);
 		
+		languageDirection = languageDirectionCombo.getText();
+		languageDirection = (languageDirection.equals("left to right"))? "ltr" : "rtl";
+		
+		isInlined = inlinedButton.getSelection();
+		
 		setReturnCode(OK);
 		close();
 	}
@@ -100,5 +126,13 @@ public class AddLocaleDialog extends TitleAreaDialog {
 
 	public String getSelectedLanguage() {
 		return selectedLanguage;
+	}
+	
+	public boolean getIsInlined() {
+		return isInlined;
+	}
+	
+	public String getLanguageDirection() {
+		return languageDirection;
 	}
 }

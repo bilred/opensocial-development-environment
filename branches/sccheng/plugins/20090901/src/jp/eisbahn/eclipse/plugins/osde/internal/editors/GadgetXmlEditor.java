@@ -48,9 +48,9 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 import com.google.gadgets.GadgetXmlSerializer;
-import com.google.gadgets.MessageBundle;
-import com.google.gadgets.Module;
-import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.MessageBundle;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
 import com.google.gadgets.parser.IParser;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
@@ -170,9 +170,19 @@ public class GadgetXmlEditor extends FormEditor {
 		try {
 			String contents = getSourceEditorContents();
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-			Logging.info("Got reference for parser.");
 			module = (Module)parser.parse(new ByteArrayInputStream(contents.getBytes("UTF-8")));
-			Logging.info("Done parsing gadget XML file.");
+			
+			// Special check to see if we need to set Locales as inlined, the default is false
+			// If the user inline messages inside <Locale></Locale>, set inlined to true
+			for (Object element : module.getModulePrefs().getRequireOrOptionalOrPreload()) {
+				if (element instanceof Locale) {
+					Locale locale = (Locale)element;
+					if (locale.getInlineMessages().size() > 0) {
+						locale.setInlined(true);
+					}
+				}
+			}
+			
 			refreshModule(module); // notifies all pages that the module has been updated
 		} catch (IOException ioe) {
 			Logging.error("IO error parsing source codes from source editor, details: ");
@@ -220,7 +230,6 @@ public class GadgetXmlEditor extends FormEditor {
 	public void doSave(IProgressMonitor monitor) {
 		commitPages(true);
 		if (getActivePage() == 4 && sourceEditor.isDirty()) {
-			Logging.info("Parsing source codes ...");
 			parseSourceCodesAndRefreshPages();
 		}
 		sourceEditor.doSave(monitor);
@@ -237,8 +246,7 @@ public class GadgetXmlEditor extends FormEditor {
 	
 	public String getSourceEditorContents() {
 		IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
-		String content = document.get();
-		return content;
+		return document.get();
 	}
 	
 	@SuppressWarnings("unchecked")

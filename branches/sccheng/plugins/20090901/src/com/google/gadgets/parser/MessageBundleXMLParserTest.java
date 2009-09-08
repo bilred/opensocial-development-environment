@@ -17,8 +17,8 @@
  */
 package com.google.gadgets.parser;
 
-import com.google.gadgets.MessageBundle;
-import com.google.gadgets.MessageBundle.Msg;
+import com.google.gadgets.model.MessageBundle;
+import com.google.gadgets.model.MessageBundle.Msg;
 
 import java.io.File;
 import java.io.FileWriter;

@@ -40,9 +40,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
 import com.google.gadgets.GadgetXmlSerializer;
-import com.google.gadgets.Module;
+import com.google.gadgets.model.Module;
 import com.google.gadgets.ViewType;
-import com.google.gadgets.Module.Content;
+import com.google.gadgets.model.Module.Content;
 import com.google.gadgets.parser.IParser;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;

@@ -35,8 +35,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.Module;
-import com.google.gadgets.Module.ModulePrefs;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Module.ModulePrefs;
 
 public class ApplicationInformationPart extends AbstractFormPart {
 

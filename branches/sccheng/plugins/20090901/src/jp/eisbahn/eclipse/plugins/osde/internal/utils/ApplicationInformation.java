@@ -17,7 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
-import com.google.gadgets.Module;
+import com.google.gadgets.model.Module;
 
 public class ApplicationInformation {
 
