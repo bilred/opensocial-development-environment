@@ -19,8 +19,8 @@ package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
 import java.util.List;
 
-import com.google.gadgets.MessageBundle.Msg;
-import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.MessageBundle.Msg;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.DetailsPart;

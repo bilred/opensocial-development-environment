@@ -41,7 +41,7 @@ public enum FeatureName {
 	}
 	
 	public static FeatureName getFeatureName(String realName) {
-		for(FeatureName featureName : FeatureName.values()) {
+		for (FeatureName featureName : FeatureName.values()) {
 			if (featureName.realName.equals(realName)) {
 				return featureName;
 			}

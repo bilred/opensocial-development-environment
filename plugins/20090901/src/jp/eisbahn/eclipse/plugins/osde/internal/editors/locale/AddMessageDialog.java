@@ -19,7 +19,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
 import com.google.api.translate.Language;
 import com.google.api.translate.Translator;
-import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogConstants;

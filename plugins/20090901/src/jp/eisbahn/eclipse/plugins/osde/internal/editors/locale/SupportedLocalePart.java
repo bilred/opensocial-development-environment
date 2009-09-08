@@ -53,9 +53,8 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.MessageBundle;
-import com.google.gadgets.Module.ModulePrefs;
-import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.Module.ModulePrefs;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
 
 /**
  * Defines the table for displaying supported locales of the gadget
@@ -99,6 +98,12 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		column.setWidth(100);
 		column = new TableColumn(table, SWT.LEFT, 2);
 		column.setText("Country");
+		column.setWidth(100);
+		column = new TableColumn(table, SWT.LEFT, 3);
+		column.setText("Inlined?");
+		column.setWidth(100);
+		column = new TableColumn(table, SWT.LEFT, 4);
+		column.setText("Language Direction");
 		column.setWidth(100);
 		
 		// Populate the table with supported locales
@@ -182,18 +187,20 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		ModulePrefs modulePrefs = page.getModule().getModulePrefs();
 		for (Locale locale : supportedLocales) {
 			try {
-				String fileName = locale.getLang() + "_" + locale.getCountry() + ".xml";
-				IFile bundleFile = project.getFile(fileName);
-				if (bundleFile.exists()) {
-					bundleFile.delete(true, new NullProgressMonitor());
+				if (!locale.isInlined()) {
+					String fileName = locale.getLang() + "_" + locale.getCountry() + ".xml";
+					IFile bundleFile = project.getFile(fileName);
+					if (bundleFile.exists()) {
+						bundleFile.delete(true, new NullProgressMonitor());
+					}
+					
+					ByteArrayInputStream in = new ByteArrayInputStream(locale.getMessageBundle().toString().getBytes("UTF-8"));
+					bundleFile.create(in, true, new NullProgressMonitor());
+					
+					// TODO: messages URI should actually be a location on the web
+					// This will cause problems once the gadget is submitted to production environment
+					locale.setMessages(fileName);
 				}
-				
-				ByteArrayInputStream in = new ByteArrayInputStream(locale.getMessageBundle().toString().getBytes("UTF-8"));
-				bundleFile.create(in, true, new NullProgressMonitor());
-				
-				// TODO: messages URI should actually be a location on the web
-				// This will cause problems once the gadget is submitted to production environment
-				locale.setMessages(fileName);
 			} catch (CoreException e) {
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
@@ -262,18 +269,22 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 				Locale newLocale = new Locale();
 				String lang = dialog.getSelectedLanguage();
 				String country = dialog.getSelectedCountry();
-				String filePath = getProject().getLocation().toString();
+				String languageDirection = dialog.getLanguageDirection();
+				boolean inlined = dialog.getIsInlined();
 				
 				newLocale.setLang(lang);
 				newLocale.setCountry(country);
-				newLocale.setMessages(filePath + File.separator + lang + "_" + country + ".xml");
-				newLocale.setLanguageDirection("ltr");
-				newLocale.setMessageBundle(new MessageBundle());
+				newLocale.setLanguageDirection(languageDirection);
+				newLocale.setInlined(inlined);
 				
-				// TODO: let the user choose language direction for this locale
+				if (!inlined) {
+					String filePath = getProject().getLocation().toString();
+					newLocale.setMessages(filePath + File.separator + lang + "_" + country + ".xml");
+				}
 				
-				List<Locale> supportedLocales = (ArrayList<Locale>) page.getModule().getModulePrefs().getLocales();
-				if (!supportedLocales.contains(newLocale)) {
+				// Add the new Locale into Module
+				List<Locale> currentSupportedLocales = (ArrayList<Locale>) page.getModule().getModulePrefs().getLocales();
+				if (!currentSupportedLocales.contains(newLocale)) {
 					page.getModule().getModulePrefs().addRequireOrOptionalOrPreload(newLocale);
 					markDirty();
 				}

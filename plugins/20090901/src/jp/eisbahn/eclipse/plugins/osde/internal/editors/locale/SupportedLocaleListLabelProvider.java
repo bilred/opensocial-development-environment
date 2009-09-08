@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
 
 class SupportedLocaleListLabelProvider extends LabelProvider implements ITableLabelProvider {
 	
@@ -58,6 +58,11 @@ class SupportedLocaleListLabelProvider extends LabelProvider implements ITableLa
 			} else {
 				return country;
 			}
+		case 3:
+			boolean inlined = locale.isInlined();
+			return (inlined)? "Yes" : "No";
+		case 4:
+			return (locale.getLanguageDirection().equals("ltr"))? "left to right" : "right to left";
 		default:
 			return null;
 		}
