@@ -177,8 +177,11 @@ public class GadgetXmlEditor extends FormEditor {
 			for (Object element : module.getModulePrefs().getRequireOrOptionalOrPreload()) {
 				if (element instanceof Locale) {
 					Locale locale = (Locale)element;
-					if (locale.getInlineMessages().size() > 0) {
+					if (locale.getInlineMessages().size() > 0 || locale.getMessages() == null) {
 						locale.setInlined(true);
+						if (locale.getMessages() != null) {
+							Logging.warn("You are specifying an external message bundle file but have inline messages at the same time for locale " + locale.toString());
+						}
 					}
 				}
 			}

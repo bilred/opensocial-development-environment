@@ -94,11 +94,11 @@ public class AddLocaleDialog extends TitleAreaDialog {
 		languageDirectionCombo.select(0);
 		
 		inlinedButton = new Button(panel, SWT.CHECK);
-		inlinedButton.setText("Inline this message bundle (not recommended)");
+		inlinedButton.setText("Inline this message bundle (recommended)");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 2;
 		inlinedButton.setLayoutData(layoutData);
-		inlinedButton.setSelection(false);
+		inlinedButton.setSelection(true);
 
 		return composite;
 	}
