@@ -133,12 +133,16 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		addLocaleButton.setLayoutData(layoutData);
 		addLocaleButton.addSelectionListener(new AddButtonSelectionListener());
 		
-		// Create deleting button
+		// Create deleting locale button
 		Button deleteButton = toolkit.createButton(buttonPane, "Delete Locale", SWT.PUSH);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
 		deleteButton.setLayoutData(layoutData);
 		deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
+		
+		toolkit.createLabel(buttonPane, "");
+		toolkit.createSeparator(buttonPane, SWT.HORIZONTAL | SWT.CENTER);
+		toolkit.createLabel(buttonPane, "");
 		
 		// Create add new message button
 		Button addMessageButton = toolkit.createButton(buttonPane, "Add New Message", SWT.PUSH);
@@ -371,6 +375,9 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 				
 				// re-select this locale to refresh messages list
 				supportedLocaleTableViewer.setSelection(selection);
+			} else {
+				MessageDialog.openInformation(page.getSite().getShell(), 
+						"Add a New Message", "Please select a Locale first.");
 			}
 		}
 	}
