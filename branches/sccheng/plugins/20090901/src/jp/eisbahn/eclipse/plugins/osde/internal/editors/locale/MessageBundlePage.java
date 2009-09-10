@@ -64,13 +64,14 @@ public class MessageBundlePage implements IDetailsPage {
 
 		// Message bundle section
 		Section messagesSection = toolkit.createSection(parent, Section.TITLE_BAR);
-		messagesSection.setText("Message Bundle");
+		messagesSection.setText("Messages");
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		messagesSection.setLayoutData(layoutData);
 		
 		// Message bundle pane
 		Composite messagesPane = toolkit.createComposite(messagesSection);
-		messagesPane.setLayout(new GridLayout(2, false));
+		messagesPane.setSize(400, 1000);
+		messagesPane.setLayout(new GridLayout(2, true));
 		messagesSection.setClient(messagesPane);
 
 		// Create the table
@@ -92,7 +93,7 @@ public class MessageBundlePage implements IDetailsPage {
 		column.setWidth(100);
 		column = new TableColumn(messagesTable, SWT.LEFT, 3);
 		column.setText("Message Description");
-		column.setWidth(100);
+		column.setWidth(120);
 		
 		// Table Viewer in the table
 		messagesList = new TableViewer(messagesTable);
