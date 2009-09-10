@@ -22,9 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Model object that corresponds to the root "<messagebundle></messagebundle>" element in the
- * message bundle xml files. This model object contains only model object Msg that
- * in turn corresponds to the enclosed element "<msg>" in the "<messagebundle>"
+ * Model object (Java Bean) that corresponds to the root "<messagebundle></messagebundle>"
+ * element in the message bundle xml files. This model object contains only model
+ * object Msg that in turn corresponds to the enclosed element "<msg>" in the "<messagebundle>"
  *  
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com) 
  *
@@ -127,6 +127,12 @@ public class MessageBundle {
 			strBuilder.append(" name=\"");
 			strBuilder.append(name);
 			strBuilder.append("\"");
+			// attribute desc is optional
+			if (desc != null && desc.length() > 0) {
+				strBuilder.append(" desc=\"");
+				strBuilder.append(desc);
+				strBuilder.append("\"");
+			}
 			strBuilder.append(">");
 			strBuilder.append(content);
 			strBuilder.append("</msg>");

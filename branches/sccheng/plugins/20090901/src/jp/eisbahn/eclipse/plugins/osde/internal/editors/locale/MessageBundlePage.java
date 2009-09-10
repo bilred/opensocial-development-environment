@@ -17,21 +17,13 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
-import java.util.List;
-import java.util.Map;
-
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
-
 import com.google.gadgets.model.Module;
 import com.google.gadgets.model.MessageBundle.Msg;
 import com.google.gadgets.model.Module.ModulePrefs.Locale;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -80,7 +72,6 @@ public class MessageBundlePage implements IDetailsPage {
 		Composite messagesPane = toolkit.createComposite(messagesSection);
 		messagesPane.setLayout(new GridLayout(2, false));
 		messagesSection.setClient(messagesPane);
-		final SectionPart messagesPart = new SectionPart(messagesSection);
 
 		// Create the table
 		Table messagesTable = toolkit.createTable(messagesPane, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
@@ -118,7 +109,7 @@ public class MessageBundlePage implements IDetailsPage {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
 		deleteButton.setLayoutData(layoutData);
-		deleteButton.addSelectionListener(new RemoveButtonSelectionListener(messagesPart));
+		deleteButton.addSelectionListener(new RemoveButtonSelectionListener());
 	}
 
 
@@ -132,12 +123,6 @@ public class MessageBundlePage implements IDetailsPage {
 	}
 	
 	private class RemoveButtonSelectionListener implements SelectionListener {
-		
-		private SectionPart sectionPart;
-		
-		public RemoveButtonSelectionListener(SectionPart sectionPart) {
-			this.sectionPart = sectionPart;
-		}
 
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
@@ -164,7 +149,6 @@ public class MessageBundlePage implements IDetailsPage {
 					}
 					
 					messagesList.refresh();
-					// managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
 					// notify the LocalePage that Module has been changed
 					((SectionPart)managedForm.getParts()[0]).markDirty();
 				}
