@@ -126,8 +126,9 @@ public enum Language {
 	 * @return true if lanCode is supported in Google Translate API
 	 */
 	public static boolean isSupported(String lanCode) {
+		lanCode = lanCode.toLowerCase();
 		for (Language language : values()) {
-			if (lanCode.equals(language.lanCode)) {
+			if (lanCode.equals(language.lanCode.toLowerCase())) {
 				return true;
 			}
 		}
@@ -144,8 +145,9 @@ public enum Language {
 	 * @return Language object of the language code
 	 */
 	public static Language fromString(String lanCode) {
+		lanCode = lanCode.toLowerCase();
 		for (Language language : values()) {
-			if (lanCode.equals(language.lanCode)) {
+			if (lanCode.equals(language.lanCode.toLowerCase())) {
 				return language;
 			}
 		}
