@@ -367,6 +367,7 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 					}
 				}
 				markDirty();
+				supportedLocaleTableViewer.setSelection(selection);
 			}
 		}
 	}
