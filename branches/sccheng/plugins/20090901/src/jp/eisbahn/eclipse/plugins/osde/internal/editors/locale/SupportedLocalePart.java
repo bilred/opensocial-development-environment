@@ -134,7 +134,7 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 		addLocaleButton.addSelectionListener(new AddButtonSelectionListener());
 		
 		// Create deleting button
-		Button deleteButton = toolkit.createButton(buttonPane, "Delete", SWT.PUSH);
+		Button deleteButton = toolkit.createButton(buttonPane, "Delete Locale", SWT.PUSH);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.verticalAlignment = GridData.BEGINNING;
 		deleteButton.setLayoutData(layoutData);
@@ -366,7 +366,10 @@ public class SupportedLocalePart extends SectionPart implements IPartSelectionLi
 						}
 					}
 				}
+				// tell the LocalePage that the module has been modified
 				markDirty();
+				
+				// re-select this locale to refresh messages list
 				supportedLocaleTableViewer.setSelection(selection);
 			}
 		}

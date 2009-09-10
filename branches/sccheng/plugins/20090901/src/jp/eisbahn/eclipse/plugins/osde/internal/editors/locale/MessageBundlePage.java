@@ -86,13 +86,13 @@ public class MessageBundlePage implements IDetailsPage {
 		column.setWidth(20);
 		column = new TableColumn(messagesTable, SWT.LEFT, 1);
 		column.setText("Message Name");
-		column.setWidth(130);
+		column.setWidth(100);
 		column = new TableColumn(messagesTable, SWT.LEFT, 2);
 		column.setText("Message Content");
-		column.setWidth(150);
+		column.setWidth(100);
 		column = new TableColumn(messagesTable, SWT.LEFT, 3);
 		column.setText("Message Description");
-		column.setWidth(150);
+		column.setWidth(100);
 		
 		// Table Viewer in the table
 		messagesList = new TableViewer(messagesTable);
