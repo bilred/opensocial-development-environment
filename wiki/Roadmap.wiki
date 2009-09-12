@@ -9,7 +9,7 @@ This version is a current stream. Supporting !OpenSocial Specification 0.8.1.
 ===v0.2.9===
 
  * Purpose: Minor version up.
- * This version will not be released. Because the new version 0.3.0 is released prior.
+ * <font color="red">This version will not be released. Because the new version 0.3.0 is released prior.</font>
 
 ==v0.3==
 
