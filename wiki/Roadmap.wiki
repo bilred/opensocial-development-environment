@@ -22,4 +22,4 @@ This version is a next major version, and will be supported !OpenSocial Specific
  * Purpose: First major version up. Supporting OS 0.9 (integrating Shindig 1.1).
  * Release date: 2009-10-**
  * Supported features and fixed issues:
-  * abc
+  * Supporting OS 0.9 (Issue #33)
