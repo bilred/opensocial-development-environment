@@ -18,7 +18,7 @@ This version is a next major version, and will be supported !OpenSocial Specific
 ===v0.3.0===
 
  * Purpose: First major version up. Supporting OS 0.9 (integrating Shindig 1.1).
- * Release date: 2009-10-**
+ * Release date: 2009-09-19 or 20
  * Supported features and fixed issues:
   * Supporting OS 0.9 (Issue #33)
   * A bug about add Relationship (Issue #71)
