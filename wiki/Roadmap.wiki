@@ -9,9 +9,7 @@ This version is a current stream. Supporting !OpenSocial Specification 0.8.1.
 ===v0.2.9===
 
  * Purpose: Minor version up.
- * Release date: 2009-09-**
- * Supported features and fixed issues:
-  * abc
+ * This version will not be released. Because the new version 0.3.0 is released prior.
 
 ==v0.3==
 
@@ -23,3 +21,7 @@ This version is a next major version, and will be supported !OpenSocial Specific
  * Release date: 2009-10-**
  * Supported features and fixed issues:
   * Supporting OS 0.9 (Issue #33)
+  * A bug about add Relationship (Issue #71)
+  * Can't execute the gadget in a sub folder (Issue #73)
+  * Subversion committing problem (Issue #75)
+  * Removing the legacy of h2-library (Issue #81)
