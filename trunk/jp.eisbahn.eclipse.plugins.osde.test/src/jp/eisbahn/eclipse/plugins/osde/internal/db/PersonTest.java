@@ -17,6 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.db;
 
+import java.io.File;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -34,7 +35,11 @@ public class PersonTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		HibernateUtils.initialize("hibernate_for_test.cfg.xml");
+		File file = new File("src/hibernate_for_test.cfg.xml");
+		if (!file.exists())
+			fail();
+		
+		HibernateUtils.initialize(file.getAbsolutePath());
 		session = HibernateUtils.currentSession();
 		deleteAll();
 	}
@@ -60,7 +65,7 @@ public class PersonTest extends TestCase {
 		session.save(person);
 		tx.commit();
 		session.clear();
-		//
+
 		tx = session.beginTransaction();
 		Query query = session.getNamedQuery(PersonImpl.FINDBY_PERSONID);
 		query.setParameter(PersonImpl.PARAM_PERSONID, "john.doe");

@@ -62,11 +62,8 @@ public class GadgetXmlLoadTest extends TestCase {
 	}
 
 	public void testParseGadgetXml() throws Exception {
-		File file = new File("test/test_gadget.xml");
-		if (!file.exists()) {
-			assertTrue(true);
-			return;
-		}
+		File file = new File("src/test_gadget.xml");
+		System.out.println(file.getAbsolutePath());
 		FileInputStream in = new FileInputStream(file);
 		Module module = (Module) target.parse(in);
 		assertNotNull(module);
