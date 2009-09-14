@@ -1,4 +1,4 @@
-package jp.eisbahn.eclipse.plugins.osde.builders;
+package jp.eisbahn.eclipse.plugins.osde.internal;
 
 import org.junit.Before;
 import org.junit.Test;
