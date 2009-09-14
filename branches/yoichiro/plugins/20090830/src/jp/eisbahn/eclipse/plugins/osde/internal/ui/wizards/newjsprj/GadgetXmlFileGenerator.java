@@ -127,8 +127,11 @@ public class GadgetXmlFileGenerator {
 						if (viewData.isCreateActivity()) {
 							content += SampleCode.CREATE_ACTIVITY;
 						}
-						if (viewData.isCreateAppData()) {
+						if (viewData.isCreateAppData() && gadgetXmlData.isOpensocial08()) {
 							content += SampleCode.SHARE_APPDATA_08;
+						}
+						if (viewData.isCreateAppData() && gadgetXmlData.isOpensocial09()) {
+							content += SampleCode.SHARE_APPDATA_09;
 						}
 					} else {
 						if (viewData.isCreateExternalJavaScript()) {
