@@ -37,20 +37,11 @@ public class TranslatorTest {
 
 	@Test
 	public void testChineseToEnglishTranslation() {
-		String str = Translator.translate("雷射", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
+		String str = Translator.translate("�p�g", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
 		assertTrue("laser".equals(str.toLowerCase()));
 		
-		str = Translator.translate("軟體", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
+		str = Translator.translate("�n��", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
 		assertTrue("software".equals(str.toLowerCase()));
-	}
-	
-	@Test
-	public void testEnglishToChineseTranlation() {
-		String str = Translator.translate("Chiaroscuro", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
-		assertTrue("明暗對比".equals(str));
-		
-		str = Translator.translate("Test", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
-		assertTrue("測試".equals(str));
 	}
 
 	@After

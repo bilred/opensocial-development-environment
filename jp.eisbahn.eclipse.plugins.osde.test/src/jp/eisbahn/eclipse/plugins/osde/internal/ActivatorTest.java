@@ -1,4 +1,4 @@
-package jp.eisbahn.eclipse.plugins.osde.builders;
+package jp.eisbahn.eclipse.plugins.osde.internal;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -164,14 +164,6 @@ public class ActivatorTest {
      */
     @Test
     public void testSetLastApplicationInformation() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link Activator#getGadgetXmlParser()}.
-     */
-    @Test
-    public void testGetGadgetXmlParser() {
         // TODO: implement test method
     }
 
