@@ -138,15 +138,21 @@ public class OsdePreferencePage
 		addField(new DirectoryFieldEditor(PreferenceConstants.JETTY_DIR,
 				   						  "Jetty directory",
 				   						  webServerGroup));
-		
-		useInternalDatabase = new BooleanFieldEditor(PreferenceConstants.USE_INTERNAL_DATABASE,
-					"Use internal H2 database",
-					getFieldEditorParent());
-		addField(useInternalDatabase);
 	}
 	
 	private void createDatabaseFields() {
-		// Database group for database related settings
+		// Controls for internal database
+		// Once the checkbox is checked, controls for external database is disabled
+		useInternalDatabase = new BooleanFieldEditor(PreferenceConstants.USE_INTERNAL_DATABASE,
+				"Use internal H2 database",
+				getFieldEditorParent());
+		addField(useInternalDatabase);
+		databaseDir = new DirectoryFieldEditor(PreferenceConstants.DATABASE_DIR,
+				   "Database directory",
+				   getFieldEditorParent());
+		addField(databaseDir);
+		
+		// Database group for external database settings
 		databaseGroup = new Group(getFieldEditorParent(), SWT.NONE);
 		databaseGroup.setText("External Database Settings");
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -176,24 +182,13 @@ public class OsdePreferencePage
 				   					   "Database password",
 				   					   databaseGroup);
 		addField(databasePassword);
-		databaseDir = new DirectoryFieldEditor(PreferenceConstants.DATABASE_DIR,
-				   					   "Database directory",
-				   					   databaseGroup);
-		addField(databaseDir);
-		setEnabledDatabaseControls(false);
+		setEnabledExternalDatabaseControls(false);
 	}
 	
+	/**
+	 * Use this method to add other fields
+	 */
 	private void createOtherFields() {
-		// Group for other settings
-		Group otherGroup = new Group(getFieldEditorParent(), SWT.NONE);
-		otherGroup.setText("Other Settings");
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = 3;
-		otherGroup.setLayoutData(layoutData);
-		otherGroup.setLayout(new GridLayout(2, false));
-		addField(new StringFieldEditor(PreferenceConstants.DOCS_SITE_MAP,
-				   					   "Docs site map",
-				   					   otherGroup));
 	}
 	
 	private void createVersionFields() {
@@ -219,24 +214,25 @@ public class OsdePreferencePage
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getSource() == useInternalDatabase) {
-			setEnabledDatabaseControls(!useInternalDatabase.getBooleanValue());
+			boolean internalDB = useInternalDatabase.getBooleanValue();
+			setEnabledExternalDatabaseControls(!internalDB);
+			databaseDir.setEnabled(internalDB, getFieldEditorParent());
 		}
 	}
 	
 	@Override
 	public void performDefaults() {
 		super.performDefaults();
-		setEnabledDatabaseControls(false);
+		setEnabledExternalDatabaseControls(false);
 	}
 	
-	private void setEnabledDatabaseControls(boolean enable) {
+	private void setEnabledExternalDatabaseControls(boolean enable) {
 		databaseGroup.setEnabled(enable);
 		externalDatabaseType.setEnabled(enable, databaseGroup);
 		databaseHost.setEnabled(enable, databaseGroup);
 		databasePort.setEnabled(enable, databaseGroup);
 		databaseUsername.setEnabled(enable, databaseGroup);
 		databasePassword.setEnabled(enable, databaseGroup);
-		databaseDir.setEnabled(enable, databaseGroup);
 	}
 
 	/**
