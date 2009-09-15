@@ -18,6 +18,8 @@
 
 package jp.eisbahn.eclipse.plugins.osde.internal.preferences;
 
+import java.io.File;
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
@@ -64,6 +66,8 @@ public class OsdePreferencePage
 	private StringFieldEditor databaseUsername;
 	private StringFieldEditor databasePassword;
 	private DirectoryFieldEditor databaseDir;
+	
+	private DirectoryFieldEditor jettyDirectory;
 	
 	public OsdePreferencePage() {
 		super(GRID);
@@ -135,9 +139,10 @@ public class OsdePreferencePage
 		webServerGroup.setLayoutData(layoutData);
 		webServerGroup.setLayout(new GridLayout(3, false));
 		
-		addField(new DirectoryFieldEditor(PreferenceConstants.JETTY_DIR,
-				   						  "Jetty directory",
-				   						  webServerGroup));
+		jettyDirectory = new DirectoryFieldEditor(PreferenceConstants.JETTY_DIR,
+												  "Jetty directory",
+												  webServerGroup);
+		addField(jettyDirectory);
 	}
 	
 	private void createDatabaseFields() {
@@ -237,6 +242,24 @@ public class OsdePreferencePage
 	 * The initializer does nothing here
 	 */
 	public void init(IWorkbench workbench) {
+	}
+	
+	@Override
+	public boolean performOk() {
+		super.performOk();
+		File jettyDir = new File(jettyDirectory.getStringValue());
+		if (!jettyDir.exists()) {
+			jettyDir.mkdir();
+		}
+		File osdeDbDir = new File(databaseDir.getStringValue());
+		if (!osdeDbDir.exists()) {
+			osdeDbDir.mkdir();
+		}
+		return true;
+	}
+	
+	@Override
+	protected void checkState() {
 	}
 
 }
