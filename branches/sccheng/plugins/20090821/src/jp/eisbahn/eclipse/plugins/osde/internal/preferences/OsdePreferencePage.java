@@ -92,7 +92,7 @@ public class OsdePreferencePage
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		localeGroup.setLayoutData(layoutData);
-		localeGroup.setLayout(new GridLayout(2, false));
+		localeGroup.setLayout(new GridLayout(3, false));
 		
 		// Construct Country Field
 		final int NUM_COUNTRIES = OpenSocialUtil.COUNTRIES.length;
@@ -133,7 +133,7 @@ public class OsdePreferencePage
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		webServerGroup.setLayoutData(layoutData);
-		webServerGroup.setLayout(new GridLayout(2, false));
+		webServerGroup.setLayout(new GridLayout(3, false));
 		
 		addField(new DirectoryFieldEditor(PreferenceConstants.JETTY_DIR,
 				   						  "Jetty directory",
@@ -141,46 +141,45 @@ public class OsdePreferencePage
 	}
 	
 	private void createDatabaseFields() {
-		// Controls for internal database
-		// Once the checkbox is checked, controls for external database is disabled
-		useInternalDatabase = new BooleanFieldEditor(PreferenceConstants.USE_INTERNAL_DATABASE,
-				"Use internal H2 database",
-				getFieldEditorParent());
-		addField(useInternalDatabase);
-		databaseDir = new DirectoryFieldEditor(PreferenceConstants.DATABASE_DIR,
-				   "Database directory",
-				   getFieldEditorParent());
-		addField(databaseDir);
-		
-		// Database group for external database settings
+		// Database group for database settings
 		databaseGroup = new Group(getFieldEditorParent(), SWT.NONE);
-		databaseGroup.setText("External Database Settings");
+		databaseGroup.setText("Database Settings");
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		databaseGroup.setLayoutData(layoutData);
-		databaseGroup.setLayout(new GridLayout(2, false));
+		databaseGroup.setLayout(new GridLayout(3, true));
+		
+		useInternalDatabase = new BooleanFieldEditor(PreferenceConstants.USE_INTERNAL_DATABASE,
+				 									 "Use internal H2 database",
+				 									 databaseGroup);
+		addField(useInternalDatabase);
+
+		databaseDir = new DirectoryFieldEditor(PreferenceConstants.DATABASE_DIR,
+											   "Database directory",
+											   databaseGroup);
+		addField(databaseDir);
 		
 		externalDatabaseType = new RadioGroupFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_TYPE,
 														 "External database type",
-														 1,
+														 3,
 														 new String[][] {{"MySQL", "MySQL"},{"Oracle", "Oracle"}},
 														 databaseGroup);
 		addField(externalDatabaseType);
 		databaseHost = new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_HOST,
-				   					   "Database host",
-				   					   databaseGroup);
+				   					   		 "Database host",
+				   					   		 databaseGroup);
 		addField(databaseHost);
 		databasePort = new IntegerFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_PORT,
-				   						"Database port",
-				   						databaseGroup);
+				   							  "Database port",
+				   							  databaseGroup);
 		addField(databasePort);
 		databaseUsername = new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_NAME,
-				   					   "Database user name",
-				   					   databaseGroup);
+				   					   			 "Database user name",
+				   					   			 databaseGroup);
 		addField(databaseUsername);
 		databasePassword = new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_PASSWORD,
-				   					   "Database password",
-				   					   databaseGroup);
+												 "Database password",
+												 databaseGroup);
 		addField(databasePassword);
 		setEnabledExternalDatabaseControls(false);
 	}
@@ -198,7 +197,7 @@ public class OsdePreferencePage
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		versionInfoGroup.setLayoutData(layoutData);
-		versionInfoGroup.setLayout(new GridLayout(2, false));
+		versionInfoGroup.setLayout(new GridLayout(1, false));
 		
 		Activator activator = Activator.getDefault();
 		String osdeVersion = (String)activator.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
@@ -216,7 +215,7 @@ public class OsdePreferencePage
 		if (event.getSource() == useInternalDatabase) {
 			boolean internalDB = useInternalDatabase.getBooleanValue();
 			setEnabledExternalDatabaseControls(!internalDB);
-			databaseDir.setEnabled(internalDB, getFieldEditorParent());
+			databaseDir.setEnabled(internalDB, databaseGroup);
 		}
 	}
 	
@@ -227,7 +226,6 @@ public class OsdePreferencePage
 	}
 	
 	private void setEnabledExternalDatabaseControls(boolean enable) {
-		databaseGroup.setEnabled(enable);
 		externalDatabaseType.setEnabled(enable, databaseGroup);
 		databaseHost.setEnabled(enable, databaseGroup);
 		databasePort.setEnabled(enable, databaseGroup);
