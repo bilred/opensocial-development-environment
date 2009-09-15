@@ -25,7 +25,6 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -55,7 +54,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 public class OsdePreferencePage
 	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage, IPropertyChangeListener {
+	implements IWorkbenchPreferencePage {
 	
 	private BooleanFieldEditor useInternalDatabase;
 	private Group databaseGroup;
@@ -79,7 +78,14 @@ public class OsdePreferencePage
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
-		
+		createLocaleFields();
+		createWebServerFields();
+		createDatabaseFields();
+		createOtherFields();
+		createVersionFields();
+	}
+	
+	private void createLocaleFields() {
 		// Group for Locale
 		Group localeGroup = new Group(getFieldEditorParent(), SWT.NONE);
 		localeGroup.setText("Locale Settings");
@@ -118,11 +124,13 @@ public class OsdePreferencePage
 				                                   					languageKeysAndValues,
 				                                   					localeGroup);
 		addField(languageFieldEditor);
-		
+	}
+	
+	private void createWebServerFields() {
 		// Web Server Settings
 		Group webServerGroup = new Group(getFieldEditorParent(), SWT.NONE);
 		webServerGroup.setText("Web Server Settings");
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		webServerGroup.setLayoutData(layoutData);
 		webServerGroup.setLayout(new GridLayout(2, false));
@@ -135,11 +143,13 @@ public class OsdePreferencePage
 					"Use internal H2 database",
 					getFieldEditorParent());
 		addField(useInternalDatabase);
-		
+	}
+	
+	private void createDatabaseFields() {
 		// Database group for database related settings
 		databaseGroup = new Group(getFieldEditorParent(), SWT.NONE);
 		databaseGroup.setText("External Database Settings");
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		databaseGroup.setLayoutData(layoutData);
 		databaseGroup.setLayout(new GridLayout(2, false));
@@ -170,22 +180,27 @@ public class OsdePreferencePage
 				   					   "Database directory",
 				   					   databaseGroup);
 		addField(databaseDir);
-		
+		setEnabledDatabaseControls(false);
+	}
+	
+	private void createOtherFields() {
 		// Group for other settings
 		Group otherGroup = new Group(getFieldEditorParent(), SWT.NONE);
 		otherGroup.setText("Other Settings");
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		otherGroup.setLayoutData(layoutData);
 		otherGroup.setLayout(new GridLayout(2, false));
 		addField(new StringFieldEditor(PreferenceConstants.DOCS_SITE_MAP,
 				   					   "Docs site map",
 				   					   otherGroup));
-		
+	}
+	
+	private void createVersionFields() {
 		// Put version information at the bottom of the preference page
 		Group versionInfoGroup = new Group(getFieldEditorParent(), SWT.NONE);
 		versionInfoGroup.setText("Version Information");
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		versionInfoGroup.setLayoutData(layoutData);
 		versionInfoGroup.setLayout(new GridLayout(2, false));
@@ -204,24 +219,24 @@ public class OsdePreferencePage
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getSource() == useInternalDatabase) {
-			if (useInternalDatabase.getBooleanValue()) {
-				databaseGroup.setEnabled(true);
-				externalDatabaseType.setEnabled(true, databaseGroup);
-				databaseHost.setEnabled(true, databaseGroup);
-				databasePort.setEnabled(true, databaseGroup);
-				databaseUsername.setEnabled(true, databaseGroup);
-				databasePassword.setEnabled(true, databaseGroup);
-				databaseDir.setEnabled(true, databaseGroup);
-			} else {
-				databaseGroup.setEnabled(false);
-				externalDatabaseType.setEnabled(false, databaseGroup);
-				databaseHost.setEnabled(false, databaseGroup);
-				databasePort.setEnabled(false, databaseGroup);
-				databaseUsername.setEnabled(false, databaseGroup);
-				databasePassword.setEnabled(false, databaseGroup);
-				databaseDir.setEnabled(false, databaseGroup);
-			}
+			setEnabledDatabaseControls(!useInternalDatabase.getBooleanValue());
 		}
+	}
+	
+	@Override
+	public void performDefaults() {
+		super.performDefaults();
+		setEnabledDatabaseControls(false);
+	}
+	
+	private void setEnabledDatabaseControls(boolean enable) {
+		databaseGroup.setEnabled(enable);
+		externalDatabaseType.setEnabled(enable, databaseGroup);
+		databaseHost.setEnabled(enable, databaseGroup);
+		databasePort.setEnabled(enable, databaseGroup);
+		databaseUsername.setEnabled(enable, databaseGroup);
+		databasePassword.setEnabled(enable, databaseGroup);
+		databaseDir.setEnabled(enable, databaseGroup);
 	}
 
 	/**
