@@ -25,10 +25,11 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -54,7 +55,16 @@ import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 public class OsdePreferencePage
 	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage {
+	implements IWorkbenchPreferencePage, IPropertyChangeListener {
+	
+	private BooleanFieldEditor useInternalDatabase;
+	private Group databaseGroup;
+	private RadioGroupFieldEditor externalDatabaseType;
+	private StringFieldEditor databaseHost;
+	private IntegerFieldEditor databasePort;
+	private StringFieldEditor databaseUsername;
+	private StringFieldEditor databasePassword;
+	private DirectoryFieldEditor databaseDir;
 	
 	public OsdePreferencePage() {
 		super(GRID);
@@ -69,7 +79,6 @@ public class OsdePreferencePage
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
-		Display display = getShell().getDisplay();
 		
 		// Group for Locale
 		Group localeGroup = new Group(getFieldEditorParent(), SWT.NONE);
@@ -122,48 +131,45 @@ public class OsdePreferencePage
 				   						  "Jetty directory",
 				   						  webServerGroup));
 		
+		useInternalDatabase = new BooleanFieldEditor(PreferenceConstants.USE_INTERNAL_DATABASE,
+					"Use internal H2 database",
+					getFieldEditorParent());
+		addField(useInternalDatabase);
+		
 		// Database group for database related settings
-		Group databaseGroup = new Group(getFieldEditorParent(), SWT.NONE);
+		databaseGroup = new Group(getFieldEditorParent(), SWT.NONE);
 		databaseGroup.setText("External Database Settings");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		databaseGroup.setLayoutData(layoutData);
 		databaseGroup.setLayout(new GridLayout(2, false));
 		
-		BooleanFieldEditor useInternalDatabase = new BooleanFieldEditor(PreferenceConstants.USE_INTERNAL_DATABASE,
-				 									 					"Use internal H2 database",
-				 									 					databaseGroup);
-		addField(useInternalDatabase);
-		
-		Label internalDatabaseLabel = new Label(databaseGroup, SWT.NONE);
-		internalDatabaseLabel.setText("Please Note: If you choose to use internal database,\n" +
-									  "You don't have to configure the following settings for external database");
-		internalDatabaseLabel.setBackground(display.getSystemColor(SWT.COLOR_YELLOW));
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = 2;
-		internalDatabaseLabel.setLayoutData(layoutData);
-		
-		RadioGroupFieldEditor externalDatabaseType = new RadioGroupFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_TYPE,
+		externalDatabaseType = new RadioGroupFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_TYPE,
 														 "External database type",
 														 1,
 														 new String[][] {{"MySQL", "MySQL"},{"Oracle", "Oracle"}},
 														 databaseGroup);
-		addField(externalDatabaseType);	
-		addField(new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_HOST,
+		addField(externalDatabaseType);
+		databaseHost = new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_HOST,
 				   					   "Database host",
-				   					   databaseGroup));
-		addField(new IntegerFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_PORT,
+				   					   databaseGroup);
+		addField(databaseHost);
+		databasePort = new IntegerFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_PORT,
 				   						"Database port",
-				   						databaseGroup));
-		addField(new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_NAME,
+				   						databaseGroup);
+		addField(databasePort);
+		databaseUsername = new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_NAME,
 				   					   "Database user name",
-				   					   databaseGroup));
-		addField(new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_PASSWORD,
+				   					   databaseGroup);
+		addField(databaseUsername);
+		databasePassword = new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_PASSWORD,
 				   					   "Database password",
-				   					   databaseGroup));
-		addField(new DirectoryFieldEditor(PreferenceConstants.DATABASE_DIR,
+				   					   databaseGroup);
+		addField(databasePassword);
+		databaseDir = new DirectoryFieldEditor(PreferenceConstants.DATABASE_DIR,
 				   					   "Database directory",
-				   					   databaseGroup));
+				   					   databaseGroup);
+		addField(databaseDir);
 		
 		// Group for other settings
 		Group otherGroup = new Group(getFieldEditorParent(), SWT.NONE);
@@ -194,11 +200,34 @@ public class OsdePreferencePage
 		Label shindigVersionLabel = new Label(versionInfoGroup, SWT.NONE);
 		shindigVersionLabel.setText("Apache Shindig Revision: " + shindigVersion);
 	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		if (event.getSource() == useInternalDatabase) {
+			if (useInternalDatabase.getBooleanValue()) {
+				databaseGroup.setEnabled(true);
+				externalDatabaseType.setEnabled(true, databaseGroup);
+				databaseHost.setEnabled(true, databaseGroup);
+				databasePort.setEnabled(true, databaseGroup);
+				databaseUsername.setEnabled(true, databaseGroup);
+				databasePassword.setEnabled(true, databaseGroup);
+				databaseDir.setEnabled(true, databaseGroup);
+			} else {
+				databaseGroup.setEnabled(false);
+				externalDatabaseType.setEnabled(false, databaseGroup);
+				databaseHost.setEnabled(false, databaseGroup);
+				databasePort.setEnabled(false, databaseGroup);
+				databaseUsername.setEnabled(false, databaseGroup);
+				databasePassword.setEnabled(false, databaseGroup);
+				databaseDir.setEnabled(false, databaseGroup);
+			}
+		}
+	}
 
 	/**
 	 * The initializer does nothing here
 	 */
-	public void init(IWorkbench workbench) {		
+	public void init(IWorkbench workbench) {
 	}
 
 }
