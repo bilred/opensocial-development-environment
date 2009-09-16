@@ -185,6 +185,7 @@ public class OsdePreferencePage
 		databasePassword = new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_PASSWORD,
 												 "Database password",
 												 databaseGroup);
+		databasePassword.getTextControl(databaseGroup).setEchoChar('*');
 		addField(databasePassword);
 		setEnabledExternalDatabaseControls(false);
 	}
