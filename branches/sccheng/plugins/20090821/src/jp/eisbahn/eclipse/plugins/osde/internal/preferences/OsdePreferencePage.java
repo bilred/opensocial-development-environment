@@ -19,7 +19,10 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.preferences;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
@@ -36,6 +39,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 /**
@@ -61,6 +65,7 @@ public class OsdePreferencePage
 	private BooleanFieldEditor useInternalDatabase;
 	private Group databaseGroup;
 	private RadioGroupFieldEditor externalDatabaseType;
+	private StringFieldEditor databaseName;
 	private StringFieldEditor databaseHost;
 	private IntegerFieldEditor databasePort;
 	private StringFieldEditor databaseUsername;
@@ -170,6 +175,10 @@ public class OsdePreferencePage
 														 new String[][] {{"MySQL", "MySQL"},{"Oracle", "Oracle"}},
 														 databaseGroup);
 		addField(externalDatabaseType);
+		databaseName = new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_NAME,
+											 "Database name",
+											 databaseGroup);
+		addField(databaseName);
 		databaseHost = new StringFieldEditor(PreferenceConstants.EXTERNAL_DATABASE_HOST,
 				   					   		 "Database host",
 				   					   		 databaseGroup);
@@ -233,6 +242,7 @@ public class OsdePreferencePage
 	
 	private void setEnabledExternalDatabaseControls(boolean enable) {
 		externalDatabaseType.setEnabled(enable, databaseGroup);
+		databaseName.setEnabled(enable, databaseGroup);
 		databaseHost.setEnabled(enable, databaseGroup);
 		databasePort.setEnabled(enable, databaseGroup);
 		databaseUsername.setEnabled(enable, databaseGroup);
@@ -255,6 +265,16 @@ public class OsdePreferencePage
 		File osdeDbDir = new File(databaseDir.getStringValue());
 		if (!osdeDbDir.exists()) {
 			osdeDbDir.mkdir();
+		}
+		Activator activator = Activator.getDefault();
+        try {
+			(new DatabaseLaunchConfigurationCreator()).create(activator.getStatusMonitor());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (CoreException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return true;
 	}
