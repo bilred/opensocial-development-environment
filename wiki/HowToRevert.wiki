@@ -3,7 +3,7 @@
 
 = Introduction =
 
-This page is teach developers who might want to revert a committed revision (change). *Revision* and *change* are used interchangeably in this document. We are using [http://subclipse.tigris.org/ Subclipse], [http://www.eclipse.org/subversive/ Subversive] and svn commands as examples in this tutorial.
+This page is for teaching developers who want to revert a committed revision (change). *Revision* and *change* are used interchangeably in this document. We are using [http://subclipse.tigris.org/ Subclipse], [http://www.eclipse.org/subversive/ Subversive] and svn commands as examples in this tutorial.
 
 = Caveat =
 
@@ -13,7 +13,7 @@ Reverting an earlier committed change (revision) is a non-trivial task and may b
 
 Subclipse
 
-Let's assume the HEAD revision of the current trunk is revision 616. And we would like to roll back all changes committed in revision 583. But at the same time we want to keep changes committed after revision 583, namely from revision 584 to revision 616. The steps in subclipse are:
+Let's assume the HEAD revision of the current trunk is revision 616. And we would like to roll back all changes committed in revision 538. But at the same time we want to keep changes committed after revision 538, namely from revision 539 to revision 616. The steps in subclipse are:
 
  * Checkout the codes from the trunk as a local working copy and make sure it is in sync with the HEAD revision
  * Use Subclipse to choose which revision you want to discard and confirm it
@@ -23,8 +23,10 @@ Let's assume the HEAD revision of the current trunk is revision 616. And we woul
 
 In the last step, if you are scared you might be missing something, put your reverted local working copy in a branch and ask for a code review from other developers before committing it to the trunk.
 
-This completes the whole processing of reverting. The following screenshots are from Subclipse to guide you through each step in detail:
+This completes the whole processing of reverting. The following screenshots are from Subclipse to guide you through the steps using Subclipse to find out revision history and revert in detail:
 
+Show all revision histories:<br>
 <img src="http://opensocial-development-environment.googlecode.com/files/subclipse_show_history.JPG">
 
+Find out the revision you want to revert and select it to confirm:<br>
 <img src="http://opensocial-development-environment.googlecode.com/files/subclipse_revert_change.JPG" />
