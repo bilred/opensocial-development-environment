@@ -1,0 +1,13 @@
+#summary How To Revert a previsouly Committed Change (Revision)?
+#labels OSDE,Subclipse,Revert,Eclipse,Plug-in
+
+= Introduction =
+
+This page is teach developers who might want to revert a committed revision (change). *Revision* and *change* are used interchangeably in this document. We are using [http://subclipse.tigris.org/ Subclipse] as an example in this tutorial.
+
+= Caveat =
+
+Reverting an earlier committed change (revision) is a non-trivial task and may break the codes/functions in the trunk. Please be very careful when you decide to do it and read this document thoroughly.
+
+= Details =
+
