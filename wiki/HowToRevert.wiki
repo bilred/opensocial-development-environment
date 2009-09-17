@@ -3,7 +3,7 @@
 
 = Introduction =
 
-This page is teach developers who might want to revert a committed revision (change). *Revision* and *change* are used interchangeably in this document. We are using [http://subclipse.tigris.org/ Subclipse] as an example in this tutorial.
+This page is teach developers who might want to revert a committed revision (change). *Revision* and *change* are used interchangeably in this document. We are using [http://subclipse.tigris.org/ Subclipse], [http://www.eclipse.org/subversive/ Subversive] and svn commands as examples in this tutorial.
 
 = Caveat =
 
@@ -11,3 +11,16 @@ Reverting an earlier committed change (revision) is a non-trivial task and may b
 
 = Details =
 
+Subclipse
+
+Let's assume the HEAD revision of the current trunk is revision 616. And we would like to roll back all changes committed in revision 583. But at the same time we want to keep changes committed after revision 583, namely from revision 584 to revision 616. The steps in subclipse are:
+
+ * Checkout the codes from the trunk as a local working copy and make sure it is in sync with the HEAD revision
+ * Use Subclipse to choose which revision you want to discard and confirm it
+ * Resolve any file conflicts by editing them after discarding the revision in the previous step (There will definitely be file conflicts if your are reverting a quite)
+ * Run all tests and make sure you didn't break anything in your local working program
+ * If all looks good, commit your changes to the trunk
+
+In the last step, if you are scared you might be missing something, put your reverted local working copy in a branch and ask for a code review from other developers before committing it to the trunk.
+
+This completes the whole processing of reverting. The following screenshots are from Subclipse to guide you through each step in detail:
