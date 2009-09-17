@@ -1,7 +1,3 @@
-// This file is obsolete, therefore all codes are commented out
-// TODO: Porting useful functions in this file to the new OsdePreferencePage under
-//       jp.eisbahn.eclipse.plugins.osde.internal.preferences
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -19,8 +15,6 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-/*
-
 package jp.eisbahn.eclipse.plugins.osde.internal.ui;
 
 import java.io.IOException;
@@ -358,5 +352,3 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 	}
 	
 }
-
-*/

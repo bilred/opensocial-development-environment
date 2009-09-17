@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-import jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceConstants;
+import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -40,7 +40,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 public class DatabaseLaunchConfigurationCreator {
 
@@ -90,9 +89,9 @@ public class DatabaseLaunchConfigurationCreator {
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "org.h2.tools.Server");
-			IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
+			OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
 			String args = "-tcp -tcpAllowOthers";
-			String databaseDir = prefs.getString(PreferenceConstants.DATABASE_DIR);
+			String databaseDir = config.getDatabaseDir();
 			if (StringUtils.isNotEmpty(databaseDir)) {
 				if (databaseDir.endsWith("\\")) {
 					databaseDir = databaseDir.substring(0, databaseDir.length() - 1);

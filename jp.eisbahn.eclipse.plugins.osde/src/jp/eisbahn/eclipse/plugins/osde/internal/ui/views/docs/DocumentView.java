@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-import jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceConstants;
+import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
 
 import org.eclipse.jface.action.Action;
@@ -152,16 +152,18 @@ public class DocumentView extends AbstractView {
 	}
 	
 	private void loadSites() {
-		Map<String, String> map = PreferenceConstants.getDocsSiteMap();
+		OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+		Map<String, String> map = config.getDocsSiteMap();
 		if (map != null) {
 			siteMap = map;
 		} else {
 			siteMap = new LinkedHashMap<String, String>();
 			setDefaultSites(siteMap);
-			PreferenceConstants.setDocsSiteMap(siteMap);
+			config.setDocsSiteMap(siteMap);
+			Activator.getDefault().storePreferences(config);
 		}
 		siteListTable.setInput(siteMap);
-		
+		//
 		sitesCombo.removeAll();
 		for (Map.Entry<String, String> entry : siteMap.entrySet()) {
 			sitesCombo.add(entry.getKey());
@@ -231,7 +233,9 @@ public class DocumentView extends AbstractView {
 				String name = dialog.getName();
 				String url = dialog.getUrl();
 				siteMap.put(name, url);
-				PreferenceConstants.setDocsSiteMap(siteMap);
+				OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+				config.setDocsSiteMap(siteMap);
+				Activator.getDefault().storePreferences(config);
 				loadSites();
 			}
 		}
@@ -247,11 +251,12 @@ public class DocumentView extends AbstractView {
 			ISelection selection = siteListTable.getSelection();
 			if (!selection.isEmpty()) {
 				IStructuredSelection structured = (IStructuredSelection)selection;
-				@SuppressWarnings("unchecked")
 				Map.Entry<String, String> entry = (Map.Entry<String, String>)structured.getFirstElement();
 				if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to delete the site '" + entry.getKey() + "'?")) {
 					siteMap.remove(entry.getKey());
-					PreferenceConstants.setDocsSiteMap(siteMap);
+					OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+					config.setDocsSiteMap(siteMap);
+					Activator.getDefault().storePreferences(config);
 					loadSites();
 				}
 			}
@@ -267,7 +272,9 @@ public class DocumentView extends AbstractView {
 		public void widgetSelected(SelectionEvent e) {
 			if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to add default sites?")) {
 				setDefaultSites(siteMap);
-				PreferenceConstants.setDocsSiteMap(siteMap);
+				OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+				config.setDocsSiteMap(siteMap);
+				Activator.getDefault().storePreferences(config);
 				loadSites();
 			}
 		}

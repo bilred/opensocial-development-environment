@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceConstants;
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.AppDataService;
@@ -58,6 +57,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
@@ -163,7 +163,7 @@ public class Activator extends AbstractUIPlugin {
 		}
 		(new ShindigLaunchConfigurationCreator()).delete(getStatusMonitor());
 		(new DatabaseLaunchConfigurationCreator()).delete(getStatusMonitor());
-		File tmpDir = new File(getPreferenceStore().getString(PreferenceConstants.JETTY_DIR));
+		File tmpDir = new File(getOsdeConfiguration().getJettyDir());
 		File[] files = tmpDir.listFiles();
 		for (File file : files) {
 			if (file.getName().startsWith("osde_")) {
@@ -410,7 +410,83 @@ public class Activator extends AbstractUIPlugin {
 	public void setRunningShindig(boolean runningShindig) {
 		this.runningShindig = runningShindig;
 	}
+
+	public OsdeConfig getOsdeConfiguration() {
+		try {
+			IPreferenceStore store = getPreferenceStore();
+			OsdeConfig config = new OsdeConfig();
+			config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
+			config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
+			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
+			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
+			config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
+			config.setUseInternalDatabase(store.getBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
+			config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
+			config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
+			config.setExternalDatabasePort(store.getString(OsdeConfig.EXTERNAL_DATABASE_PORT));
+			config.setExternalDatabaseUsername(store.getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+			config.setExternalDatabasePassword(store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
+			return config;
+		} catch(IOException e) {
+			Logging.error("Something went wrong while getting OSDE configurations.", e);
+			throw new IllegalStateException(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		}
+	}
 	
+	public OsdeConfig getDefaultOsdeConfiguration() {
+		try {
+			IPreferenceStore store = getPreferenceStore();
+			OsdeConfig config = new OsdeConfig();
+			config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
+			config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
+			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
+			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
+			config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
+			config.setUseInternalDatabase(store.getBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
+			config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
+			config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
+			config.setExternalDatabasePort(store.getString(OsdeConfig.EXTERNAL_DATABASE_PORT));
+			config.setExternalDatabaseUsername(store.getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+			config.setExternalDatabasePassword(store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
+			return config;
+		} catch(IOException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		}
+	}
+	
+	public void storePreferences(OsdeConfig config) {
+		storePreferences(getPreferenceStore(), config);
+	}
+
+	public void storePreferences(IPreferenceStore store, OsdeConfig config) {
+		try {
+			store.setValue(OsdeConfig.DEFAULT_COUNTRY, config.getDefaultCountry());
+			store.setValue(OsdeConfig.DEFAULT_LANGUAGE, config.getDefaultLanguage());
+			store.setValue(OsdeConfig.DATABASE_DIR, config.getDatabaseDir());
+			store.setValue(OsdeConfig.DOCS_SITE_MAP, encodeSiteMap(config.getDocsSiteMap()));
+			store.setValue(OsdeConfig.JETTY_DIR, config.getJettyDir());
+			store.setValue(OsdeConfig.USE_INTERNAL_DATABASE, config.isUseInternalDatabase());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_HOST, config.getExternalDatabaseHost());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_PORT, config.getExternalDatabasePort());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_USERNAME, config.getExternalDatabaseUsername());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, config.getExternalDatabasePassword());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_TYPE, config.getExternalDatabaseType());
+			store.setValue(OsdeConfig.EXTERNAL_DATABASE_NAME, config.getExternalDatabaseName());
+		} catch(IOException e) {
+			e.printStackTrace();
+			throw new IllegalStateException(e);
+		}
+	}
+
 	public LaunchApplicationInformation getLastApplicationInformation() {
 		return lastApplicationInformation;
 	}
