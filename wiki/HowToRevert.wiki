@@ -24,3 +24,7 @@ Let's assume the HEAD revision of the current trunk is revision 616. And we woul
 In the last step, if you are scared you might be missing something, put your reverted local working copy in a branch and ask for a code review from other developers before committing it to the trunk.
 
 This completes the whole processing of reverting. The following screenshots are from Subclipse to guide you through each step in detail:
+
+<img src="http://opensocial-development-environment.googlecode.com/files/subclipse_show_history.JPG">
+
+<img src="http://opensocial-development-environment.googlecode.com/files/subclipse_revert_change.JPG" />
