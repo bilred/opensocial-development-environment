@@ -208,9 +208,7 @@
             name="Run the last launched OpenSocial Application">
       </command>
    </extension>
-   
-   
-   
+     
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
@@ -281,13 +279,21 @@
          </action>
       </objectContribution>
    </extension>
-   <extension
+   
+    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="jp.eisbahn.eclipse.plugins.osde.internal.preferences.OsdePreferencePage"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.preferences.OsdePreferencePage"
-            name="OSDE Preferences">
+            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
+            id="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
+            name="OSDE">
       </page>
+   </extension>
+   
+   <extension 
+   		 point="org.eclipse.core.runtime.preferences">
+   	  <initializer
+   	        class="jp.eisbahn.eclipse.plugins.osde.internal.OsdePreferenceInitializer">
+   	  </initializer> 
    </extension>
    
    <extension
@@ -346,12 +352,6 @@
             file="toc.xml"
             primary="true">
       </toc>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceInitializer">
-      </initializer>
    </extension>
    
    <extension point="org.eclipse.ui.bindings">
