@@ -1,0 +1,13 @@
+#summary Preview on Production Container
+
+= Introduction =
+
+It means that a gadget-developer can easily deploy (upload) his/her
+open-social gadget to a production container (say, iGoogle) from within OSDE, and then he/she can preview the gadget with live interaction with a production container.
+
+= Details =
+
+* For the long-term goal, we will support most of major containers.
+
+* As the first step (short-term goal), I am planning to support it for the
+iGoogle container only.
