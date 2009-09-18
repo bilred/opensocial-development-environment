@@ -40,7 +40,12 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
- * IGoogle Utility class.
+ * This iGoogle Utility class provides authentication and
+ * hosting-gadget-related methods to interact with iGoogle
+ * (http://www.google.com/ig) gadget container.
+ * <p>
+ * Samples of usages could be found at
+ * {@link HostingIGoogleUtilTest#testAllMethods()}.
  *
  * @author albert.cheng.ig@gmail.com
  */
@@ -58,7 +63,7 @@ public class HostingIGoogleUtil {
     private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
 
     private HostingIGoogleUtil() {
-        // hide constructor for util class
+        // Disable instantiation of this utility class.
     }
 
     /**
@@ -67,7 +72,7 @@ public class HostingIGoogleUtil {
      * @return the SID
      */
     static String retrieveSid(String emailUserName, String password,
-                                      String loginCaptchaToken, String loginCaptchaAnswer) {
+        String loginCaptchaToken, String loginCaptchaAnswer) {
 
         // TODO: Can we get sid and Ig...Token all together?
 
@@ -117,7 +122,7 @@ public class HostingIGoogleUtil {
      * @throws IOException
      */
     private static String requestAuthen(String emailUserName, String password,
-                                        String loginTokenOfCaptcha, String loginCaptchaAnswer)
+        String loginTokenOfCaptcha, String loginCaptchaAnswer)
         throws IOException {
 
         // TODO: Refactor this method utilizing HttpPost.
@@ -180,7 +185,7 @@ public class HostingIGoogleUtil {
      * @throws IOException
      */
     public static String uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
-                                   File sourceFile, String targetFilePath)
+        File sourceFile, String targetFilePath)
         throws ClientProtocolException, IOException {
 
         // Verify prefEditToken.
