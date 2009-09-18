@@ -22,37 +22,35 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.util.List;
 
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Param;
-import com.google.gadgets.model.Module.Content;
-import com.google.gadgets.model.Module.ModulePrefs;
-import com.google.gadgets.model.Module.UserPref;
-import com.google.gadgets.model.Module.ModulePrefs.Icon;
-import com.google.gadgets.model.Module.ModulePrefs.Link;
-import com.google.gadgets.model.Module.ModulePrefs.Locale;
-import com.google.gadgets.model.Module.ModulePrefs.OAuth;
-import com.google.gadgets.model.Module.ModulePrefs.Optional;
-import com.google.gadgets.model.Module.ModulePrefs.Preload;
-import com.google.gadgets.model.Module.ModulePrefs.Require;
-import com.google.gadgets.model.Module.ModulePrefs.OAuth.Service;
-import com.google.gadgets.model.Module.ModulePrefs.OAuth.Service.Access;
-import com.google.gadgets.model.Module.ModulePrefs.OAuth.Service.Authorization;
-import com.google.gadgets.model.Module.ModulePrefs.OAuth.Service.Request;
-import com.google.gadgets.model.Module.UserPref.EnumValue;
-import com.google.gadgets.parser.IParser;
-import com.google.gadgets.parser.ParserFactory;
-import com.google.gadgets.parser.ParserType;
+import com.google.gadgets.GadgetXmlParser;
+import com.google.gadgets.Module;
+import com.google.gadgets.Param;
+import com.google.gadgets.Module.Content;
+import com.google.gadgets.Module.ModulePrefs;
+import com.google.gadgets.Module.UserPref;
+import com.google.gadgets.Module.ModulePrefs.Icon;
+import com.google.gadgets.Module.ModulePrefs.Link;
+import com.google.gadgets.Module.ModulePrefs.Locale;
+import com.google.gadgets.Module.ModulePrefs.OAuth;
+import com.google.gadgets.Module.ModulePrefs.Optional;
+import com.google.gadgets.Module.ModulePrefs.Preload;
+import com.google.gadgets.Module.ModulePrefs.Require;
+import com.google.gadgets.Module.ModulePrefs.OAuth.Service;
+import com.google.gadgets.Module.ModulePrefs.OAuth.Service.Access;
+import com.google.gadgets.Module.ModulePrefs.OAuth.Service.Authorization;
+import com.google.gadgets.Module.ModulePrefs.OAuth.Service.Request;
+import com.google.gadgets.Module.UserPref.EnumValue;
 
 import junit.framework.TestCase;
 
 public class GadgetXmlLoadTest extends TestCase {
 	
-	private IParser target;
+	private GadgetXmlParser target;
 	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		target = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+		target = new GadgetXmlParser();
 	}
 
 	@Override
