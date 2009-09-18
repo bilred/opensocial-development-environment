@@ -7,7 +7,7 @@ open-social gadget to a production container (say, iGoogle) from within OSDE, an
 
 = Details =
 
-* For the long-term goal, we will support most of major containers.
+ * For the long-term goal, we will support most of major containers.
 
-* As the first step (short-term goal), I am planning to support it for the
+ * As the first step (short-term goal), I am planning to support it for the
 iGoogle container only.
