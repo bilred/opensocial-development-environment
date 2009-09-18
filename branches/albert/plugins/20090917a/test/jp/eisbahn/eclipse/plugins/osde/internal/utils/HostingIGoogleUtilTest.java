@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.IgPrefEditToken;
 
 import org.apache.http.client.ClientProtocolException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.*;
@@ -41,7 +42,7 @@ public class HostingIGoogleUtilTest {
      * Test method for {@link HostingIGoogleUtil#uploadFile(
      * String, String, IgPrefEditToken, File, String)}.
      */
-    @Test
+    @Test @Ignore // TODO: Enable this test once it is ready.
     public void testAllMethods() {
         try {
             // TODO: Create emailUserName and password for testing purpose.
