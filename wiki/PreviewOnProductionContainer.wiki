@@ -7,6 +7,8 @@ open-social gadget to a production container (say, iGoogle) from within OSDE, an
 
 = Details =
 
+ * Issue 39 (http://code.google.com/p/opensocial-development-environment/issues/detail?id=39)
+
  * For the long-term goal, we will support most of major containers.
 
  * As the first step (short-term goal), I am planning to support it for the
