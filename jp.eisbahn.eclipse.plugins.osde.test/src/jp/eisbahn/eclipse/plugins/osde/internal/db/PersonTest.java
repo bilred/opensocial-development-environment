@@ -17,7 +17,6 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.db;
 
-import java.io.File;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -35,11 +34,8 @@ public class PersonTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		File file = new File("src/hibernate_for_test.cfg.xml");
-		if (!file.exists())
-			fail();
 		
-		HibernateUtils.initialize(file.getAbsolutePath());
+		HibernateUtils.initialize("hibernate_for_test.cfg.xml");
 		session = HibernateUtils.currentSession();
 		deleteAll();
 	}
