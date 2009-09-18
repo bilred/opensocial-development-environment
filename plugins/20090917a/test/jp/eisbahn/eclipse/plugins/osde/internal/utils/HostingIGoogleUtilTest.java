@@ -56,8 +56,10 @@ public class HostingIGoogleUtilTest {
             logger.fine("pref: " + prefEditToken.getPref());
             logger.fine("editToken: " + prefEditToken.getEditToken());
 
-            File sourceFile = new File("src/mypackage/dummy_gadget.xml");
-            String targetFilePath = "dummy_gadget_05.xml";
+            // TODO: Prepare sourceFile.
+            File sourceFile =
+                new File("test/jp.eisbahn.eclipse.plugins.osde.internal/utils/dummy_gadget.xml");
+            String targetFilePath = "dummy_gadget.xml";
             String uploadFileResult =
                 uploadFile(sid, publicId, prefEditToken, sourceFile, targetFilePath);
             logger.info("uploadFileResult: " + uploadFileResult);
