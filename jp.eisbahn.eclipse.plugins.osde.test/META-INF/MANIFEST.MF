@@ -4,4 +4,7 @@ Bundle-Name: OSDE_Testing
 Bundle-SymbolicName: OSDE_Testing
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: jp.eisbahn.eclipse.plugins.osde;bundle-version="0.2.8"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit4,
+ org.eclipse.ui.views.log
+Bundle-RequiredExecutionEnvironment: J2SE-1.5,
+ JavaSE-1.6
