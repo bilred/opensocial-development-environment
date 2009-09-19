@@ -98,7 +98,7 @@
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunFromEditorAction"
                definitionId="jp.eisbahn.eclipse.plugins.osde.commands.runGadgetCommand" /> 
       </editorContribution>
- </extension>
+   </extension>
    
    <extension
          point="org.eclipse.ui.actionSets">
