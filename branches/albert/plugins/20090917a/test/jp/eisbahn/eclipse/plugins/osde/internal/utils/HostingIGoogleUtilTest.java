@@ -41,43 +41,39 @@ public class HostingIGoogleUtilTest {
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
      * String, String, IgPrefEditToken, File, String)}.
+     * @throws IOException
+     * @throws ClientProtocolException
      */
     @Test @Ignore // TODO: Enable this test once it is ready.
-    public void testAllMethods() {
-        try {
-            // TODO: Create emailUserName and password for testing purpose.
-            // TODO: Assert responses.
-            String emailUserName = "emailUserName";
-            String password = "password";
-            String sid = retrieveSid(emailUserName, password, null, null);
-            logger.fine("sid: " + sid);
-            String publicId = retrievePublicId(sid);
-            logger.fine("publicId: " + publicId);
-            IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
-            logger.fine("pref: " + prefEditToken.getPref());
-            logger.fine("editToken: " + prefEditToken.getEditToken());
+    public void testAllMethods() throws ClientProtocolException, IOException {
+        // TODO: Create emailUserName and password for testing purpose.
+        // TODO: Assert responses.
+        String emailUserName = "emailUserName";
+        String password = "password";
+        String sid = retrieveSid(emailUserName, password, null, null);
+        logger.fine("sid: " + sid);
+        String publicId = retrievePublicId(sid);
+        logger.fine("publicId: " + publicId);
+        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
+        logger.fine("pref: " + prefEditToken.getPref());
+        logger.fine("editToken: " + prefEditToken.getEditToken());
 
-            // TODO: Prepare sourceFile.
-            File sourceFile =
-                new File("test/jp.eisbahn.eclipse.plugins.osde.internal/utils/dummy_gadget.xml");
-            String targetFilePath = "dummy_gadget.xml";
-            String uploadFileResult =
-                uploadFile(sid, publicId, prefEditToken, sourceFile, targetFilePath);
-            logger.info("uploadFileResult: " + uploadFileResult);
+        // TODO: Prepare sourceFile.
+        File sourceFile =
+            new File("test/jp.eisbahn.eclipse.plugins.osde.internal/utils/dummy_gadget.xml");
+        String targetFilePath = "dummy_gadget.xml";
+        String uploadFileResult =
+            uploadFile(sid, publicId, prefEditToken, sourceFile, targetFilePath);
+        logger.info("uploadFileResult: " + uploadFileResult);
 
-            String quotaByte = retrieveQuotaByte(sid, publicId);
-            logger.info("quotaByte: " + quotaByte);
-            String quotaByteUsed = retrieveQuotaByteUsed(sid, publicId);
-            logger.info("quotaByteUsed: " + quotaByteUsed);
-            String fileList = retrieveFileList(sid, publicId);
-            logger.info("fileList:\n" + fileList);
-            String fileContent = retrieveFile(sid, publicId, targetFilePath);
-            logger.info("fileContent:\n" + fileContent);
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String quotaByte = retrieveQuotaByte(sid, publicId);
+        logger.info("quotaByte: " + quotaByte);
+        String quotaByteUsed = retrieveQuotaByteUsed(sid, publicId);
+        logger.info("quotaByteUsed: " + quotaByteUsed);
+        String fileList = retrieveFileList(sid, publicId);
+        logger.info("fileList:\n" + fileList);
+        String fileContent = retrieveFile(sid, publicId, targetFilePath);
+        logger.info("fileContent:\n" + fileContent);
     }
 
 }
