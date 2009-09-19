@@ -367,7 +367,7 @@ public class HostingIGoogleUtil {
      *
      * @author albert.cheng.ig@gmail.com
      */
-    static class IgPrefEditToken {
+    public static class IgPrefEditToken {
         private String pref;
         private String editToken;
 
