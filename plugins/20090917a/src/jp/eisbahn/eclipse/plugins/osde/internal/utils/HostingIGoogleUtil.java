@@ -40,8 +40,8 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
- * This iGoogle Utility class provides authentication and
- * hosting-gadget-related methods to interact with iGoogle
+ * This iGoogle utility class provides authentication and
+ * gadget-hosting related methods to interact with iGoogle
  * (http://www.google.com/ig) gadget container.
  * <p>
  * Samples of usages could be found at
@@ -78,7 +78,7 @@ public class HostingIGoogleUtil {
 
         String response = null;
         try {
-            response = requestAuthen(
+            response = requestAuthentication(
                 emailUserName, password, loginCaptchaToken, loginCaptchaAnswer);
             logger.fine("response:\n" + " " + response);
         } catch (IOException e) {
@@ -121,7 +121,7 @@ public class HostingIGoogleUtil {
      * @return http response as a String
      * @throws IOException
      */
-    private static String requestAuthen(String emailUserName, String password,
+    private static String requestAuthentication(String emailUserName, String password,
         String loginTokenOfCaptcha, String loginCaptchaAnswer)
         throws IOException {
 
@@ -161,20 +161,18 @@ public class HostingIGoogleUtil {
         }
 
         // Retrieve response.
-        InputStream inputStream = null;
-        String response = null;
+        int responseCode = urlConnection.getResponseCode();
+        InputStream inputStream = (responseCode == HttpURLConnection.HTTP_OK)
+                                  ? urlConnection.getInputStream()
+                                  : urlConnection.getErrorStream();;
         try {
-            int responseCode = urlConnection.getResponseCode();
-            inputStream = (responseCode == HttpURLConnection.HTTP_OK)
-                          ? urlConnection.getInputStream()
-                          : urlConnection.getErrorStream();
-            response = retrieveResponseStreamAsString(inputStream);
+            String response = retrieveResponseStreamAsString(inputStream);
+            return response;
         } finally {
             if (inputStream != null) {
                 inputStream.close();
             }
         }
-        return response;
     }
 
     /**
@@ -367,10 +365,9 @@ public class HostingIGoogleUtil {
         BufferedReader br = new BufferedReader(isr);
         String line;
         while ((line = br.readLine()) != null) {
-            sb.append('\n').append(line);
+            sb.append(line).append('\n');
         }
-        sb.deleteCharAt(0); // delete the first char ('\n') which is extra
-        return sb.toString();
+        return sb.substring(0, sb.length() - 1); // ignore the last '\n'
     }
 
     /**
