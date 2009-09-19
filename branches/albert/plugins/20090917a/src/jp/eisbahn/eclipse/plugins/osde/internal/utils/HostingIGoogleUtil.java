@@ -72,8 +72,7 @@ public class HostingIGoogleUtil {
      * @return the SID
      */
     static String retrieveSid(String emailUserName, String password,
-        String loginCaptchaToken, String loginCaptchaAnswer) {
-
+            String loginCaptchaToken, String loginCaptchaAnswer) {
         // TODO: Can we get sid and Ig...Token all together?
 
         String response = null;
@@ -112,7 +111,7 @@ public class HostingIGoogleUtil {
     }
 
     /**
-     * Makes a HTTP POST request.
+     * Makes a HTTP POST request for authentication.
      *
      * @param emailUserName the name of the user
      * @param password the password of the user
@@ -122,9 +121,8 @@ public class HostingIGoogleUtil {
      * @throws IOException
      */
     private static String requestAuthentication(String emailUserName, String password,
-        String loginTokenOfCaptcha, String loginCaptchaAnswer)
-        throws IOException {
-
+            String loginTokenOfCaptcha, String loginCaptchaAnswer)
+            throws IOException {
         // TODO: Refactor this method utilizing HttpPost.
 
         // Prepare connection.
@@ -161,6 +159,7 @@ public class HostingIGoogleUtil {
         }
 
         // Retrieve response.
+        // TODO Should the caller of this method need to know the responseCode?
         int responseCode = urlConnection.getResponseCode();
         InputStream inputStream = (responseCode == HttpURLConnection.HTTP_OK)
                                   ? urlConnection.getInputStream()
@@ -182,10 +181,10 @@ public class HostingIGoogleUtil {
      * @throws ClientProtocolException
      * @throws IOException
      */
+    // TODO: Change type of sourceFile from File to IFile.
     public static String uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
-        File sourceFile, String targetFilePath)
-        throws ClientProtocolException, IOException {
-
+            File sourceFile, String targetFilePath)
+            throws ClientProtocolException, IOException {
         // Verify prefEditToken.
         String editToken = prefEditToken.getEditToken();
         if (editToken == null) {
@@ -221,40 +220,35 @@ public class HostingIGoogleUtil {
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
-        throws ClientProtocolException, IOException {
-
+            throws ClientProtocolException, IOException {
         String url = URL_IG_GADGETS_BYTE_QUOTA + publicId;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
     static String retrieveQuotaByteUsed(String sid, String publicId)
-        throws ClientProtocolException, IOException {
-
+            throws ClientProtocolException, IOException {
         String url = URL_IG_GADGETS_BYTES_USED + publicId;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
     static String retrieveFileList(String sid, String publicId)
-        throws ClientProtocolException, IOException {
-
+            throws ClientProtocolException, IOException {
         String url = URL_IG_GADGETS_DIRECTORY + publicId;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
     static String retrieveFile(String sid, String publicId, String filePath)
-        throws ClientProtocolException, IOException {
-
+            throws ClientProtocolException, IOException {
         String url = URL_GMODULE_FILE + publicId + "/" + filePath;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
     static String retrievePublicId(String sid)
-        throws ClientProtocolException, IOException {
-
+            throws ClientProtocolException, IOException {
         String response = sendHttpRequestToIg(URL_IG_GADGETS, sid);
         return response;
     }
@@ -267,8 +261,7 @@ public class HostingIGoogleUtil {
      * @throws IOException
      */
     private static String sendHttpRequestToIg(String url, String sid)
-        throws ClientProtocolException, IOException {
-
+            throws ClientProtocolException, IOException {
         // Prepare HttpGet.
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader("Content-Type", "text/plain");
@@ -282,8 +275,7 @@ public class HostingIGoogleUtil {
     }
 
     static IgPrefEditToken retrieveIgPrefEditToken(String sid)
-        throws ClientProtocolException, IOException {
-
+            throws ClientProtocolException, IOException {
         HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
         httpGet.setHeader("Content-Type", "text/plain");
         httpGet.addHeader("Cookie", "SID=" + sid);
@@ -320,8 +312,8 @@ public class HostingIGoogleUtil {
     }
 
     private static String retrieveHttpResponseAsString(
-        HttpClient httpClient, HttpRequestBase httpRequest, HttpResponse httpResponse)
-        throws IOException {
+            HttpClient httpClient, HttpRequestBase httpRequest, HttpResponse httpResponse)
+            throws IOException {
         HttpEntity entity = httpResponse.getEntity();
         String response = null;
         if (entity != null) {
@@ -359,7 +351,7 @@ public class HostingIGoogleUtil {
      * @throws IOException
      */
     private static String retrieveResponseStreamAsString(InputStream inputStream)
-        throws IOException {
+            throws IOException {
         StringBuilder sb = new StringBuilder();
         InputStreamReader isr = new InputStreamReader(inputStream);
         BufferedReader br = new BufferedReader(isr);
