@@ -227,8 +227,10 @@ public class HostingIGoogleUtil {
         logger.fine("httpResponse: " + httpResponse);
         String statusLine = httpResponse.getStatusLine().toString();
         logger.info("statusLine: " + statusLine);
-        String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
-        logger.fine("response: " + response);
+        if (!"HTTP/1.1 201 Created".equals(statusLine)) {
+            String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
+            logger.warning("response: " + response);
+        }
         return statusLine;
     }
 
