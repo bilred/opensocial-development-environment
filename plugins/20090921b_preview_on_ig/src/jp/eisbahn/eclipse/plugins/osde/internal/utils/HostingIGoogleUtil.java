@@ -162,7 +162,7 @@ public class HostingIGoogleUtil {
         }
 
         // Retrieve response.
-        // TODO Should the caller of this method need to know the responseCode?
+        // TODO: Should the caller of this method need to know the responseCode?
         int responseCode = urlConnection.getResponseCode();
         InputStream inputStream = (responseCode == HttpURLConnection.HTTP_OK)
                                   ? urlConnection.getInputStream()
@@ -184,7 +184,6 @@ public class HostingIGoogleUtil {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    // TODO: Change type of sourceFile from File to IFile.
     public static String uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
             File sourceFile, String targetFilePath)
             throws ClientProtocolException, IOException {
