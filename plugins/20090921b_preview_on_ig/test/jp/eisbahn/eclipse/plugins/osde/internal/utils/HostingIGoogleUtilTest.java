@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.IgPrefEditToken;
 
 import org.apache.http.client.ClientProtocolException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.*;
@@ -44,21 +43,22 @@ public class HostingIGoogleUtilTest {
      * @throws IOException
      * @throws ClientProtocolException
      */
-    @Test @Ignore // TODO: Enable this test once it is ready.
+    @Test
     public void testAllMethods() throws ClientProtocolException, IOException {
-        // TODO: Create emailUserName and password for testing purpose.
         // TODO: Assert responses.
-        String emailUserName = "emailUserName";
-        String password = "password";
-        String sid = retrieveSid(emailUserName, password, null, null);
-        logger.fine("sid: " + sid);
-        String publicId = retrievePublicId(sid);
-        logger.fine("publicId: " + publicId);
-        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
-        logger.fine("pref: " + prefEditToken.getPref());
-        logger.fine("editToken: " + prefEditToken.getEditToken());
 
-        // TODO: Prepare sourceFile.
+        // Prepare Authentication.
+        String emailUserName = "osde.test.001";
+        String password = "osdetest888";
+        String sid = retrieveSid(emailUserName, password, null, null);
+        logger.info("sid: " + sid);
+        String publicId = retrievePublicId(sid);
+        logger.info("publicId: " + publicId);
+        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
+        logger.info("pref: " + prefEditToken.getPref());
+        logger.info("editToken: " + prefEditToken.getEditToken());
+
+        // Upload file.
         File sourceFile =
             new File("test/jp.eisbahn.eclipse.plugins.osde.internal/utils/dummy_gadget.xml");
         String targetFilePath = "dummy_gadget.xml";
@@ -66,6 +66,7 @@ public class HostingIGoogleUtilTest {
             uploadFile(sid, publicId, prefEditToken, sourceFile, targetFilePath);
         logger.info("uploadFileResult: " + uploadFileResult);
 
+        // Retrieve directory info.
         String quotaByte = retrieveQuotaByte(sid, publicId);
         logger.info("quotaByte: " + quotaByte);
         String quotaByteUsed = retrieveQuotaByteUsed(sid, publicId);
@@ -74,6 +75,8 @@ public class HostingIGoogleUtilTest {
         logger.info("fileList:\n" + fileList);
         String fileContent = retrieveFile(sid, publicId, targetFilePath);
         logger.info("fileContent:\n" + fileContent);
+        String previewUrl = formPreviewGadgetUrl(publicId, targetFilePath);
+        logger.info("previewUrl: " + previewUrl);
     }
 
 }
