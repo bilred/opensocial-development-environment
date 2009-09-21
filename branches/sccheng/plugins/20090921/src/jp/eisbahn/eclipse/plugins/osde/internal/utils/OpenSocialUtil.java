@@ -24,8 +24,6 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
@@ -33,15 +31,17 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.xml.sax.SAXException;
 
-import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.Module;
+import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserFactory;
+import com.google.gadgets.parser.ParserType;
 
 public class OpenSocialUtil {
 
 	public static ApplicationInformation createApplicationInformation(IFile file) throws CoreException, IOException, SAXException {
 		try {
-			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-			Module module = parser.parse(file.getContents());
+			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+			Module module = (Module)parser.parse(file.getContents());
 			String path = file.getFullPath().toPortableString();
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(path.getBytes("UTF-8"));
@@ -66,8 +66,8 @@ public class OpenSocialUtil {
 
 	public static ApplicationInformation createApplicationInformation(String url) throws CoreException, IOException, SAXException {
 		try {
-			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-			Module module = parser.parse(new URL(url).openStream());
+			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+			Module module = (Module)parser.parse(new URL(url).openStream());
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(url.getBytes("UTF-8"));
 			String appId = Gadgets.toHexString(hash);

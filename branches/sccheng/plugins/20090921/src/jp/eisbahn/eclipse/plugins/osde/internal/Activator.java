@@ -79,8 +79,6 @@ import org.hibernate.classic.Session;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import com.google.gadgets.GadgetXmlParser;
-
 /**
  * The activator class controls the plug-in life cycle
  * 
@@ -109,7 +107,6 @@ public class Activator extends AbstractUIPlugin {
 	private Session session;
 	private boolean runningShindig = false;
 	private LaunchApplicationInformation lastApplicationInformation;
-	private GadgetXmlParser gadgetXmlParser;
 
 	/**
 	 * The constructor
@@ -134,7 +131,6 @@ public class Activator extends AbstractUIPlugin {
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
 		registerIcon();
-		gadgetXmlParser = new GadgetXmlParser();
 	}
 
 	/**
@@ -516,10 +512,5 @@ public class Activator extends AbstractUIPlugin {
 			return null;
 		}
 	}
-	
-	public GadgetXmlParser getGadgetXmlParser() {
-		return gadgetXmlParser;
-	}
-	
 }
 
