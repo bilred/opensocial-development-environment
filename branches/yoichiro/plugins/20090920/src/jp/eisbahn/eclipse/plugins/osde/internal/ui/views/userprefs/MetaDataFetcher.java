@@ -62,7 +62,6 @@ public class MetaDataFetcher {
 			JSONArray errors = (JSONArray)gadget.get("errors");
 			String errorMsg = "";
 			for (Object error : errors) {
-				System.out.println(error.toString());
 				errorMsg += error.toString();
 			}
 			throw new IOException(errorMsg);

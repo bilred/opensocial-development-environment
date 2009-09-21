@@ -18,6 +18,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.widgets.Shell;
@@ -38,8 +39,7 @@ public class UserPrefsViewNotifier {
 					userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
 					userPrefsView.showUserPrefFields(information, url);
 				} catch (PartInitException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logging.error("Notifying to UserPrefs view failed.", e);
 					throw new IllegalStateException(e);
 				}
 			}

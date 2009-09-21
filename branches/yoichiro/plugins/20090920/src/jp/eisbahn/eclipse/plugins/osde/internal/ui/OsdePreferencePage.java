@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.core.runtime.CoreException;
@@ -258,11 +259,11 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 			Activator activator = Activator.getDefault();
 			(new DatabaseLaunchConfigurationCreator()).create(activator.getStatusMonitor());
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			Logging.error("Storing preference values failed.", e);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Logging.error("Storing preference values failed.", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logging.error("Storing preference values failed.", e);
 		}
 		return true;
 	}

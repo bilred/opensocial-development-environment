@@ -26,6 +26,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.eclipse.core.resources.IFile;
@@ -85,17 +87,13 @@ public class LocaleModel implements Comparable<LocaleModel> {
 					messages.put(name, value);
 				}
 			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logging.warn("Loading message bundle file failed.", e);
 			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logging.warn("Loading message bundle file failed.", e);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logging.warn("Loading message bundle file failed.", e);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logging.warn("Loading message bundle file failed.", e);
 			}
 		}
 	}

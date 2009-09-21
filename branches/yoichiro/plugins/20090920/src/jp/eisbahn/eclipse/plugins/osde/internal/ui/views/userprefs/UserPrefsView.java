@@ -29,6 +29,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInforma
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationJob;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
@@ -244,7 +245,7 @@ public class UserPrefsView extends AbstractView {
 					monitor.worked(1);
 					UserPrefsView.this.information = information;
 				} catch (final Exception e) {
-					e.printStackTrace();
+					Logging.error("To show the UserPrefs values failed.", e);
 					getSite().getShell().getDisplay().syncExec(new Runnable() {
 						public void run() {
 							MessageDialog.openError(getSite().getShell(), "Error", "Fetching metadata failed.\n" + e.getMessage());

@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -122,9 +123,9 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								destFile.setContents(in, true, false, monitor);
 							} catch (IOException e) {
-								e.printStackTrace();
+								Logging.warn("Building and copying the Gadget XML file failed.", e);
 							} catch (SAXException e) {
-								e.printStackTrace();
+								Logging.warn("Building and copying the Gadget XML file failed.", e);
 							}
 						}
 					}

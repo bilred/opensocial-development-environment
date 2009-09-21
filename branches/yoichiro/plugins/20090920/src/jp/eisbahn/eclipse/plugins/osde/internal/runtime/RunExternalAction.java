@@ -26,6 +26,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.shindig.social.opensocial.model.Person;
@@ -78,13 +79,13 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 		} catch(ConnectionException e) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Logging.warn("Invalid gadget file.", e);
 			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logging.warn("Invalid gadget file.", e);
 			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + e.getMessage());
 		} catch (SAXException e) {
-			e.printStackTrace();
+			Logging.warn("Invalid gadget file.", e);
 			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + e.getMessage());
 		}
 	}
@@ -98,8 +99,7 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 					userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
 					userPrefsView.showUserPrefFields(information, information.getUrl());
 				} catch (PartInitException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logging.warn("Notifying to UserPrefs view failed.", e);
 				}
 			}
 		});

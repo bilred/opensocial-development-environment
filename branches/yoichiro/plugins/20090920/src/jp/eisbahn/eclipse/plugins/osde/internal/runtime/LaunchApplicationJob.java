@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
 import org.eclipse.core.resources.IProject;
@@ -123,11 +124,9 @@ public class LaunchApplicationJob extends Job {
 						}
 						browser.openURL(new URL(kicker));
 					} catch (MalformedURLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Logging.error("Launching the Web Browser failed.", e);
 					} catch (PartInitException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Logging.error("Launching the Web Browser failed.", e);
 					}
 				}
 			});
@@ -135,13 +134,11 @@ public class LaunchApplicationJob extends Job {
 			monitor.done();
 			return Status.OK_STATUS;
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logging.warn("Launching your application failed.", e);
 			monitor.done();
 			return Status.CANCEL_STATUS;
 		} catch (ConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logging.warn("Launching your application failed.", e);
 			monitor.done();
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
 			return Status.CANCEL_STATUS;

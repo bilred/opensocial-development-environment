@@ -29,6 +29,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
@@ -174,9 +175,9 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								IOUtils.copy(in, out);
 							} catch(CoreException e) {
-								e.printStackTrace();
+								Logging.error("Exporting the project files failed.", e);
 							} catch (SAXException e) {
-								e.printStackTrace();
+								Logging.error("Exporting the project files failed.", e);
 							}
 						} else {
 							IOUtils.copy(orgFile.getContents(), out);

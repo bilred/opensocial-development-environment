@@ -92,6 +92,9 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "jp.eisbahn.eclipse.plugins.osde";
+	
+	// Work directory name for OSDE
+	private static final String WORK_DIR_NAME = ".osde";
 
 	// The shared instance
 	private static Activator plugin;
@@ -311,8 +314,7 @@ public class Activator extends AbstractUIPlugin {
 					userPrefsView.disconnectedDatabase();
 					monitor.worked(1);
 				} catch (PartInitException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logging.warn("Disconnecting Shindig Database failed.", e);
 				}
 			}
 		});
@@ -351,8 +353,7 @@ public class Activator extends AbstractUIPlugin {
 							UserPrefsView userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
 							userPrefsView.connectedDatabase();
 						} catch (PartInitException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							Logging.error("Connecting to Shindig Database failed.", e);
 						} catch(JDBCException e) {
 							MessageDialog.openError(
 									window.getShell(), "Error",
@@ -432,7 +433,7 @@ public class Activator extends AbstractUIPlugin {
 			Logging.error("Something went wrong while getting OSDE configurations.", e);
 			throw new IllegalStateException(e);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			Logging.error("Retrieving the preference values failed.", e);
 			throw new IllegalStateException(e);
 		}
 	}
@@ -441,24 +442,24 @@ public class Activator extends AbstractUIPlugin {
 		try {
 			IPreferenceStore store = getPreferenceStore();
 			OsdeConfig config = new OsdeConfig();
-			config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
-			config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
-			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
-			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
-			config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
-			config.setUseInternalDatabase(store.getBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
-			config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
-			config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
-			config.setExternalDatabasePort(store.getString(OsdeConfig.EXTERNAL_DATABASE_PORT));
-			config.setExternalDatabaseUsername(store.getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
-			config.setExternalDatabasePassword(store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
-			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
+			config.setDefaultCountry(store.getDefaultString(OsdeConfig.DEFAULT_COUNTRY));
+			config.setDefaultLanguage(store.getDefaultString(OsdeConfig.DEFAULT_LANGUAGE));
+			config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
+			config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
+			config.setJettyDir(store.getDefaultString(OsdeConfig.JETTY_DIR));
+			config.setUseInternalDatabase(store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
+			config.setExternalDatabaseType(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
+			config.setExternalDatabaseHost(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
+			config.setExternalDatabasePort(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PORT));
+			config.setExternalDatabaseUsername(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+			config.setExternalDatabasePassword(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+			config.setExternalDatabaseName(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
 			return config;
 		} catch(IOException e) {
-			e.printStackTrace();
+			Logging.error("Retrieving preference values failed.", e);
 			throw new IllegalStateException(e);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			Logging.error("Retrieving preference values failed.", e);
 			throw new IllegalStateException(e);
 		}
 	}
@@ -482,7 +483,7 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_TYPE, config.getExternalDatabaseType());
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_NAME, config.getExternalDatabaseName());
 		} catch(IOException e) {
-			e.printStackTrace();
+			Logging.error("Storing preference values failed.", e);
 			throw new IllegalStateException(e);
 		}
 	}
@@ -519,6 +520,18 @@ public class Activator extends AbstractUIPlugin {
 	
 	public GadgetXmlParser getGadgetXmlParser() {
 		return gadgetXmlParser;
+	}
+	
+	public File getWorkDirectory() {
+		String userHome = System.getProperty("user.home");
+		File workDir = new File(userHome, WORK_DIR_NAME);
+		if (!workDir.exists()) {
+			boolean result = workDir.mkdir();
+			if (!result) {
+				throw new IllegalStateException("Could not create the work directory. " + workDir.getAbsolutePath());
+			}
+		}
+		return workDir;
 	}
 	
 }
