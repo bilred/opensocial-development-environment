@@ -25,7 +25,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,10 +50,13 @@ import org.json.JSONObject;
 public class Translator {
 	
 	private static final String GOOGLE_TRANSLATE_URL_PREFIX = 
-		"http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=";
+		"http://ajax.googleapis.com/ajax/services/language/translate?v=1.0";
+	
+	private static URLConnection connection;
+	private static String referrer = "";
 	
 	/**
-	 * Translate a single string from one language to another
+	 * Translate a single string from one language to another.
 	 * 
 	 * @param text string to be translated
 	 * @param from language of the original string
@@ -59,32 +64,13 @@ public class Translator {
 	 * @return translated string in target language
 	 */
 	public static String translate(String text, Language from, Language to) {
+		String queryURL = constructQueryURL(text, from, to);
+		openConnection(queryURL);
+
+		// parse the response string into JSON object and return the desired result
 		try {
-			String queryURL = constructQueryURL(text, from, to);
-			URL url = new URL(queryURL);
-			URLConnection connection = url.openConnection();
-			connection.addRequestProperty("Referer",
-					"http://code.google.com/p/opensocial-development-environment");
-			
-			// read in the response from Google translate and construct a string to store it
-			String line;
-			StringBuilder builder = new StringBuilder();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			while((line = reader.readLine()) != null) {
-				builder.append(line);
-			}
-			reader.close();
-			
-			// parse the response string into JSON object and return the desired result
-			JSONObject json = new JSONObject(builder.toString());
-			String result = json.getJSONObject("responseData").getString("translatedText");
-			return result;
-		} catch (MalformedURLException ex) {
-			System.err.println("Invalid server url for Google Translate API");
-			ex.printStackTrace();
-		} catch (IOException ioe) {
-			System.err.println("Can't establish connections to Google Translate service");
-			ioe.printStackTrace();
+			JSONObject json = new JSONObject(getJSONResponse());
+			return json.getJSONObject("responseData").getString("translatedText");
 		} catch (JSONException jse) {
 			System.err.println("Can't parse the response from Google Translate service into JSON object");
 			jse.printStackTrace();
@@ -92,18 +78,196 @@ public class Translator {
 		return null;
 	}
 	
-	private static String constructQueryURL(String text, Language from, Language to) {
-		StringBuilder result = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
+	/**
+	 * Translate a given string into different target languages
+	 * (Batch interface for clients)
+	 * 
+	 * @param text string to be translated
+	 * @param fromLanguage original language of text
+	 * @param toLanguages target languages of translations of text
+	 * @return translations of text in different languages
+	 */
+	public static ArrayList<String> translate(String text, Language fromLanguage, Language... toLanguages) {
+		String queryURL = constructQueryURL(text, fromLanguage, toLanguages);
+		openConnection(queryURL);
+		String response = getJSONResponse();
+		return retrieveMultipleResultsFromJSONResponse(response);
+	}
+	
+	/**
+	 * Translate multiple strings from one language to another in batch
+	 * (Batch interface for clients)
+	 * 
+	 * @param fromLanguage
+	 * @param toLanguage
+	 * @param texts
+	 * @return translations for every string in texts from fromLanguage to toLanguage
+	 */
+	public static ArrayList<String> translate(Language fromLanguage, Language toLanguage, String... texts) {
+		String queryURL = constructQueryURL(fromLanguage, toLanguage, texts);
+		openConnection(queryURL);
+		String response = getJSONResponse();
+		return retrieveMultipleResultsFromJSONResponse(response);
+	}
+	
+	/**
+	 * Set the referrer who is using Google Translate API
+	 * @param referrer
+	 */
+	public static void setReferrer(String referrer) {
+		Translator.referrer = referrer;
+	}
+	
+	/**
+	 * Opens connection and set referrer for the connection
+	 * 
+	 * @param queryURL
+	 */
+	private static void openConnection(String queryURL) {
 		try {
-			result.append(URLEncoder.encode(text, "UTF-8"));
+			URL url = new URL(queryURL);
+			connection = url.openConnection();
+			connection.addRequestProperty("Referrer", referrer);
+		} catch (MalformedURLException ex) {
+			System.err.println("Invalid server url for Google Translate API");
+			ex.printStackTrace();
+		} catch (IOException ioe) {
+			System.err.println("Can't establish connections to Google Translate service");
+			ioe.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Get response from Google Translate. This method assumes the connection is successfully established.
+	 * Otherwise an IOException will be caught
+	 * 
+	 * @return response in String
+	 */
+	private static String getJSONResponse() {
+		String line;
+		StringBuilder builder = new StringBuilder();
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			while((line = reader.readLine()) != null) {
+				builder.append(line);
+			}
+			reader.close();
+		} catch (IOException ioe) {
+			System.err.println("Error fetching data from Google Translate API");
+			ioe.printStackTrace();
+		}
+		
+		return builder.toString();
+	}
+	
+	/**
+	 * Retrives multiple results if there are more than one translation results in the response.
+	 * This method is called when the client uses batch interface for translation.
+	 * 
+	 * @param JSONResponse response from Google Translate
+	 * @return A list of translations in String
+	 */
+	private static ArrayList<String> retrieveMultipleResultsFromJSONResponse(String JSONResponse) {
+		// parse the response using JSON libraries
+		try {
+			JSONObject json = new JSONObject(JSONResponse);
+			JSONArray responseData = json.getJSONArray("responseData");
+			ArrayList<String> results = new ArrayList<String>();
+			for (int i = 0; i < responseData.length(); ++i) {
+				results.add(responseData.getJSONObject(i).getJSONObject("responseData").getString("translatedText"));
+			}
+			return results;
+		} catch (JSONException jse) {
+			System.err.println("Can't parse the response from Google Translate service into JSON object");
+			jse.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Encode the text to be translated and construct query parameter to be embedded into query URL
+	 * 
+	 * @param text string to be translated
+	 * @return "&q=encoded_text"
+	 */
+	private static String encodeAndConstructQueryText(String text) {
+		StringBuilder result = new StringBuilder();
+		try {
+			result.append("&q=").append(URLEncoder.encode(text, "UTF-8"));
 		} catch (UnsupportedEncodingException ex) {
 			System.err.println("Error during encoding the text to be tranlated.");
 		}
-		result.append("&langpair=");
-		result.append(from.getLanCode());
+		
+		return result.toString();
+	}
+	
+	/**
+	 * Construct language pair parameter for the query URL
+	 * 
+	 * @param fromLanguage
+	 * @param toLanguage
+	 * @return "&langpair=fromLanguage|toLanguage"
+	 */
+	private static String constructLangpairQuery(Language fromLanguage, Language toLanguage) {
+		StringBuilder result = new StringBuilder();
+		result.append("&langpair=").append(fromLanguage.getLangCode());
 		result.append("%7C"); // %7C is the character "|" in the encoded url
-		result.append(to.getLanCode());
+		result.append(toLanguage.getLangCode());
+		
+		return result.toString();
+	}
+	
+	/**
+	 * Construct 1:1 translation query URL to be fed to Google Translate API
+	 * 
+	 * @param text string to be translated
+	 * @param from original Language of text
+	 * @param to target Language of translated text
+	 * @return "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=text&langpair=from|to"
+	 */
+	private static String constructQueryURL(String text, Language fromLanguage, Language toLanguage) {
+		StringBuilder result = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
+		result.append(encodeAndConstructQueryText(text));
+		result.append(constructLangpairQuery(fromLanguage, toLanguage));
 
+		return result.toString();
+	}
+	
+	/**
+	 * Construct 1:many translation query URL to be fed to Google Translate API
+	 * 
+	 * @param text string to be translated
+	 * @param fromLanguage original language of text
+	 * @param toLanguages target languages of translation
+	 * @return Example: "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0
+	 * &q=text&langpair=fromLanguage|toLanguages[0]&lanpair=fromLanguage|toLanguages[1]..."
+	 */
+	private static String constructQueryURL(String text, Language fromLanguage, Language... toLanguages) {
+		StringBuilder result = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
+		result.append(encodeAndConstructQueryText(text));
+		for (Language toLanguage : toLanguages) {
+			result.append(constructLangpairQuery(fromLanguage, toLanguage));
+		}
+		
+		return result.toString();
+	}
+	
+	/**
+	 * Constructs query URL for multiple string translations from fromLanguage to toLanguage
+	 * 
+	 * @param fromLanguage
+	 * @param toLanguage
+	 * @param texts
+	 * @return Example: "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0
+	 * &q=texts[0]&q=texts[1]&langpair=fromLanguage|toLanguage"
+	 */
+	private static String constructQueryURL(Language fromLanguage, Language toLanguage, String... texts) {
+		StringBuilder result = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
+		for (String text : texts) {
+			result.append(encodeAndConstructQueryText(text));
+		}
+		result.append(constructLangpairQuery(fromLanguage, toLanguage));
 		return result.toString();
 	}
 }
