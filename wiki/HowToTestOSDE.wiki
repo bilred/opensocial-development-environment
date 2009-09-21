@@ -1,5 +1,5 @@
 #summary Testing as a Fragment Project in OSDE
-#labels OSDE,Featured,Phase-QA,EclipsePlug-in,OpenSocial
+#labels OSDE,Phase-Implementation,Phase-QA,EclipsePlug-in,OpenSocial
 
 = Introduction =
 
