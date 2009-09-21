@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.basic.ModulePrefsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.contents.ContentsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.locale.LocalePage;
@@ -47,9 +46,11 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.xml.sax.SAXException;
 
-import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.Module;
+import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserFactory;
+import com.google.gadgets.parser.ParserType;
 
 public class GadgetXmlEditor extends FormEditor {
 	
@@ -80,13 +81,8 @@ public class GadgetXmlEditor extends FormEditor {
 		try {
 			IFile file = (IFile)input.getAdapter(IResource.class);
 			setPartName(file.getName());
-			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
-			module = parser.parse(file.getContents());
-		} catch (IOException e) {
-			throw new PartInitException(e.getMessage(), e);
-		} catch (SAXException e) {
-//			throw new PartInitException(e.getMessage(), e);
-			initializeFailed = true;
+			IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+			module = (Module) gadgetXMLParser.parse(file.getContents());
 		} catch (CoreException e) {
 			throw new PartInitException(e.getMessage(), e);
 		}
@@ -125,14 +121,9 @@ public class GadgetXmlEditor extends FormEditor {
 			addPageChangedListener(new IPageChangedListener() {
 				public void pageChanged(PageChangedEvent event) {
 					try {
-						GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+						IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 						parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
 					} catch (IOException e) {
-						MessageDialog.openError(getSite().getShell(), "Error",
-								"Syntax error: " + e.getMessage());
-						setActiveEditor(sourceEditor);
-						return;
-					} catch (SAXException e) {
 						MessageDialog.openError(getSite().getShell(), "Error",
 								"Syntax error: " + e.getMessage());
 						setActiveEditor(sourceEditor);
@@ -217,9 +208,9 @@ public class GadgetXmlEditor extends FormEditor {
 	private void reflectModel() throws IOException, SAXException {
 		reflecting = true;
 		try {
-			GadgetXmlParser parser = Activator.getDefault().getGadgetXmlParser();
+			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			String content = getSource();
-			changeModel(parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
+			changeModel((Module) parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
 		} finally {
 			reflecting = false;
 		}

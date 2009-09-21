@@ -199,12 +199,4 @@ public class ActivatorTest {
         // TODO: implement test method
     }
 
-    /**
-     * Test method for {@link Activator#getGadgetXmlParser()}.
-     */
-    @Test
-    public void testGetGadgetXmlParser() {
-        // TODO: implement test method
-    }
-
 }
