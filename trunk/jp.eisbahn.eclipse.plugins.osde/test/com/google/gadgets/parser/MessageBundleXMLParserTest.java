@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.google.gadgets;
+package com.google.gadgets.parser;
 
 import com.google.gadgets.MessageBundle;
 import com.google.gadgets.MessageBundle.Msg;
@@ -24,20 +24,25 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  *
  */
-public class MessageBundleXMLParserTest {
+public class MessageBundleXMLParserTest extends TestCase {
 
 	private MessageBundleXMLParser msgBundleParser;
 	private FileWriter fout;
 	private File fin;
+	
+	public MessageBundleXMLParserTest (String testName) {
+		super(testName);
+	}
 	
 	/**
 	 * @throws java.lang.Exception
@@ -62,18 +67,21 @@ public class MessageBundleXMLParserTest {
 	}
 
 	@Test
-	public void testParsing() throws Exception {
+	public void testParse() throws Exception {
 		fin = new File("test.txt");
-		MessageBundle msgBundle = msgBundleParser.parse(fin);
+		assertFalse(msgBundleParser == null);
+		MessageBundle msgBundle = (MessageBundle)msgBundleParser.parse(fin);
+		assertFalse(msgBundle == null);
 		List<Msg> messages = msgBundle.getMessages();
 		assertEquals(messages.size(), 8);
 	}
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@After
 	public void tearDown() throws Exception {
-		fin.delete();
+		fin.deleteOnExit();
 	}
 
 }

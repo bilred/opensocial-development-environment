@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.util.List;
 
-import com.google.gadgets.GadgetXmlParser;
 import com.google.gadgets.Module;
 import com.google.gadgets.Param;
 import com.google.gadgets.Module.Content;
@@ -41,17 +40,20 @@ import com.google.gadgets.Module.ModulePrefs.OAuth.Service.Access;
 import com.google.gadgets.Module.ModulePrefs.OAuth.Service.Authorization;
 import com.google.gadgets.Module.ModulePrefs.OAuth.Service.Request;
 import com.google.gadgets.Module.UserPref.EnumValue;
+import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserFactory;
+import com.google.gadgets.parser.ParserType;
 
 import junit.framework.TestCase;
 
 public class GadgetXmlLoadTest extends TestCase {
 	
-	private GadgetXmlParser target;
+	private IParser target;
 	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		target = new GadgetXmlParser();
+		target = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 	}
 
 	@Override
@@ -63,7 +65,7 @@ public class GadgetXmlLoadTest extends TestCase {
 	public void testParseGadgetXml() throws Exception {
 		File file = new File("test/test_gadget.xml");
 		FileInputStream in = new FileInputStream(file);
-		Module module = target.parse(in);
+		Module module = (Module) target.parse(in);
 		assertNotNull(module);
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		assertNotNull(modulePrefs);
