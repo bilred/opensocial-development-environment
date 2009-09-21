@@ -24,110 +24,113 @@ package com.google.api.translate;
  *
  */
 public enum Language {
-	AFRIKAANS("af"),
-	ALBANIAN("sq"),
-	AMHARIC("am"),
-	ARABIC("ar"),
-	ARMENIAN("hy"),
-	AZERBAIJANI("az"),
-	BASQUE("eu"),
-	BELARUSIAN("be"),
-	BENGALI("bn"),
-	BIHARI("bh"),
-	BULGARIAN("bg"),
-	BURMESE("my"),
-	CATALAN("ca"),
-	CHEROKEE("chr"),
-	CHINESE("zh"),
-	CHINESE_SIMPLIFIED("zh-CN"),
-	CHINESE_TRADITIONAL("zh-TW"),
-	CROATIAN("hr"),
-	CZECH("cs"),
-	DANISH("da"),
-	DHIVEHI("dv"),
-	DUTCH("nl"),  
-	ENGLISH("en"),
-	ESPERANTO("eo"),
-	ESTONIAN("et"),
-	FILIPINO("tl"),
-	FINNISH("fi"),
-	FRENCH("fr"),
-	GALICIAN("gl"),
-	GEORGIAN("ka"),
-	GERMAN("de"),
-	GREEK("el"),
-	GUARANI("gn"),
-	GUJARATI("gu"),
-	HEBREW("iw"),
-	HINDI("hi"),
-	HUNGARIAN("hu"),
-	ICELANDIC("is"),
-	INDONESIAN("id"),
-	INUKTITUT("iu"),
-	ITALIAN("it"),
-	JAPANESE("ja"),
-	KANNADA("kn"),
-	KAZAKH("kk"),
-	KHMER("km"),
-	KOREAN("ko"),
-	KURDISH("ku"),
-	KYRGYZ("ky"),
-	LAOTHIAN("lo"),
-	LATVIAN("lv"),
-	LITHUANIAN("lt"),
-	MACEDONIAN("mk"),
-	MALAY("ms"),
-	MALAYALAM("ml"),
-	MALTESE("mt"),
-	MARATHI("mr"),
-	MONGOLIAN("mn"),
-	NEPALI("ne"),
-	NORWEGIAN("no"),
-	ORIYA("or"),
-	PASHTO("ps"),
-	PERSIAN("fa"),
-	POLISH("pl"),
-	PORTUGUESE("pt-PT"),
-	PUNJABI("pa"),
-	ROMANIAN("ro"),
-	RUSSIAN("ru"),
-	SANSKRIT("sa"),
-	SERBIAN("sr"),
-	SINDHI("sd"),
-	SINHALESE("si"),
-	SLOVAK("sk"),
-	SLOVENIAN("sl"),
-	SPANISH("es"),
-	SWAHILI("sw"),
-	SWEDISH("sv"),
-	TAJIK("tg"),
-	TAMIL("ta"),
-	TAGALOG("tl"),
-	TELUGU("te"),
-	THAI("th"),
-	TIBETAN("bo"),
-	TURKISH("tr"),
-	UKRAINIAN("uk"),
-	URDU("ur"),
-	UZBEK("uz"),
-	UIGHUR("ug"),
-	VIETNAMESE("vi");
+	  AFRIKAANS("af"),
+	  ALBANIAN("sq"),
+	  AMHARIC("am"),
+	  ARABIC("ar"),
+	  ARMENIAN("hy"),
+	  AZERBAIJANI("az"),
+	  BASQUE("eu"),
+	  BELARUSIAN("be"),
+	  BENGALI("bn"),
+	  BIHARI("bh"),
+	  BULGARIAN("bg"),
+	  BURMESE("my"),
+	  CATALAN("ca"),
+	  CHEROKEE("chr"),
+	  CHINESE("zh"),
+	  CHINESE_SIMPLIFIED("zh-CN"),
+	  CHINESE_TRADITIONAL("zh-TW"),
+	  CROATIAN("hr"),
+	  CZECH("cs"),
+	  DANISH("da"),
+	  DHIVEHI("dv"),
+	  DUTCH("nl"),  
+	  ENGLISH("en"),
+	  ESPERANTO("eo"),
+	  ESTONIAN("et"),
+	  FILIPINO("tl"),
+	  FINNISH("fi"),
+	  FRENCH("fr"),
+	  GALICIAN("gl"),
+	  GEORGIAN("ka"),
+	  GERMAN("de"),
+	  GREEK("el"),
+	  GUARANI("gn"),
+	  GUJARATI("gu"),
+	  HEBREW("iw"),
+	  HINDI("hi"),
+	  HUNGARIAN("hu"),
+	  ICELANDIC("is"),
+	  INDONESIAN("id"),
+	  INUKTITUT("iu"),
+	  IRISH("ga"),
+	  ITALIAN("it"),
+	  JAPANESE("ja"),
+	  KANNADA("kn"),
+	  KAZAKH("kk"),
+	  KHMER("km"),
+	  KOREAN("ko"),
+	  KURDISH("ku"),
+	  KYRGYZ("ky"),
+	  LAOTHIAN("lo"),
+	  LATVIAN("lv"),
+	  LITHUANIAN("lt"),
+	  MACEDONIAN("mk"),
+	  MALAY("ms"),
+	  MALAYALAM("ml"),
+	  MALTESE("mt"),
+	  MARATHI("mr"),
+	  MONGOLIAN("mn"),
+	  NEPALI("ne"),
+	  NORWEGIAN("no"),
+	  ORIYA("or"),
+	  PASHTO("ps"),
+	  PERSIAN("fa"),
+	  POLISH("pl"),
+	  PORTUGUESE("pt-PT"),
+	  PUNJABI("pa"),
+	  ROMANIAN("ro"),
+	  RUSSIAN("ru"),
+	  SANSKRIT("sa"),
+	  SERBIAN("sr"),
+	  SINDHI("sd"),
+	  SINHALESE("si"),
+	  SLOVAK("sk"),
+	  SLOVENIAN("sl"),
+	  SPANISH("es"),
+	  SWAHILI("sw"),
+	  SWEDISH("sv"),
+	  TAJIK("tg"),
+	  TAMIL("ta"),
+	  TAGALOG("tl"),
+	  TELUGU("te"),
+	  THAI("th"),
+	  TIBETAN("bo"),
+	  TURKISH("tr"),
+	  UKRAINIAN("uk"),
+	  URDU("ur"),
+	  UZBEK("uz"),
+	  UIGHUR("ug"),
+	  VIETNAMESE("vi"),
+	  WELSH("cy"),
+	  YIDDISH("yi");
 	
-	private final String lanCode;
+	private final String langCode;
 	
 	private Language(String lanCode) {
-		this.lanCode = lanCode;
+		this.langCode = lanCode;
 	}
 	
 	/**
 	 * Determines if the given language is supported in Google Translate API
 	 * 
-	 * @param lanCode incoming query of language code
-	 * @return true if lanCode is supported in Google Translate API
+	 * @param langCode incoming query of language code
+	 * @return true if langCode is supported in Google Translate API
 	 */
-	public static boolean isSupported(String lanCode) {
+	public static boolean isSupported(String langCode) {
 		for (Language language : values()) {
-			if (lanCode.equals(language.lanCode)) {
+			if (langCode.equals(language.langCode)) {
 				return true;
 			}
 		}
@@ -140,12 +143,12 @@ public enum Language {
 	 * except that isSupported() returns true or false to indicate if a given language
 	 * code is supported. And this method returns explicitly a Language object or null. 
 	 * 
-	 * @param lanCode a String that represents the language code
+	 * @param langCode a String that represents the language code
 	 * @return Language object of the language code
 	 */
-	public static Language fromString(String lanCode) {
+	public static Language fromString(String langCode) {
 		for (Language language : values()) {
-			if (lanCode.equals(language.lanCode)) {
+			if (langCode.equals(language.langCode)) {
 				return language;
 			}
 		}
@@ -157,7 +160,7 @@ public enum Language {
 	 * 
 	 * @return language code of this language
 	 */
-	public String getLanCode() {
-		return this.lanCode;
+	public String getLangCode() {
+		return this.langCode;
 	}
 }

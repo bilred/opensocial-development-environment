@@ -17,11 +17,15 @@
  */
 package com.google.api.translate;
 
+import java.util.ArrayList;
+
 import com.google.api.translate.Language;
 import com.google.api.translate.Translator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -34,7 +38,7 @@ public class TranslatorTest {
 	@Before
 	public void setUp() throws Exception {
 	}
-
+	
 	@Test
 	public void testChineseToEnglishTranslation() {
 		String str = Translator.translate("雷射", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
@@ -53,6 +57,22 @@ public class TranslatorTest {
 		assertTrue("測試".equals(str));
 	}
 
+	@Test
+	public void testOneToManyTranslations() {
+		ArrayList<String> results = Translator.translate("hello world", Language.ENGLISH, Language.ITALIAN, Language.FRENCH);
+		assertEquals(results.size(), 2);
+		assertTrue("ciao a tutti".equals(results.get(0)));
+		assertTrue("Bonjour tout le monde".equals(results.get(1)));
+	}
+	
+	@Test
+	public void testMultipleStringsTranslations() {
+		ArrayList<String> results = Translator.translate(Language.ENGLISH, Language.ITALIAN, "hello world", "goodbye");
+		assertEquals(results.size(), 2);
+		assertTrue("ciao a tutti".equals(results.get(0)));
+		assertTrue("arrivederci".equals(results.get(1)));
+	}
+	
 	@After
 	public void tearDown() throws Exception {
 	}
