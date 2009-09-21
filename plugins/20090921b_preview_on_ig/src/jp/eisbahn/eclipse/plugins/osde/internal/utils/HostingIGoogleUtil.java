@@ -71,9 +71,12 @@ public class HostingIGoogleUtil {
      *
      * @return the SID
      */
-    static String retrieveSid(String emailUserName, String password,
+    public static String retrieveSid(String emailUserName, String password,
             String loginCaptchaToken, String loginCaptchaAnswer) {
         // TODO: Can we get sid and Ig...Token all together?
+
+        logger.info("emailUserName: " + emailUserName);
+        logger.info("password: " + password);
 
         String response = null;
         try {
@@ -197,21 +200,32 @@ public class HostingIGoogleUtil {
             return "ERROR: pref is null";
         }
 
+        // Verify sourceFile.
+        if (sourceFile.getTotalSpace() <= 0) {
+            logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
+            logger.severe("sourceFile space: " + sourceFile.getTotalSpace());
+            return null;
+        }
+
         // Prepare HttpPost.
         String url = URL_IG_GADGETS_FILE + publicId + "/" + targetFilePath + "?et=" + editToken;
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
         FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
+        logger.fine("fileEntity length: " + fileEntity.getContentLength());
         httpPost.setEntity(fileEntity);
         httpPost.setHeader("Content-Type", "text/plain");
 
         // Cookie PREF must be placed before SID.
+        logger.fine("preparing headers");
         httpPost.addHeader("Cookie", "PREF=" + pref);
         httpPost.addHeader("Cookie", "SID=" + sid);
 
         // Execute request.
+        logger.fine("preparing HttpClient");
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpPost);
+        logger.fine("httpResponse: " + httpResponse);
         String statusLine = httpResponse.getStatusLine().toString();
         logger.info("statusLine: " + statusLine);
         String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
@@ -242,12 +256,16 @@ public class HostingIGoogleUtil {
 
     static String retrieveFile(String sid, String publicId, String filePath)
             throws ClientProtocolException, IOException {
-        String url = URL_GMODULE_FILE + publicId + "/" + filePath;
+        String url = formHostedFileUrl(publicId, filePath);
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
-    static String retrievePublicId(String sid)
+    private static String formHostedFileUrl(String publicId, String filePath) {
+        return URL_GMODULE_FILE + publicId + "/" + filePath;
+    }
+
+    public static String retrievePublicId(String sid)
             throws ClientProtocolException, IOException {
         String response = sendHttpRequestToIg(URL_IG_GADGETS, sid);
         return response;
@@ -274,7 +292,7 @@ public class HostingIGoogleUtil {
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
-    static IgPrefEditToken retrieveIgPrefEditToken(String sid)
+    public static IgPrefEditToken retrieveIgPrefEditToken(String sid)
             throws ClientProtocolException, IOException {
         HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
         httpGet.setHeader("Content-Type", "text/plain");
@@ -360,6 +378,12 @@ public class HostingIGoogleUtil {
             sb.append(line).append('\n');
         }
         return sb.substring(0, sb.length() - 1); // ignore the last '\n'
+    }
+
+    public static String formPreviewGadgetUrl(String publicId, String filePath) {
+        // TODO: support various views, languages, and countries.
+        String hostedFileUrl = formHostedFileUrl(publicId, filePath);
+        return "http://www.gmodules.com/gadgets/ifr?&view=home&hl=en&gl=us&url=" + hostedFileUrl;
     }
 
     /**
