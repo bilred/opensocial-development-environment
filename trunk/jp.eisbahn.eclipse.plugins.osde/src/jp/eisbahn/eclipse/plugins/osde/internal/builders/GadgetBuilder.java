@@ -102,6 +102,11 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 							try {
 								IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 								Module module = (Module)gadgetXMLParser.parse(orgFile.getContents());
+								
+								// TODO: if module is null, that means we are visiting an external message bundle file
+								// we should use message bundle parser for this file instead
+								if (module == null) return false;
+								
 								List<Content> contents = module.getContent();
 								Random rnd = new Random();
 								for (Content content : contents) {
