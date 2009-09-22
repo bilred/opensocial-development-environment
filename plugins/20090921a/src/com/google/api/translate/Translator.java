@@ -67,7 +67,7 @@ public class Translator {
 	 * @param to target language of the translation
 	 * @return translated string in target language
 	 */
-	public synchronized String translate(String text, Language from, Language to) {
+	public String translate(String text, Language from, Language to) {
 		StringBuilder builder = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
 		constructQueryURL(builder, text, from, to);
 		openConnection(builder.toString());
@@ -92,7 +92,7 @@ public class Translator {
 	 * @param toLanguages target languages of translations of text
 	 * @return translations of text in different languages
 	 */
-	public synchronized ArrayList<String> translate(String text, Language fromLanguage, Language... toLanguages) {
+	public ArrayList<String> translate(String text, Language fromLanguage, Language... toLanguages) {
 		StringBuilder builder = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
 		constructQueryURL(builder, text, fromLanguage, toLanguages);
 		openConnection(builder.toString());
@@ -109,7 +109,7 @@ public class Translator {
 	 * @param texts
 	 * @return translations for every string in texts from fromLanguage to toLanguage
 	 */
-	public synchronized ArrayList<String> translate(Language fromLanguage, Language toLanguage, String... texts) {
+	public ArrayList<String> translate(Language fromLanguage, Language toLanguage, String... texts) {
 		StringBuilder builder = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
 		constructQueryURL(builder, fromLanguage, toLanguage, texts);
 		openConnection(builder.toString());
