@@ -45,31 +45,31 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
 
     private String username;
     private String password;
-	private boolean useExternalBrowser;
-	private Text usernameText;
-	private Text passwordText;
-	private Button useExternalBrowserCheckbox;
+    private boolean useExternalBrowser;
+    private Text usernameText;
+    private Text passwordText;
+    private Button useExternalBrowserCheckbox;
 
-	public PreviewIGoogleDialog(Shell shell) {
-		super(shell);
-	}
+    public PreviewIGoogleDialog(Shell shell) {
+        super(shell);
+    }
 
-	@Override
-	protected Control createDialogArea(Composite parent) {
-	    logger.fine("createDialogArea");
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        logger.fine("createDialogArea");
 
-	    // Set title and message.
-		setTitle("Preview Gadget on iGoogle");
-		setMessage("Please enter your gmail account info.");
+        // Set title and message.
+        setTitle("Preview Gadget on iGoogle");
+        setMessage("Please enter your gmail account info.");
 
-		// Prepare composite and panel.
-		Composite composite = (Composite) super.createDialogArea(parent);
-		Composite panel = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		panel.setLayoutData(layoutData);
+        // Prepare composite and panel.
+        Composite composite = (Composite) super.createDialogArea(parent);
+        Composite panel = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        panel.setLayout(layout);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        panel.setLayoutData(layoutData);
 
         // Prepare username.
         Label usernameLabel = new Label(panel, SWT.RIGHT);
@@ -92,53 +92,53 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
         layoutData.horizontalSpan = 1;
         passwordText.setLayoutData(layoutData);
 
-		// Prepare checkbox of useExternalBrowser.
-		useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
-		useExternalBrowserCheckbox.setText("Use an external Web browser.");
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = 2;
-		useExternalBrowserCheckbox.setLayoutData(layoutData);
-		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
-		if (!browserSupport.isInternalWebBrowserAvailable()) {
-			useExternalBrowserCheckbox.setSelection(true);
-			useExternalBrowserCheckbox.setEnabled(false);
-		}
+        // Prepare checkbox of useExternalBrowser.
+        useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
+        useExternalBrowserCheckbox.setText("Use an external Web browser.");
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        layoutData.horizontalSpan = 2;
+        useExternalBrowserCheckbox.setLayoutData(layoutData);
+        IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+        if (!browserSupport.isInternalWebBrowserAvailable()) {
+            useExternalBrowserCheckbox.setSelection(true);
+            useExternalBrowserCheckbox.setEnabled(false);
+        }
 
-		return composite;
-	}
+        return composite;
+    }
 
-	@Override
-	protected Point getInitialSize() {
+    @Override
+    protected Point getInitialSize() {
         logger.fine("getInitialSize");
-		return new Point(550, 400);
-	}
+        return new Point(550, 400);
+    }
 
-	@Override
-	protected void okPressed() {
+    @Override
+    protected void okPressed() {
         logger.fine("okPressed");
 
         username = usernameText.getText();
         logger.fine("username: " + username);
         password = passwordText.getText();
         logger.fine("password: " + password);
-		useExternalBrowser = useExternalBrowserCheckbox.getSelection();
-		logger.fine("useExternalBrowser: " + useExternalBrowser);
+        useExternalBrowser = useExternalBrowserCheckbox.getSelection();
+        logger.fine("useExternalBrowser: " + useExternalBrowser);
 
-		logger.fine("gonna setReturnCode");
-		setReturnCode(OK);
-		logger.fine("gonna close");
-		close();
-	}
+        logger.fine("gonna setReturnCode");
+        setReturnCode(OK);
+        logger.fine("gonna close");
+        close();
+    }
 
-	String getUserName() {
-	    return username;
-	}
+    String getUsername() {
+        return username;
+    }
 
-	String getPassword() {
-	    return password;
-	}
+    String getPassword() {
+        return password;
+    }
 
-	boolean isUseExternalBrowser() {
-		return useExternalBrowser;
-	}
+    boolean isUseExternalBrowser() {
+        return useExternalBrowser;
+    }
 }

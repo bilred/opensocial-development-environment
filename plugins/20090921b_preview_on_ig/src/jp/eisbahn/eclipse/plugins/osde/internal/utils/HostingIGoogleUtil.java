@@ -28,6 +28,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -225,13 +227,14 @@ public class HostingIGoogleUtil {
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpPost);
         logger.fine("httpResponse: " + httpResponse);
-        String statusLine = httpResponse.getStatusLine().toString();
-        logger.info("statusLine: " + statusLine);
-        if (!"HTTP/1.1 201 Created".equals(statusLine)) {
+        StatusLine statusLine = httpResponse.getStatusLine();
+        if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
             String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
             logger.warning("response: " + response);
         }
-        return statusLine;
+        String statusLineString = statusLine.toString();
+        logger.info("statusLine: " + statusLineString);
+        return statusLineString;
     }
 
     static String retrieveQuotaByte(String sid, String publicId)

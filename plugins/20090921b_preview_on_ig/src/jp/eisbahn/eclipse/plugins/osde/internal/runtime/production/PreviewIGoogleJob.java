@@ -58,64 +58,64 @@ public class PreviewIGoogleJob extends Job {
     private Shell shell;
     private String username;
     private String password;
-	private boolean useExternalBrowser;
-	private IFile gadgetXmlFile;
+    private boolean useExternalBrowser;
+    private IFile gadgetXmlFile;
 
-	public PreviewIGoogleJob(String jobName, Shell shell, String username, String password,
-	        boolean useExternalBrowser, IFile gadgetXmlFile) {
-		super(jobName);
-		this.jobName = jobName;
+    public PreviewIGoogleJob(String jobName, Shell shell, String username, String password,
+            boolean useExternalBrowser, IFile gadgetXmlFile) {
+        super(jobName);
+        this.jobName = jobName;
         this.shell = shell;
         this.username = username;
         this.password = password;
         this.useExternalBrowser = useExternalBrowser;
         this.gadgetXmlFile = gadgetXmlFile;
-	}
+    }
 
-	@Override
-	protected IStatus run(final IProgressMonitor monitor) {
-	    logger.fine("in run");
-	    final String previewGadgetUrl;
-	    try {
-	        previewGadgetUrl = uploadFileToIg();
-	    } catch (Exception e) {
-	        logger.warning(e.getMessage());
-	        return Status.CANCEL_STATUS;
-	    }
+    @Override
+    protected IStatus run(final IProgressMonitor monitor) {
+        logger.fine("in run");
+        final String previewGadgetUrl;
+        try {
+            previewGadgetUrl = uploadFileToIg();
+        } catch (Exception e) {
+            logger.warning(e.getMessage());
+            return Status.CANCEL_STATUS;
+        }
 
-		shell.getDisplay().syncExec(new Runnable() {
-			public void run() {
-			    logger.fine("in Runnable's run");
-				try {
-					IWorkbenchBrowserSupport support =
-					        PlatformUI.getWorkbench().getBrowserSupport();
-					IWebBrowser browser;
-					if (useExternalBrowser) {
+        shell.getDisplay().syncExec(new Runnable() {
+            public void run() {
+                logger.fine("in Runnable's run");
+                try {
+                    IWorkbenchBrowserSupport support =
+                            PlatformUI.getWorkbench().getBrowserSupport();
+                    IWebBrowser browser;
+                    if (useExternalBrowser) {
                         browser = support.getExternalBrowser();
-					} else {
-					    int style = IWorkbenchBrowserSupport.LOCATION_BAR
+                    } else {
+                        int style = IWorkbenchBrowserSupport.LOCATION_BAR
                                   | IWorkbenchBrowserSupport.NAVIGATION_BAR
                                   | IWorkbenchBrowserSupport.AS_EDITOR;
-					    String browserId = null;
-					    String browserName = jobName;
-					    String tooltip = jobName;
-						browser = support.createBrowser(style, browserId, browserName, tooltip);
-					}
-					browser.openURL(new URL(previewGadgetUrl));
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		return Status.OK_STATUS;
-	}
+                        String browserId = null;
+                        String browserName = jobName;
+                        String tooltip = jobName;
+                        browser = support.createBrowser(style, browserId, browserName, tooltip);
+                    }
+                    browser.openURL(new URL(previewGadgetUrl));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (PartInitException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return Status.OK_STATUS;
+    }
 
-	private String uploadFileToIg()
-	        throws ClientProtocolException, IOException, CoreException {
-	    // TODO: Support save SID etc in session.
-	    // TODO: Support captcha.
+    private String uploadFileToIg()
+            throws ClientProtocolException, IOException, CoreException {
+        // TODO: Support save SID etc in session.
+        // TODO: Support captcha.
         logger.fine("in PreviewIGoogleJob.uploadFileToIg");
         String sid = retrieveSid(username, password, null, null);
         String publicId = retrievePublicId(sid);
@@ -127,5 +127,5 @@ public class PreviewIGoogleJob extends Job {
         logger.fine("uploadFileResult: " + uploadFileResult);
         String previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(publicId, targetFilePath);
         return previewGadgetUrl;
-	}
+    }
 }
