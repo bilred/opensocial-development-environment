@@ -68,8 +68,9 @@ public class Translator {
 	 * @return translated string in target language
 	 */
 	public synchronized String translate(String text, Language from, Language to) {
-		String queryURL = constructQueryURL(text, from, to);
-		openConnection(queryURL);
+		StringBuilder builder = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
+		constructQueryURL(builder, text, from, to);
+		openConnection(builder.toString());
 
 		// parse the response string into JSON object and return the desired result
 		try {
@@ -92,8 +93,9 @@ public class Translator {
 	 * @return translations of text in different languages
 	 */
 	public synchronized ArrayList<String> translate(String text, Language fromLanguage, Language... toLanguages) {
-		String queryURL = constructQueryURL(text, fromLanguage, toLanguages);
-		openConnection(queryURL);
+		StringBuilder builder = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
+		constructQueryURL(builder, text, fromLanguage, toLanguages);
+		openConnection(builder.toString());
 		String response = getJSONResponse();
 		return retrieveMultipleResultsFromJSONResponse(response);
 	}
@@ -108,8 +110,9 @@ public class Translator {
 	 * @return translations for every string in texts from fromLanguage to toLanguage
 	 */
 	public synchronized ArrayList<String> translate(Language fromLanguage, Language toLanguage, String... texts) {
-		String queryURL = constructQueryURL(fromLanguage, toLanguage, texts);
-		openConnection(queryURL);
+		StringBuilder builder = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
+		constructQueryURL(builder, fromLanguage, toLanguage, texts);
+		openConnection(builder.toString());
 		String response = getJSONResponse();
 		return retrieveMultipleResultsFromJSONResponse(response);
 	}
@@ -205,15 +208,13 @@ public class Translator {
 	 * @param text string to be translated
 	 * @return "&q=encoded_text"
 	 */
-	private String encodeAndConstructQueryText(String text) {
-		StringBuilder result = new StringBuilder();
+	private void encodeAndConstructQueryText(StringBuilder builder, String text) {
 		try {
-			result.append("&q=").append(URLEncoder.encode(text, "UTF-8"));
+			builder.append("&q=").append(URLEncoder.encode(text, "UTF-8"));
 		} catch (UnsupportedEncodingException ex) {
-			System.err.println("Error during encoding the text to be tranlated.");
+			System.err.println("Error during encoding the text to be tranlated");
+			ex.printStackTrace();
 		}
-		
-		return result.toString();
 	}
 	
 	/**
@@ -223,13 +224,10 @@ public class Translator {
 	 * @param toLanguage
 	 * @return "&langpair=fromLanguage|toLanguage"
 	 */
-	private String constructLangPairQuery(Language fromLanguage, Language toLanguage) {
-		StringBuilder result = new StringBuilder();
-		result.append("&langpair=").append(fromLanguage.getLangCode());
-		result.append("%7C"); // %7C is the character "|" in the encoded url
-		result.append(toLanguage.getLangCode());
-		
-		return result.toString();
+	private void constructLangPairQuery(StringBuilder builder, Language fromLanguage, Language toLanguage) {
+		builder.append("&langpair=").append(fromLanguage.getLangCode());
+		builder.append("%7C"); // %7C is the character "|" in the encoded url
+		builder.append(toLanguage.getLangCode());
 	}
 	
 	/**
@@ -241,14 +239,11 @@ public class Translator {
 	 * @return Example: "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0
 	 * &q=text&langpair=fromLanguage|toLanguages[0]&lanpair=fromLanguage|toLanguages[1]..."
 	 */
-	private String constructQueryURL(String text, Language fromLanguage, Language... toLanguages) {
-		StringBuilder result = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
-		result.append(encodeAndConstructQueryText(text));
+	private void constructQueryURL(StringBuilder builder, String text, Language fromLanguage, Language... toLanguages) {
+		encodeAndConstructQueryText(builder, text);
 		for (Language toLanguage : toLanguages) {
-			result.append(constructLangPairQuery(fromLanguage, toLanguage));
+			constructLangPairQuery(builder, fromLanguage, toLanguage);
 		}
-		
-		return result.toString();
 	}
 	
 	/**
@@ -260,12 +255,10 @@ public class Translator {
 	 * @return Example: "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0
 	 * &q=texts[0]&q=texts[1]&langpair=fromLanguage|toLanguage"
 	 */
-	private String constructQueryURL(Language fromLanguage, Language toLanguage, String... texts) {
-		StringBuilder result = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
+	private void constructQueryURL(StringBuilder builder, Language fromLanguage, Language toLanguage, String... texts) {
 		for (String text : texts) {
-			result.append(encodeAndConstructQueryText(text));
+			encodeAndConstructQueryText(builder, text);
 		}
-		result.append(constructLangPairQuery(fromLanguage, toLanguage));
-		return result.toString();
+		constructLangPairQuery(builder, fromLanguage, toLanguage);
 	}
 }
