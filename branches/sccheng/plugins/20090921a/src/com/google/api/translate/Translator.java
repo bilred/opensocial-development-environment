@@ -41,7 +41,7 @@ import org.json.JSONObject;
  *    This is accomplished through the use of multiple q arguments.
  * 2. Translate one string into several languages. This is accomplished
  *    through the use of multiple langpair arguments.
- * 3. Translate a single string from one language to another
+ * 3. Translate a single string from one language to another.
  * 
  * Sample usage:
  * <code>Translator translator = new Translator();</code>
@@ -168,7 +168,8 @@ public class Translator {
 			ioe.printStackTrace();
 		} finally {
 			try {
-				reader.close();
+				if (reader != null)
+					reader.close();
 			} catch (IOException ioe) {
 				System.err.println("Can't close connection to Google Translate API");
 				ioe.printStackTrace();
