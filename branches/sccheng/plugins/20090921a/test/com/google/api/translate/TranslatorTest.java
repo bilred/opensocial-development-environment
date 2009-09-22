@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -82,35 +81,6 @@ public class TranslatorTest {
 		assertEquals(results.size(), 2);
 		assertTrue("ciao a tutti".equals(results.get(0)));
 		assertTrue("arrivederci".equals(results.get(1)));
-	}
-	
-	@Test
-	public void testThreadSafty() {
-		final int NUM_THREADS = 1000;
-		for (int i = 0; i < NUM_THREADS; ++i) {
-			Thread translatorConsumer = new Thread(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep((int)(Math.random() * 2000));
-					} catch (InterruptedException e) {
-						System.err.print("Sleeping consumer interrupted");
-						e.printStackTrace();
-					}
-					String translation = translator.translate("peace", Language.ENGLISH, Language.FRENCH);
-					assertFalse(translation == null);
-					assertTrue("paix".equals(translation));
-				}
-			});
-			translatorConsumer.start();
-		}
-		
-		try {
-			// wait for all consumer threads to terminate
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			System.err.println("testThreadSafety method interrupted when waiting for consumers");
-			e.printStackTrace();
-		}
 	}
 	
 	@After
