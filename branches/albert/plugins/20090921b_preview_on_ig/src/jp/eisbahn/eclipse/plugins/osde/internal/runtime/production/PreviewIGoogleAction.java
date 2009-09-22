@@ -90,9 +90,7 @@ public class PreviewIGoogleAction
         if (openResult == Window.OK) {
             logger.fine("OK pressed");
             String username = dialog.getUsername();
-            logger.fine("username: " + username);
             String password = dialog.getPassword();
-            logger.fine("password: " + password);
             Job job = new PreviewIGoogleJob("Preview iGoogle gadget", shell, username,
                     password, dialog.isUseExternalBrowser(), gadgetXmlFile);
             logger.fine("job: " + job);

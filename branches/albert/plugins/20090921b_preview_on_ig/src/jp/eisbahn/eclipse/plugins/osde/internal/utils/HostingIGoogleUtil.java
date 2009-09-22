@@ -201,10 +201,12 @@ public class HostingIGoogleUtil {
             return "ERROR: pref is null";
         }
 
-        // Verify sourceFile.
-        if (sourceFile.getTotalSpace() <= 0) {
+        // Verify sourceFile to make sure it does have contents in it.
+        if (sourceFile.length() <= 0L) {
             logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
             logger.severe("sourceFile space: " + sourceFile.getTotalSpace());
+
+            // TODO: Is there a better way to handle the error of empty/non-existing file?
             return null;
         }
 
