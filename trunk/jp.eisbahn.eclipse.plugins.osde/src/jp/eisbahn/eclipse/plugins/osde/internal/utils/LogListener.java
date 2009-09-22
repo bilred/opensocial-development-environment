@@ -18,9 +18,12 @@
 
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
@@ -38,8 +41,7 @@ public class LogListener implements ILogListener {
     private String path; // path under which the log file is located
    
     public LogListener() {
-        path = System.getProperty("java.io.tmpdir");
-        openOutputStream();
+        this(Activator.getDefault().getWorkDirectory().getAbsolutePath());
     }
     
     public LogListener(String path) {
@@ -48,12 +50,13 @@ public class LogListener implements ILogListener {
     }
     
     public void openOutputStream() {
+    	File logFile = new File(path, "log.log");
     	try {
-    		fout = new FileWriter(path + "\\log.log");
+    		fout = new FileWriter(logFile);
     	} catch (IOException e) {
     		e.printStackTrace();
     	}
-    	System.out.println("Writing log file to " + path + "\\log.log");
+    	System.out.println("Writing log file to " + logFile.getAbsolutePath());
     }
    
     public void logging(IStatus status, String plugin) {

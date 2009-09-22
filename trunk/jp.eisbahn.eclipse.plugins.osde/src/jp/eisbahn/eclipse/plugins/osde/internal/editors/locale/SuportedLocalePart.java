@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.eclipse.core.resources.IFile;
@@ -203,9 +205,9 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 					bundleFile.create(in, true, new NullProgressMonitor());
 					locale.setMessages("http://localhost:8080/" + project.getName() + "/" + fileName);
 				} catch (CoreException e) {
-					e.printStackTrace();
+					Logging.warn("Creating the message bundle file failed.", e);
 				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
+					Logging.warn("Creating the message bundle file failed.", e);
 				}
 			}
 			elements.add(locale);

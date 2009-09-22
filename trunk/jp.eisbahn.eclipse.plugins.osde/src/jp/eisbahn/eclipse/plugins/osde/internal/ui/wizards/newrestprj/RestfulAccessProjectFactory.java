@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.model.Person;
@@ -146,12 +148,10 @@ class RestfulAccessProjectFactory implements IRunnableWithProgress {
 			}
 			return file;
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logging.error("Creating the Java file failed.", e);
 			throw new IllegalStateException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logging.error("Creating the Java file failed.", e);
 			throw new IllegalStateException(e);
 		}
 		
@@ -253,7 +253,7 @@ class RestfulAccessProjectFactory implements IRunnableWithProgress {
 					}
 				}
 			} catch (CoreException e) {
-				e.printStackTrace();
+				Logging.error("Adding the classpath entries failed.", e);
 			}
 			return ices.toArray(new IClasspathEntry[ices.size()]);
 		}

@@ -21,6 +21,7 @@ import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -239,7 +240,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 				widths.setSelection(Integer.parseInt(prevWidth));
 			}
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Logging.error("Setting the default values to Run Application Dialog failed.", e);
 		}
 	}
 
@@ -268,7 +269,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_WIDTH), String.valueOf(widths.getSelection()));
 			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_USE_EXTERNAL_BROWSER), String.valueOf(useExternalBrowserCheck.getSelection()));
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Logging.error("Setting persistent properties failed.", e);
 		}
 		setReturnCode(OK);
 		close();

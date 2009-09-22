@@ -26,6 +26,7 @@ import java.io.StringWriter;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -85,8 +86,7 @@ public class ShindigLauncher {
 								try {
 									DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
 								} catch (CoreException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									Logging.error("Launching Shindig Database failed.", e);
 								}
 							}
 						});
@@ -109,16 +109,14 @@ public class ShindigLauncher {
 							try {
 								DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
 							} catch (CoreException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								Logging.error("Launching Apache Shindig failed.", e);
 							}
 						}
 					});
 				}
 			}
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logging.error("Launching Apache Shindig or Shindig Database failed.", e);
 		}
 	}
 
@@ -170,8 +168,7 @@ public class ShindigLauncher {
 			ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
 			IOUtils.copy(bytes, fos);
 		} catch(IOException e) {
-			// TODO
-			e.printStackTrace();
+			Logging.error("Creating the configuration file for H2Database failed.", e);
 			throw new IllegalStateException(e);
 		} finally {
 			IOUtils.closeQuietly(fos);

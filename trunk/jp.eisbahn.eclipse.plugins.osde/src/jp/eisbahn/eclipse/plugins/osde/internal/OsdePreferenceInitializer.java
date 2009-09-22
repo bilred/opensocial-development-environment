@@ -15,7 +15,7 @@ public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 
 	@Override
 	public void initializeDefaultPreferences() {
-		String tmpdir = System.getProperty("java.io.tmpdir");
+		String tmpdir = Activator.getDefault().getWorkDirectory().getAbsolutePath();
 		Preferences node = new DefaultScope().getNode(Activator.PLUGIN_ID);
 		Locale locale = Locale.getDefault();
 		node.put(OsdeConfig.DEFAULT_COUNTRY, locale.getCountry());

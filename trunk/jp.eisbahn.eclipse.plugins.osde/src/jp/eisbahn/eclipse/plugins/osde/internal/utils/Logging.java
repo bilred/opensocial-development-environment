@@ -64,28 +64,33 @@ public class Logging {
 	 * 
 	 * @param status Status object that carries information for logging
 	 */
-	public static void log(IStatus status) {
+	public static IStatus log(IStatus status) {
 		Activator.getDefault().getLog().log(status);
+		return status;
 	}
 	
-	public static void info(String message) {
-		log(IStatus.INFO, message, null);
+	public static IStatus info(String message) {
+		return log(IStatus.INFO, message, null);
 	}
 	
-	public static void warn(String message) {
-		log(IStatus.WARNING, message, null);
+	public static IStatus warn(String message) {
+		return log(IStatus.WARNING, message, null);
 	}
 	
-	public static void error(String message) {
-		log(IStatus.ERROR, message, null);
+	public static IStatus warn(String message, Throwable exception) {
+		return log(IStatus.WARNING, message, exception);
+	}
+
+	public static IStatus error(String message) {
+		return log(IStatus.ERROR, message, null);
 	}
 	
-	public static void error(String message, Throwable exception) {
-		log(IStatus.ERROR, message, exception);
+	public static IStatus error(String message, Throwable exception) {
+		return log(IStatus.ERROR, message, exception);
 	}
 	
-	public static void log(int severity, String message, Throwable exception) {
-		log(new Status(severity, Activator.PLUGIN_ID, message, exception));
+	public static IStatus log(int severity, String message, Throwable exception) {
+		return log(new Status(severity, Activator.PLUGIN_ID, message, exception));
 	}
 	
 	/**
