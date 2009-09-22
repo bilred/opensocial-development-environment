@@ -42,7 +42,7 @@ public class PreviewIGoogleAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
     Logger logger = Logger.getLogger(PreviewIGoogleAction.class.getName());
 
-	private IFile gadgetXmlFile;
+    private IFile gadgetXmlFile;
     private IWorkbenchPart targetPart;
     private Shell shell;
 
@@ -70,18 +70,18 @@ public class PreviewIGoogleAction
     }
 
     /**
-	 * {@inheritDoc}
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-	    logger.fine("in setActivePart");
+     * {@inheritDoc}
+     */
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        logger.fine("in setActivePart");
         this.targetPart = targetPart;
-		shell = targetPart.getSite().getShell();
-	}
+        shell = targetPart.getSite().getShell();
+    }
 
-	/**
-	 * @see IActionDelegate#run(IAction)
-	 */
-	public void run(IAction action) {
+    /**
+     * @see IActionDelegate#run(IAction)
+     */
+    public void run(IAction action) {
         logger.fine("in run");
         PreviewIGoogleDialog dialog = new PreviewIGoogleDialog(shell);
         logger.fine("dialog: " + dialog);
@@ -89,7 +89,7 @@ public class PreviewIGoogleAction
         logger.fine("openResult: " + openResult);
         if (openResult == Window.OK) {
             logger.fine("OK pressed");
-            String username = dialog.getUserName();
+            String username = dialog.getUsername();
             logger.fine("username: " + username);
             String password = dialog.getPassword();
             logger.fine("password: " + password);
@@ -99,7 +99,7 @@ public class PreviewIGoogleAction
             job.schedule(1000);
         }
         logger.fine("leaving run");
-	}
+    }
 
     public void dispose() {
         logger.fine("in dispose");
