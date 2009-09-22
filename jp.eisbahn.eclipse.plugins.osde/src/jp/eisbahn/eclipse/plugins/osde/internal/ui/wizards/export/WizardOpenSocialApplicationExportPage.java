@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
@@ -174,7 +175,7 @@ public class WizardOpenSocialApplicationExportPage extends WizardPage {
 					openSocialProjects.add(project);
 				}
 			} catch (CoreException e) {
-				e.printStackTrace();
+				Logging.error("Initializing the Export page failed.", e);
 			}
 		}
 		projectList.setInput(openSocialProjects);

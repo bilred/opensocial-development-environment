@@ -20,6 +20,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.model.Activity;
@@ -51,7 +52,7 @@ public class ActivityListLabelProvider extends LabelProvider implements ITableLa
 				ApplicationImpl application = applicationService.getApplication(activity.getAppId());
 				return application.getTitle();
 			} catch (ConnectionException e) {
-				e.printStackTrace();
+				Logging.error("Connecting to Shindig Database failed.", e);
 				return null;
 			}
 		default:

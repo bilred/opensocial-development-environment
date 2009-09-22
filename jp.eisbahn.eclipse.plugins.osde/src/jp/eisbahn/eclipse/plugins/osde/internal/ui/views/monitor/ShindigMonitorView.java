@@ -28,6 +28,7 @@ import java.util.Set;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.action.Action;
@@ -151,15 +152,13 @@ public class ShindigMonitorView extends AbstractView {
 									logs.add(log);
 								}
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								Logging.warn("Parsing the log file failed.", e);
 							}
 						}
 					} catch(FileNotFoundException e) {
 						// nop
 					} catch(IOException e) {
-						// TODO
-						e.printStackTrace();
+						Logging.warn("Parsing the log file failed.", e);
 					} finally {
 						IOUtils.closeQuietly(in);
 					}

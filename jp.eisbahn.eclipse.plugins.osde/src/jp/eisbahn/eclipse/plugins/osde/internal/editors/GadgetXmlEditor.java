@@ -27,6 +27,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.editors.contents.ContentsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.locale.LocalePage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.outline.GadgetXmlOutlinePage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefsPage;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -105,10 +106,10 @@ public class GadgetXmlEditor extends FormEditor {
 					try {
 						reflectModel();
 					} catch (IOException e) {
-						e.printStackTrace();
+						Logging.warn("Reflecting to the model failed.", e);
 						// Ignore
 					} catch (SAXException e) {
-						e.printStackTrace();
+						Logging.warn("Reflecting to the model failed.", e);
 						// Ignore
 					}
 					commitPages(true);

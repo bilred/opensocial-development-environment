@@ -18,6 +18,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -96,8 +97,7 @@ public class ShutoffShindigAction extends Action implements IObjectActionDelegat
 						}
 					});
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logging.error("To shutdown Apache Shindig or Shindig Database failed.", e);
 				}
 				monitor.done();
 				return Status.OK_STATUS;
