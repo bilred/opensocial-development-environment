@@ -118,8 +118,8 @@ public enum Language {
 	
 	private final String langCode;
 	
-	private Language(String lanCode) {
-		this.langCode = lanCode;
+	private Language(String langCode) {
+		this.langCode = langCode;
 	}
 	
 	/**
@@ -136,7 +136,7 @@ public enum Language {
 		}
 		return false;
 	}
-	
+ 
 	/**
 	 * Returns a Language object given a language code, null otherwise
 	 * The logic in this method is similar to isSupported() method,
