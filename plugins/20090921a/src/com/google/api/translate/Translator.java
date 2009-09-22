@@ -168,8 +168,9 @@ public class Translator {
 			ioe.printStackTrace();
 		} finally {
 			try {
-				if (reader != null)
+				if (reader != null) {
 					reader.close();
+				}
 			} catch (IOException ioe) {
 				System.err.println("Can't close connection to Google Translate API");
 				ioe.printStackTrace();
