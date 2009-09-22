@@ -7,7 +7,7 @@ This page is for teaching developers who want to undo a committed revision (chan
 
 = Caveat =
 
-Reverting an earlier committed change (revision) is a non-trivial task and may break the codes/functions in the trunk. Please be very careful when you decide to do it and read this document thoroughly.
+Undoing an earlier committed change (revision) is a non-trivial task and may break the codes/functions in the trunk. Please be very careful when you decide to do it and read this document thoroughly.
 
 = Details =
 
@@ -100,3 +100,22 @@ Show all revision histories:<br>
 
 Find out the revision you want to revert and select it to confirm:<br>
 <img src="http://opensocial-development-environment.googlecode.com/files/subclipse_revert_change.JPG" />
+
+== Subversive ==
+
+In the subversive do not provide one button solution to undo a commit but using a reversed merge can undo the commit. You can find the merge in the team context-menu:
+
+<img src="http://farm3.static.flickr.com/2452/3944420401_0f9da681fd_o.png" />
+
+After merge dialog opened, you need set up:
+  * the project svn url
+  * revision
+  * check reversed merge
+
+<img src="http://farm4.static.flickr.com/3499/3945203176_5c9e3bf573_o.png" />
+
+Then perform the merge command and subversive will open *Team Synchronizing Perspective*. In our example, do merge break my working copy:
+
+<img src="http://farm3.static.flickr.com/2528/3945203318_e908391694_o.png" />
+
+If your working copy is broken, edit the conflicts and pass tests before commiting changes.
