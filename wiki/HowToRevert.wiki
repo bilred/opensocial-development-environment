@@ -109,7 +109,7 @@ In the subversive do not provide one button solution to undo a commit but using 
 
 After merge dialog opened, you need set up:
   * the project svn url
-  * revision
+  * revision (we need to undo rev 538: browse the revision and select rev 538 and the previous revision)
   * check reversed merge
 
 <img src="http://farm4.static.flickr.com/3499/3945203176_5c9e3bf573_o.png" />
