@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -35,31 +36,41 @@ import static org.junit.Assert.assertTrue;
  */
 public class TranslatorTest {
 
+	private Translator translator;
+	
 	@Before
 	public void setUp() throws Exception {
+		translator = new Translator();
+		translator.setReferrer("http://code.google.com/p/google-translate-api-java-client/");
+	}
+	
+	@Test
+	public void testSetAndGetReferrer() {
+		assertTrue(translator.getReferrer().equals("http://code.google.com/p/google-translate-api-java-client/"));
 	}
 	
 	@Test
 	public void testChineseToEnglishTranslation() {
-		String str = Translator.translate("雷射", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
+		String str = translator.translate("雷射", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
 		assertTrue("laser".equals(str.toLowerCase()));
 		
-		str = Translator.translate("軟體", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
+		str = translator.translate("軟體", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
 		assertTrue("software".equals(str.toLowerCase()));
 	}
 	
 	@Test
 	public void testEnglishToChineseTranlation() {
-		String str = Translator.translate("Chiaroscuro", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
+		String str = translator.translate("Chiaroscuro", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
 		assertTrue("明暗對比".equals(str));
 		
-		str = Translator.translate("Test", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
+		str = translator.translate("Test", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
 		assertTrue("測試".equals(str));
 	}
 
 	@Test
 	public void testOneToManyTranslations() {
-		ArrayList<String> results = Translator.translate("hello world", Language.ENGLISH, Language.ITALIAN, Language.FRENCH);
+		ArrayList<String> results = translator.translate("hello world", Language.ENGLISH,
+														 Language.ITALIAN, Language.FRENCH);
 		assertEquals(results.size(), 2);
 		assertTrue("ciao a tutti".equals(results.get(0)));
 		assertTrue("Bonjour tout le monde".equals(results.get(1)));
@@ -67,10 +78,39 @@ public class TranslatorTest {
 	
 	@Test
 	public void testMultipleStringsTranslations() {
-		ArrayList<String> results = Translator.translate(Language.ENGLISH, Language.ITALIAN, "hello world", "goodbye");
+		ArrayList<String> results = translator.translate(Language.ENGLISH, Language.ITALIAN, "hello world", "goodbye");
 		assertEquals(results.size(), 2);
 		assertTrue("ciao a tutti".equals(results.get(0)));
 		assertTrue("arrivederci".equals(results.get(1)));
+	}
+	
+	@Test
+	public void testThreadSafty() {
+		final int NUM_THREADS = 1000;
+		for (int i = 0; i < NUM_THREADS; ++i) {
+			Thread translatorConsumer = new Thread(new Runnable() {
+				public void run() {
+					try {
+						Thread.sleep((int)(Math.random() * 2000));
+					} catch (InterruptedException e) {
+						System.err.print("Sleeping consumer interrupted");
+						e.printStackTrace();
+					}
+					String translation = translator.translate("peace", Language.ENGLISH, Language.FRENCH);
+					assertFalse(translation == null);
+					assertTrue("paix".equals(translation));
+				}
+			});
+			translatorConsumer.start();
+		}
+		
+		try {
+			// wait for all consumer threads to terminate
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			System.err.println("testThreadSafety method interrupted when waiting for consumers");
+			e.printStackTrace();
+		}
 	}
 	
 	@After
