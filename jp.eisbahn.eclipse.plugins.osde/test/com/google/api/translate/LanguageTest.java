@@ -38,10 +38,10 @@ public class LanguageTest {
 	
 	@Test
 	public void testGetLanCode() {
-		String lanCode = Language.FRENCH.getLanCode();
+		String lanCode = Language.FRENCH.getLangCode();
 		assertTrue("fr".equals(lanCode));
 		
-		lanCode = Language.CHINESE_TRADITIONAL.getLanCode();
+		lanCode = Language.CHINESE_TRADITIONAL.getLangCode();
 		assertTrue("zh-TW".equals(lanCode));
 	}
 	

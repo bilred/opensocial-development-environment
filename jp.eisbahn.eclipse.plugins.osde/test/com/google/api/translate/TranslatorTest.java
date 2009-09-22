@@ -17,11 +17,15 @@
  */
 package com.google.api.translate;
 
+import java.util.ArrayList;
+
 import com.google.api.translate.Language;
 import com.google.api.translate.Translator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -31,28 +35,54 @@ import static org.junit.Assert.assertTrue;
  */
 public class TranslatorTest {
 
+	private Translator translator;
+	
 	@Before
 	public void setUp() throws Exception {
+		translator = new Translator();
+		translator.setReferrer("http://code.google.com/p/google-translate-api-java-client/");
 	}
-
+	
+	@Test
+	public void testSetAndGetReferrer() {
+		assertTrue(translator.getReferrer().equals("http://code.google.com/p/google-translate-api-java-client/"));
+	}
+	
 	@Test
 	public void testChineseToEnglishTranslation() {
-		String str = Translator.translate("雷射", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
+		String str = translator.translate("雷射", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
 		assertTrue("laser".equals(str.toLowerCase()));
 		
-		str = Translator.translate("軟體", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
+		str = translator.translate("軟體", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
 		assertTrue("software".equals(str.toLowerCase()));
 	}
 	
 	@Test
 	public void testEnglishToChineseTranlation() {
-		String str = Translator.translate("Chiaroscuro", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
+		String str = translator.translate("Chiaroscuro", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
 		assertTrue("明暗對比".equals(str));
 		
-		str = Translator.translate("Test", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
+		str = translator.translate("Test", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
 		assertTrue("測試".equals(str));
 	}
 
+	@Test
+	public void testOneToManyTranslations() {
+		ArrayList<String> results = translator.translate("hello world", Language.ENGLISH,
+														 Language.ITALIAN, Language.FRENCH);
+		assertEquals(results.size(), 2);
+		assertTrue("ciao a tutti".equals(results.get(0)));
+		assertTrue("Bonjour tout le monde".equals(results.get(1)));
+	}
+	
+	@Test
+	public void testMultipleStringsTranslations() {
+		ArrayList<String> results = translator.translate(Language.ENGLISH, Language.ITALIAN, "hello world", "goodbye");
+		assertEquals(results.size(), 2);
+		assertTrue("ciao a tutti".equals(results.get(0)));
+		assertTrue("arrivederci".equals(results.get(1)));
+	}
+	
 	@After
 	public void tearDown() throws Exception {
 	}
