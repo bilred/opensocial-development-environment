@@ -44,6 +44,7 @@ public class OsdeProjectNature implements IProjectNature {
 		ICommand[] newCommands = new ICommand[commands.length + 1];
 		System.arraycopy(commands, 0, newCommands, 0, commands.length);
 		newCommands[commands.length] = command;
+		description.setNatureIds(new String[]{ID});
 		description.setBuildSpec(newCommands);
 		project.setDescription(description, null);
 	}
@@ -57,6 +58,7 @@ public class OsdeProjectNature implements IProjectNature {
 				System.arraycopy(commands, 0, newCommands, 0, i);
 				System.arraycopy(commands, i + 1, newCommands, i, commands.length - i - 1);
 				description.setBuildSpec(newCommands);
+				description.setNatureIds(new String[]{});
 				project.setDescription(description, null);
 				return;
 			}
