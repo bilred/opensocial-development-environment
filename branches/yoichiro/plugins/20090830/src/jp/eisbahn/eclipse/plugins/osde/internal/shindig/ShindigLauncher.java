@@ -26,6 +26,7 @@ import java.io.StringWriter;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.preferences.PreferenceConstants;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -126,11 +127,7 @@ public class ShindigLauncher {
 	private static void createConfigFileForHibernate(IPreferenceStore prefs) {
 		FileOutputStream fos = null;
 		try {
-			InputStreamReader in = new InputStreamReader(
-					ShindigLauncher.class.getResourceAsStream("/shindig/osde_hibernate.cfg.xml.tmpl"), "UTF-8");
-			StringWriter out = new StringWriter();
-			IOUtils.copy(in, out);
-			String code = out.toString();
+			String code = ResourceUtil.loadTextResourceFile("/shindig/osde_hibernate.cfg.xml.tmpl");
 			if (prefs.getBoolean(PreferenceConstants.USE_INTERNAL_DATABASE)) {
 				code = code.replace("$driver_class$", "org.h2.Driver");
 				code = code.replace("$url$", "jdbc:h2:tcp://localhost:9092/shindig");

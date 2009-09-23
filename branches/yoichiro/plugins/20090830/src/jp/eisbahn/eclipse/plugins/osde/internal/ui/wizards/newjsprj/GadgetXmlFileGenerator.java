@@ -18,10 +18,13 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.EnumMap;
 import java.util.Set;
+
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
 
 import org.eclipse.core.resources.IFile;
@@ -49,7 +52,7 @@ public class GadgetXmlFileGenerator {
 		this.gadgetViewData = gadgetViewData;
 	}
 	
-	public IFile generate(IProgressMonitor monitor) throws UnsupportedEncodingException, CoreException {
+	public IFile generate(IProgressMonitor monitor) throws UnsupportedEncodingException, IOException, CoreException {
 		try {
 			monitor.beginTask("Generate Gadget XML file.", 100);
 			IFile gadgetXmlFile = project.getFile(new Path(gadgetXmlData.getGadgetSpecFilename()));
@@ -119,19 +122,22 @@ public class GadgetXmlFileGenerator {
 					if (viewData.isCreateSampleCodeSet()) {
 						content += "\n";
 						if (viewData.isCreatePeople() && gadgetXmlData.isOpensocial08()) {
-							content += SampleCode.FETCH_PEOPLE_08;
+							content += ResourceUtil.loadTextResourceFile("/samples/fetch_people_08.txt");
 						}
 						if (viewData.isCreatePeople() && gadgetXmlData.isOpensocial09()) {
-							content += SampleCode.FETCH_PEOPLE_09;
+							content += ResourceUtil.loadTextResourceFile("/samples/fetch_people_09.txt");
 						}
-						if (viewData.isCreateActivity()) {
-							content += SampleCode.CREATE_ACTIVITY;
+						if (viewData.isCreateActivity() && gadgetXmlData.isOpensocial08()) {
+							content += ResourceUtil.loadTextResourceFile("/samples/post_activity_08.txt");
+						}
+						if (viewData.isCreateActivity() && gadgetXmlData.isOpensocial09()) {
+							content += ResourceUtil.loadTextResourceFile("/samples/post_activity_09.txt");
 						}
 						if (viewData.isCreateAppData() && gadgetXmlData.isOpensocial08()) {
-							content += SampleCode.SHARE_APPDATA_08;
+							content += ResourceUtil.loadTextResourceFile("/samples/share_appdata_08.txt");
 						}
 						if (viewData.isCreateAppData() && gadgetXmlData.isOpensocial09()) {
-							content += SampleCode.SHARE_APPDATA_09;
+							content += ResourceUtil.loadTextResourceFile("/samples/share_appdata_09.txt");
 						}
 					} else {
 						if (viewData.isCreateExternalJavaScript()) {

@@ -263,7 +263,7 @@ public class UserPrefsView extends AbstractView {
 				return resultMap;
 			}
 		};
-		job.schedule();
+		job.schedule(1000);
 	}
 
 	private class SaveButtonSelectionListener implements SelectionListener {

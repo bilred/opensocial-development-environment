@@ -32,6 +32,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.shindig.social.opensocial.model.Person;
@@ -117,10 +118,7 @@ public abstract class AbstractRunAction {
 		protected IStatus run(IProgressMonitor monitor) {
 			FileOutputStream fos = null;
 			try {
-				InputStreamReader in = new InputStreamReader(getClass().getResourceAsStream("/shindig/context.tmpl"), "UTF-8");
-				StringWriter out = new StringWriter();
-				IOUtils.copy(in, out);
-				String code = out.toString();
+				String code = ResourceUtil.loadTextResourceFile("/shindig/context.tmpl");
 				code = code.replace("$project_name$", project.getName());
 				IPath location = project.getFolder("target").getLocation();
 				code = code.replace("$context_dir$", location.toOSString());
