@@ -1,5 +1,5 @@
 #summary How To Undo a previsouly Committed Change (Revision)?
-#labels OSDE,Subclipse,Revert,Eclipse,Plug-in
+#labels OSDE,Subclipse,Revert,Eclipse,Plug-in,Subversive,svn
 
 = Introduction =
 
