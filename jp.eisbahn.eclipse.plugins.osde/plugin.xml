@@ -277,6 +277,22 @@
                </objectState>
             </enablement>
          </action>
+         <!-- TODO: enable this feature when it is ready
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleAction"
+               enablesFor="1"
+               id="jp.eisbahn.eclipse.plugins.osde.previewIGoogleAction"
+               label="Preview on production container - iGoogle (TODO: need 2-layers of dropdown list)"
+               icon="icons/action_go.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
+            <enablement>
+               <objectState
+                     name="contentTypeId"
+                     value="jp.eisbahn.eclipse.plugins.osde.gadgetXml">
+               </objectState>
+            </enablement>
+         </action>
+         -->
       </objectContribution>
    </extension>
    

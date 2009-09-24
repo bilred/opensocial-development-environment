@@ -28,6 +28,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -71,7 +73,7 @@ public class HostingIGoogleUtil {
      *
      * @return the SID
      */
-    static String retrieveSid(String emailUserName, String password,
+    public static String retrieveSid(String emailUserName, String password,
             String loginCaptchaToken, String loginCaptchaAnswer) {
         // TODO: Can we get sid and Ig...Token all together?
 
@@ -159,7 +161,7 @@ public class HostingIGoogleUtil {
         }
 
         // Retrieve response.
-        // TODO Should the caller of this method need to know the responseCode?
+        // TODO: Should the caller of this method need to know the responseCode?
         int responseCode = urlConnection.getResponseCode();
         InputStream inputStream = (responseCode == HttpURLConnection.HTTP_OK)
                                   ? urlConnection.getInputStream()
@@ -181,7 +183,6 @@ public class HostingIGoogleUtil {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    // TODO: Change type of sourceFile from File to IFile.
     public static String uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
             File sourceFile, String targetFilePath)
             throws ClientProtocolException, IOException {
@@ -197,26 +198,42 @@ public class HostingIGoogleUtil {
             return "ERROR: pref is null";
         }
 
+        // Verify sourceFile to make sure it does have contents in it.
+        if (sourceFile.length() <= 0L) {
+            logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
+            logger.severe("sourceFile space: " + sourceFile.getTotalSpace());
+
+            // TODO: Is there a better way to handle the error of empty/non-existing file?
+            return null;
+        }
+
         // Prepare HttpPost.
         String url = URL_IG_GADGETS_FILE + publicId + "/" + targetFilePath + "?et=" + editToken;
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
         FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
+        logger.fine("fileEntity length: " + fileEntity.getContentLength());
         httpPost.setEntity(fileEntity);
         httpPost.setHeader("Content-Type", "text/plain");
 
         // Cookie PREF must be placed before SID.
+        logger.fine("preparing headers");
         httpPost.addHeader("Cookie", "PREF=" + pref);
         httpPost.addHeader("Cookie", "SID=" + sid);
 
         // Execute request.
+        logger.fine("preparing HttpClient");
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpPost);
-        String statusLine = httpResponse.getStatusLine().toString();
-        logger.info("statusLine: " + statusLine);
-        String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
-        logger.fine("response: " + response);
-        return statusLine;
+        logger.fine("httpResponse: " + httpResponse);
+        StatusLine statusLine = httpResponse.getStatusLine();
+        if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
+            String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
+            logger.warning("response: " + response);
+        }
+        String statusLineString = statusLine.toString();
+        logger.info("statusLine: " + statusLineString);
+        return statusLineString;
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
@@ -242,12 +259,16 @@ public class HostingIGoogleUtil {
 
     static String retrieveFile(String sid, String publicId, String filePath)
             throws ClientProtocolException, IOException {
-        String url = URL_GMODULE_FILE + publicId + "/" + filePath;
+        String url = formHostedFileUrl(publicId, filePath);
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
-    static String retrievePublicId(String sid)
+    private static String formHostedFileUrl(String publicId, String filePath) {
+        return URL_GMODULE_FILE + publicId + "/" + filePath;
+    }
+
+    public static String retrievePublicId(String sid)
             throws ClientProtocolException, IOException {
         String response = sendHttpRequestToIg(URL_IG_GADGETS, sid);
         return response;
@@ -274,7 +295,7 @@ public class HostingIGoogleUtil {
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
-    static IgPrefEditToken retrieveIgPrefEditToken(String sid)
+    public static IgPrefEditToken retrieveIgPrefEditToken(String sid)
             throws ClientProtocolException, IOException {
         HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
         httpGet.setHeader("Content-Type", "text/plain");
@@ -360,6 +381,12 @@ public class HostingIGoogleUtil {
             sb.append(line).append('\n');
         }
         return sb.substring(0, sb.length() - 1); // ignore the last '\n'
+    }
+
+    public static String formPreviewGadgetUrl(String publicId, String filePath) {
+        // TODO: support various views, languages, and countries.
+        String hostedFileUrl = formHostedFileUrl(publicId, filePath);
+        return "http://www.gmodules.com/gadgets/ifr?&view=home&hl=en&gl=us&url=" + hostedFileUrl;
     }
 
     /**
