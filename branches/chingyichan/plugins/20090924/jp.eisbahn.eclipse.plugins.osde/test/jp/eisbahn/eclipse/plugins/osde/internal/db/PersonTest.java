@@ -44,7 +44,9 @@ public class PersonTest {
 	public void setUp() throws Exception {
 
 		dbDir.mkdirs();
-		dbServer = Server.createTcpServer(new String[]{"-tcp", "-tcpAllowOthers", "-baseDir", dbDir.getAbsolutePath()}).start();
+		dbServer = Server.createTcpServer(
+			new String[]{"-tcp", "-tcpAllowOthers",
+				"-baseDir", dbDir.getAbsolutePath()}).start();
 
 		HibernateUtils.initialize("hibernate_for_test.cfg.xml");
 		session = HibernateUtils.currentSession();
