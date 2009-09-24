@@ -5,10 +5,37 @@
 It means that a gadget-developer can easily deploy (upload) his/her
 open-social gadget to a production container (say, iGoogle) from within OSDE, and then he/she can preview the gadget with live interaction with a production container.
 
-= Details =
+= Feature Description =
+
+ * priority: p0=highest, p4=lowest
+
+ # Developer (right-)clicks on anyone of the following and OSDE displays a dropdown list of functions.
+   * (done) gadget.xml
+   * (p2) "Run" tab
+   * (p2) "OSDE" tab
+ # Developer selects "Preview on production container" and a list of containers appear.
+   * (done) Support iGoogle container
+   * (p1) A list of more containers will be supported soon.
+ # OSDE pops up a dialog asking for:
+   * (done) google account and password
+     * if developer has already input account/password info, OSDE stores the corresponding session tokens and does not ask for account/password again during the current session. (p2)
+   * (done) checkbox to use external browser
+   * (p2) preview home view or canvas view
+   * (p3) country and language
+ # Devloper clicks on OK button
+ # OSDE interacts with iGoogle server to authenticate the user
+ # OSDE uploads gadget files to iGoogle server
+   * support one gadget xml file (done)
+   * (p2) support multiple files
+ # OSDE opens a browser and preview the gadget against iGoogle production server.
+   * (done) support preview the whole iframe of the gadget
+   * (p2) support interaction with the whole iGoogle container (not just inside the iframe of the gadget) during preview.
+
+= Bugs =
+
+ * (p1) failed upload file
+
+
+= References =
 
  * Issue 39 (http://code.google.com/p/opensocial-development-environment/issues/detail?id=39)
-
- * For the long-term goal, we will support most of major containers.
-
- * As the first step (short-term goal), I am planning to support it for the iGoogle container only.
