@@ -201,7 +201,7 @@ public class HostingIGoogleUtil {
         // Verify sourceFile to make sure it does have contents in it.
         if (sourceFile.length() <= 0L) {
             logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
-            logger.severe("sourceFile space: " + sourceFile.getTotalSpace());
+            logger.severe("sourceFile length: " + sourceFile.length());
 
             // TODO: Is there a better way to handle the error of empty/non-existing file?
             return null;
