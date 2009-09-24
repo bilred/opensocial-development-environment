@@ -20,8 +20,6 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newrestprj;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -31,7 +29,6 @@ import java.util.Set;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.core.resources.IFile;

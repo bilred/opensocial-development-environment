@@ -37,15 +37,27 @@ public class ResourceUtil {
     
     /**
      * Retrieve the content in the resource file which you specify.
+     * This method will use UTF-8 as the resource file encoding.
      * @param path The resource file path.
      * @return The Content.
      * @throws IOException When some errors occurred.
      */
     public static String loadTextResourceFile(String path) throws IOException {
+        return loadTextResourceFile(path, "UTF-8");
+    }
+
+    /**
+     * Retrieve the content in the resource file which you specify.
+     * @param path The resource file path.
+     * @param encoding File encoding.
+     * @return The Content.
+     * @throws IOException When some errors occurred.
+     */
+    public static String loadTextResourceFile(String path, String encoding) throws IOException {
         InputStreamReader in = null;
         StringWriter out = null;
         try {
-            in = new InputStreamReader(ResourceUtil.class.getResourceAsStream(path), "UTF-8");
+            in = new InputStreamReader(ResourceUtil.class.getResourceAsStream(path), encoding);
             out = new StringWriter();
             IOUtils.copy(in, out);
             String result = out.toString();
