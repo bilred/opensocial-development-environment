@@ -38,8 +38,8 @@ open-social gadget to a production container (say, iGoogle) from within OSDE, an
 = Bugs =
 
  * (p1) Uploading file fails.
-   * Description: Developer will see an old version of gadget file (if already uploaded) during preview. Developers might be able to successfully see the new gadget file if he/she tries to use this preview function several times.
-   * Analysis: originally, I thought it is some kind of caching problem, because developer can eventually see the new uploaded gadget file. After careful tracing, I found out it is caused by silent failure of file upload. I guess it might be caused by the Captcha authentication, but I am not sure yet. I will further investigate it soon.
+   * Description: Developer will see an old version of gadget file (if already uploaded) during preview. Developers might be able to successfully see the new gadget file if he/she continue to try to use this preview function several times.
+   * Analysis: originally, I thought it is some kind of caching problem because developer can eventually see the new uploaded gadget file. After careful tracing, I found out it is caused by silent failure of file upload. I guess it might be caused by the Captcha authentication, but I am not sure yet. I will further investigate it soon.
 
 
 = References =
