@@ -17,16 +17,20 @@
  */
 package com.google.api.translate;
 
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.api.translate.Language;
 import com.google.api.translate.Translator;
+import junitx.util.PrivateAccessor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Provides test cases for testing Translator using Google Translate API
@@ -83,6 +87,61 @@ public class TranslatorTest {
 		assertTrue("arrivederci".equals(results.get(1)));
 	}
 	
+	@Test
+	public void testOpenConnection() {
+		try {
+			Translator localTranslator = new Translator();
+			URLConnection connection = (URLConnection) PrivateAccessor.getField(translator, "connection");
+			connection = null;
+			assertTrue(connection == null);
+			PrivateAccessor.invoke(localTranslator, "openConnection", new Class[]{String.class}, new Object[]{"http://localhost:1234"});
+			assertTrue(connection == null);
+			PrivateAccessor.invoke(localTranslator, "openConnection", new Class[]{String.class}, new Object[]{"malformed url"});
+			assertTrue(connection == null);
+		} catch (Throwable e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void testEncodeQueryText() {
+		Translator localTranslator = new Translator();
+		StringBuilder builder = new StringBuilder("");
+		String text = "|"; // an empty space
+		
+		try {
+			String encoding = "UTF-8";
+			PrivateAccessor.invoke(localTranslator, "encodeAndConstructQueryText",
+								   new Class[]{StringBuilder.class, String.class, String.class},
+								   new Object[]{builder, text, encoding});
+			assertTrue(builder.toString().equals("&q=%7C"));
+			
+			builder = new StringBuilder("");
+			encoding = "blah";
+			PrivateAccessor.invoke(localTranslator, "encodeAndConstructQueryText",
+						   		   new Class[]{StringBuilder.class, String.class, String.class},
+						   		   new Object[]{builder, text, encoding});
+			assertTrue(builder.toString().equals("&q="));
+			
+		} catch (Throwable e) {
+			fail();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testRetrieveJSONResultsException() {
+		Translator localTranslator = new Translator();
+		List<String> results = null;
+		try {
+			results = (ArrayList<String>) PrivateAccessor.invoke(localTranslator, "retrieveMultipleResultsFromJSONResponse",
+								   						  	     new Class[]{String.class}, new Object[]{"blah blah"});
+		} catch (Throwable e) {
+			fail();
+		}
+		assertTrue(results == null);
+	}
+
 	@After
 	public void tearDown() throws Exception {
 	}

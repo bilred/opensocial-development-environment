@@ -210,9 +210,9 @@ public class Translator {
 	 * @param text string to be translated
 	 * @return "&q=encoded_text"
 	 */
-	private void encodeAndConstructQueryText(StringBuilder builder, String text) {
+	private void encodeAndConstructQueryText(StringBuilder builder, String text, String encoding) {
 		try {
-			builder.append("&q=").append(URLEncoder.encode(text, "UTF-8"));
+			builder.append("&q=").append(URLEncoder.encode(text, encoding));
 		} catch (UnsupportedEncodingException ex) {
 			System.err.println("Error during encoding the text to be tranlated");
 			ex.printStackTrace();
@@ -242,7 +242,7 @@ public class Translator {
 	 * &q=text&langpair=fromLanguage|toLanguages[0]&lanpair=fromLanguage|toLanguages[1]..."
 	 */
 	private void constructQueryURL(StringBuilder builder, String text, Language fromLanguage, Language... toLanguages) {
-		encodeAndConstructQueryText(builder, text);
+		encodeAndConstructQueryText(builder, text, "UTF-8");
 		for (Language toLanguage : toLanguages) {
 			constructLangPairQuery(builder, fromLanguage, toLanguage);
 		}
@@ -259,7 +259,7 @@ public class Translator {
 	 */
 	private void constructQueryURL(StringBuilder builder, Language fromLanguage, Language toLanguage, String... texts) {
 		for (String text : texts) {
-			encodeAndConstructQueryText(builder, text);
+			encodeAndConstructQueryText(builder, text, "UTF-8");
 		}
 		constructLangPairQuery(builder, fromLanguage, toLanguage);
 	}
