@@ -97,6 +97,7 @@
         <directory>${basedir}/../../config</directory>
         <includes>
           <include>container.js</include>
+          <include>oauthkey.pem</include>
         </includes>
       </resource>
       <resource>
@@ -135,6 +136,10 @@
     <dependency>
       <groupId>org.apache.shindig</groupId>
       <artifactId>shindig-features</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.shindig</groupId>
+      <artifactId>shindig-hibernate</artifactId>
     </dependency>
 
     <!-- external dependencies -->
