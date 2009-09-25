@@ -40,13 +40,13 @@ import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.SmokerImpl;
 import org.apache.shindig.social.opensocial.model.BodyType;
-import org.apache.shindig.social.opensocial.model.Enum;
 import org.apache.shindig.social.opensocial.model.Name;
 import org.apache.shindig.social.opensocial.model.Person;
-import org.apache.shindig.social.opensocial.model.Enum.Drinker;
-import org.apache.shindig.social.opensocial.model.Enum.NetworkPresence;
-import org.apache.shindig.social.opensocial.model.Enum.Smoker;
+import org.apache.shindig.social.opensocial.model.Drinker;
+import org.apache.shindig.social.opensocial.model.NetworkPresence;
+import org.apache.shindig.social.opensocial.model.Smoker;
 import org.apache.shindig.social.opensocial.model.Person.Gender;
+import org.apache.shindig.protocol.model.Enum;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -443,7 +443,7 @@ public class PersonPage implements IDetailsPage {
 			additionalNameText.setText(trim(name.getAdditionalName()));
 			honorificPrefixText.setText(trim(name.getHonorificPrefix()));
 			honorificSuffixText.setText(trim(name.getHonorificSuffix()));
-			nameUnstructuredText.setText(trim(name.getUnstructured()));
+			nameUnstructuredText.setText(trim(name.getFormatted()));
 		} else {
 			givenNameText.setText("");
 			familyNameText.setText("");
@@ -550,7 +550,7 @@ public class PersonPage implements IDetailsPage {
 				name.setGivenName(normalize(givenNameText.getText()));
 				name.setHonorificPrefix(normalize(honorificPrefixText.getText()));
 				name.setHonorificSuffix(normalize(honorificSuffixText.getText()));
-				name.setUnstructured(normalize(nameUnstructuredText.getText()));
+				name.setFormatted(normalize(nameUnstructuredText.getText()));
 				//
 				BodyType bodyType = person.getBodyType();
 				if (bodyType == null) {

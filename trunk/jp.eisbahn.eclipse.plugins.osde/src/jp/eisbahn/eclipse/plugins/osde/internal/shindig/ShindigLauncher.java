@@ -134,6 +134,9 @@ public class ShindigLauncher {
 				code = code.replace("$username$", "sa");
 				code = code.replace("$password$", "");
 				code = code.replace("$dialect$", "H2");
+				String databaseDir = config.getDatabaseDir();
+				File dbFile = new File(databaseDir, "shindig.data.db");
+				code = code.replace("$hbm2ddl$", dbFile.isFile() ? "update" : "create");
 			} else {
 				if (config.getExternalDatabaseType().equals("MySQL")) {
 					code = code.replace("$driver_class$", "com.mysql.jdbc.Driver");

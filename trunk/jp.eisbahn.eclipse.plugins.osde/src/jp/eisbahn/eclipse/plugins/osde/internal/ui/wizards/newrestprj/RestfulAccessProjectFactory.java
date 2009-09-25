@@ -20,8 +20,6 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newrestprj;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -30,8 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.core.resources.IFile;
@@ -134,10 +132,7 @@ class RestfulAccessProjectFactory implements IRunnableWithProgress {
 
 	private IFile createSampleCode(IFolder examplesDir) throws CoreException {
 		try {
-			InputStreamReader in = new InputStreamReader(getClass().getResourceAsStream("/ocl/Sample.tmpl"), "UTF-8");
-			StringWriter out = new StringWriter();
-			IOUtils.copy(in, out);
-			String code = out.toString();
+			String code = ResourceUtil.loadTextResourceFile("/ocl/Sample.tmpl");
 			code = code.replace("$consumer_key$", application.getConsumerKey());
 			code = code.replace("$consumer_secret$", application.getConsumerSecret());
 			code = code.replace("$viewer_id$", person.getId());

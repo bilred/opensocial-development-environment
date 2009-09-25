@@ -36,6 +36,8 @@ public class GadgetXmlData implements Serializable {
 	private String screenshot = "";
 	/** Thumbnail */
 	private String thumbnail = "";
+	/** opensocial-0.9 */
+	private boolean opensocial09;
 	/** opensocial-0.8 */
 	private boolean opensocial08;
 	/** opensocial-0.7 */
@@ -130,7 +132,15 @@ public class GadgetXmlData implements Serializable {
 	public void setOpensocial08(boolean opensocial08) {
 		this.opensocial08 = opensocial08;
 	}
+
+	public boolean isOpensocial09() {
+		return opensocial09;
+	}
 	
+	public void setOpensocial09(boolean opensocial09) {
+		this.opensocial09 = opensocial09;
+	}
+
 	public boolean isOpensocial07() {
 		return opensocial07;
 	}

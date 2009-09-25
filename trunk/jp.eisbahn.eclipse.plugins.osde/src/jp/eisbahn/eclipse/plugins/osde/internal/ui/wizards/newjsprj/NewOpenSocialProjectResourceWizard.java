@@ -17,6 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -168,6 +169,8 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
 				} catch(CoreException e) {
 					throw new InvocationTargetException(e);
 				} catch(UnsupportedEncodingException e) {
+					throw new InvocationTargetException(e);
+				} catch(IOException e) {
 					throw new InvocationTargetException(e);
 				}
 			}

@@ -38,16 +38,16 @@ import org.apache.shindig.social.opensocial.hibernate.entities.SmokerImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.UrlImpl;
 import org.apache.shindig.social.opensocial.model.Address;
 import org.apache.shindig.social.opensocial.model.BodyType;
-import org.apache.shindig.social.opensocial.model.Enum;
+import org.apache.shindig.protocol.model.Enum;
 import org.apache.shindig.social.opensocial.model.ListField;
 import org.apache.shindig.social.opensocial.model.Name;
 import org.apache.shindig.social.opensocial.model.Organization;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.apache.shindig.social.opensocial.model.Url;
-import org.apache.shindig.social.opensocial.model.Enum.Drinker;
-import org.apache.shindig.social.opensocial.model.Enum.LookingFor;
-import org.apache.shindig.social.opensocial.model.Enum.NetworkPresence;
-import org.apache.shindig.social.opensocial.model.Enum.Smoker;
+import org.apache.shindig.social.opensocial.model.Drinker;
+import org.apache.shindig.social.opensocial.model.LookingFor;
+import org.apache.shindig.social.opensocial.model.NetworkPresence;
+import org.apache.shindig.social.opensocial.model.Smoker;
 import org.apache.shindig.social.opensocial.model.Person.Gender;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -141,7 +141,7 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 		Name name = new NameImpl();
 		name.setFamilyName("Doe");
 		name.setGivenName("George");
-		name.setUnstructured("George Doe");
+		name.setFormatted("George Doe");
 		return george;
 	}
 
@@ -154,7 +154,7 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 		Name name = new NameImpl();
 		name.setFamilyName("Doe");
 		name.setGivenName("Jane");
-		name.setUnstructured("Jane Doe");
+		name.setFormatted("Jane Doe");
 		return jane;
 	}
 
@@ -167,7 +167,7 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 		Name name = new NameImpl();
 		name.setFamilyName("Doe");
 		name.setGivenName("John");
-		name.setUnstructured("John Doe");
+		name.setFormatted("John Doe");
 		return john;
 	}
 
@@ -266,7 +266,7 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 		name.setGivenName("Shin");
 		name.setHonorificPrefix("Sir");
 		name.setHonorificSuffix("Social Butterfly");
-		name.setUnstructured("Sir Shin H. Digg Social Butterfly");
+		name.setFormatted("Sir Shin H. Digg Social Butterfly");
 		canonical.setName(name);
 		canonical.setNetworkPresence(new NetworkPresenceImpl(NetworkPresence.ONLINE, "Online"));
 		canonical.setNickname("diggy");
