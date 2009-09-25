@@ -17,28 +17,49 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.db;
 
+import java.io.File;
 import java.util.List;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
 import org.apache.shindig.social.opensocial.model.Person;
+import org.h2.tools.Server;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class PersonTest extends TestCase {
-	
+public class PersonTest {
+
 	private Session session;
-	
-	protected void setUp() throws Exception {
-		super.setUp();
+	private File dbDir = new File("./dbDir" + System.currentTimeMillis());
+	private Server dbServer;
+
+	@Before
+	public void setUp() throws Exception {
+
+		dbDir.mkdirs();
+		dbServer = Server.createTcpServer(
+			new String[]{"-tcp", "-tcpAllowOthers",
+				"-baseDir", dbDir.getAbsolutePath()}).start();
+
 		HibernateUtils.initialize("hibernate_for_test.cfg.xml");
 		session = HibernateUtils.currentSession();
 		deleteAll();
 	}
-	
+
+	@After
+	public void tearDown() throws Exception {
+		HibernateUtils.closeSession();
+		dbServer.stop();
+		FileUtils.deleteDirectory(dbDir);
+	}
+
 	private void deleteAll() throws Exception {
 		Transaction tx = session.beginTransaction();
 		Query query = session.createQuery("delete from PersonImpl p");
@@ -46,11 +67,7 @@ public class PersonTest extends TestCase {
 		tx.commit();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		HibernateUtils.closeSession();
-	}
-	
+	@Test
 	public void testCreatePerson() throws Exception {
 		Transaction tx = session.beginTransaction();
 		Person person = new PersonImpl();
@@ -71,9 +88,10 @@ public class PersonTest extends TestCase {
 		if (plist != null && plist.size() > 0) {
 			person = (Person)plist.get(0);
 		}
-		assertEquals("id", "john.doe", person.getId());
-		assertEquals("aboutMe", "aboutMe1", person.getAboutMe());
-		assertEquals("Age", new Integer(33), person.getAge());
+
+		Assert.assertEquals("id", "john.doe", person.getId());
+		Assert.assertEquals("aboutMe", "aboutMe1", person.getAboutMe());
+		Assert.assertEquals("Age", new Integer(33), person.getAge());
 		tx.commit();
 	}
 
