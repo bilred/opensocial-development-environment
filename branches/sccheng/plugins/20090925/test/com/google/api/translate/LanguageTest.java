@@ -54,7 +54,7 @@ public class LanguageTest {
 		assertNull(lang);
 		
 		lang = Language.fromString("zh-TW");
-		assertNotNull(lang == null);
+		assertNotNull(lang);
 	}
 	
 	@After
