@@ -17,20 +17,21 @@
  */
 package com.google.api.translate;
 
-import java.net.URLConnection;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.google.api.translate.Language;
 import com.google.api.translate.Translator;
-import junitx.util.PrivateAccessor;
+
+import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Provides test cases for testing Translator using Google Translate API
@@ -53,7 +54,7 @@ public class TranslatorTest {
 	}
 	
 	@Test
-	public void testChineseToEnglishTranslation() {
+	public void testChineseToEnglishTranslation() throws IOException, JSONException {
 		String str = translator.translate("雷射", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
 		assertTrue("laser".equals(str.toLowerCase()));
 		
@@ -62,7 +63,7 @@ public class TranslatorTest {
 	}
 	
 	@Test
-	public void testEnglishToChineseTranlation() {
+	public void testEnglishToChineseTranlation() throws IOException, JSONException {
 		String str = translator.translate("Chiaroscuro", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
 		assertTrue("明暗對比".equals(str));
 		
@@ -71,7 +72,7 @@ public class TranslatorTest {
 	}
 
 	@Test
-	public void testOneToManyTranslations() {
+	public void testOneToManyTranslations() throws IOException, JSONException {
 		ArrayList<String> results = translator.translate("hello world", Language.ENGLISH,
 														 Language.ITALIAN, Language.FRENCH);
 		assertEquals(results.size(), 2);
@@ -80,66 +81,51 @@ public class TranslatorTest {
 	}
 	
 	@Test
-	public void testMultipleStringsTranslations() {
+	public void testMultipleStringsTranslations() throws IOException, JSONException {
 		ArrayList<String> results = translator.translate(Language.ENGLISH, Language.ITALIAN, "hello world", "goodbye");
 		assertEquals(results.size(), 2);
 		assertTrue("ciao a tutti".equals(results.get(0)));
 		assertTrue("arrivederci".equals(results.get(1)));
 	}
 	
-	@Test
-	public void testOpenConnection() {
-		try {
-			Translator localTranslator = new Translator();
-			URLConnection connection = (URLConnection) PrivateAccessor.getField(translator, "connection");
-			connection = null;
-			assertTrue(connection == null);
-			PrivateAccessor.invoke(localTranslator, "openConnection", new Class[]{String.class}, new Object[]{"http://localhost:1234"});
-			assertTrue(connection == null);
-			PrivateAccessor.invoke(localTranslator, "openConnection", new Class[]{String.class}, new Object[]{"malformed url"});
-			assertTrue(connection == null);
-		} catch (Throwable e) {
-			fail();
-		}
+	@Test(expected=IOException.class)
+	public void testOpenConnectionException() throws IOException {
+		Translator localTranslator = new Translator();
+		localTranslator.openConnection("malformed url");
 	}
 	
-	@Test
-	public void testEncodeQueryText() {
+	@Test(expected=UnsupportedEncodingException.class)
+	public void testEncodeQueryTextException() throws UnsupportedEncodingException {
 		Translator localTranslator = new Translator();
 		StringBuilder builder = new StringBuilder("");
 		String text = "|"; // an empty space
 		
-		try {
-			String encoding = "UTF-8";
-			PrivateAccessor.invoke(localTranslator, "encodeAndConstructQueryText",
-								   new Class[]{StringBuilder.class, String.class, String.class},
-								   new Object[]{builder, text, encoding});
-			assertTrue(builder.toString().equals("&q=%7C"));
-			
-			builder = new StringBuilder("");
-			encoding = "blah";
-			PrivateAccessor.invoke(localTranslator, "encodeAndConstructQueryText",
-						   		   new Class[]{StringBuilder.class, String.class, String.class},
-						   		   new Object[]{builder, text, encoding});
-			assertTrue(builder.toString().equals("&q="));
-			
-		} catch (Throwable e) {
-			fail();
-		}
+		String encoding = "UTF-8";
+		localTranslator.encodeAndConstructQueryText(builder, text, encoding);
+		assertTrue(builder.toString().equals("&q=%7C"));
+		
+		builder = new StringBuilder("");
+		encoding = "blah";
+		localTranslator.encodeAndConstructQueryText(builder, text, encoding);
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testRetrieveJSONResultsException() {
+	@Test(expected=JSONException.class)
+	public void testRetrieveJSONResultJSONException() throws JSONException {
 		Translator localTranslator = new Translator();
-		List<String> results = null;
-		try {
-			results = (ArrayList<String>) PrivateAccessor.invoke(localTranslator, "retrieveMultipleResultsFromJSONResponse",
-								   						  	     new Class[]{String.class}, new Object[]{"blah blah"});
-		} catch (Throwable e) {
-			fail();
-		}
-		assertTrue(results == null);
+		localTranslator.retrieveSingleResultFromJSONResponse("wrongly formatted response");
+	}
+	
+	@Test(expected=JSONException.class)
+	public void testRetrieveJSONResultsException() throws JSONException {
+		Translator localTranslator = new Translator();
+		localTranslator.retrieveMultipleResultsFromJSONResponse("blah blah");
+	}
+	
+	@Test(expected=IOException.class)
+	public void testGetJSONResponseException() throws IOException {
+		Translator localTranslator = new Translator();
+		localTranslator.connection = (new URL("http://localhost")).openConnection();
+		localTranslator.getJSONResponse();
 	}
 
 	@After
