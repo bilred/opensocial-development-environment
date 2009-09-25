@@ -21,6 +21,9 @@ package com.google.api.translate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
@@ -48,10 +51,10 @@ public class LanguageTest {
 	@Test
 	public void testFromString() {
 		Language lang = Language.fromString("blah");
-		assertTrue(lang == null);
+		assertNull(lang);
 		
 		lang = Language.fromString("zh-TW");
-		assertFalse(lang == null);
+		assertNotNull(lang == null);
 	}
 	
 	@After

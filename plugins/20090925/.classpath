@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry kind="lib" path="libs/httpclient-4.0.jar"/>
-    <classpathentry kind="lib" path="libs/httpcore-4.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpclient-4.0.jar"/>
+	<classpathentry kind="lib" path="libs/httpcore-4.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/json.jar"/>
 	<classpathentry kind="lib" path="libs/junit-addons-1.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
@@ -16,8 +16,8 @@
 	<classpathentry exported="true" kind="lib" path="libs/commons-collections-3.2.1.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-digester-2.0.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-httpclient-3.1.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
-    <classpathentry exported="true" kind="lib" path="libs/commons-io-1.4.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
-    <classpathentry exported="true" kind="lib" path="libs/commons-lang-2.4.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-io-1.4.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-lang-2.4.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.1.1.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="libs/dom4j-1.6.1.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="libs/easymock-2.5.1.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
