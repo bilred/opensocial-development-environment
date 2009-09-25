@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OpenSocial Development Environment Plug-in
 Bundle-SymbolicName: jp.eisbahn.eclipse.plugins.osde;singleton:=true
-Bundle-Version: 0.2.8
+Bundle-Version: 0.3.0
 Bundle-Activator: jp.eisbahn.eclipse.plugins.osde.internal.Activator
 Bundle-Vendor: Yoichiro Tanaka
-Bundle-Shindig-Revision: 735392
+Bundle-Shindig-Revision: 796905
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.4",
  org.eclipse.debug.core;bundle-version="3.4",
@@ -54,5 +54,6 @@ Bundle-ClassPath: .,
  libs/mysql-connector-java-5.1.6.jar,
  libs/ojdbc5.jar,
  libs/persistence-api-1.0.jar,
- libs/shindig-social-api-1.1-SNAPSHOT.jar,
- libs/shindig-hibernate-1.1-SNAPSHOT.jar
+ libs/shindig-common-1.1-BETA1-incubating.jar,
+ libs/shindig-hibernate-1.1-BETA1-incubating.jar,
+ libs/shindig-social-api-1.1-BETA1-incubating.jar

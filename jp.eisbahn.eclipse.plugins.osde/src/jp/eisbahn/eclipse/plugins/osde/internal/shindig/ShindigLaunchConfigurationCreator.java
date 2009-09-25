@@ -75,9 +75,10 @@ public class ShindigLaunchConfigurationCreator {
 			IRuntimeClasspathEntry systemLibsEntry = JavaRuntime.newRuntimeContainerClasspathEntry(
 					systemLibs, IRuntimeClasspathEntry.STANDARD_CLASSES);
 			systemLibsEntry.setClasspathProperty(IRuntimeClasspathEntry.BOOTSTRAP_CLASSES);
-			IRuntimeClasspathEntry jettyEntry = createRuntimeClasspathEntry("/shindig/jetty-6.1.14.jar");
-			IRuntimeClasspathEntry jettyUtilEntry = createRuntimeClasspathEntry("/shindig/jetty-util-6.1.14.jar");
+			IRuntimeClasspathEntry jettyEntry = createRuntimeClasspathEntry("/shindig/jetty-6.1.15.jar");
+			IRuntimeClasspathEntry jettyUtilEntry = createRuntimeClasspathEntry("/shindig/jetty-util-6.1.15.jar");
 			IRuntimeClasspathEntry servletApiEntry = createRuntimeClasspathEntry("/shindig/servlet-api-2.5-6.1.14.jar");
+			IRuntimeClasspathEntry juelApiEntry = createRuntimeClasspathEntry("/shindig/juel-api-2.1.2.jar");
 			IRuntimeClasspathEntry launcherEntry = createRuntimeClasspathEntry("/shindig/launcher.jar");
 			ILaunchConfigurationWorkingCopy wc = type.newInstance(null, "Apache Shindig");
 			List<String> classpath = new ArrayList<String>();
@@ -85,13 +86,14 @@ public class ShindigLaunchConfigurationCreator {
 			classpath.add(jettyEntry.getMemento());
 			classpath.add(jettyUtilEntry.getMemento());
 			classpath.add(servletApiEntry.getMemento());
+			classpath.add(juelApiEntry.getMemento());
 			classpath.add(launcherEntry.getMemento());
 			monitor.worked(1);
 			monitor.subTask("Creating the launch configuration.");
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "Main");
-			String warFile = getBundleEntryUrl("/shindig/shindig-server-1.1-SNAPSHOT.war").toExternalForm();
+			String warFile = getBundleEntryUrl("/shindig/shindig-server-1.1-BETA1-incubating.war").toExternalForm();
 			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
 					"8080 \"" + warFile + "\" \"" + Activator.getDefault().getOsdeConfiguration().getJettyDir() + "\"");
 			wc.doSave();

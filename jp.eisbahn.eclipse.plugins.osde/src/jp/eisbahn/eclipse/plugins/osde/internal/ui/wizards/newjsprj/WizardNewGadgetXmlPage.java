@@ -40,6 +40,7 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 	private Text descriptionText;
 	private Text authorEmailText;
 	private Text specFilenameText;
+	private Button opensocial09Button;
 	private Button opensocial08Button;
 	private Button opensocial07Button;
 	private Button pubsubButton;
@@ -149,8 +150,9 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		layout.numColumns = 4;
 		featuresGroup.setLayout(layout);
 		featuresGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		opensocial09Button = createCheckbox(featuresGroup, "OpenSocial v0.9");
+		opensocial09Button.setSelection(true);
 		opensocial08Button = createCheckbox(featuresGroup, "OpenSocial v0.8");
-		opensocial08Button.setSelection(true);
 		opensocial07Button = createCheckbox(featuresGroup, "OpenSocial v0.7");
 		pubsubButton = createCheckbox(featuresGroup, "PubSub");
 		viewsButton = createCheckbox(featuresGroup, "Views");
@@ -195,6 +197,7 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		data.setMiniMessage(miniMessageButton.getSelection());
 		data.setOpensocial07(opensocial07Button.getSelection());
 		data.setOpensocial08(opensocial08Button.getSelection());
+		data.setOpensocial09(opensocial09Button.getSelection());
 		data.setPubsub(pubsubButton.getSelection());
 		data.setSetTitle(setTitleButton.getSelection());
 		data.setSkins(skinsButton.getSelection());

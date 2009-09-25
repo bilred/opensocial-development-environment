@@ -18,10 +18,13 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.EnumMap;
 import java.util.Set;
+
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
 
 import org.eclipse.core.resources.IFile;
@@ -49,7 +52,7 @@ public class GadgetXmlFileGenerator {
 		this.gadgetViewData = gadgetViewData;
 	}
 	
-	public IFile generate(IProgressMonitor monitor) throws UnsupportedEncodingException, CoreException {
+	public IFile generate(IProgressMonitor monitor) throws UnsupportedEncodingException, IOException, CoreException {
 		try {
 			monitor.beginTask("Generate Gadget XML file.", 100);
 			IFile gadgetXmlFile = project.getFile(new Path(gadgetXmlData.getGadgetSpecFilename()));
@@ -74,6 +77,9 @@ public class GadgetXmlFileGenerator {
 				content += " thumbnail=\"" + gadgetXmlData.getThumbnail() + "\"";
 			}
 			content += ">\n";
+			if (gadgetXmlData.isOpensocial09()) {
+				content += "    <Require feature=\"opensocial-0.9\" />\n";
+			}
 			if (gadgetXmlData.isOpensocial08()) {
 				content += "    <Require feature=\"opensocial-0.8\" />\n";
 			}
@@ -104,6 +110,9 @@ public class GadgetXmlFileGenerator {
 			if (gadgetXmlData.isViews()) {
 				content += "    <Require feature=\"views\" />\n";
 			}
+			if (gadgetXmlData.isOpensocial09() && hasCreateSampleCodeSet()) {
+				content += "    <Require feature=\"osapi\" />\n";
+			}
 			content += "  </ModulePrefs>\n";
 			Set<ViewName> keySet = gadgetViewData.keySet();
 			for (ViewName viewName : keySet) {
@@ -112,105 +121,23 @@ public class GadgetXmlFileGenerator {
 					content += "  <Content type=\"html\" view=\"" + viewName.toString() + "\"><![CDATA[\n";
 					if (viewData.isCreateSampleCodeSet()) {
 						content += "\n";
-						if (viewData.isCreatePeople()) {
-							content += "<!-- Fetching People and Friends -->\n";
-							content += "<div>\n";
-							content += "  <button onclick='fetchPeople();'>Fetch people and friends</button>\n";
-							content += "  <div>\n";
-							content += "    <span id='viewer'></span>\n";
-							content += "    <ul id='friends'></ul>\n";
-							content += "  </div>\n";
-							content += "</div>\n";
-							content += "<script type='text/javascript'>\n";
-							content += "function fetchPeople() {\n";
-							content += "  var req = opensocial.newDataRequest();\n";
-							content += "  req.add(req.newFetchPersonRequest(opensocial.IdSpec.PersonId.VIEWER), 'viewer');\n";
-							content += "  var params = {};\n";
-							content += "  params[opensocial.IdSpec.Field.USER_ID] = opensocial.IdSpec.PersonId.VIEWER;\n";
-							content += "  params[opensocial.IdSpec.Field.GROUP_ID] = 'FRIENDS';\n";
-							content += "  var idSpec = opensocial.newIdSpec(params);\n";
-							content += "  req.add(req.newFetchPeopleRequest(idSpec), 'friends');\n";
-							content += "  req.send(function(data) {\n";
-							content += "    var viewer = data.get('viewer').getData();\n";
-							content += "    document.getElementById('viewer').innerHTML = viewer.getId();\n";
-							content += "    var friends = data.get('friends').getData();\n";
-							content += "    document.getElementById('friends').innerHTML = '';\n";
-							content += "    friends.each(function(friend) {\n";
-							content += "      document.getElementById('friends').innerHTML += '<li>' + friend.getId() + '</li>';\n";
-							content += "    });\n";
-							content += "    gadgets.window.adjustHeight();\n";
-							content += "  });\n";
-							content += "}\n";
-							content += "</script>\n";
-							content += "\n";
+						if (viewData.isCreatePeople() && gadgetXmlData.isOpensocial08()) {
+							content += ResourceUtil.loadTextResourceFile("/samples/fetch_people_08.txt");
 						}
-						if (viewData.isCreateActivity()) {
-							content += "<!-- Posting activity -->\n";
-							content += "<div>\n";
-							content += "  <input type='text' id='title' />\n";
-							content += "  <button onclick='postActivity();'>Post activity</button>\n";
-							content += "  <div id='result_activity'></div>\n";
-							content += "</div>\n";
-							content += "<script type='text/javascript'>\n";
-							content += "function postActivity() {\n";
-							content += "  var params = {};\n";
-							content += "  params[opensocial.Activity.Field.TITLE] = document.getElementById('title').value;\n";
-							content += "  var activity = opensocial.newActivity(params);\n";
-							content += "  opensocial.requestCreateActivity(\n";
-							content += "      activity, opensocial.CreateActivityPriority.HIGH, function(response) {\n";
-							content += "        if (response.hadError()) {\n";
-							content += "          document.getElementById('result_activity').innerHTML = response.getErrorMessage();\n";
-							content += "        } else {\n";
-							content += "          document.getElementById('result_activity').innerHTML = 'Succeeded!';\n";
-							content += "        }\n";
-							content += "        gadgets.window.adjustHeight();\n";
-							content += "      });\n";
-							content += "}\n";
-							content += "</script>\n";
-							content += "\n";
+						if (viewData.isCreatePeople() && gadgetXmlData.isOpensocial09()) {
+							content += ResourceUtil.loadTextResourceFile("/samples/fetch_people_09.txt");
 						}
-						if (viewData.isCreateAppData()) {
-							content += "<!-- Sharing data with friends -->\n";
-							content += "<div>\n";
-							content += "  <input type='text' id='content' />\n";
-							content += "  <button onclick='shareData();'>Share data</button>\n";
-							content += "  <button onclick='fetchFriendData();'>Fetch friend's data</button>\n";
-							content += "  <div id='result_appdata'></div>\n";
-							content += "  <ul id='contents'></ul>\n";
-							content += "</div>\n";
-							content += "<script type='text/javascript'>\n";
-							content += "function shareData() {\n";
-							content += "  var content = document.getElementById('content').value;\n";
-							content += "  var req = opensocial.newDataRequest();\n";
-							content += "  req.add(req.newUpdatePersonAppDataRequest(opensocial.IdSpec.PersonId.VIEWER, 'content', content));\n";
-							content += "  req.send(function(response) {\n";
-							content += "    if (response.hadError()) {\n";
-							content += "      document.getElementById('result_appdata').innerHTML = response.getErrorMessage();\n";
-							content += "    } else {\n";
-							content += "      document.getElementById('result_appdata').innerHTML = 'Succeeded!';\n";
-							content += "    }\n";
-							content += "    gadgets.window.adjustHeight();\n";
-							content += "  });\n";
-							content += "}\n";
-							content += "function fetchFriendData() {\n";
-							content += "  var req = opensocial.newDataRequest();\n";
-							content += "  var params = {};\n";
-							content += "  params[opensocial.IdSpec.Field.USER_ID] = opensocial.IdSpec.PersonId.VIEWER;\n";
-							content += "  params[opensocial.IdSpec.Field.GROUP_ID] = 'FRIENDS';\n";
-							content += "  var idSpec = opensocial.newIdSpec(params);\n";
-							content += "  req.add(req.newFetchPersonAppDataRequest(idSpec, ['content']), 'stored');\n";
-							content += "  req.send(function(data) {\n";
-							content += "    var stored = data.get('stored').getData();\n";
-							content += "    for(var id in stored) {\n";
-							content += "      var obj = stored[id];\n";
-							content += "      document.getElementById('contents').innerHTML\n";
-							content += "          += '<li>' + id + ': ' + obj['content'] + '</li>';\n";
-							content += "    }\n";
-							content += "    gadgets.window.adjustHeight();\n";
-							content += "  });\n";
-							content += "}\n";
-							content += "</script>\n";
-							content += "\n";
+						if (viewData.isCreateActivity() && gadgetXmlData.isOpensocial08()) {
+							content += ResourceUtil.loadTextResourceFile("/samples/post_activity_08.txt");
+						}
+						if (viewData.isCreateActivity() && gadgetXmlData.isOpensocial09()) {
+							content += ResourceUtil.loadTextResourceFile("/samples/post_activity_09.txt");
+						}
+						if (viewData.isCreateAppData() && gadgetXmlData.isOpensocial08()) {
+							content += ResourceUtil.loadTextResourceFile("/samples/share_appdata_08.txt");
+						}
+						if (viewData.isCreateAppData() && gadgetXmlData.isOpensocial09()) {
+							content += ResourceUtil.loadTextResourceFile("/samples/share_appdata_09.txt");
 						}
 					} else {
 						if (viewData.isCreateExternalJavaScript()) {
