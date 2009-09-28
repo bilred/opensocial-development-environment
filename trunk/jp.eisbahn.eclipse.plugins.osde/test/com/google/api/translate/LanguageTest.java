@@ -21,6 +21,9 @@ package com.google.api.translate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
@@ -37,12 +40,21 @@ public class LanguageTest {
 	}
 	
 	@Test
-	public void testGetLanCode() {
-		String lanCode = Language.FRENCH.getLangCode();
-		assertTrue("fr".equals(lanCode));
+	public void testGetLangCode() {
+		String langCode = Language.FRENCH.getLangCode();
+		assertTrue("fr".equals(langCode));
 		
-		lanCode = Language.CHINESE_TRADITIONAL.getLangCode();
-		assertTrue("zh-TW".equals(lanCode));
+		langCode = Language.CHINESE_TRADITIONAL.getLangCode();
+		assertTrue("zh-TW".equals(langCode));
+	}
+	
+	@Test
+	public void testFromString() {
+		Language lang = Language.fromString("blah");
+		assertNull(lang);
+		
+		lang = Language.fromString("zh-TW");
+		assertNotNull(lang);
 	}
 	
 	@After
