@@ -22,11 +22,11 @@ JUnit Plug-in Test files are separated from source code files in OSDE. They are 
 The fragment test project should thus contain only testing codes but not host plug-in source codes.
 
 In OSDE, source code and regular JUnit Test code of host plug-in are put under [http://code.google.com/p/opensocial-development-environment/source/browse/#svn/trunk/jp.eisbahn.eclipse.plugins.osde svn/trunk/jp.eisbahn.eclipse.plugins.osde]
-while test files for it are put under [http://code.google.com/p/opensocial-development-environment/source/browse/#svn/trunk/jp.eisbahn.eclipse.plugins.osde.test svn/trunk/jp.eisbahn.eclipse.plugins.osde.test].
+while JUnit Plug-in test files for it are put under [http://code.google.com/p/opensocial-development-environment/source/browse/#svn/trunk/jp.eisbahn.eclipse.plugins.osde.test svn/trunk/jp.eisbahn.eclipse.plugins.osde.test].
 
-In order to successfully run both kinds of tests for OSDE, you have to checkout both of them as two separate eclipse projects onto your local machine. And then run JUnit Test or JUnit Plug-in Test. You should be able to run tests without seeing compile errors by following this simple step. If you only want to run regular JUnit Test, you can only check out the host project.
+In order to successfully run both kinds of tests for OSDE, you have to checkout both of them as two separate eclipse projects onto your local machine. And then run JUnit Test or JUnit Plug-in Test separately. You should be able to run tests without seeing compile errors by following this simple step. If you only want to run regular JUnit Test, you can only check out the host plug-in project.
 
-When running your JUnit Plug-in test, if you are seeing errors like "unresolved type" in the test project. Try to keep only the host plug-in project and test project opened in eclipse and close all other unrelated projects. Then make sure the errors are gone and run the tests again.
+When running your JUnit Plug-in test, if you are seeing errors like "unresolved type" in the fragment test project. Try to keep only the host plug-in project and test project opened in eclipse and close all other unrelated projects. Then make sure the errors are gone and run the tests again.
 
 If you are still seeing compile errors in the test project. Make sure you didn't touch/modify the [http://code.google.com/p/opensocial-development-environment/source/browse/trunk/jp.eisbahn.eclipse.plugins.osde.test/META-INF/MANIFEST.MF manifest.mf file] in the test project. The manifest file is supposed to stay as it is and not frequently changed.
 
@@ -36,9 +36,13 @@ Based on the above discussions, since the files are distributed into two diffren
 
 = Development and Code Review for Testing Code =
 
-Developing testing code in the fragment test project requires more attention since we might have two separate projects in your workspace and also in the trunk. When requesting code review for your source files and their testing code:
+Developing testing code in the fragment test project requires more attention since you might have two separate projects in your workspace and also in the trunk. When requesting code review for your source files and their testing code:
  * *For regular JUnit Test, put your test files under test directory in the host project*.
 
 or
 
- * *For JUnit Plug-in Test, put your source files in host plug-in project and testing files in the fragment test project*. In this way, you have to create *TWO* branches and file *TWO* code reviews since your files are now scattered in two different projects/branches.
+ * *For JUnit Plug-in Test, put your source files in the host plug-in project and testing files in the fragment test project*. In this way, you have to create *TWO* branches and file *TWO* code reviews since your files are now scattered in two different projects/branches.
+
+= Reference =
+
+ * [http://rcpquickstart.com/2007/06/20/unit-testing-plug-ins-with-fragments/ Unit Testing Plug-ins with Fragments]
