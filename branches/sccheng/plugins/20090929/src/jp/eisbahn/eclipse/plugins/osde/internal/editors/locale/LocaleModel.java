@@ -38,8 +38,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.google.gadgets.Module.ModulePrefs.Locale;
-import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.MessageBundle.Msg;
 
 public class LocaleModel implements Comparable<LocaleModel> {
 
@@ -62,9 +62,9 @@ public class LocaleModel implements Comparable<LocaleModel> {
 		lang = rawModel.getLang();
 		internal = StringUtils.isEmpty(rawModel.getMessages());
 		if (internal) {
-			List<Msg> msgs = rawModel.getMsg();
+			List<Msg> msgs = rawModel.getInlineMessages();
 			for (Msg msg : msgs) {
-				messages.put(msg.getName(), msg.getValue());
+				messages.put(msg.getName(), msg.getContent());
 			}
 		} else {
 			loadMessageBundleFile(project);

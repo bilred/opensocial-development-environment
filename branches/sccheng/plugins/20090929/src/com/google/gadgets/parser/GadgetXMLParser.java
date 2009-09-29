@@ -30,8 +30,9 @@ import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
 import org.xml.sax.SAXException;
 
-import com.google.gadgets.Module;
-import com.google.gadgets.Param;
+import com.google.gadgets.model.MessageBundle;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Param;
 
 /**
  * Parser class for parsing gadgets.xml file using Apache's Digester
@@ -114,12 +115,12 @@ public class GadgetXMLParser extends Digester implements IParser {
 		digester.addRule("Module/ModulePrefs/Locale", new SetPropertiesRule(attributeNames, propertyNames));
 		digester.addRule("Module/ModulePrefs/Locale", new SetNextRule("addRequireOrOptionalOrPreload"));
 		
-		digester.addRule("Module/ModulePrefs/Locale/msg", new ObjectCreateRule(Module.ModulePrefs.Locale.Msg.class));
+		digester.addRule("Module/ModulePrefs/Locale/msg", new ObjectCreateRule(MessageBundle.Msg.class));
         attributeNames = new String[]{"name", "desc"};
         propertyNames = new String[]{"name", "desc"};
         digester.addRule("Module/ModulePrefs/Locale/msg", new SetPropertiesRule(attributeNames, propertyNames));
-        digester.addRule("Module/ModulePrefs/Locale/msg", new CallMethodRule("setValue", 0));
-        digester.addRule("Module/ModulePrefs/Locale/msg", new SetNextRule("addMsg"));
+        digester.addRule("Module/ModulePrefs/Locale/msg", new CallMethodRule("setContent", 0));
+        digester.addRule("Module/ModulePrefs/Locale/msg", new SetNextRule("addInlineMessage"));
 
 		digester.addRule("Module/ModulePrefs/OAuth", new ObjectCreateRule(Module.ModulePrefs.OAuth.class));
 		digester.addRule("Module/ModulePrefs/OAuth", new SetNextRule("addRequireOrOptionalOrPreload"));

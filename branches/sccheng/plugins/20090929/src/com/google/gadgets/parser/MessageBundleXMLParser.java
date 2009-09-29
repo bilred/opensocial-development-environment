@@ -30,7 +30,7 @@ import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
 import org.xml.sax.SAXException;
 
-import com.google.gadgets.MessageBundle;
+import com.google.gadgets.model.MessageBundle;
 
 /**
  * Parser class for parsing message bundle XML file using Apache's Digester

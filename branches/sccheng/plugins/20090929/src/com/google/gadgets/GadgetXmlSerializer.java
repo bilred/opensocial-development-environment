@@ -24,15 +24,17 @@ import jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.google.gadgets.Module.Content;
-import com.google.gadgets.Module.ModulePrefs;
-import com.google.gadgets.Module.UserPref;
-import com.google.gadgets.Module.ModulePrefs.Icon;
-import com.google.gadgets.Module.ModulePrefs.Locale;
-import com.google.gadgets.Module.ModulePrefs.Optional;
-import com.google.gadgets.Module.ModulePrefs.Require;
-import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
-import com.google.gadgets.Module.UserPref.EnumValue;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Param;
+import com.google.gadgets.model.Module.Content;
+import com.google.gadgets.model.Module.ModulePrefs;
+import com.google.gadgets.model.Module.UserPref;
+import com.google.gadgets.model.Module.ModulePrefs.Icon;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.Module.ModulePrefs.Optional;
+import com.google.gadgets.model.Module.ModulePrefs.Require;
+import com.google.gadgets.model.MessageBundle.Msg;
+import com.google.gadgets.model.Module.UserPref.EnumValue;
 
 
 public class GadgetXmlSerializer {
@@ -134,11 +136,11 @@ public class GadgetXmlSerializer {
 				createAttribute("lang", locale.getLang(), sb);
 				createAttribute("country", locale.getCountry(), sb);
 				createAttribute("messages", locale.getMessages(), sb);
-				List<Msg> msgs = locale.getMsg();
+				List<Msg> msgs = locale.getInlineMessages();
 				if (msgs != null && !msgs.isEmpty()) {
 					sb.append(">\n");
 					for (Msg msg : msgs) {
-						sb.append("            <msg name=\"" + msg.getName() + "\">" + escape(msg.getValue()) + "</msg>\n");
+						sb.append("            <msg name=\"" + msg.getName() + "\">" + escape(msg.getContent()) + "</msg>\n");
 					}
 					sb.append("        </Locale>\n");
 				} else {
