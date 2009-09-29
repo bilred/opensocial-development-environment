@@ -28,7 +28,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.google.gadgets.Module;
+import com.google.gadgets.model.Module;
 
 public class ApplicationService {
 	

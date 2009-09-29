@@ -45,9 +45,9 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.Module;
+import com.google.gadgets.model.Module;
 import com.google.gadgets.ViewType;
-import com.google.gadgets.Module.Content;
+import com.google.gadgets.model.Module.Content;
 
 public class SupportedViewsPart extends SectionPart implements IPartSelectionListener {
 	

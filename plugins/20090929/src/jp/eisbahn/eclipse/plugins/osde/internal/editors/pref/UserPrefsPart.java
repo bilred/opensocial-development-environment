@@ -46,9 +46,9 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.Module;
-import com.google.gadgets.Module.UserPref;
-import com.google.gadgets.Module.UserPref.EnumValue;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Module.UserPref;
+import com.google.gadgets.model.Module.UserPref.EnumValue;
 
 public class UserPrefsPart extends SectionPart implements IPartSelectionListener {
 	
