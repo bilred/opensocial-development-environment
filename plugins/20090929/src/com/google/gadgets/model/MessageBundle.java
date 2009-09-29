@@ -73,7 +73,7 @@ public class MessageBundle {
 		protected String desc;
 		
 		
-		public Msg() {} // required for parser to automatically fill in details as a java bean
+		public Msg() {}
 		
 		public Msg(String name, String content, String desc) {
 			this.name = name;

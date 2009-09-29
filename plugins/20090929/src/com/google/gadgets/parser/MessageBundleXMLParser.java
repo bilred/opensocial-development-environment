@@ -52,16 +52,17 @@ public class MessageBundleXMLParser implements IParser {
 		digester = new Digester();
 		digester.addRule("messagebundle", new ObjectCreateRule(MessageBundle.class));
 		digester.addRule("messagebundle/msg", new ObjectCreateRule(MessageBundle.Msg.class));
-		String[] propertyNames = new String[]{"name"};
-		String[] attributeNames = new String[]{"name"};
+		String[] propertyNames = new String[]{"name", "desc"};
+		String[] attributeNames = new String[]{"name", "desc"};
 		digester.addRule("messagebundle/msg", new SetPropertiesRule(propertyNames, attributeNames));
 		digester.addRule("messagebundle/msg", new CallMethodRule("setContent", 0));
 		digester.addRule("messagebundle/msg", new SetNextRule("addMessage"));
+
 	}
 	
 	public Object parse(File inputFile) {
 		try {
-			return digester.parse(inputFile);
+			return (MessageBundle) digester.parse(inputFile);
 		} catch (SAXException saxe) {
 			Logging.error("Error parsing message bundle files:");
 			Logging.error(saxe.toString());
@@ -76,7 +77,7 @@ public class MessageBundleXMLParser implements IParser {
 	
 	public Object parse(InputStream in) {
 		try {
-			return digester.parse(in);
+			return (MessageBundle) digester.parse(in);
 		} catch (SAXException saxe) {
 			Logging.error("Error parsing message bundle files:");
 			Logging.error(saxe.toString());
@@ -89,9 +90,9 @@ public class MessageBundleXMLParser implements IParser {
 		return null;
 	}
 	
-	public Object parse(String str) {
+	public Object parse(String uri) {
 		try {
-			return digester.parse(str);
+			return (MessageBundle) digester.parse(uri);
 		} catch (SAXException saxe) {
 			Logging.error("Error parsing message bundle files:");
 			Logging.error(saxe.toString());

@@ -69,8 +69,7 @@ public class MessageBundleXMLParserTest extends TestCase {
 	@Test
 	public void testParse() throws Exception {
 		fin = new File("test.txt");
-		assertFalse(msgBundleParser == null);
-		MessageBundle msgBundle = (MessageBundle)msgBundleParser.parse(fin);
+		MessageBundle msgBundle = (MessageBundle) msgBundleParser.parse(fin);
 		assertFalse(msgBundle == null);
 		List<Msg> messages = msgBundle.getMessages();
 		assertEquals(messages.size(), 8);
