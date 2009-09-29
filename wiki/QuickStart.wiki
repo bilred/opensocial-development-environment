@@ -43,6 +43,7 @@ http://www.eisbahn.jp/osde/img/select_opensocial.gif
 The wizard for creating new !OpenSocial project is started.
 
  * Input the project name and push `[Next`] button.
+  * You should not specify the project location path that starts with any server name (ex. \\server_name\...), because your project will not be able to launch using Jetty server.
  * Input your application's information. Title and Author Email is required. Push `[Next`] button after input.
  * Select the view type. At least, you need to support one and more views. Push `[Finish`] button after selecting.
 
