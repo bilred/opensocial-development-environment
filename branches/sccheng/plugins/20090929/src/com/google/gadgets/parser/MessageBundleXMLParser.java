@@ -17,18 +17,10 @@
  */
 package com.google.gadgets.parser;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.InputStream;
-
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
-
 import org.apache.commons.digester.CallMethodRule;
-import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
-import org.xml.sax.SAXException;
 
 import com.google.gadgets.model.MessageBundle;
 
@@ -40,16 +32,13 @@ import com.google.gadgets.model.MessageBundle;
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  *
  */
-public class MessageBundleXMLParser implements IParser {
-	
-	private Digester digester;
+public class MessageBundleXMLParser extends AbstractParser {
 	
 	public MessageBundleXMLParser() {
-		initialize();
+		super();
 	}
 	
 	protected void initialize() {
-		digester = new Digester();
 		digester.addRule("messagebundle", new ObjectCreateRule(MessageBundle.class));
 		digester.addRule("messagebundle/msg", new ObjectCreateRule(MessageBundle.Msg.class));
 		String[] propertyNames = new String[]{"name", "desc"};
@@ -57,51 +46,6 @@ public class MessageBundleXMLParser implements IParser {
 		digester.addRule("messagebundle/msg", new SetPropertiesRule(propertyNames, attributeNames));
 		digester.addRule("messagebundle/msg", new CallMethodRule("setContent", 0));
 		digester.addRule("messagebundle/msg", new SetNextRule("addMessage"));
-
 	}
 	
-	public Object parse(File inputFile) {
-		try {
-			return (MessageBundle) digester.parse(inputFile);
-		} catch (SAXException saxe) {
-			Logging.error("Error parsing message bundle files:");
-			Logging.error(saxe.toString());
-		} catch (IOException ioe) {
-			Logging.error("Error loading message bundle files:");
-			Logging.error(ioe.toString());
-		} finally {
-			digester.clear();
-		}
-		return null;
-	}
-	
-	public Object parse(InputStream in) {
-		try {
-			return (MessageBundle) digester.parse(in);
-		} catch (SAXException saxe) {
-			Logging.error("Error parsing message bundle files:");
-			Logging.error(saxe.toString());
-		} catch (IOException ioe) {
-			Logging.error("Error loading message bundle files:");
-			Logging.error(ioe.toString());
-		} finally {
-			digester.clear();
-		}
-		return null;
-	}
-	
-	public Object parse(String uri) {
-		try {
-			return (MessageBundle) digester.parse(uri);
-		} catch (SAXException saxe) {
-			Logging.error("Error parsing message bundle files:");
-			Logging.error(saxe.toString());
-		} catch (IOException ioe) {
-			Logging.error("Error loading message bundle files:");
-			Logging.error(ioe.toString());
-		} finally {
-			digester.clear();
-		}
-		return null;
-	}
 }
