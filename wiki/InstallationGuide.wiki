@@ -55,4 +55,15 @@ Eclipse starts to download and install OSDE. If the intalling task has succeed, 
 
 Install complete after restarting Eclipse. If installing OSDE is succeed, you'll be able to find the !OpenSocial icon in Eclipse toolbar.
 
+=== 5. Check a configuration ===
+
+OSDE allows you to configure some preferences on a preference panel. If you want to adjust the values, please select the following menus.
+
+ * `[Eclipse`] -> `[Preferences...`] -> `[OSDE`] (for MacOSX)
+ * `[Window`] -> `[Preferences...`] -> `[OSDE`] (for Windows)
+
+You can find the two fields "Jetty context directory" and "Shindig database directory". These fields is set the default path. In case that you use Windows, If the paths starts with any server name (ex. \\server_name\folder\...), you can't launch your application. To resolve this situation, please re-write to the path that starts with Drive letter (ex. C:\osde\...). 
+
+=== 6. Next ===
+
 See [QuickStart Quick start] at next.
