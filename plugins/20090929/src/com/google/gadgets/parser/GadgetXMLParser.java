@@ -17,18 +17,10 @@
  */
 package com.google.gadgets.parser;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
-
 import org.apache.commons.digester.CallMethodRule;
-import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
-import org.xml.sax.SAXException;
 
 import com.google.gadgets.model.MessageBundle;
 import com.google.gadgets.model.Module;
@@ -51,17 +43,13 @@ import com.google.gadgets.model.Param;
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  *
  */
-public class GadgetXMLParser extends Digester implements IParser {
-	
-	private Digester digester; 
+public class GadgetXMLParser extends AbstractParser {
 	
 	public GadgetXMLParser() {
-		initialize();
+		super();
 	}
 	
 	protected void initialize() {
-		digester = new Digester();
-		
 		digester.addRule("Module", new ObjectCreateRule(Module.class));
 
 		digester.addRule("Module/ModulePrefs", new ObjectCreateRule(Module.ModulePrefs.class));
@@ -174,54 +162,5 @@ public class GadgetXMLParser extends Digester implements IParser {
 		digester.addRule("Module/Content", new CallMethodRule("setValue", 0));
 		digester.addRule("Module/Content", new SetNextRule("addContent"));
 	}
-
-	public Object parse(InputStream in) {
-		try {
-			return digester.parse(in);
-		} catch (IOException ioe) {
-			Logging.error("Error loading gadget XML file:");
-			Logging.error(ioe.toString());
-		} catch (SAXException saxe) {
-			Logging.error("Error parsing gadget XML file:");
-			Logging.error(saxe.toString());
-			// TODO: mark parsing errors in the editor instead of failing
-		} finally {
-			clear();
-		}
-		return null;
-	}
-
-	public Object parse(File in) {
-		try {
-			return digester.parse(in);
-		} catch (IOException ioe) {
-			Logging.error("Error loading gadget XML file:");
-			Logging.error(ioe.toString());
-		} catch (SAXException saxe) {
-			Logging.error("Error parsing gadget XML file:");
-			Logging.error(saxe.toString());
-			// TODO: mark parsing errors in the editor instead of failing
-		} finally {
-			digester.clear();
-		}
-		return null;
-	}
 	
-	public Object parse(String uri) {
-		try {
-			return digester.parse(uri);
-		} catch (IOException ioe) {
-			System.err.println(ioe.getMessage());
-			//Logging.error("Error loading gadget XML file:");
-			//Logging.error(ioe.toString());
-		} catch (SAXException saxe) {
-			System.err.println(saxe.getMessage());
-			//Logging.error("Error parsing gadget XML file:");
-			//Logging.error(saxe.toString());
-			// TODO: mark parsing errors in the editor instead of failing
-		} finally {
-			digester.clear();
-		}
-		return null;
-	}
 }
