@@ -31,7 +31,7 @@ import java.io.InputStream;
  *
  */
 public interface IParser {
-	public Object parse(String str);
+	public Object parse(String uri);
 	public Object parse(InputStream in);
 	public Object parse(File fin);
 }

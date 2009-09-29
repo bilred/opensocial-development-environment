@@ -57,6 +57,10 @@ public class GadgetXMLParserTest extends TestCase {
 
 	@After
 	public void tearDown() throws Exception {
+		File file = new File("test.txt");
+		if (file.exists()) {
+			file.delete();
+		}
 	}
 
 	@Test
