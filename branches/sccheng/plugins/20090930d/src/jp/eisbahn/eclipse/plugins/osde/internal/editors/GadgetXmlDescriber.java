@@ -31,8 +31,12 @@ import com.google.gadgets.parser.ParserType;
 public class GadgetXmlDescriber implements IContentDescriber {
 
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
-		IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-		parser.parse(contents);
+		try {
+			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+			parser.parse(contents);
+		} catch (Exception e) {
+			return IContentDescriber.INDETERMINATE;
+		}
 		return IContentDescriber.VALID;
 	}
 
