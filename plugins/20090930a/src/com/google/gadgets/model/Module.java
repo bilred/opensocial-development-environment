@@ -128,9 +128,23 @@ public class Module {
 		
 	}
 	
+	/**
+	 * ModulePrefs contains sub-elements: Locale, Require, Optional, Preload,
+	 * icon, link, and OAuth.
+	 *
+	 */
 	public static class ModulePrefs {
 		
-		protected List<Object> requireOrOptionalOrPreload;
+		protected List<Object> requireOrOptionalOrPreload = new ArrayList<Object>();
+		
+		protected List<Locale> locales = new ArrayList<Locale>();
+		protected List<Require> requires = new ArrayList<Require>();
+		protected List<Optional> optionals = new ArrayList<Optional>();
+		protected List<Preload> preloads = new ArrayList<Preload>();
+		protected List<Icon> icons = new ArrayList<Icon>();
+		protected List<Link> links = new ArrayList<Link>();
+		protected List<OAuth> oauths = new ArrayList<OAuth>();
+		
 		protected String title;
 		protected String titleUrl;
 		protected String description;
@@ -154,15 +168,65 @@ public class Module {
 		}
 		
 		public List<Locale> getLocales() {
-			List<Locale> locales = new ArrayList<Locale>();
-			for (Object element : requireOrOptionalOrPreload) {
-				if (element instanceof Locale) {
-					locales.add((Locale)element);
-				}
-			}
 			return locales;
 		}
+		
+		public void addLocale(Locale locale) {
+			locales.add(locale);
+		}
+		
+		public void removeLocale(Locale locale) {
+			locales.remove(locale);
+		}
+		
+		public void addRequire(Require require) {
+			requires.add(require);
+		}
+		
+		public List<Require> getRequires() {
+			return requires;
+		}
 
+		public void addOptional(Optional optional) {
+			optionals.add(optional);
+		}
+		
+		public List<Optional> getOptionals() {
+			return optionals;
+		}
+		
+		public void addPreload(Preload preload) {
+			preloads.add(preload);
+		}
+		
+		public List<Preload> getPreloads() {
+			return preloads;
+		}
+		
+		public void addIcon(Icon icon) {
+			icons.add(icon);
+		}
+		
+		public List<Icon> getIcons() {
+			return icons;
+		}
+		
+		public void addLink(Link link) {
+			links.add(link);
+		}
+		
+		public List<Link> getLinks() {
+			return links;
+		}
+		
+		public void addOAuth(OAuth oauth) {
+			oauths.add(oauth);
+		}
+		
+		public List<OAuth> getOAuths() {
+			return oauths;
+		}
+		
 		public String getTitle() {
 			return title;
 		}
@@ -337,9 +401,9 @@ public class Module {
 		
 		/**
 		 * Definition of Locale is a bit confusing because there are messages and inlineMessages.
-		 * - messages, as defined in gadget API specification, is a URI describing where
+		 *  - messages, as defined in gadget API specification, is a URI describing where
 		 * the message bundle file is.
-		 * - inlineMessage, on the other hand, are messages that are inlined in gadget.xml
+		 *  - inlineMessage, on the other hand, are messages that are inlined in gadget.xml
 		 * rather than put in a separate message bundle file.
 		 * The variable msgBundle thus refers to outside message bundle model.
 		 * 
