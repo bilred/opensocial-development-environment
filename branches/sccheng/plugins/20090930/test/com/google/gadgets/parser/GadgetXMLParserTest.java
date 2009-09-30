@@ -72,7 +72,12 @@ public class GadgetXMLParserTest extends TestCase {
 	public final void testParse() {
 		fin = new File("test.txt");
 		assertTrue(fin.exists());
-		Module module = (Module)parser.parse(fin);
+		Module module = null;
+		try {
+			module = (Module) parser.parse(fin);
+		} catch (ParserException e) {
+			e.printStackTrace();
+		}
 		assertFalse(module == null);
 	}
 

@@ -50,6 +50,7 @@ import org.xml.sax.SAXException;
 import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.model.Module;
 import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserException;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
@@ -83,7 +84,11 @@ public class GadgetXmlEditor extends FormEditor {
 			IFile file = (IFile)input.getAdapter(IResource.class);
 			setPartName(file.getName());
 			IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-			module = (Module) gadgetXMLParser.parse(file.getContents());
+			try {
+				module = (Module) gadgetXMLParser.parse(file.getContents());
+			} catch (ParserException e) {
+				Logging.error(e.getMessage());
+			}
 		} catch (CoreException e) {
 			throw new PartInitException(e.getMessage(), e);
 		}
@@ -123,7 +128,11 @@ public class GadgetXmlEditor extends FormEditor {
 				public void pageChanged(PageChangedEvent event) {
 					try {
 						IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-						parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
+						try {
+							parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
+						} catch (ParserException e) {
+							Logging.error(e.getMessage());
+						}
 					} catch (IOException e) {
 						MessageDialog.openError(getSite().getShell(), "Error",
 								"Syntax error: " + e.getMessage());
@@ -211,7 +220,11 @@ public class GadgetXmlEditor extends FormEditor {
 		try {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			String content = getSource();
-			changeModel((Module) parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
+			try {
+				changeModel((Module) parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
+			} catch (ParserException e) {
+				Logging.warn(e.getMessage());
+			}
 		} finally {
 			reflecting = false;
 		}
