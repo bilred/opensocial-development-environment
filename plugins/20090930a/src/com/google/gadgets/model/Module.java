@@ -171,56 +171,24 @@ public class Module {
 			return locales;
 		}
 		
-		public void addLocale(Locale locale) {
-			locales.add(locale);
-		}
-		
-		public void removeLocale(Locale locale) {
-			locales.remove(locale);
-		}
-		
-		public void addRequire(Require require) {
-			requires.add(require);
-		}
-		
 		public List<Require> getRequires() {
 			return requires;
-		}
-
-		public void addOptional(Optional optional) {
-			optionals.add(optional);
 		}
 		
 		public List<Optional> getOptionals() {
 			return optionals;
 		}
 		
-		public void addPreload(Preload preload) {
-			preloads.add(preload);
-		}
-		
 		public List<Preload> getPreloads() {
 			return preloads;
-		}
-		
-		public void addIcon(Icon icon) {
-			icons.add(icon);
 		}
 		
 		public List<Icon> getIcons() {
 			return icons;
 		}
-		
-		public void addLink(Link link) {
-			links.add(link);
-		}
-		
+
 		public List<Link> getLinks() {
 			return links;
-		}
-		
-		public void addOAuth(OAuth oauth) {
-			oauths.add(oauth);
 		}
 		
 		public List<OAuth> getOAuths() {
