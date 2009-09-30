@@ -17,8 +17,8 @@
  */
 package com.google.gadgets.parser;
 
-import com.google.gadgets.MessageBundle;
-import com.google.gadgets.MessageBundle.Msg;
+import com.google.gadgets.model.MessageBundle;
+import com.google.gadgets.model.MessageBundle.Msg;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -69,8 +69,7 @@ public class MessageBundleXMLParserTest extends TestCase {
 	@Test
 	public void testParse() throws Exception {
 		fin = new File("test.txt");
-		assertFalse(msgBundleParser == null);
-		MessageBundle msgBundle = (MessageBundle)msgBundleParser.parse(fin);
+		MessageBundle msgBundle = (MessageBundle) msgBundleParser.parse(fin);
 		assertFalse(msgBundle == null);
 		List<Msg> messages = msgBundle.getMessages();
 		assertEquals(messages.size(), 8);

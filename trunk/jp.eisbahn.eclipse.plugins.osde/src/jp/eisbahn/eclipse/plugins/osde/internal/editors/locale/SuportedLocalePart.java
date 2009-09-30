@@ -55,10 +55,11 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.Module;
-import com.google.gadgets.Module.ModulePrefs;
-import com.google.gadgets.Module.ModulePrefs.Locale;
-import com.google.gadgets.Module.ModulePrefs.Locale.Msg;
+import com.google.gadgets.model.MessageBundle;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Module.ModulePrefs;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
+import com.google.gadgets.model.MessageBundle.Msg;
 
 public class SuportedLocalePart extends SectionPart implements IPartSelectionListener {
 	
@@ -177,13 +178,13 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 			if (!StringUtils.isEmpty(lang)) {
 				locale.setLang(lang);
 			}
-			List<Msg> msgs = locale.getMsg();
 			if (model.isInternal()) {
+				List<Msg> msgs = locale.getInlineMessages();
 				Map<String, String> messages = model.getMessages();
 				for (Map.Entry<String, String> entry : messages.entrySet()) {
 					Msg msg = new Msg();
 					msg.setName(entry.getKey());
-					msg.setValue(entry.getValue());
+					msg.setContent(entry.getValue());
 					msgs.add(msg);
 				}
 			} else {
@@ -192,18 +193,19 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 							+ model.getLang() + "_" + model.getCountry() + ".xml";
 					IFile bundleFile = project.getFile(fileName);
 					if (bundleFile.exists()) {
-							bundleFile.delete(true, new NullProgressMonitor());
+						bundleFile.delete(true, new NullProgressMonitor());
 					}
-					StringBuilder sb = new StringBuilder();
-					sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<messagebundle>\n");
+					MessageBundle msgBundle = new MessageBundle();
 					Map<String, String> messages = model.getMessages();
 					for (Map.Entry<String, String> entry : messages.entrySet()) {
-						sb.append("  <msg name=\"" + entry.getKey() + "\">" + entry.getValue() + "</msg>\n");
+						msgBundle.addMessage(new Msg(entry.getKey(), entry.getValue()));
 					}
-					sb.append("</messagebundle>");
-					ByteArrayInputStream in = new ByteArrayInputStream(sb.toString().getBytes("UTF8"));
+					
+					ByteArrayInputStream in = new ByteArrayInputStream(msgBundle.toString().getBytes("UTF-8"));
 					bundleFile.create(in, true, new NullProgressMonitor());
+					
 					locale.setMessages("http://localhost:8080/" + project.getName() + "/" + fileName);
+					locale.setMessageBundle(msgBundle);
 				} catch (CoreException e) {
 					Logging.warn("Creating the message bundle file failed.", e);
 				} catch (UnsupportedEncodingException e) {

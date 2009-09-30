@@ -26,7 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.gadgets.Module;
+import com.google.gadgets.model.Module;
 
 public class GadgetXMLParserTest extends TestCase {
 
@@ -57,6 +57,10 @@ public class GadgetXMLParserTest extends TestCase {
 
 	@After
 	public void tearDown() throws Exception {
+		File file = new File("test.txt");
+		if (file.exists()) {
+			file.delete();
+		}
 	}
 
 	@Test

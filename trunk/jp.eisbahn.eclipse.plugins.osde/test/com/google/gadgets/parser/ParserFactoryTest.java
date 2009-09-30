@@ -26,7 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.gadgets.Module;
+import com.google.gadgets.model.Module;
 
 public class ParserFactoryTest extends TestCase {
 
@@ -74,11 +74,12 @@ public class ParserFactoryTest extends TestCase {
 		}
 	}
 	
+	// TODO: Find a better way for testing thread-safety in JUnit
 	class GadgetConsumer implements Runnable {
 		public void run() {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			assertFalse(parser == null);
-			Module module = (Module)parser.parse(fin);
+			Module module = (Module) parser.parse(fin);
 			assertFalse(module == null);
 			assertTrue(module.getModulePrefs().getRequireOrOptionalOrPreload().size() == 0);
 		}

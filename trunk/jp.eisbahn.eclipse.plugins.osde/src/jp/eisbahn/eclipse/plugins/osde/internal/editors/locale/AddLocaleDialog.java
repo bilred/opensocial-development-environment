@@ -17,6 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -96,13 +97,13 @@ public class AddLocaleDialog extends TitleAreaDialog {
 	protected void okPressed() {
 		country = countryCombo.getText();
 		if (country.equals(OpenSocialUtil.ANY)) {
-			country = "";
+			country = "ALL";
 		} else {
 			country = country.substring(country.indexOf('(') + 1, country.length() - 1);
 		}
 		language = languageCombo.getText();
 		if (language.equals(OpenSocialUtil.ANY)) {
-			language = "";
+			language = "ALL";
 		} else {
 			language = language.substring(language.indexOf('(') + 1, language.length() - 1);
 		}

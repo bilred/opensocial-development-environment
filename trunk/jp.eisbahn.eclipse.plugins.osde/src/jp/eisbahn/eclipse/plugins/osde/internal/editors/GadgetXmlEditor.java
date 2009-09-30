@@ -48,7 +48,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.xml.sax.SAXException;
 
 import com.google.gadgets.GadgetXmlSerializer;
-import com.google.gadgets.Module;
+import com.google.gadgets.model.Module;
 import com.google.gadgets.parser.IParser;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
