@@ -386,7 +386,8 @@ public class HostingIGoogleUtil {
     public static String formPreviewGadgetUrl(String publicId, String filePath) {
         // TODO: support various views, languages, and countries.
         String hostedFileUrl = formHostedFileUrl(publicId, filePath);
-        return "http://www.gmodules.com/gadgets/ifr?&view=home&hl=en&gl=us&url=" + hostedFileUrl;
+        return "http://www.gmodules.com/gadgets/ifr?&view=home&hl=en&gl=us&nocache=1&url="
+               + hostedFileUrl;
     }
 
     /**
