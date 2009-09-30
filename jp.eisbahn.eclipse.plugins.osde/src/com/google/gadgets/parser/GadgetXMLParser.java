@@ -17,21 +17,14 @@
  */
 package com.google.gadgets.parser;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
-
 import org.apache.commons.digester.CallMethodRule;
-import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
-import org.xml.sax.SAXException;
 
-import com.google.gadgets.Module;
-import com.google.gadgets.Param;
+import com.google.gadgets.model.MessageBundle;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Param;
 
 /**
  * Parser class for parsing gadgets.xml file using Apache's Digester
@@ -50,17 +43,13 @@ import com.google.gadgets.Param;
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  *
  */
-public class GadgetXMLParser extends Digester implements IParser {
-	
-	private Digester digester; 
+public class GadgetXMLParser extends AbstractParser {
 	
 	public GadgetXMLParser() {
-		initialize();
+		super();
 	}
 	
 	protected void initialize() {
-		digester = new Digester();
-		
 		digester.addRule("Module", new ObjectCreateRule(Module.class));
 
 		digester.addRule("Module/ModulePrefs", new ObjectCreateRule(Module.ModulePrefs.class));
@@ -114,12 +103,12 @@ public class GadgetXMLParser extends Digester implements IParser {
 		digester.addRule("Module/ModulePrefs/Locale", new SetPropertiesRule(attributeNames, propertyNames));
 		digester.addRule("Module/ModulePrefs/Locale", new SetNextRule("addRequireOrOptionalOrPreload"));
 		
-		digester.addRule("Module/ModulePrefs/Locale/msg", new ObjectCreateRule(Module.ModulePrefs.Locale.Msg.class));
+		digester.addRule("Module/ModulePrefs/Locale/msg", new ObjectCreateRule(MessageBundle.Msg.class));
         attributeNames = new String[]{"name", "desc"};
         propertyNames = new String[]{"name", "desc"};
         digester.addRule("Module/ModulePrefs/Locale/msg", new SetPropertiesRule(attributeNames, propertyNames));
-        digester.addRule("Module/ModulePrefs/Locale/msg", new CallMethodRule("setValue", 0));
-        digester.addRule("Module/ModulePrefs/Locale/msg", new SetNextRule("addMsg"));
+        digester.addRule("Module/ModulePrefs/Locale/msg", new CallMethodRule("setContent", 0));
+        digester.addRule("Module/ModulePrefs/Locale/msg", new SetNextRule("addInlineMessage"));
 
 		digester.addRule("Module/ModulePrefs/OAuth", new ObjectCreateRule(Module.ModulePrefs.OAuth.class));
 		digester.addRule("Module/ModulePrefs/OAuth", new SetNextRule("addRequireOrOptionalOrPreload"));
@@ -173,54 +162,5 @@ public class GadgetXMLParser extends Digester implements IParser {
 		digester.addRule("Module/Content", new CallMethodRule("setValue", 0));
 		digester.addRule("Module/Content", new SetNextRule("addContent"));
 	}
-
-	public Object parse(InputStream in) {
-		try {
-			return digester.parse(in);
-		} catch (IOException ioe) {
-			Logging.error("Error loading gadget XML file:");
-			Logging.error(ioe.toString());
-		} catch (SAXException saxe) {
-			Logging.error("Error parsing gadget XML file:");
-			Logging.error(saxe.toString());
-			// TODO: mark parsing errors in the editor instead of failing
-		} finally {
-			clear();
-		}
-		return null;
-	}
-
-	public Object parse(File in) {
-		try {
-			return digester.parse(in);
-		} catch (IOException ioe) {
-			Logging.error("Error loading gadget XML file:");
-			Logging.error(ioe.toString());
-		} catch (SAXException saxe) {
-			Logging.error("Error parsing gadget XML file:");
-			Logging.error(saxe.toString());
-			// TODO: mark parsing errors in the editor instead of failing
-		} finally {
-			digester.clear();
-		}
-		return null;
-	}
 	
-	public Object parse(String uri) {
-		try {
-			return digester.parse(uri);
-		} catch (IOException ioe) {
-			System.err.println(ioe.getMessage());
-			//Logging.error("Error loading gadget XML file:");
-			//Logging.error(ioe.toString());
-		} catch (SAXException saxe) {
-			System.err.println(saxe.getMessage());
-			//Logging.error("Error parsing gadget XML file:");
-			//Logging.error(saxe.toString());
-			// TODO: mark parsing errors in the editor instead of failing
-		} finally {
-			digester.clear();
-		}
-		return null;
-	}
 }

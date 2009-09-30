@@ -23,15 +23,14 @@ import java.io.InputStream;
 /**
  * A dummy interface for parsers
  * 
- * All parsers should implement this interface and be added
- * to ParserFactory.java. This is intended for implementing a uniform interface
+ * All parsers should implement AbstractParser instead of this interface
+ * This interface is intended for implementing a uniform interface
  * to generate parsers for clients
  * 
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  *
  */
 public interface IParser {
-	public Object parse(String str);
 	public Object parse(InputStream in);
 	public Object parse(File fin);
 }

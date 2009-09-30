@@ -50,9 +50,9 @@ import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import com.google.gadgets.GadgetXmlSerializer;
-import com.google.gadgets.Module;
+import com.google.gadgets.model.Module;
 import com.google.gadgets.ViewType;
-import com.google.gadgets.Module.Content;
+import com.google.gadgets.model.Module.Content;
 import com.google.gadgets.parser.IParser;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;

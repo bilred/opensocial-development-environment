@@ -42,10 +42,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.Module;
-import com.google.gadgets.Param;
-import com.google.gadgets.Module.ModulePrefs;
-import com.google.gadgets.Module.ModulePrefs.Optional;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Param;
+import com.google.gadgets.model.Module.ModulePrefs;
+import com.google.gadgets.model.Module.ModulePrefs.Optional;
 
 public class ContentRewritePart extends AbstractFormPart {
 
