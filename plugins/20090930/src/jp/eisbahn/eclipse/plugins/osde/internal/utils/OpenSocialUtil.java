@@ -46,7 +46,7 @@ public class OpenSocialUtil {
 			try {
 				module = (Module) parser.parse(file.getContents());
 			} catch (ParserException e) {
-				e.printStackTrace();
+				Logging.error(e.getMessage());
 			}
 			String path = file.getFullPath().toPortableString();
 			MessageDigest digest = MessageDigest.getInstance("MD5");
@@ -77,7 +77,7 @@ public class OpenSocialUtil {
 			try {
 				module = (Module)parser.parse(new URL(url).openStream());
 			} catch (ParserException e) {
-				Logging.warn(e.getMessage());
+				Logging.error(e.getMessage());
 			}
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(url.getBytes("UTF-8"));
