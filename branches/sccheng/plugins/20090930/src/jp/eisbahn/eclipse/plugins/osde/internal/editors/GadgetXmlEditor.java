@@ -223,7 +223,7 @@ public class GadgetXmlEditor extends FormEditor {
 			try {
 				changeModel((Module) parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
 			} catch (ParserException e) {
-				Logging.warn(e.getMessage());
+				Logging.error(e.getMessage());
 			}
 		} finally {
 			reflecting = false;

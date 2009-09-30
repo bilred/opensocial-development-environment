@@ -161,7 +161,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 								try {
 									module = (Module) parser.parse(orgFile.getContents());
 								} catch (ParserException e) {
-									Logging.warn(e.getMessage());
+									Logging.error(e.getMessage());
 								}
 								List<Content> contents = module.getContent();
 								for (Content content : contents) {

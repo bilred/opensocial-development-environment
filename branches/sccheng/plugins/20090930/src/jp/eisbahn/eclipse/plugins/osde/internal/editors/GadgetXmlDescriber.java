@@ -38,7 +38,7 @@ public class GadgetXmlDescriber implements IContentDescriber {
 		try {
 			parser.parse(contents);
 		} catch (ParserException e) {
-			Logging.warn(e.getMessage());
+			Logging.error(e.getMessage());
 		}
 		return IContentDescriber.VALID;
 	}
