@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
 
 import com.google.gadgets.model.Module;
 import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserException;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
@@ -41,7 +42,12 @@ public class OpenSocialUtil {
 	public static ApplicationInformation createApplicationInformation(IFile file) throws CoreException, IOException, SAXException {
 		try {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-			Module module = (Module)parser.parse(file.getContents());
+			Module module = null;
+			try {
+				module = (Module) parser.parse(file.getContents());
+			} catch (ParserException e) {
+				e.printStackTrace();
+			}
 			String path = file.getFullPath().toPortableString();
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(path.getBytes("UTF-8"));
@@ -67,7 +73,12 @@ public class OpenSocialUtil {
 	public static ApplicationInformation createApplicationInformation(String url) throws CoreException, IOException, SAXException {
 		try {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-			Module module = (Module)parser.parse(new URL(url).openStream());
+			Module module = null;
+			try {
+				module = (Module)parser.parse(new URL(url).openStream());
+			} catch (ParserException e) {
+				Logging.warn(e.getMessage());
+			}
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(url.getBytes("UTF-8"));
 			String appId = Gadgets.toHexString(hash);

@@ -45,6 +45,7 @@ import com.google.gadgets.model.Module;
 import com.google.gadgets.ViewType;
 import com.google.gadgets.model.Module.Content;
 import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserException;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
@@ -102,7 +103,12 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 						if (OpenSocialUtil.isGadgetXml(destFile)) {
 							try {
 								IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-								Module module = (Module)gadgetXMLParser.parse(orgFile.getContents());
+								Module module = null;
+								try {
+									module = (Module) gadgetXMLParser.parse(orgFile.getContents());
+								} catch (ParserException e) {
+									Logging.warn(e.getMessage());
+								}
 								
 								// TODO: if module is null, that means we are visiting an external message bundle file
 								// we should use message bundle parser for this file instead

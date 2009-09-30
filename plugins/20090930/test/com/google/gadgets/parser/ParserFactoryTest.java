@@ -79,7 +79,12 @@ public class ParserFactoryTest extends TestCase {
 		public void run() {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			assertFalse(parser == null);
-			Module module = (Module) parser.parse(fin);
+			Module module = null;
+			try {
+				module = (Module) parser.parse(fin);
+			} catch (ParserException e) {
+				e.printStackTrace();
+			}
 			assertFalse(module == null);
 			assertTrue(module.getModulePrefs().getRequireOrOptionalOrPreload().size() == 0);
 		}

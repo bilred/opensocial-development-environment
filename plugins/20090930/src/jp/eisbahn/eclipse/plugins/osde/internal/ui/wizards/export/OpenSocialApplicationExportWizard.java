@@ -54,6 +54,7 @@ import com.google.gadgets.model.Module;
 import com.google.gadgets.ViewType;
 import com.google.gadgets.model.Module.Content;
 import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserException;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
@@ -156,7 +157,12 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 						if (OpenSocialUtil.isGadgetXml(orgFile)) {
 							try {
 								IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-								Module module = (Module)parser.parse(orgFile.getContents());
+								Module module = null;
+								try {
+									module = (Module) parser.parse(orgFile.getContents());
+								} catch (ParserException e) {
+									Logging.warn(e.getMessage());
+								}
 								List<Content> contents = module.getContent();
 								for (Content content : contents) {
 									if (ViewType.html.toString().equals(content.getType())) {

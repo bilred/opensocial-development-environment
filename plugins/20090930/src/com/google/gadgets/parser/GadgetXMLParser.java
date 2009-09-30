@@ -18,6 +18,7 @@
 package com.google.gadgets.parser;
 
 import org.apache.commons.digester.CallMethodRule;
+import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
@@ -49,7 +50,7 @@ public class GadgetXMLParser extends AbstractParser {
 		super();
 	}
 	
-	protected void initialize() {
+	protected void initialize(Digester digester) {
 		digester.addRule("Module", new ObjectCreateRule(Module.class));
 
 		digester.addRule("Module/ModulePrefs", new ObjectCreateRule(Module.ModulePrefs.class));
