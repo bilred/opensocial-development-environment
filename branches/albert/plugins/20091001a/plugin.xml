@@ -266,8 +266,8 @@
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.runAction"
-               label="Run this application"
+               id="jp.eisbahn.eclipse.plugins.osde.runActionLocally"
+               label="Run this application locally"
                icon="icons/action_go.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
             <enablement>
@@ -281,8 +281,8 @@
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.previewIGoogleAction"
-               label="Preview on production container - iGoogle (TODO: need 2-layers of dropdown list)"
+               id="jp.eisbahn.eclipse.plugins.osde.runActionOnIGoogle"
+               label="Run this application on iGoogle"
                icon="icons/action_go.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
             <enablement>
