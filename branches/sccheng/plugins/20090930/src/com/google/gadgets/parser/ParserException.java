@@ -24,9 +24,17 @@ package com.google.gadgets.parser;
  */
 @SuppressWarnings("serial")
 public class ParserException extends Exception {
-	public ParserException(){};
 	
-	public ParserException(String message) {
-		super(message);
+	public ParserException() {
+		super();
 	}
+	
+	public ParserException(String message, Throwable t) {
+		super(message, t);
+	}
+	
+	public ParserException(Throwable t) {
+		super(t.getMessage(), t);
+	}
+	
 }

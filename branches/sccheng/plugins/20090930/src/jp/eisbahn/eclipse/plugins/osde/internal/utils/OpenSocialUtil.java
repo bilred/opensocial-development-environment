@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.xml.sax.SAXException;
 
 import com.google.gadgets.model.Module;
 import com.google.gadgets.parser.IParser;
@@ -39,15 +38,12 @@ import com.google.gadgets.parser.ParserType;
 
 public class OpenSocialUtil {
 
-	public static ApplicationInformation createApplicationInformation(IFile file) throws CoreException, IOException, SAXException {
+	public static ApplicationInformation createApplicationInformation(IFile file) throws CoreException, ParserException {
 		try {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			Module module = null;
-			try {
-				module = (Module) parser.parse(file.getContents());
-			} catch (ParserException e) {
-				Logging.error(e.getMessage());
-			}
+			module = (Module) parser.parse(file.getContents());
+
 			String path = file.getFullPath().toPortableString();
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(path.getBytes("UTF-8"));
@@ -70,15 +66,12 @@ public class OpenSocialUtil {
 		}
 	}
 
-	public static ApplicationInformation createApplicationInformation(String url) throws CoreException, IOException, SAXException {
+	public static ApplicationInformation createApplicationInformation(String url) throws CoreException, ParserException, IOException {
 		try {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			Module module = null;
-			try {
-				module = (Module)parser.parse(new URL(url).openStream());
-			} catch (ParserException e) {
-				Logging.error(e.getMessage());
-			}
+			module = (Module)parser.parse(new URL(url).openStream());
+			
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(url.getBytes("UTF-8"));
 			String appId = Gadgets.toHexString(hash);

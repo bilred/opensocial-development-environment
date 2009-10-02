@@ -49,7 +49,7 @@ public abstract class AbstractParser implements IParser {
 		try {
 			return parse(new FileInputStream(file));
 		} catch (FileNotFoundException e) {
-			throw new ParserException(e.toString());
+			throw new ParserException(file.getAbsolutePath() + " not found", e);
 		}
 	}
 	
@@ -57,9 +57,9 @@ public abstract class AbstractParser implements IParser {
 		try {
 			return digester.parse(stream);
 		} catch (IOException e) {
-			throw new ParserException(e.toString());
+			throw new ParserException("IO error during parsing.", e);
 		} catch (SAXException e) {
-			throw new ParserException(e.toString());
+			throw new ParserException("Parsing error", e);
 		} finally {
 			digester.clear();
 		}

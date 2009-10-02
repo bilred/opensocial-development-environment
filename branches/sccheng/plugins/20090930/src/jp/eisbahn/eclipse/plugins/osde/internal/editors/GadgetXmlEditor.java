@@ -18,7 +18,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +45,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.xml.sax.SAXException;
 
 import com.google.gadgets.GadgetXmlSerializer;
 import com.google.gadgets.model.Module;
@@ -110,10 +109,10 @@ public class GadgetXmlEditor extends FormEditor {
 				public void doSave(IProgressMonitor progressMonitor) {
 					try {
 						reflectModel();
-					} catch (IOException e) {
+					} catch (ParserException e) {
 						Logging.warn("Reflecting to the model failed.", e);
 						// Ignore
-					} catch (SAXException e) {
+					} catch (UnsupportedEncodingException e) {
 						Logging.warn("Reflecting to the model failed.", e);
 						// Ignore
 					}
@@ -126,29 +125,30 @@ public class GadgetXmlEditor extends FormEditor {
 			setPageText(4, "Source");
 			addPageChangedListener(new IPageChangedListener() {
 				public void pageChanged(PageChangedEvent event) {
+					IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 					try {
-						IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 						try {
 							parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
-						} catch (ParserException e) {
-							Logging.error(e.getMessage());
+						} catch (UnsupportedEncodingException e) {
+							Logging.error("Encoding error during parsing.");
+							e.printStackTrace();
+							return;
 						}
-					} catch (IOException e) {
-						MessageDialog.openError(getSite().getShell(), "Error",
-								"Syntax error: " + e.getMessage());
+					} catch (ParserException e) {
+						Logging.error("Parsing error when switching pages.", e);
 						setActiveEditor(sourceEditor);
 						return;
 					}
 					if (sourceEditor.isDirty()) {
 						try {
 							reflectModel();
-						} catch (IOException e) {
+						} catch (ParserException e) {
 							MessageDialog.openError(getSite().getShell(), "Error",
-									"Syntax error: " + e.getMessage());
+									"Parsing error: " + e.getMessage());
 							setActiveEditor(sourceEditor);
-						} catch (SAXException e) {
+						} catch (UnsupportedEncodingException e) {
 							MessageDialog.openError(getSite().getShell(), "Error",
-									"Syntax error: " + e.getMessage());
+									"Encoding error: " + e.getMessage());
 							setActiveEditor(sourceEditor);
 						}
 					}
@@ -215,16 +215,13 @@ public class GadgetXmlEditor extends FormEditor {
 		return false;
 	}
 
-	private void reflectModel() throws IOException, SAXException {
+	private void reflectModel() throws ParserException, UnsupportedEncodingException {
 		reflecting = true;
 		try {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			String content = getSource();
-			try {
-				changeModel((Module) parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
-			} catch (ParserException e) {
-				Logging.error(e.getMessage());
-			}
+
+			changeModel((Module) parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
 		} finally {
 			reflecting = false;
 		}

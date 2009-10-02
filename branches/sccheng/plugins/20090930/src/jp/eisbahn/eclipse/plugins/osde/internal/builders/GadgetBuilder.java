@@ -107,7 +107,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								try {
 									module = (Module) gadgetXMLParser.parse(orgFile.getContents());
 								} catch (ParserException e) {
-									Logging.error(e.getMessage());
+									Logging.error("Parsing failed in gadget builder.", e);
 								}
 								
 								// TODO: if module is null, that means we are visiting an external message bundle file
