@@ -40,7 +40,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class PreviewIGoogleAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
-    Logger logger = Logger.getLogger(PreviewIGoogleAction.class.getName());
+    private static Logger logger = Logger.getLogger(PreviewIGoogleAction.class.getName());
 
     private IFile gadgetXmlFile;
     private IWorkbenchPart targetPart;
