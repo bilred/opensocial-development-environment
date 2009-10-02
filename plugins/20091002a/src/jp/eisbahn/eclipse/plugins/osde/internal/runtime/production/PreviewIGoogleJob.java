@@ -133,10 +133,11 @@ public class PreviewIGoogleJob extends Job {
             throws ClientProtocolException, IOException, CoreException {
         // TODO: Support save SID etc in session.
         // TODO: Support captcha.
-        logger.fine("in PreviewIGoogleJob.uploadFilesToIg");
+        logger.info("in PreviewIGoogleJob.uploadFilesToIg");
         String sid = retrieveSid(username, password, null, null);
         String publicId = retrievePublicId(sid);
         IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
+        logger.info("got edit token");
 
         File gadgetXmlFile = gadgetXmlIFile.getRawLocation().toFile();
         logger.info("gadgetXmlFile: " + gadgetXmlFile);
@@ -146,7 +147,7 @@ public class PreviewIGoogleJob extends Job {
         String targetFilePath = HOST_DIR_FOR_OSDE + gadgetXmlFile.getName();
         String uploadFileResult =
             uploadFile(sid, publicId, prefEditToken, gadgetXmlFile, targetFilePath);
-        logger.fine("uploadFileResult: " + uploadFileResult);
+        logger.info("uploadFileResult: " + uploadFileResult);
         String previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(publicId, targetFilePath);
         return previewGadgetUrl;
     }
