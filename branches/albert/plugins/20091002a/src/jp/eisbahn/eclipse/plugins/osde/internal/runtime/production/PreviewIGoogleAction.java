@@ -91,7 +91,7 @@ public class PreviewIGoogleAction
             logger.fine("OK pressed");
             String username = dialog.getUsername();
             String password = dialog.getPassword();
-            Job job = new PreviewIGoogleJob("Preview iGoogle gadget", shell, username,
+            Job job = new PreviewIGoogleJob("Preview iGoogle gadget", username,
                     password, dialog.isUseExternalBrowser(), gadgetXmlFile);
             logger.fine("job: " + job);
             job.schedule(1000);
