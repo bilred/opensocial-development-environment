@@ -38,7 +38,8 @@ public class GadgetXmlDescriber implements IContentDescriber {
 		try {
 			parser.parse(contents);
 		} catch (ParserException e) {
-			Logging.error(e.getMessage());
+			Logging.warn("Parsing failed in gadget xml describer, returning IContentDescriber.INTERMEDIATE", e);
+			return IContentDescriber.INDETERMINATE;
 		}
 		return IContentDescriber.VALID;
 	}

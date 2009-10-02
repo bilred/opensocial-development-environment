@@ -158,11 +158,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 							try {
 								IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 								Module module = null;
-								try {
-									module = (Module) parser.parse(orgFile.getContents());
-								} catch (ParserException e) {
-									Logging.error(e.getMessage());
-								}
+								module = (Module) parser.parse(orgFile.getContents());
 								List<Content> contents = module.getContent();
 								for (Content content : contents) {
 									if (ViewType.html.toString().equals(content.getType())) {
@@ -180,8 +176,8 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 								String serialize = GadgetXmlSerializer.serialize(module);
 								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								IOUtils.copy(in, out);
-							} catch(CoreException e) {
-								Logging.error("Exporting the project files failed.", e);
+							} catch(ParserException e) {
+								Logging.error("Exporting/Parsing the project files failed.", e);
 							}
 						} else {
 							IOUtils.copy(orgFile.getContents(), out);

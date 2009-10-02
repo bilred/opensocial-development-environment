@@ -17,7 +17,6 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.editors.locale;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;

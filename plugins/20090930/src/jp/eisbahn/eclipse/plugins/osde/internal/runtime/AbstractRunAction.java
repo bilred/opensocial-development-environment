@@ -46,7 +46,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.xml.sax.SAXException;
+
+import com.google.gadgets.parser.ParserException;
 
 public abstract class AbstractRunAction {
 	
@@ -64,7 +65,9 @@ public abstract class AbstractRunAction {
 	
 	protected void launch(IFile gadgetXmlFile, IProject project) {
 		try {
-			ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(gadgetXmlFile);
+			ApplicationInformation appInfo;
+			appInfo = OpenSocialUtil.createApplicationInformation(gadgetXmlFile);
+			
 			ApplicationService applicationService = Activator.getDefault().getApplicationService();
 			applicationService.storeAppInfo(appInfo);
 			//
@@ -95,10 +98,8 @@ public abstract class AbstractRunAction {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
 		} catch (CoreException e) {
 			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
-		} catch (IOException e) {
-			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
-		} catch (SAXException e) {
-			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
+		} catch (ParserException e) {
+			MessageDialog.openError(shell, "Error", "Invalid syntax. " + e.getMessage());
 		}
 	}
 

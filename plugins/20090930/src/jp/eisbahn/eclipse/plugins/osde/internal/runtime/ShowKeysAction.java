@@ -17,8 +17,6 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
-import java.io.IOException;
-
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
@@ -43,7 +41,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.xml.sax.SAXException;
+
+import com.google.gadgets.parser.ParserException;
 
 public class ShowKeysAction implements IObjectActionDelegate {
 
@@ -115,9 +114,7 @@ public class ShowKeysAction implements IObjectActionDelegate {
 			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
 		} catch (ConnectionException e) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
-		} catch (IOException e) {
-			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
-		} catch (SAXException e) {
+		} catch (ParserException e) {
 			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
 		}
 	}
