@@ -62,11 +62,10 @@ public class PreviewIGoogleJob extends Job {
     private boolean useExternalBrowser;
     private IFile gadgetXmlIFile;
 
-    public PreviewIGoogleJob(String jobName, Shell shell, String username, String password,
+    public PreviewIGoogleJob(String jobName, String username, String password,
             boolean useExternalBrowser, IFile gadgetXmlIFile) {
         super(jobName);
         this.jobName = jobName;
-        this.shell = shell;
         this.username = username;
         this.password = password;
         this.useExternalBrowser = useExternalBrowser;

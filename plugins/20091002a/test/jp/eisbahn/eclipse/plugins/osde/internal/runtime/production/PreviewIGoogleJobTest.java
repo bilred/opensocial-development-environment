@@ -75,11 +75,10 @@ public class PreviewIGoogleJobTest {
      */
     @Test
     public void testUploadFilesToIg() {
-        Shell shell = new Shell(); // FIXME
         String username = "osde.test.001";
         String password = "osdetest888";
         IFile gadgetXmlFile = null; // FIXME
-        PreviewIGoogleJob job = new PreviewIGoogleJob("Preview iGoogle gadget", shell, username,
+        PreviewIGoogleJob job = new PreviewIGoogleJob("Preview iGoogle gadget", username,
                 password, false, gadgetXmlFile);
     }
 
