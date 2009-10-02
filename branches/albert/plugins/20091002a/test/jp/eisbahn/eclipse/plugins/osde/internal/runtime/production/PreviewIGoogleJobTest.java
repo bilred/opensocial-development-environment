@@ -75,7 +75,7 @@ public class PreviewIGoogleJobTest {
      */
     @Test
     public void testUploadFilesToIg() {
-        Shell shell = null; // FIXME
+        Shell shell = new Shell(); // FIXME
         String username = "osde.test.001";
         String password = "osdetest888";
         IFile gadgetXmlFile = null; // FIXME
