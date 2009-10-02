@@ -97,18 +97,15 @@ public class FeaturesPart extends AbstractFormPart {
 		Module module = getModule();
 		if (module != null) {
 			ModulePrefs modulePrefs = module.getModulePrefs();
-			List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
-			for (Object value : elements) {
-				if (value instanceof Require) {
-					Require require = (Require)value;
-					String featureRealName = require.getFeature();
-					FeatureName feature = FeatureName.getFeatureName(featureRealName);
-					Button button = buttonMap.get(feature);
-					if (button != null) {
-						button.setSelection(true);
-					} else {
-						freeFeatures.add(featureRealName);
-					}
+			List<Require> requires = modulePrefs.getRequires();
+			for (Require require : requires) {
+				String featureRealName = require.getFeature();
+				FeatureName feature = FeatureName.getFeatureName(featureRealName);
+				Button button = buttonMap.get(feature);
+				if (button != null) {
+					button.setSelection(true);
+				} else {
+					freeFeatures.add(featureRealName);
 				}
 			}
 		}
@@ -217,8 +214,8 @@ public class FeaturesPart extends AbstractFormPart {
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		clearFeatures(modulePrefs);
-		List<Object> requireOrOptionalOrPreload = modulePrefs.getRequireOrOptionalOrPreload();
+		modulePrefs.getRequires().clear();
+		List<Require> requires = modulePrefs.getRequires();
 		Set<Entry<FeatureName,Button>> set = buttonMap.entrySet();
 		for (Entry<FeatureName, Button> entry : set) {
 			FeatureName featureName = entry.getKey();
@@ -226,27 +223,17 @@ public class FeaturesPart extends AbstractFormPart {
 			if (button.getSelection()) {
 				Require require = new Require();
 				require.setFeature(featureName.toString());
-				requireOrOptionalOrPreload.add(require);
+				requires.add(require);
 			}
 		}
 		Set<String> freeFeatures = (Set<String>)freeFraturesList.getInput();
 		for (String featureName : freeFeatures) {
 			Require require = new Require();
 			require.setFeature(featureName);
-			requireOrOptionalOrPreload.add(require);
+			requires.add(require);
 		}
 	}
 	
-	private void clearFeatures(ModulePrefs modulePrefs) {
-		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (int i = elements.size() - 1; i >= 0; i--) {
-			Object element = elements.get(i);
-			if (element instanceof Require) {
-				elements.remove(i);
-			}
-		}
-	}
-
 	public void changeModel() {
 		displayInitialValue();
 	}
