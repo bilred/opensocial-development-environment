@@ -135,8 +135,6 @@ public class Module {
 	 */
 	public static class ModulePrefs {
 		
-		protected List<Object> requireOrOptionalOrPreload = new ArrayList<Object>();
-		
 		protected List<Locale> locales = new ArrayList<Locale>();
 		protected List<Require> requires = new ArrayList<Require>();
 		protected List<Optional> optionals = new ArrayList<Optional>();
@@ -152,47 +150,61 @@ public class Module {
 		protected String authorEmail;
 		protected String screenshot;
 		protected String thumbnail;
-		
-		public List<Object> getRequireOrOptionalOrPreload() {
-			if (requireOrOptionalOrPreload == null) {
-				requireOrOptionalOrPreload = new ArrayList<Object>();
-			}
-			return this.requireOrOptionalOrPreload;
-		}
-		
-		public void addRequireOrOptionalOrPreload(Object obj) {
-			if (requireOrOptionalOrPreload == null) {
-				requireOrOptionalOrPreload = new ArrayList<Object>();
-			}
-			requireOrOptionalOrPreload.add(obj);
-		}
-		
+				
 		public List<Locale> getLocales() {
 			return locales;
+		}
+		
+		public void addLocale(Locale locale) {
+			locales.add(locale);
 		}
 		
 		public List<Require> getRequires() {
 			return requires;
 		}
 		
+		public void addRequire(Require require) {
+			requires.add(require);
+		}
+		
 		public List<Optional> getOptionals() {
 			return optionals;
+		}
+		
+		public void addOptional(Optional optional) {
+			optionals.add(optional);
 		}
 		
 		public List<Preload> getPreloads() {
 			return preloads;
 		}
 		
+		public void addPreload(Preload preload) {
+			preloads.add(preload);
+		}
+		
 		public List<Icon> getIcons() {
 			return icons;
+		}
+		
+		public void addIcon(Icon icon) {
+			icons.add(icon);
 		}
 
 		public List<Link> getLinks() {
 			return links;
 		}
 		
+		public void addLink(Link link) {
+			links.add(link);
+		}
+		
 		public List<OAuth> getOAuths() {
 			return oauths;
+		}
+		
+		public void addOAuth(OAuth oauth) {
+			oauths.add(oauth);
 		}
 		
 		public String getTitle() {

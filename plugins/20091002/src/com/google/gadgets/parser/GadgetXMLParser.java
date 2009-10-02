@@ -62,7 +62,7 @@ public class GadgetXMLParser extends AbstractParser {
 		attributeNames = new String[]{"feature"};
 		propertyNames = new String[]{"feature"};
 		digester.addRule("Module/ModulePrefs/Require", new SetPropertiesRule(attributeNames, propertyNames));
-		digester.addRule("Module/ModulePrefs/Require", new SetNextRule("addRequireOrOptionalOrPreload"));
+		digester.addRule("Module/ModulePrefs/Require", new SetNextRule("addRequire"));
 
 		digester.addRule("Module/ModulePrefs/Require/Param", new ObjectCreateRule(Param.class));
 		attributeNames = new String[]{"name"};
@@ -75,7 +75,7 @@ public class GadgetXMLParser extends AbstractParser {
 		attributeNames = new String[]{"feature"};
 		propertyNames = new String[]{"feature"};
 		digester.addRule("Module/ModulePrefs/Optional", new SetPropertiesRule(attributeNames, propertyNames));
-		digester.addRule("Module/ModulePrefs/Optional", new SetNextRule("addRequireOrOptionalOrPreload"));
+		digester.addRule("Module/ModulePrefs/Optional", new SetNextRule("addOptional"));
 
 		digester.addRule("Module/ModulePrefs/Optional/Param", new ObjectCreateRule(Param.class));
 		attributeNames = new String[]{"name"};
@@ -89,19 +89,19 @@ public class GadgetXMLParser extends AbstractParser {
 		propertyNames = new String[]{"mode", "type"};
 		digester.addRule("Module/ModulePrefs/Icon", new SetPropertiesRule(attributeNames, propertyNames));
 		digester.addRule("Module/ModulePrefs/Icon", new CallMethodRule("setValue", 0));
-		digester.addRule("Module/ModulePrefs/Icon", new SetNextRule("addRequireOrOptionalOrPreload"));
+		digester.addRule("Module/ModulePrefs/Icon", new SetNextRule("addIcon"));
 
 		digester.addRule("Module/ModulePrefs/Link", new ObjectCreateRule(Module.ModulePrefs.Link.class));
 		attributeNames = new String[]{"href", "rel", "method"};
 		propertyNames = new String[]{"href", "rel", "method"};
 		digester.addRule("Module/ModulePrefs/Link", new SetPropertiesRule(attributeNames, propertyNames));
-		digester.addRule("Module/ModulePrefs/Link", new SetNextRule("addRequireOrOptionalOrPreload"));
+		digester.addRule("Module/ModulePrefs/Link", new SetNextRule("addLink"));
 
 		digester.addRule("Module/ModulePrefs/Locale", new ObjectCreateRule(Module.ModulePrefs.Locale.class));
 		attributeNames = new String[]{"lang", "country", "messages", "language_direction"};
 		propertyNames = new String[]{"lang", "country", "messages", "languageDirection"};
 		digester.addRule("Module/ModulePrefs/Locale", new SetPropertiesRule(attributeNames, propertyNames));
-		digester.addRule("Module/ModulePrefs/Locale", new SetNextRule("addRequireOrOptionalOrPreload"));
+		digester.addRule("Module/ModulePrefs/Locale", new SetNextRule("addLocale"));
 		
 		digester.addRule("Module/ModulePrefs/Locale/msg", new ObjectCreateRule(MessageBundle.Msg.class));
         attributeNames = new String[]{"name", "desc"};
@@ -111,7 +111,7 @@ public class GadgetXMLParser extends AbstractParser {
         digester.addRule("Module/ModulePrefs/Locale/msg", new SetNextRule("addInlineMessage"));
 
 		digester.addRule("Module/ModulePrefs/OAuth", new ObjectCreateRule(Module.ModulePrefs.OAuth.class));
-		digester.addRule("Module/ModulePrefs/OAuth", new SetNextRule("addRequireOrOptionalOrPreload"));
+		digester.addRule("Module/ModulePrefs/OAuth", new SetNextRule("addOAuth"));
 
 		digester.addRule("Module/ModulePrefs/OAuth/Service", new ObjectCreateRule(Module.ModulePrefs.OAuth.Service.class));
 		attributeNames = new String[]{"name"};
@@ -141,7 +141,7 @@ public class GadgetXMLParser extends AbstractParser {
 		attributeNames = new String[]{"href", "authz", "sign_owner", "sign_viewer", "views", "oauth_service_name", "oauth_token_name", "oauth_request_token", "oauth_request_token_secret"};
 		propertyNames = new String[]{"href", "authz", "signOwner", "signViewer", "views", "oauthServiceName", "oauthTokenName", "oauthRequestToken", "oauthRequestTokenSecret"};
 		digester.addRule("Module/ModulePrefs/Preload", new SetPropertiesRule(attributeNames, propertyNames));
-		digester.addRule("Module/ModulePrefs/Preload", new SetNextRule("addRequireOrOptionalOrPreload"));
+		digester.addRule("Module/ModulePrefs/Preload", new SetNextRule("addPreload"));
 
 		digester.addRule("Module/UserPref", new ObjectCreateRule(Module.UserPref.class));
 		attributeNames = new String[]{"name", "display_name", "default_value", "required", "datatype"};
