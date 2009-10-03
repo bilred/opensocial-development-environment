@@ -36,35 +36,33 @@ import org.xml.sax.SAXException;
  */
 public abstract class AbstractParser implements IParser {
 	
-	protected Digester digester;
+	private Digester digester;
 	
 	protected AbstractParser() {
 		digester = new Digester();
-		initialize();
+		initialize(digester);
 	}
 	
-	protected abstract void initialize();
+	protected abstract void initialize(Digester digester);
 
-	public Object parse(File file) {
+	public Object parse(File file) throws ParserException {
 		try {
 			return parse(new FileInputStream(file));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			throw new ParserException(file.getAbsolutePath() + " not found", e);
 		}
-		return null;
 	}
 	
-	public Object parse(InputStream stream) {
+	public Object parse(InputStream stream) throws ParserException {
 		try {
 			return digester.parse(stream);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new ParserException("IO error during parsing.", e);
 		} catch (SAXException e) {
-			e.printStackTrace();
+			throw new ParserException("Parsing error", e);
 		} finally {
 			digester.clear();
 		}
-		return null;
 	}
 
 }

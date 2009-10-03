@@ -18,6 +18,7 @@
 package com.google.gadgets.parser;
 
 import org.apache.commons.digester.CallMethodRule;
+import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
@@ -38,7 +39,7 @@ public class MessageBundleXMLParser extends AbstractParser {
 		super();
 	}
 	
-	protected void initialize() {
+	protected void initialize(Digester digester) {
 		digester.addRule("messagebundle", new ObjectCreateRule(MessageBundle.class));
 		digester.addRule("messagebundle/msg", new ObjectCreateRule(MessageBundle.Msg.class));
 		String[] propertyNames = new String[]{"name", "desc"};
