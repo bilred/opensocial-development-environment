@@ -20,11 +20,14 @@ package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 import java.io.IOException;
 import java.io.InputStream;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescriber;
 import org.eclipse.core.runtime.content.IContentDescription;
 
 import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserException;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
@@ -32,7 +35,12 @@ public class GadgetXmlDescriber implements IContentDescriber {
 
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
 		IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-		parser.parse(contents);
+		try {
+			parser.parse(contents);
+		} catch (ParserException e) {
+			Logging.warn("Parsing failed in gadget xml describer, returning IContentDescriber.INTERMEDIATE", e);
+			return IContentDescriber.INDETERMINATE;
+		}
 		return IContentDescriber.VALID;
 	}
 

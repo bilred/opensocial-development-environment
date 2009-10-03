@@ -69,10 +69,11 @@ public class GadgetXMLParserTest extends TestCase {
 	}
 
 	@Test
-	public final void testParse() {
+	public final void testParse() throws ParserException {
 		fin = new File("test.txt");
 		assertTrue(fin.exists());
-		Module module = (Module)parser.parse(fin);
+		Module module = null;
+		module = (Module) parser.parse(fin);
 		assertFalse(module == null);
 	}
 
