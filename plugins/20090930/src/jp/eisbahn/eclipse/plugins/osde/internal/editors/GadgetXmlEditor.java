@@ -127,15 +127,15 @@ public class GadgetXmlEditor extends FormEditor {
 				public void pageChanged(PageChangedEvent event) {
 					IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 					try {
-						try {
-							parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
-						} catch (UnsupportedEncodingException e) {
-							Logging.error("Encoding error during parsing.");
-							e.printStackTrace();
-							return;
-						}
+						parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8"))); 
+					} catch (UnsupportedEncodingException e) {
+						MessageDialog.openError(getSite().getShell(), "Error",
+								"Encoding error in source editor: " + e.getMessage());
+						setActiveEditor(sourceEditor);
+						return;
 					} catch (ParserException e) {
-						Logging.error("Parsing error when switching pages.", e);
+						MessageDialog.openError(getSite().getShell(), "Error",
+								"Syntax error: " + e.getMessage());
 						setActiveEditor(sourceEditor);
 						return;
 					}
