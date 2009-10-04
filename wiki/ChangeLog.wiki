@@ -1,5 +1,16 @@
 = Change log =
 
+=== October 4, 2009 ===
+ Version 0.3.0 Candidate 1 has been released.
+
+ * Supporting to OpenSocial v0.9.
+ * Changing the default path of the working directory for OSDE.
+ * Fixed about add Relationship.
+ * Fixed the problem that can't execute the gadget in a sub folder.
+ * Removing the legacy of h2-library.
+ * Fixed shindig launch error.
+ * Add the logging function. The log file will be written in the $HOME/.osde directory.
+
 === August 16, 2009 ===
  Version 0.2.8 has been released.
 
