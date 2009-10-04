@@ -792,7 +792,7 @@ for NSIS, however, are subject to the terms of the Common Public License version
    </license>
 
    <url>
-      <update url="http://opensocial-development-environment.googlecode.com/svn/update-site/site.xml"/>
+      <update url="http://opensocial-development-environment.googlecode.com/svn/update-site-candidate/site.xml"/>
    </url>
 
    <requires>
