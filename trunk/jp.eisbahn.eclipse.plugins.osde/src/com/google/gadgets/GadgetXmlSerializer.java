@@ -58,18 +58,14 @@ public class GadgetXmlSerializer {
 	private static String createIcon(Module module) {
 		StringBuilder sb = new StringBuilder();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<?> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (Object element : elements) {
-			Object value = element;
-			if (value instanceof Icon) {
-				Icon icon = (Icon)value;
-				sb.append("        <Icon");
-				createAttribute("mode", icon.getMode(), sb);
-				createAttribute("type", icon.getType(), sb);
-				sb.append(">");
-				sb.append(Gadgets.trim(icon.getValue()));
-				sb.append("</Icon>\n");
-			}
+		List<Icon> icons = modulePrefs.getIcons();
+		for (Icon icon : icons) {
+			sb.append("        <Icon");
+			createAttribute("mode", icon.getMode(), sb);
+			createAttribute("type", icon.getType(), sb);
+			sb.append(">");
+			sb.append(Gadgets.trim(icon.getValue()));
+			sb.append("</Icon>\n");
 		}
 		return sb.toString();
 	}
@@ -127,25 +123,21 @@ public class GadgetXmlSerializer {
 	private static Object createLocales(Module module) {
 		StringBuilder sb = new StringBuilder();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<?> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (Object element : elements) {
-			Object value = element;
-			if (value instanceof Locale) {
-				Locale locale = (Locale)value;
-				sb.append("        <Locale");
-				createAttribute("lang", locale.getLang(), sb);
-				createAttribute("country", locale.getCountry(), sb);
-				createAttribute("messages", locale.getMessages(), sb);
-				List<Msg> msgs = locale.getInlineMessages();
-				if (msgs != null && !msgs.isEmpty()) {
-					sb.append(">\n");
-					for (Msg msg : msgs) {
-						sb.append("            <msg name=\"" + msg.getName() + "\">" + escape(msg.getContent()) + "</msg>\n");
-					}
-					sb.append("        </Locale>\n");
-				} else {
-					sb.append(" />\n");
+		List<Locale> locales = modulePrefs.getLocales();
+		for (Locale locale : locales) {
+			sb.append("        <Locale");
+			createAttribute("lang", locale.getLang(), sb);
+			createAttribute("country", locale.getCountry(), sb);
+			createAttribute("messages", locale.getMessages(), sb);
+			List<Msg> msgs = locale.getInlineMessages();
+			if (msgs != null && !msgs.isEmpty()) {
+				sb.append(">\n");
+				for (Msg msg : msgs) {
+					sb.append("            <msg name=\"" + msg.getName() + "\">" + escape(msg.getContent()) + "</msg>\n");
 				}
+				sb.append("        </Locale>\n");
+			} else {
+				sb.append(" />\n");
 			}
 		}
 		return sb.toString();
@@ -154,43 +146,42 @@ public class GadgetXmlSerializer {
 	private static String createRequiresAndOptionals(Module module) {
 		StringBuilder sb = new StringBuilder();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<?> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		for (Object element : elements) {
-			Object value = element;
-			if (value instanceof Require) {
-				Require require = (Require)value;
-				sb.append("        <Require feature=\"" + require.getFeature() + "\"");
-				List<Param> params = require.getParam();
-				if (params.isEmpty()) {
-					sb.append(" />\n");
-				} else {
-					sb.append(">\n");
-					for (Param param : params) {
-						sb.append("            <Param name=\"");
-						sb.append(param.getName());
-						sb.append("\">");
-						sb.append(escape(param.getValue()));
-						sb.append("</Param>\n");
-					}
-					sb.append("        </Require>\n");
+		List<Require> requires = modulePrefs.getRequires();
+		List<Optional> optionals = modulePrefs.getOptionals();
+		
+		for (Require require : requires) {
+			sb.append("        <Require feature=\"" + require.getFeature() + "\"");
+			List<Param> params = require.getParam();
+			if (params.isEmpty()) {
+				sb.append(" />\n");
+			} else {
+				sb.append(">\n");
+				for (Param param : params) {
+					sb.append("            <Param name=\"");
+					sb.append(param.getName());
+					sb.append("\">");
+					sb.append(escape(param.getValue()));
+					sb.append("</Param>\n");
 				}
-			} else if (value instanceof Optional) {
-				Optional optional = (Optional)value;
-				sb.append("        <Optional feature=\"" + optional.getFeature() + "\"");
-				List<Param> params = optional.getParam();
-				if (params.isEmpty()) {
-					sb.append(" />\n");
-				} else {
-					sb.append(">\n");
-					for (Param param : params) {
-						sb.append("            <Param name=\"");
-						sb.append(param.getName());
-						sb.append("\">");
-						sb.append(escape(param.getValue()));
-						sb.append("</Param>\n");
-					}
-					sb.append("        </Optional>\n");
+				sb.append("        </Require>\n");
+			}
+		}
+		
+		for (Optional optional : optionals) {
+			sb.append("        <Optional feature=\"" + optional.getFeature() + "\"");
+			List<Param> params = optional.getParam();
+			if (params.isEmpty()) {
+				sb.append(" />\n");
+			} else {
+				sb.append(">\n");
+				for (Param param : params) {
+					sb.append("            <Param name=\"");
+					sb.append(param.getName());
+					sb.append("\">");
+					sb.append(escape(param.getValue()));
+					sb.append("</Param>\n");
 				}
+				sb.append("        </Optional>\n");
 			}
 		}
 		return sb.toString();
