@@ -133,25 +133,22 @@ public class IconPart extends AbstractFormPart {
 		Module module = getModule();
 		if (module != null) {
 			ModulePrefs modulePrefs = module.getModulePrefs();
-			List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
-			for (Object value : elements) {
-				if (value instanceof Icon) {
-					useButton.setSelection(true);
-					Icon icon = (Icon)value;
-					String mode = icon.getMode();
-					if (StringUtils.isNotEmpty(mode)) {
-						urlRadio.setSelection(false);
-						base64Radio.setSelection(true);
-						base64TypeText.setText(Gadgets.trim(icon.getType()));
-						encodedIcon = Gadgets.trim(icon.getValue());
-						base64Text.setText(encodedIcon.substring(0, 20) + "...");
-					} else {
-						urlRadio.setSelection(true);
-						base64Radio.setSelection(false);
-						urlText.setText(Gadgets.trim(icon.getValue()));
-					}
-					break;
+			List<Icon> icons = modulePrefs.getIcons();
+			for (Icon icon : icons) {
+				useButton.setSelection(true);
+				String mode = icon.getMode();
+				if (StringUtils.isNotEmpty(mode)) {
+					urlRadio.setSelection(false);
+					base64Radio.setSelection(true);
+					base64TypeText.setText(Gadgets.trim(icon.getType()));
+					encodedIcon = Gadgets.trim(icon.getValue());
+					base64Text.setText(encodedIcon.substring(0, 20) + "...");
+				} else {
+					urlRadio.setSelection(true);
+					base64Radio.setSelection(false);
+					urlText.setText(Gadgets.trim(icon.getValue()));
 				}
+				break;
 			}
 		}
 		setEnabledControls();
@@ -252,8 +249,9 @@ public class IconPart extends AbstractFormPart {
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		removeAllIcons(elements);
+		List<Icon> icons = modulePrefs.getIcons();
+		icons.clear();
+		
 		if (useButton.getSelection()) {
 			Icon icon = new Icon();
 			if (urlRadio.getSelection()) {
@@ -263,19 +261,10 @@ public class IconPart extends AbstractFormPart {
 				icon.setType(base64TypeText.getText());
 				icon.setValue(encodedIcon);
 			}
-			elements.add(icon);
+			icons.add(icon);
 		}
 	}
 	
-	private void removeAllIcons(List<Object> elements) {
-		for (int i = elements.size() - 1; i >= 0; i--) {
-			Object value = elements.get(i);
-			if (value instanceof Icon) {
-				elements.remove(i);
-			}
-		}
-	}
-
 	public void changeModel() {
 		displayInitialValue();
 	}

@@ -67,8 +67,10 @@ public class GadgetXmlLoadTest extends TestCase {
 		FileInputStream in = new FileInputStream(file);
 		Module module = (Module) target.parse(in);
 		assertNotNull(module);
+		
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		assertNotNull(modulePrefs);
+		
 		assertEquals("title1", modulePrefs.getTitle());
 		assertEquals("titleUrl1", modulePrefs.getTitleUrl());
 		assertEquals("description1", modulePrefs.getDescription());
@@ -76,28 +78,38 @@ public class GadgetXmlLoadTest extends TestCase {
 		assertEquals("authorEmail1", modulePrefs.getAuthorEmail());
 		assertEquals("screenshot1", modulePrefs.getScreenshot());
 		assertEquals("thumbnail1", modulePrefs.getThumbnail());
-		List<Object> requireOrOptionalOrPreload = modulePrefs.getRequireOrOptionalOrPreload();
-		Require require = (Require)requireOrOptionalOrPreload.get(0);
+		
+		List<Require> requires = modulePrefs.getRequires();
+		Require require = requires.get(0);
 		assertEquals("feature1", require.getFeature());
+		
 		List<Param> params = require.getParam();
 		Param param = params.get(0);
 		assertEquals("name1", param.getName());
 		assertEquals("value1", param.getValue());
-		Optional optional = (Optional)requireOrOptionalOrPreload.get(1);
+		
+		List<Optional> optionals = modulePrefs.getOptionals();
+		Optional optional = optionals.get(0);
 		assertEquals("feature2", optional.getFeature());
 		params = optional.getParam();
 		param = params.get(0);
 		assertEquals("name2", param.getName());
 		assertEquals("value2", param.getValue());
-		Icon icon = (Icon)requireOrOptionalOrPreload.get(2);
+		
+		List<Icon> icons = modulePrefs.getIcons();
+		Icon icon = icons.get(0);
 		assertEquals("mode1", icon.getMode());
 		assertEquals("type1", icon.getType());
 		assertEquals("value3", icon.getValue());
-		Link link = (Link)requireOrOptionalOrPreload.get(3);
+		
+		List<Link> links = modulePrefs.getLinks();
+		Link link = links.get(0);
 		assertEquals("href1", link.getHref());
 		assertEquals("rel1", link.getRel());
 		assertEquals("method1", link.getMethod());
-		Locale locale = (Locale)requireOrOptionalOrPreload.get(4);
+		
+		List<Locale> locales = modulePrefs.getLocales();
+		Locale locale = locales.get(0);
 		assertEquals("lang1", locale.getLang());
 		assertEquals("country1", locale.getCountry());
 		assertEquals("messages1", locale.getMessages());
@@ -107,7 +119,9 @@ public class GadgetXmlLoadTest extends TestCase {
 		assertEquals("value4", msg.getContent());
 		assertEquals("name3", msg.getName());
 		assertEquals("desc1", msg.getDesc());
-		OAuth oauth = (OAuth)requireOrOptionalOrPreload.get(5);
+		
+		List<OAuth> oauths = modulePrefs.getOAuths();
+		OAuth oauth = oauths.get(0);
 		List<Service> services = oauth.getService();
 		Service service = services.get(0);
 		assertEquals("name4", service.getName());
@@ -121,7 +135,9 @@ public class GadgetXmlLoadTest extends TestCase {
 		assertEquals("paramLocation2", access.getParamLocation());
 		Authorization authorization = service.getAuthorization();
 		assertEquals("url3", authorization.getUrl());
-		Preload preload = (Preload)requireOrOptionalOrPreload.get(6);
+		
+		List<Preload> preloads = modulePrefs.getPreloads();
+		Preload preload = preloads.get(0);
 		assertEquals("href2", preload.getHref());
 		assertEquals("authz1", preload.getAuthz());
 		assertTrue(preload.isSignOwner());
@@ -131,6 +147,7 @@ public class GadgetXmlLoadTest extends TestCase {
 		assertEquals("oauthTokenName1", preload.getOauthTokenName());
 		assertEquals("oauthRequestToken1", preload.getOauthRequestToken());
 		assertEquals("oauthRequestTokenSecret1", preload.getOauthRequestTokenSecret());
+		
 		List<UserPref> userPrefs = module.getUserPref();
 		UserPref userPref = userPrefs.get(0);
 		assertEquals("name5", userPref.getName());
@@ -142,6 +159,7 @@ public class GadgetXmlLoadTest extends TestCase {
 		EnumValue enumValue = enumValues.get(0);
 		assertEquals("value5", enumValue.getValue());
 		assertEquals("displayValue1", enumValue.getDisplayValue());
+		
 		List<Content> contents = module.getContent();
 		Content content = contents.get(0);
 		assertEquals("type2", content.getType());
