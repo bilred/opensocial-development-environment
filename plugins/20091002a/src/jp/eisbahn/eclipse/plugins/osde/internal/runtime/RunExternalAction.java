@@ -40,7 +40,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
-import org.xml.sax.SAXException;
+
+import com.google.gadgets.parser.ParserException;
 
 public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 
@@ -84,7 +85,7 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 		} catch (IOException e) {
 			Logging.warn("Invalid gadget file.", e);
 			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + e.getMessage());
-		} catch (SAXException e) {
+		} catch (ParserException e) {
 			Logging.warn("Invalid gadget file.", e);
 			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + e.getMessage());
 		}

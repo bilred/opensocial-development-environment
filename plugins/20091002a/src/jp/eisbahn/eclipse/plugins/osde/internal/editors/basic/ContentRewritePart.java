@@ -116,35 +116,32 @@ public class ContentRewritePart extends AbstractFormPart {
 		Module module = getModule();
 		if (module != null) {
 			ModulePrefs modulePrefs = module.getModulePrefs();
-			List<?> elements = modulePrefs.getRequireOrOptionalOrPreload();
-			for (Object element : elements) {
-				if (element instanceof Optional) {
-					Optional optional = (Optional)element;
-					String feature = optional.getFeature();
-					if (feature.equals("content-rewrite")) {
-						useButton.setSelection(true);
-						List<Param> params = optional.getParam();
-						for (Param param : params) {
-							if (param.getName().equals("include-urls")) {
-								includeUrlsText.setText(Gadgets.trim(param.getValue()));
-							}
-							if (param.getName().equals("exclude-urls")) {
-								excludeUrlsText.setText(Gadgets.trim(param.getValue()));
-							}
-							if (param.getName().equals("include-tags")) {
-								includeTagsText.setText(Gadgets.trim(param.getValue()));
-							}
-							if (param.getName().equals("expires")) {
-								Integer expiresValue = Gadgets.toInteger(param.getValue());
-								if (expiresValue != null) {
-									expiresSpinner.setSelection(expiresValue);
-								} else {
-									expiresSpinner.setSelection(86400);
-								}
+			List<Optional> optionals = modulePrefs.getOptionals();
+			for (Optional optional : optionals) {
+				String feature = optional.getFeature();
+				if (feature.equals("content-rewrite")) {
+					useButton.setSelection(true);
+					List<Param> params = optional.getParam();
+					for (Param param : params) {
+						if (param.getName().equals("include-urls")) {
+							includeUrlsText.setText(Gadgets.trim(param.getValue()));
+						}
+						if (param.getName().equals("exclude-urls")) {
+							excludeUrlsText.setText(Gadgets.trim(param.getValue()));
+						}
+						if (param.getName().equals("include-tags")) {
+							includeTagsText.setText(Gadgets.trim(param.getValue()));
+						}
+						if (param.getName().equals("expires")) {
+							Integer expiresValue = Gadgets.toInteger(param.getValue());
+							if (expiresValue != null) {
+								expiresSpinner.setSelection(expiresValue);
+							} else {
+								expiresSpinner.setSelection(86400);
 							}
 						}
-						return;
 					}
+					return;
 				}
 			}
 		}
@@ -196,10 +193,10 @@ public class ContentRewritePart extends AbstractFormPart {
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		Optional contentRewriteNode = getContentRewriteNode(elements);
+		List<Optional> optionals = modulePrefs.getOptionals();
+		Optional contentRewriteNode = getContentRewriteNode(optionals);
 		if (contentRewriteNode != null) {
-			elements.remove(contentRewriteNode);
+			optionals.remove(contentRewriteNode);
 		}
 		if (useButton.getSelection()) {
 			Optional optional = new Optional();
@@ -230,15 +227,14 @@ public class ContentRewritePart extends AbstractFormPart {
 			param.setName("expires");
 			param.setValue(String.valueOf(expiresSpinner.getSelection()));
 			params.add(param);
-			elements.add(optional);
+			optionals.add(optional);
 		}
 	}
 	
-	private Optional getContentRewriteNode(List<?> elements) {
-		for (Object value : elements) {
-			if ((value instanceof Optional)
-					&& ((Optional)value).getFeature().equals("content-rewrite")) {
-				return (Optional)value;
+	private Optional getContentRewriteNode(List<Optional> optionals) {
+		for (Optional optional : optionals) {
+			if (optional.getFeature().equals("content-rewrite")) {
+				return optional;
 			}
 		}
 		return null;
