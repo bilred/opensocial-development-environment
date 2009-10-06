@@ -200,10 +200,10 @@ public class HostingIGoogleUtil {
 
         // Verify sourceFile to make sure it does have contents in it.
         if (sourceFile.length() <= 0L) {
-            logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
             logger.severe("sourceFile length: " + sourceFile.length());
+            logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
 
-            // TODO: Is there a better way to handle the error of empty/non-existing file?
+            // FIXME: Is there a better way to handle the error of empty/non-existing file?
             return null;
         }
 
@@ -232,7 +232,7 @@ public class HostingIGoogleUtil {
             logger.warning("response: " + response);
         }
         String statusLineString = statusLine.toString();
-        logger.info("statusLine: " + statusLineString);
+        logger.fine("statusLine: " + statusLineString);
         return statusLineString;
     }
 
@@ -327,7 +327,7 @@ public class HostingIGoogleUtil {
         // TODO: Check indexOfEditToken != -1
 
         // Retrieve the 8 chars after "?et=" (of which the length is 4)
-        String editToken = pageContent.substring(indexOfEditToken + 4, indexOfEditToken + 4 + 8);
+        String editToken = pageContent.substring(indexOfEditToken + 4, indexOfEditToken + 4 + 16);
         logger.fine("editToken: " + editToken);
         return editToken;
     }
