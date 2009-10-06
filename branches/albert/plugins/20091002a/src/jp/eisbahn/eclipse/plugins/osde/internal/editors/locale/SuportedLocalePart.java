@@ -128,13 +128,10 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		Module module = getModule();
 		if (module != null) {
 			ModulePrefs modulePrefs = module.getModulePrefs();
-			List<Object> list = modulePrefs.getRequireOrOptionalOrPreload();
-			for (Object value : list) {
-				if (value instanceof Locale) {
-					Locale locale = (Locale)value;
-					LocaleModel model = new LocaleModel(locale, project);
-					models.add(model);
-				}
+			List<Locale> locales = modulePrefs.getLocales();
+			for (Locale locale : locales) {
+				LocaleModel model = new LocaleModel(locale, project);
+				models.add(model);
 			}
 		}
 		supportedLocaleList.setInput(models);
@@ -159,13 +156,14 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		return page.getModule();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<Object> elements = modulePrefs.getRequireOrOptionalOrPreload();
-		elements = removeAllLocale(elements);
-		List<LocaleModel> models = (List<LocaleModel>)supportedLocaleList.getInput();
-		IFile file = (IFile)page.getEditorInput().getAdapter(IResource.class);
+		List<Locale> locales = modulePrefs.getLocales();
+		locales.clear();
+		List<LocaleModel> models = (List<LocaleModel>) supportedLocaleList.getInput();
+		IFile file = (IFile) page.getEditorInput().getAdapter(IResource.class);
 		IProject project = file.getProject();
 		removeAllMessageBundleFiles(project);
 		for (LocaleModel model : models) {
@@ -212,7 +210,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 					Logging.warn("Creating the message bundle file failed.", e);
 				}
 			}
-			elements.add(locale);
+			locales.add(locale);
 		}
 	}
 	
@@ -243,22 +241,12 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		}
 	}
 
-	private List<Object> removeAllLocale(List<Object> elements) {
-		List<Object> targetList = new ArrayList<Object>();
-		for (Object element : elements) {
-			if (element instanceof Locale) {
-				targetList.add(element);
-			}
-		}
-		elements.removeAll(targetList);
-		return elements;
-	}
-
 	private class AddButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		@SuppressWarnings("unchecked")
 		public void widgetSelected(SelectionEvent e) {
 			AddLocaleDialog dialog = new AddLocaleDialog(page.getSite().getShell());
 			if (dialog.open() == AddLocaleDialog.OK) {
@@ -266,7 +254,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 				model.setCountry(dialog.getCountry());
 				model.setLang(dialog.getLanguage());
 				model.setInternal(dialog.isInternal());
-				List<LocaleModel> models = (List<LocaleModel>)supportedLocaleList.getInput();
+				List<LocaleModel> models = (List<LocaleModel>) supportedLocaleList.getInput();
 				if (!contains(models, model)) {
 					models.add(model);
 					supportedLocaleList.refresh();
@@ -298,6 +286,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
+		@SuppressWarnings("unchecked")
 		public void widgetSelected(SelectionEvent e) {
 			ISelection selection = supportedLocaleList.getSelection();
 			if (!selection.isEmpty()) {
@@ -309,7 +298,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 				lang = StringUtils.isEmpty(lang) ? "(any)" : lang;
 				if (MessageDialog.openConfirm(page.getSite().getShell(),
 						"Deleting locale", "Do you want to delete locale '" + lang + "_" + country + "'?")) {
-					List<LocaleModel> models = (List<LocaleModel>)supportedLocaleList.getInput();
+					List<LocaleModel> models = (List<LocaleModel>) supportedLocaleList.getInput();
 					models.remove(model);
 					supportedLocaleList.refresh();
 					markDirty();
@@ -319,8 +308,10 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		
 	}
 
+	
+	@SuppressWarnings("unchecked")
 	public List<LocaleModel> getLocaleModels() {
-		return (List<LocaleModel>)supportedLocaleList.getInput();
+		return (List<LocaleModel>) supportedLocaleList.getInput();
 	}
 
 	public void changeModel() {

@@ -43,11 +43,11 @@ public class ParserFactoryTest extends TestCase {
 		fout.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"); 
 		fout.write("<Module>");
 		fout.write("  <ModulePrefs title=\"hello world example\" />"); 
-		fout.write("    <Content type=\"html\">");
-		fout.write("      <![CDATA["); 
-		fout.write("        Hello, world!");
-		fout.write("      ]]>");
-		fout.write("    </Content>"); 
+		fout.write("  <Content type=\"html\">");
+		fout.write("    <![CDATA["); 
+		fout.write("      Hello, world!");
+		fout.write("    ]]>");
+		fout.write("  </Content>"); 
 		fout.write("</Module>");
 		fout.flush();
 		fout.close();
@@ -79,9 +79,14 @@ public class ParserFactoryTest extends TestCase {
 		public void run() {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			assertFalse(parser == null);
-			Module module = (Module) parser.parse(fin);
+			Module module = null;
+			try {
+				module = (Module) parser.parse(fin);
+			} catch (ParserException e) {
+				e.printStackTrace();
+			}
 			assertFalse(module == null);
-			assertTrue(module.getModulePrefs().getRequireOrOptionalOrPreload().size() == 0);
+			assertTrue(module.getModulePrefs().getLocales().size() == 0);
 		}
 	}
 
