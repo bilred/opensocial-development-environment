@@ -18,6 +18,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.editors;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class GadgetXmlEditor extends FormEditor {
 
 	private ContentsPage contentsPage;
 
-	private LocalePage messageBundlePage;
+	private LocalePage localePage;
 
 	private UserPrefsPage userPrefsPage;
 
@@ -76,20 +77,42 @@ public class GadgetXmlEditor extends FormEditor {
 	private boolean initializeFailed = false;
 	
 	
+	/**
+	 * Initializes GadgetXmlEditor for input file (resource). If the input resource is gadget.xml,
+	 * parse the contents of it and populate the parsed result in the field module. If the input
+	 * resource is a message bundle file, use message bundle parser to parse to see if there is 
+	 * any errors in the file.
+	 */
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
+		
+		IFile file = (IFile) input.getAdapter(IResource.class);
+		String inputFileName = file.getName();
+		IParser parser = null;
+		InputStream fileContents = null;
+		setPartName(inputFileName);
+		
 		try {
-			IFile file = (IFile)input.getAdapter(IResource.class);
-			setPartName(file.getName());
-			IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-			try {
-				module = (Module) gadgetXMLParser.parse(file.getContents());
-			} catch (ParserException e) {
-				Logging.error(e.getMessage());
-			}
+			fileContents = file.getContents();
 		} catch (CoreException e) {
+			Logging.error("Resource " + inputFileName + " is invalid.");
 			throw new PartInitException(e.getMessage(), e);
+		}
+		
+		// use different parsers for different files
+		if (inputFileName.equals("gadget.xml")) {
+			parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+		} else if (inputFileName.endsWith(".xml")) {
+			parser = ParserFactory.createParser(ParserType.MESSAGE_BUNDLE_XML_PARSER);
+		} else {
+			// TODO: use parsers for other file formats
+		}
+		
+		try {
+			parser.parse(fileContents);
+		} catch (ParserException e) {
+			Logging.error(e.getMessage());
 		}
 	}
 
@@ -100,8 +123,8 @@ public class GadgetXmlEditor extends FormEditor {
 			addPage(modulePrefsPage);
 			contentsPage = new ContentsPage(this, module);
 			addPage(contentsPage);
-			messageBundlePage = new LocalePage(this, module);
-			addPage(messageBundlePage);
+			localePage = new LocalePage(this, module);
+			addPage(localePage);
 			userPrefsPage = new UserPrefsPage(this, module);
 			addPage(userPrefsPage);
 			sourceEditor = new StructuredTextEditor() {
@@ -175,7 +198,7 @@ public class GadgetXmlEditor extends FormEditor {
 		this.module = model;
 		modulePrefsPage.changeModel(model);
 		contentsPage.changeModel(model);
-		messageBundlePage.changeModel(model);
+		localePage.changeModel(model);
 		userPrefsPage.changeModel(model);
 	}
 
@@ -186,7 +209,7 @@ public class GadgetXmlEditor extends FormEditor {
 			modulePrefsPage.updateModel();
 			contentsPage.updateModel();
 			userPrefsPage.updateModel();
-			messageBundlePage.updateModel();
+			localePage.updateModel();
 			String serialized = GadgetXmlSerializer.serialize(module);
 			IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
 			String now = document.get();

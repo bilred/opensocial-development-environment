@@ -55,7 +55,11 @@ public abstract class AbstractParser implements IParser {
 	
 	public Object parse(InputStream stream) throws ParserException {
 		try {
-			return digester.parse(stream);
+			Object parsedResult = digester.parse(stream);
+			if (parsedResult == null) {
+				throw new ParserException("Syntax error during parsing.");
+			}
+			return parsedResult;
 		} catch (IOException e) {
 			throw new ParserException("IO error during parsing.", e);
 		} catch (SAXException e) {
