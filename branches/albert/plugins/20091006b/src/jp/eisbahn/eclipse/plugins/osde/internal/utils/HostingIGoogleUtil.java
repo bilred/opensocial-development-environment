@@ -54,8 +54,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
-    
-    static final String OSDE_HOST_DIRECTORY = "osde/";
+
+    public static final String OSDE_HOST_DIRECTORY = "osde/";
 
     private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
     private static final String URL_IG_PREF_EDIT_TOKEN = "http://www.google.com/ig/resetprefs.html";
@@ -65,6 +65,8 @@ public class HostingIGoogleUtil {
     private static final String URL_IG_GADGETS_DIRECTORY = URL_IG_GADGETS + "/directory/";
     private static final String URL_IG_GADGETS_FILE = URL_IG_GADGETS + "/file/";
     private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
+
+    private static final int EDIT_TOKEN_LENGTH = 16;
 
     private HostingIGoogleUtil() {
         // Disable instantiation of this utility class.
@@ -323,13 +325,14 @@ public class HostingIGoogleUtil {
     }
 
     private static String retrieveEditTokenFromPageContent(String pageContent) {
-        // Sample of edit token: et=ok49ZFcD (8 chars)
         int indexOfEditToken = pageContent.indexOf("?et=");
 
         // TODO: Check indexOfEditToken != -1
 
-        // Retrieve the 8 chars after "?et=" (of which the length is 4)
-        String editToken = pageContent.substring(indexOfEditToken + 4, indexOfEditToken + 4 + 16);
+        // Retrieve the 16 chars after "?et=" (of which the length is 4)
+        int indexOfEditTokenValue = indexOfEditToken + 4;
+        String editToken = pageContent.substring(indexOfEditTokenValue,
+                indexOfEditTokenValue + EDIT_TOKEN_LENGTH);
         logger.fine("editToken: " + editToken);
         return editToken;
     }
