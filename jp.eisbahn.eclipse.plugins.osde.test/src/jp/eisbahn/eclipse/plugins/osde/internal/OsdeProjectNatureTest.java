@@ -1,50 +1,105 @@
 package jp.eisbahn.eclipse.plugins.osde.internal;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder;
+import jp.eisbahn.eclipse.plugins.osde.test.EclipseTestCase;
+import jp.eisbahn.eclipse.plugins.osde.test.TestProject;
+import junit.framework.Assert;
+
+import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * TODO: add javadoc for type
+ *	Test OsdeProject Nature
  */
-public class OsdeProjectNatureTest {
+public class OsdeProjectNatureTest extends EclipseTestCase {
 
-    /**
-     * @throws java.lang.Exception
-     */
+	TestProject project;
+	OsdeProjectNature nature;
+
     @Before
     public void setUp() throws Exception {
+    	project = new TestProject();
+    	nature = new OsdeProjectNature();
+    	nature.setProject(project.getProject());
     }
 
-    /**
-     * Test method for {@link OsdeProjectNature#configure()}.
-     */
-    @Test
-    public void testConfigure() {
-        // TODO: implement test method
+    @After
+    public void tearDown() throws Exception {
+    	try {
+			project.dispose();
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
     }
 
-    /**
-     * Test method for {@link OsdeProjectNature#deconfigure()}.
-     */
-    @Test
-    public void testDeconfigure() {
-        // TODO: implement test method
-    }
+	private boolean hasOsdeNature(IProject project) {
+		try {
+			for (String natureId : project.getDescription().getNatureIds()) {
+				if(OsdeProjectNature.ID.equals(natureId)){
+					return true;
+				}
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
-    /**
-     * Test method for {@link OsdeProjectNature#getProject()}.
-     */
+	private boolean hasOsdeBuilder(IProject project) {
+		try {
+			for (ICommand command : project.getDescription().getBuildSpec()) {
+				if (GadgetBuilder.ID.equals(command.getBuilderName())) {
+					return true;
+				}
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Test
+	public void testConfigureAndDeconfigure() {
+
+		// project should not have osde project nature and builder before adding.
+		Assert.assertFalse(hasOsdeNature(project.getProject()));
+		Assert.assertFalse(hasOsdeBuilder(project.getProject()));
+
+		try {
+			nature.configure();
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+
+		// project should have osde project nature after adding
+		Assert.assertTrue(hasOsdeNature(project.getProject()));
+		Assert.assertTrue(hasOsdeBuilder(project.getProject()));
+
+		try {
+			nature.deconfigure();
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+
+		// project should not have osde project nature after removing.
+		Assert.assertFalse(hasOsdeNature(project.getProject()));
+		Assert.assertFalse(hasOsdeBuilder(project.getProject()));
+	}
+
     @Test
     public void testGetProject() {
-        // TODO: implement test method
+		nature.setProject(project.getProject());
+		Assert.assertEquals(project.getProject(), nature.getProject());
     }
 
-    /**
-     * Test method for {@link OsdeProjectNature#setProject(org.eclipse.core.resources.IProject)}.
-     */
     @Test
     public void testSetProject() {
-        // TODO: implement test method
+		nature.setProject(project.getProject());
+		Assert.assertEquals(project.getProject(), nature.getProject());
     }
 
 }
