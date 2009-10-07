@@ -18,10 +18,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
-import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrieveIgPrefEditToken;
-import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrievePublicId;
-import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrieveSid;
-import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.uploadFile;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,20 +49,19 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  */
 public class PreviewIGoogleJob extends Job {
-    Logger logger = Logger.getLogger(PreviewIGoogleJob.class.getName());
+    private static Logger logger = Logger.getLogger(PreviewIGoogleJob.class.getName());
 
     private String jobName;
     private Shell shell;
     private String username;
     private String password;
     private boolean useExternalBrowser;
-    private IFile gadgetXmlFile;
+    private File gadgetXmlFile;
 
-    public PreviewIGoogleJob(String jobName, Shell shell, String username, String password,
-            boolean useExternalBrowser, IFile gadgetXmlFile) {
+    public PreviewIGoogleJob(String jobName, String username, String password,
+            boolean useExternalBrowser, File gadgetXmlFile) {
         super(jobName);
         this.jobName = jobName;
-        this.shell = shell;
         this.username = username;
         this.password = password;
         this.useExternalBrowser = useExternalBrowser;
@@ -120,11 +116,35 @@ public class PreviewIGoogleJob extends Job {
         String sid = retrieveSid(username, password, null, null);
         String publicId = retrievePublicId(sid);
         IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
-        File sourceFile = gadgetXmlFile.getRawLocation().toFile();
-        String targetFilePath = sourceFile.getName();
+        String targetFilePath = OSDE_HOST_DIRECTORY + gadgetXmlFile.getName();
         String uploadFileResult =
-            uploadFile(sid, publicId, prefEditToken, sourceFile, targetFilePath);
+            uploadFile(sid, publicId, prefEditToken, gadgetXmlFile, targetFilePath);
         logger.fine("uploadFileResult: " + uploadFileResult);
+        String previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(publicId, targetFilePath);
+        return previewGadgetUrl;
+    }
+
+    String uploadFilesToIg()
+            throws ClientProtocolException, IOException, CoreException {
+        // TODO: Support save SID etc in session.
+        // TODO: Support captcha.
+        logger.info("in PreviewIGoogleJob.uploadFilesToIg");
+        String sid = retrieveSid(username, password, null, null);
+        String publicId = retrievePublicId(sid);
+        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
+        logger.info("got edit token");
+
+        logger.info("gadgetXmlFile: " + gadgetXmlFile);
+//        File sourceDir = gadgetXmlFile.getParentFile();
+//        logger.info("sourceDir: " + sourceDir);
+
+        String targetFilePath = OSDE_HOST_DIRECTORY + gadgetXmlFile.getName();
+
+        // TODO: get list of files in target folder
+
+        String uploadFileResult =
+            uploadFile(sid, publicId, prefEditToken, gadgetXmlFile, targetFilePath);
+        logger.info("uploadFileResult: " + uploadFileResult);
         String previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(publicId, targetFilePath);
         return previewGadgetUrl;
     }

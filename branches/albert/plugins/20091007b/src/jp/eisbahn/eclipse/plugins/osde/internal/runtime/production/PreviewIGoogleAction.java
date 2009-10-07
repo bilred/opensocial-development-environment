@@ -18,6 +18,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
@@ -40,9 +41,9 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class PreviewIGoogleAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
-    Logger logger = Logger.getLogger(PreviewIGoogleAction.class.getName());
+    private static Logger logger = Logger.getLogger(PreviewIGoogleAction.class.getName());
 
-    private IFile gadgetXmlFile;
+    private IFile gadgetXmlIFile;
     private IWorkbenchPart targetPart;
     private Shell shell;
 
@@ -64,7 +65,7 @@ public class PreviewIGoogleAction
             IStructuredSelection structured = (IStructuredSelection) selection;
             Object element = structured.getFirstElement();
             if (element instanceof IFile) {
-                gadgetXmlFile = (IFile) element;
+                gadgetXmlIFile = (IFile) element;
             }
         }
     }
@@ -91,7 +92,8 @@ public class PreviewIGoogleAction
             logger.fine("OK pressed");
             String username = dialog.getUsername();
             String password = dialog.getPassword();
-            Job job = new PreviewIGoogleJob("Preview iGoogle gadget", shell, username,
+            File gadgetXmlFile = gadgetXmlIFile.getRawLocation().toFile();
+            Job job = new PreviewIGoogleJob("Preview iGoogle gadget", username,
                     password, dialog.isUseExternalBrowser(), gadgetXmlFile);
             logger.fine("job: " + job);
             job.schedule(1000);

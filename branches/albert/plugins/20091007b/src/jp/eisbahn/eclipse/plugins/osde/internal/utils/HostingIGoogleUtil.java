@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpStatus;
@@ -55,6 +56,7 @@ public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
+    // FIXME: make it more private and prepend "/"
     public static final String OSDE_HOST_DIRECTORY = "osde/";
 
     private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
@@ -238,6 +240,64 @@ public class HostingIGoogleUtil {
         String statusLineString = statusLine.toString();
         logger.fine("statusLine: " + statusLineString);
         return statusLineString;
+    }
+
+    /**
+     * Uploads a list of files to iGoogle.
+     *
+     * @return status code of HTTP response
+     * @throws ClientProtocolException
+     * @throws IOException
+     * @throws UploadFileException
+     */
+    public void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
+            List <File> sourceFiles)
+            throws ClientProtocolException, IOException, UploadFileException {
+        // Verify prefEditToken.
+        String editToken = prefEditToken.getEditToken();
+        if (editToken == null) {
+            throw new UploadFileException("editToken is null");
+        }
+        String pref = prefEditToken.getPref();
+        if (pref == null) {
+            throw new UploadFileException("pref is null");
+        }
+
+        // Verify sourceFiles to make sure they do have contents.
+        for (File sourceFile : sourceFiles) {
+            if (sourceFile.length() <= 0L) {
+                logger.severe("sourceFile length: " + sourceFile.length());
+                logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
+                throw new UploadFileException("sourceFile.length(): " + sourceFile.length());
+            }
+
+            // Prepare HttpPost.
+            String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_HOST_DIRECTORY
+                + sourceFile.getPath() + "?et=" + editToken;
+            logger.fine("url: " + url);
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader("Content-Type", "text/plain");
+            FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
+            logger.fine("fileEntity length: " + fileEntity.getContentLength());
+            httpPost.setEntity(fileEntity);
+
+            // Cookie PREF must be placed before SID.
+            logger.fine("preparing headers");
+            httpPost.addHeader("Cookie", "PREF=" + pref);
+            httpPost.addHeader("Cookie", "SID=" + sid);
+
+            // Execute request.
+            logger.fine("preparing HttpClient");
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            logger.fine("httpResponse: " + httpResponse);
+            StatusLine statusLine = httpResponse.getStatusLine();
+            if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
+                String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
+                logger.warning("response: " + response);
+                throw new UploadFileException(statusLine.toString());
+            }
+        }
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
