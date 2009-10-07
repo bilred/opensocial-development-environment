@@ -55,6 +55,8 @@ public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
+    public static final String OSDE_HOST_DIRECTORY = "osde/";
+
     private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
     private static final String URL_IG_PREF_EDIT_TOKEN = "http://www.google.com/ig/resetprefs.html";
     private static final String URL_IG_GADGETS = "http://www.google.com/ig/gadgets";
@@ -63,6 +65,8 @@ public class HostingIGoogleUtil {
     private static final String URL_IG_GADGETS_DIRECTORY = URL_IG_GADGETS + "/directory/";
     private static final String URL_IG_GADGETS_FILE = URL_IG_GADGETS + "/file/";
     private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
+
+    private static final int EDIT_TOKEN_LENGTH = 16;
 
     private HostingIGoogleUtil() {
         // Disable instantiation of this utility class.
@@ -200,8 +204,8 @@ public class HostingIGoogleUtil {
 
         // Verify sourceFile to make sure it does have contents in it.
         if (sourceFile.length() <= 0L) {
-            logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
             logger.severe("sourceFile length: " + sourceFile.length());
+            logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
 
             // TODO: Is there a better way to handle the error of empty/non-existing file?
             return null;
@@ -232,7 +236,7 @@ public class HostingIGoogleUtil {
             logger.warning("response: " + response);
         }
         String statusLineString = statusLine.toString();
-        logger.info("statusLine: " + statusLineString);
+        logger.fine("statusLine: " + statusLineString);
         return statusLineString;
     }
 
@@ -321,13 +325,14 @@ public class HostingIGoogleUtil {
     }
 
     private static String retrieveEditTokenFromPageContent(String pageContent) {
-        // Sample of edit token: et=ok49ZFcD (8 chars)
         int indexOfEditToken = pageContent.indexOf("?et=");
 
         // TODO: Check indexOfEditToken != -1
 
-        // Retrieve the 8 chars after "?et=" (of which the length is 4)
-        String editToken = pageContent.substring(indexOfEditToken + 4, indexOfEditToken + 4 + 8);
+        // Retrieve the 16 chars after "?et=" (of which the length is 4)
+        int indexOfEditTokenValue = indexOfEditToken + 4;
+        String editToken = pageContent.substring(indexOfEditTokenValue,
+                indexOfEditTokenValue + EDIT_TOKEN_LENGTH);
         logger.fine("editToken: " + editToken);
         return editToken;
     }
