@@ -7,10 +7,10 @@
       <content-type
             base-type="org.eclipse.core.runtime.xml"
             describer="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlDescriber"
-            file-extensions="xml"
+            file-names="gadget.xml"
             id="gadgetXml"
             name="Gadget XML File"
-            priority="high" />
+            priority="high"/>
    </extension>
    
    <extension
@@ -386,7 +386,7 @@
       <editor
             class="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor"
             default="false"
-            extensions="xml"
+            filenames="gadget.xml"
             icon="icons/opensocial.gif"
             id="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor"
             name="Gadget XML Editor">
