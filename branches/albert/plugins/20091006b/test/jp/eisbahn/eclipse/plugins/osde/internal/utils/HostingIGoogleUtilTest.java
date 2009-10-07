@@ -37,7 +37,6 @@ import static org.junit.Assert.*;
 public class HostingIGoogleUtilTest {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
-    private static final String OSDE_HOST_DIRECTORY = "osde/"; // TODO: move to HostingIGoogleUtil
 
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
