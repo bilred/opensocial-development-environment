@@ -6,11 +6,23 @@
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
             base-type="org.eclipse.core.runtime.xml"
-            describer="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlDescriber"
-            file-names="gadget.xml"
-            id="gadgetXml"
-            name="Gadget XML File"
-            priority="high"/>
+            file-extensions="xml"
+            id="gadgetSpecXML"
+            name="Gadget Spec XML File"
+            priority="high">
+         <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber">
+            <parameter name="element" value="Module"/>
+         </describer>
+      </content-type>
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            file-extensions="xml"
+            id="messageBundleXML"
+            name="Message Bundle XML File">
+         <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber">
+            <parameter name="element" value="messagebundle"/>
+         </describer>
+      </content-type>
    </extension>
    
    <extension
@@ -386,11 +398,11 @@
       <editor
             class="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor"
             default="false"
-            filenames="gadget.xml"
+            extensions="xml"
             icon="icons/opensocial.gif"
             id="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor"
             name="Gadget XML Editor">
-         <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetXml" />
+         <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML" />
       </editor>
    </extension>
    
