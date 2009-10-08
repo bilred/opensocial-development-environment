@@ -41,7 +41,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * @author albert.cheng.ig@gmail.com
  */
 public class PreviewIGoogleDialog extends TitleAreaDialog {
-    Logger logger = Logger.getLogger(PreviewIGoogleDialog.class.getName());
+    private static Logger logger = Logger.getLogger(PreviewIGoogleDialog.class.getName());
 
     private String username;
     private String password;
