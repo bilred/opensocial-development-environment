@@ -168,10 +168,16 @@
                toolbarPath="opensocialGroup"
                tooltip="Run this application.">
             <enablement>
-               <objectState
-                     name="contentTypeId"
-                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
-               </objectState>
+               <or>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               </objectState>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.messageBundleXML">
+	               </objectState>
+               </or>
             </enablement>
          </action>
          <action
@@ -255,10 +261,16 @@
                icon="icons/icon_wand.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
             <enablement>
-               <objectState
-                     name="contentTypeId"
-                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
-               </objectState>
+               <or>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               </objectState>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.messageBundleXML">
+	               </objectState>
+               </or>
             </enablement>
          </action>
          <action
@@ -269,10 +281,16 @@
                icon="icons/icon_key.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
             <enablement>
-               <objectState
-                     name="contentTypeId"
-                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
-               </objectState>
+               <or>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               </objectState>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.messageBundleXML">
+	               </objectState>
+               </or>
             </enablement>
          </action>
          <action
@@ -283,10 +301,16 @@
                icon="icons/action_go.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
             <enablement>
-               <objectState
-                     name="contentTypeId"
-                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
-               </objectState>
+               <or>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               </objectState>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.messageBundleXML">
+	               </objectState>
+               </or>
             </enablement>
          </action>
          <!-- TODO: enable this feature when it is ready
@@ -298,10 +322,16 @@
                icon="icons/action_go.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
             <enablement>
-               <objectState
-                     name="contentTypeId"
-                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
-               </objectState>
+               <or>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               </objectState>
+	               <objectState
+	                     name="contentTypeId"
+	                     value="jp.eisbahn.eclipse.plugins.osde.messageBundleXML">
+	               </objectState>
+               </or>
             </enablement>
          </action>
          -->
