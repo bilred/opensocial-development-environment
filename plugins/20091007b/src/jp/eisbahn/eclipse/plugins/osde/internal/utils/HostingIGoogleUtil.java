@@ -56,7 +56,6 @@ public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    // FIXME: make it more private
     private static final String OSDE_HOST_DIRECTORY = "osde/";
 
     private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
@@ -78,9 +77,10 @@ public class HostingIGoogleUtil {
      * Retrieves the authentication SID token.
      *
      * @return the SID
+     * @throws HostingException
      */
     public static String retrieveSid(String emailUserName, String password,
-            String loginCaptchaToken, String loginCaptchaAnswer) {
+            String loginCaptchaToken, String loginCaptchaAnswer) throws HostingException {
         // TODO: Can we get sid and Ig...Token all together?
 
         String response = null;
@@ -89,10 +89,7 @@ public class HostingIGoogleUtil {
                 emailUserName, password, loginCaptchaToken, loginCaptchaAnswer);
             logger.fine("response:\n" + " " + response);
         } catch (IOException e) {
-            logger.severe("Error:\n" + e.getMessage());
-
-            // TODO: Handle IOException
-            return null;
+            throw new HostingException(e);
         }
 
         // Parse the output

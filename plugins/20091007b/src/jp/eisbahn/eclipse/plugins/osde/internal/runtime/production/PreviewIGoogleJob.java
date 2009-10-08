@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
 
 import org.apache.http.client.ClientProtocolException;
@@ -76,11 +75,9 @@ public class PreviewIGoogleJob extends Job {
         logger.info("in run");
         final String previewGadgetUrl;
         try {
-            logger.info("gonna uploadFilesToIg()");
             previewGadgetUrl = uploadFilesToIg();
-            logger.info("finished uploadFilesToIg()");
         } catch (Exception e) {
-            logger.warning(e.getMessage());
+            logger.severe(e.getMessage());
             return Status.CANCEL_STATUS;
         }
 
@@ -118,20 +115,15 @@ public class PreviewIGoogleJob extends Job {
         return Status.OK_STATUS;
     }
 
-//    private String uploadFileToIg()
-//            throws ClientProtocolException, IOException, CoreException, HostingException {
-//        // TODO: Support save SID etc in session.
-//        // TODO: Support captcha.
-//        logger.fine("in PreviewIGoogleJob.uploadFileToIg");
-//        String sid = retrieveSid(username, password, null, null);
-//        String publicId = retrievePublicId(sid);
-//        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
-//        uploadFile(sid, publicId, prefEditToken, gadgetXmlFile);
-//        String targetFilePath = gadgetXmlFile.getName();
-//        String previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(publicId, targetFilePath);
-//        return previewGadgetUrl;
-//    }
-
+    /**
+     * Uploads files to iGoogle.
+     *
+     * @return the url for gadget preview
+     * @throws ClientProtocolException
+     * @throws IOException
+     * @throws CoreException
+     * @throws HostingException
+     */
     String uploadFilesToIg()
             throws ClientProtocolException, IOException, CoreException, HostingException {
         // TODO: Support save SID etc in session.
@@ -142,22 +134,14 @@ public class PreviewIGoogleJob extends Job {
         IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
         logger.info("prefEditToken: " + prefEditToken);
 
-        // TODO: get list of files in target folder
-        ArrayList <File> listOfFiles = new ArrayList <File> ();
-        listOfFiles.add(gadgetXmlFile);
-
-        logger.info("gadgetXmlFile: " + gadgetXmlFile);
-        File sourceDir = gadgetXmlFile.getParentFile();
-        logger.info("sourceDir: " + sourceDir);
-
+        // TODO: Get list of files in target folder.
         ArrayList <String> relativeFilePaths = new ArrayList <String> ();
         relativeFilePaths.add(gadgetXmlFile.getName());
+
+        // Upload files.
         String rootPath = gadgetXmlFile.getParent();
         uploadFiles(sid, publicId, prefEditToken, rootPath, relativeFilePaths);
-
-//        uploadFiles(sid, publicId, prefEditToken, listOfFiles);
-        String previewGadgetUrl =
-                HostingIGoogleUtil.formPreviewGadgetUrl(publicId, gadgetXmlFile.getName());
+        String previewGadgetUrl = formPreviewGadgetUrl(publicId, gadgetXmlFile.getName());
         return previewGadgetUrl;
     }
 }
