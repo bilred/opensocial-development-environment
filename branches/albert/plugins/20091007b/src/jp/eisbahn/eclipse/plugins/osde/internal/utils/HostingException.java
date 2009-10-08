@@ -19,19 +19,27 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 /**
- * Exception used when uploading a file to production container fails.
+ * Exception used when hosting a file in a production container fails.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class UploadFileException extends Exception {
+public class HostingException extends Exception {
 
     private static final long serialVersionUID = -2228528582709169307L;
 
-    public UploadFileException() {
-        // default constructor
+    public HostingException() {
+        super();
     }
 
-    public UploadFileException(String message) {
+    public HostingException(String message) {
         super(message);
+    }
+
+    public HostingException(Throwable cause) {
+        super(cause);
+    }
+
+    public HostingException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

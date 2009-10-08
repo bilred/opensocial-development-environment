@@ -56,8 +56,8 @@ public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    // FIXME: make it more private and prepend "/"
-    public static final String OSDE_HOST_DIRECTORY = "osde/";
+    // FIXME: make it more private
+    private static final String OSDE_HOST_DIRECTORY = "osde/";
 
     private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
     private static final String URL_IG_PREF_EDIT_TOKEN = "http://www.google.com/ig/resetprefs.html";
@@ -68,7 +68,7 @@ public class HostingIGoogleUtil {
     private static final String URL_IG_GADGETS_FILE = URL_IG_GADGETS + "/file/";
     private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
 
-    private static final int EDIT_TOKEN_LENGTH = 16;
+    //private static final int EDIT_TOKEN_LENGTH = 16;
 
     private HostingIGoogleUtil() {
         // Disable instantiation of this utility class.
@@ -185,118 +185,61 @@ public class HostingIGoogleUtil {
     /**
      * Uploads a file to iGoogle.
      *
-     * @return status line of HTTP response
      * @throws ClientProtocolException
      * @throws IOException
+     * @throws HostingException
      */
-    public static String uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
-            File sourceFile, String targetFilePath)
-            throws ClientProtocolException, IOException {
-        // Verify prefEditToken.
-        String editToken = prefEditToken.getEditToken();
-        if (editToken == null) {
-            logger.warning("editToken is null");
-            return "ERROR: editToken is null";
-        }
-        String pref = prefEditToken.getPref();
-        if (pref == null) {
-            logger.warning("pref is null");
-            return "ERROR: pref is null";
-        }
-
-        // Verify sourceFile to make sure it does have contents in it.
-        if (sourceFile.length() <= 0L) {
-            logger.severe("sourceFile length: " + sourceFile.length());
-            logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
-
-            // TODO: Is there a better way to handle the error of empty/non-existing file?
-            return null;
+    public static void uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
+            String sourceFileRootPath, String sourceFileRelativePath)
+            throws ClientProtocolException, IOException, HostingException {
+        // Validate prefEditToken.
+        if (!prefEditToken.validate()) {
+            throw new HostingException("Invalid prefEditToken: " + prefEditToken);
         }
 
         // Prepare HttpPost.
-        String url = URL_IG_GADGETS_FILE + publicId + "/" + targetFilePath + "?et=" + editToken;
-        logger.fine("url: " + url);
+        logger.info("sourceFilePath: " + sourceFileRelativePath);
+        String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_HOST_DIRECTORY
+            + sourceFileRelativePath + "?et=" + prefEditToken.getEditToken();
+        logger.info("url: " + url);
         HttpPost httpPost = new HttpPost(url);
-        FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
-        logger.fine("fileEntity length: " + fileEntity.getContentLength());
-        httpPost.setEntity(fileEntity);
         httpPost.setHeader("Content-Type", "text/plain");
+        File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
+        FileEntity fileEntity = new FileEntity(sourceFile , "text/plain; charset=\"UTF-8\"");
+        logger.info("fileEntity length: " + fileEntity.getContentLength());
+        httpPost.setEntity(fileEntity);
 
-        // Cookie PREF must be placed before SID.
-        logger.fine("preparing headers");
-        httpPost.addHeader("Cookie", "PREF=" + pref);
+        // Add cookie headers. Cookie PREF must be placed before SID.
+        httpPost.addHeader("Cookie", "PREF=" + prefEditToken.getPref());
         httpPost.addHeader("Cookie", "SID=" + sid);
 
         // Execute request.
-        logger.fine("preparing HttpClient");
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpPost);
-        logger.fine("httpResponse: " + httpResponse);
         StatusLine statusLine = httpResponse.getStatusLine();
+        logger.info("statusLine: " + statusLine);
         if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
             String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
-            logger.warning("response: " + response);
+            throw new HostingException("Failed file-upload with status line: "
+                    + statusLine.toString() + "\nand response:\n" + response);
         }
-        String statusLineString = statusLine.toString();
-        logger.fine("statusLine: " + statusLineString);
-        return statusLineString;
     }
 
     /**
      * Uploads a list of files to iGoogle.
      *
-     * @return status code of HTTP response
      * @throws ClientProtocolException
      * @throws IOException
-     * @throws UploadFileException
+     * @throws HostingException
      */
-    public void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
-            List <File> sourceFiles)
-            throws ClientProtocolException, IOException, UploadFileException {
-        // Verify prefEditToken.
-        String editToken = prefEditToken.getEditToken();
-        if (editToken == null) {
-            throw new UploadFileException("editToken is null");
+    public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
+            String sourceFileRootPath, List <String> sourceFileRelativePaths)
+            throws ClientProtocolException, IOException, HostingException {
+        if (sourceFileRelativePaths == null) {
+            return;
         }
-        String pref = prefEditToken.getPref();
-        if (pref == null) {
-            throw new UploadFileException("pref is null");
-        }
-
-        // Verify sourceFiles to make sure they do have contents.
-        for (File sourceFile : sourceFiles) {
-            if (sourceFile.length() <= 0L) {
-                logger.severe("sourceFile length: " + sourceFile.length());
-                logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
-                throw new UploadFileException("sourceFile.length(): " + sourceFile.length());
-            }
-
-            // Prepare HttpPost.
-            String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_HOST_DIRECTORY
-                + sourceFile.getPath() + "?et=" + editToken;
-            logger.fine("url: " + url);
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.setHeader("Content-Type", "text/plain");
-            FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
-            logger.fine("fileEntity length: " + fileEntity.getContentLength());
-            httpPost.setEntity(fileEntity);
-
-            // Cookie PREF must be placed before SID.
-            logger.fine("preparing headers");
-            httpPost.addHeader("Cookie", "PREF=" + pref);
-            httpPost.addHeader("Cookie", "SID=" + sid);
-
-            // Execute request.
-            logger.fine("preparing HttpClient");
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-            logger.fine("httpResponse: " + httpResponse);
-            StatusLine statusLine = httpResponse.getStatusLine();
-            if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
-                String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
-                logger.warning("response: " + response);
-                throw new UploadFileException(statusLine.toString());
-            }
+        for (String sourceFileRelativePath: sourceFileRelativePaths) {
+            uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, sourceFileRelativePath);
         }
     }
 
@@ -329,7 +272,7 @@ public class HostingIGoogleUtil {
     }
 
     private static String formHostedFileUrl(String publicId, String filePath) {
-        return URL_GMODULE_FILE + publicId + "/" + filePath;
+        return URL_GMODULE_FILE + publicId + "/" + OSDE_HOST_DIRECTORY + filePath;
     }
 
     public static String retrievePublicId(String sid)
@@ -380,21 +323,8 @@ public class HostingIGoogleUtil {
         }
 
         String responseString = retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
-        String editToken = retrieveEditTokenFromPageContent(responseString);
+        String editToken = IgPrefEditToken.retrieveEditTokenFromPageContent(responseString);
         return new IgPrefEditToken(pref, editToken);
-    }
-
-    private static String retrieveEditTokenFromPageContent(String pageContent) {
-        int indexOfEditToken = pageContent.indexOf("?et=");
-
-        // TODO: Check indexOfEditToken != -1
-
-        // Retrieve the 16 chars after "?et=" (of which the length is 4)
-        int indexOfEditTokenValue = indexOfEditToken + 4;
-        String editToken = pageContent.substring(indexOfEditTokenValue,
-                indexOfEditTokenValue + EDIT_TOKEN_LENGTH);
-        logger.fine("editToken: " + editToken);
-        return editToken;
     }
 
     private static String retrieveHttpResponseAsString(
@@ -453,28 +383,5 @@ public class HostingIGoogleUtil {
         String hostedFileUrl = formHostedFileUrl(publicId, filePath);
         return "http://www.gmodules.com/gadgets/ifr?&view=home&hl=en&gl=us&nocache=1&url="
                + hostedFileUrl;
-    }
-
-    /**
-     * Data used for interacting with iGoogle service.
-     *
-     * @author albert.cheng.ig@gmail.com
-     */
-    public static class IgPrefEditToken {
-        private String pref;
-        private String editToken;
-
-        private IgPrefEditToken(String pref, String editToken) {
-            this.pref = pref;
-            this.editToken = editToken;
-        }
-
-        String getPref() {
-            return pref;
-        }
-
-        String getEditToken() {
-            return editToken;
-        }
     }
 }

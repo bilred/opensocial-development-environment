@@ -24,18 +24,20 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.IgPrefEditToken;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
 
 import org.apache.http.client.ClientProtocolException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -58,10 +60,11 @@ public class PreviewIGoogleJob extends Job {
     private boolean useExternalBrowser;
     private File gadgetXmlFile;
 
-    public PreviewIGoogleJob(String jobName, String username, String password,
+    public PreviewIGoogleJob(String jobName, Shell shell, String username, String password,
             boolean useExternalBrowser, File gadgetXmlFile) {
         super(jobName);
         this.jobName = jobName;
+        this.shell = shell;
         this.username = username;
         this.password = password;
         this.useExternalBrowser = useExternalBrowser;
@@ -70,18 +73,24 @@ public class PreviewIGoogleJob extends Job {
 
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
-        logger.fine("in run");
+        logger.info("in run");
         final String previewGadgetUrl;
         try {
-            previewGadgetUrl = uploadFileToIg();
+            logger.info("gonna uploadFilesToIg()");
+            previewGadgetUrl = uploadFilesToIg();
+            logger.info("finished uploadFilesToIg()");
         } catch (Exception e) {
             logger.warning(e.getMessage());
             return Status.CANCEL_STATUS;
         }
 
-        shell.getDisplay().syncExec(new Runnable() {
+        logger.info("gonna syncExec");
+        logger.info("shell: " + shell);
+        Display display = shell.getDisplay();
+        logger.info("display: " + display);
+        display.syncExec(new Runnable() {
             public void run() {
-                logger.fine("in Runnable's run");
+                logger.info("in Runnable's run");
                 try {
                     IWorkbenchBrowserSupport support =
                             PlatformUI.getWorkbench().getBrowserSupport();
@@ -105,47 +114,50 @@ public class PreviewIGoogleJob extends Job {
                 }
             }
         });
+        logger.info("finished syncExec");
         return Status.OK_STATUS;
     }
 
-    private String uploadFileToIg()
-            throws ClientProtocolException, IOException, CoreException {
-        // TODO: Support save SID etc in session.
-        // TODO: Support captcha.
-        logger.fine("in PreviewIGoogleJob.uploadFileToIg");
-        String sid = retrieveSid(username, password, null, null);
-        String publicId = retrievePublicId(sid);
-        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
-        String targetFilePath = OSDE_HOST_DIRECTORY + gadgetXmlFile.getName();
-        String uploadFileResult =
-            uploadFile(sid, publicId, prefEditToken, gadgetXmlFile, targetFilePath);
-        logger.fine("uploadFileResult: " + uploadFileResult);
-        String previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(publicId, targetFilePath);
-        return previewGadgetUrl;
-    }
+//    private String uploadFileToIg()
+//            throws ClientProtocolException, IOException, CoreException, HostingException {
+//        // TODO: Support save SID etc in session.
+//        // TODO: Support captcha.
+//        logger.fine("in PreviewIGoogleJob.uploadFileToIg");
+//        String sid = retrieveSid(username, password, null, null);
+//        String publicId = retrievePublicId(sid);
+//        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
+//        uploadFile(sid, publicId, prefEditToken, gadgetXmlFile);
+//        String targetFilePath = gadgetXmlFile.getName();
+//        String previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(publicId, targetFilePath);
+//        return previewGadgetUrl;
+//    }
 
     String uploadFilesToIg()
-            throws ClientProtocolException, IOException, CoreException {
+            throws ClientProtocolException, IOException, CoreException, HostingException {
         // TODO: Support save SID etc in session.
         // TODO: Support captcha.
         logger.info("in PreviewIGoogleJob.uploadFilesToIg");
         String sid = retrieveSid(username, password, null, null);
         String publicId = retrievePublicId(sid);
         IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
-        logger.info("got edit token");
-
-        logger.info("gadgetXmlFile: " + gadgetXmlFile);
-//        File sourceDir = gadgetXmlFile.getParentFile();
-//        logger.info("sourceDir: " + sourceDir);
-
-        String targetFilePath = OSDE_HOST_DIRECTORY + gadgetXmlFile.getName();
+        logger.info("prefEditToken: " + prefEditToken);
 
         // TODO: get list of files in target folder
+        ArrayList <File> listOfFiles = new ArrayList <File> ();
+        listOfFiles.add(gadgetXmlFile);
 
-        String uploadFileResult =
-            uploadFile(sid, publicId, prefEditToken, gadgetXmlFile, targetFilePath);
-        logger.info("uploadFileResult: " + uploadFileResult);
-        String previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(publicId, targetFilePath);
+        logger.info("gadgetXmlFile: " + gadgetXmlFile);
+        File sourceDir = gadgetXmlFile.getParentFile();
+        logger.info("sourceDir: " + sourceDir);
+
+        ArrayList <String> relativeFilePaths = new ArrayList <String> ();
+        relativeFilePaths.add(gadgetXmlFile.getName());
+        String rootPath = gadgetXmlFile.getParent();
+        uploadFiles(sid, publicId, prefEditToken, rootPath, relativeFilePaths);
+
+//        uploadFiles(sid, publicId, prefEditToken, listOfFiles);
+        String previewGadgetUrl =
+                HostingIGoogleUtil.formPreviewGadgetUrl(publicId, gadgetXmlFile.getName());
         return previewGadgetUrl;
     }
 }
