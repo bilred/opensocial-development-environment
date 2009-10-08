@@ -96,10 +96,25 @@ public class OpenSocialUtil {
 	}
 
 	public static boolean isGadgetXml(IFile file) {
+		return isGadgetSpecXML(file) || isMessageBundleXML(file);
+	}
+	
+	public static boolean isGadgetSpecXML(IFile file) {
 		IContentTypeManager manager = Platform.getContentTypeManager();
 		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
 		for (IContentType contentType : contentTypes) {
-			if (contentType.getId().equals("jp.eisbahn.eclipse.plugins.osde.gadgetXml")) {
+			if (contentType.getId().equals("jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isMessageBundleXML(IFile file) {
+		IContentTypeManager manager = Platform.getContentTypeManager();
+		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
+		for (IContentType contentType : contentTypes) {
+			if (contentType.getId().equals("jp.eisbahn.eclipse.plugins.osde.messageBundleXML")) {
 				return true;
 			}
 		}
