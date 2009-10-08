@@ -55,7 +55,11 @@ public abstract class AbstractParser implements IParser {
 	
 	public Object parse(InputStream stream) throws ParserException {
 		try {
-			return digester.parse(stream);
+			Object result = digester.parse(stream);
+			if (result == null) {
+				throw new ParserException("Digester returned null as the result of parsing.");
+			}
+			return result;
 		} catch (IOException e) {
 			throw new ParserException("IO error during parsing.", e);
 		} catch (SAXException e) {
