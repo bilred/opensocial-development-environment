@@ -93,7 +93,7 @@ public class PreviewIGoogleAction
             String username = dialog.getUsername();
             String password = dialog.getPassword();
             File gadgetXmlFile = gadgetXmlIFile.getRawLocation().toFile();
-            Job job = new PreviewIGoogleJob("Preview iGoogle gadget", username,
+            Job job = new PreviewIGoogleJob("Preview iGoogle gadget", shell, username,
                     password, dialog.isUseExternalBrowser(), gadgetXmlFile);
             logger.fine("job: " + job);
             job.schedule(1000);

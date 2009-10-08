@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
+
 import org.apache.http.client.ClientProtocolException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -32,6 +34,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -86,9 +89,12 @@ public class PreviewIGoogleJobTest {
      * @throws CoreException
      * @throws IOException
      * @throws ClientProtocolException
+     * @throws HostingException
      */
     @Test
-    public void testUploadFilesToIg() throws ClientProtocolException, IOException, CoreException {
+    public void testUploadFilesToIg()
+            throws ClientProtocolException, IOException, CoreException, HostingException {
+        Shell shell = new Shell();
         String username = "osde.test.001";
         String password = "osdetest888";
         String gadgetXmlFilePath = "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/"
@@ -96,7 +102,7 @@ public class PreviewIGoogleJobTest {
         File gadgetXmlFile = new File(gadgetXmlFilePath);
         logger.info("gadgetXmlFile abs path: " + gadgetXmlFile.getAbsolutePath());
         PreviewIGoogleJob job = new PreviewIGoogleJob(
-                "Preview iGoogle gadget", username, password, false, gadgetXmlFile);
+                "Preview iGoogle gadget", shell, username, password, false, gadgetXmlFile);
         String result = job.uploadFilesToIg();
         logger.info("result: " + result);
     }
