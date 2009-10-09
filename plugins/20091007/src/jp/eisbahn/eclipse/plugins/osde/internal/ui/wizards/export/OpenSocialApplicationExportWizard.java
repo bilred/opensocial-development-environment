@@ -154,7 +154,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 					if (!orgFile.getName().equals(".project")) {
 						ZipEntry entry = new ZipEntry(resource.getProjectRelativePath().toPortableString());
 						out.putNextEntry(entry);
-						if (OpenSocialUtil.isGadgetXml(orgFile)) {
+						if (OpenSocialUtil.isGadgetSpecXML(orgFile)) {
 							try {
 								IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 								Module module = null;
