@@ -25,15 +25,10 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
-import junitx.framework.Assert;
 
 import org.apache.http.client.ClientProtocolException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Shell;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -42,34 +37,6 @@ import org.junit.Test;
 public class PreviewIGoogleJobTest {
 
     private static Logger logger = Logger.getLogger(PreviewIGoogleJobTest.class.getName());
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
     /**
      * Test method for {@link PreviewIGoogleJob#run(org.eclipse.core.runtime.IProgressMonitor)}.
@@ -96,8 +63,6 @@ public class PreviewIGoogleJobTest {
                 + "production/testdata/";
         String gadgetXmlFileRelativePath = "gadget.xml";
 
-        // TODO: Prepare gadgetXmlFile via InputStream instead of path String,
-        // so that this test code is portable when the date files are stored in a jar.
         File gadgetXmlFile = new File(rootPath, gadgetXmlFileRelativePath);
         logger.info("gadgetXmlFile abs path: " + gadgetXmlFile.getAbsolutePath());
         PreviewIGoogleJob job = new PreviewIGoogleJob(
