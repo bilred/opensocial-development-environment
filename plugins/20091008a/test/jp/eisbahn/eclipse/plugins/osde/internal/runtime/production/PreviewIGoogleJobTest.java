@@ -80,7 +80,7 @@ public class PreviewIGoogleJobTest {
     }
 
     /**
-     * Test method for {@link PreviewIGoogleJob#uploadFilesToIg()}.
+     * Test method for {@link PreviewIGoogleJob#uploadTextFilesToIg()}.
      * @throws CoreException
      * @throws IOException
      * @throws ClientProtocolException
@@ -93,13 +93,13 @@ public class PreviewIGoogleJobTest {
         String username = "osde.test.001";
         String password = "osdetest888";
         String rootPath = "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/"
-            + "production/testdata/";
+                + "production/testdata/";
         String gadgetXmlFileRelativePath = "gadget.xml";
         File gadgetXmlFile = new File(rootPath, gadgetXmlFileRelativePath);
         logger.info("gadgetXmlFile abs path: " + gadgetXmlFile.getAbsolutePath());
         PreviewIGoogleJob job = new PreviewIGoogleJob(
                 "Preview iGoogle gadget", shell, username, password, false, gadgetXmlFile);
-        String gadgetPreviewUrl = job.uploadFilesToIg();
+        String gadgetPreviewUrl = job.uploadTextFilesToIg();
         logger.info("gadgetPreviewUrl: " + gadgetPreviewUrl);
         assertTrue(gadgetPreviewUrl.endsWith(gadgetXmlFileRelativePath));
     }
