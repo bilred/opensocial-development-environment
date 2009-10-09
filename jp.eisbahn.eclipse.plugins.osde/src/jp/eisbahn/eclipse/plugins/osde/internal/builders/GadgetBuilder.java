@@ -103,17 +103,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 						if (OpenSocialUtil.isGadgetXml(destFile)) {
 							try {
 								IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-								Module module = null;
-								try {
-									module = (Module) gadgetXMLParser.parse(orgFile.getContents());
-								} catch (ParserException e) {
-									Logging.error("Parsing failed in gadget builder.", e);
-								}
-								
-								// TODO: if module is null, that means we are visiting an external message bundle file
-								// we should use message bundle parser for this file instead
-								if (module == null) return false;
-								
+								Module module = (Module) gadgetXMLParser.parse(orgFile.getContents());
 								List<Content> contents = module.getContent();
 								Random rnd = new Random();
 								for (Content content : contents) {
@@ -134,6 +124,8 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								destFile.setContents(in, true, false, monitor);
 							} catch (IOException e) {
+								Logging.warn("Building and copying the Gadget XML file failed.", e);
+							} catch (ParserException e) {
 								Logging.warn("Building and copying the Gadget XML file failed.", e);
 							}
 						}
