@@ -94,10 +94,6 @@ public class OpenSocialUtil {
 			throw new IllegalStateException(e);
 		}
 	}
-
-	public static boolean isGadgetXml(IFile file) {
-		return isGadgetSpecXML(file) || isMessageBundleXML(file);
-	}
 	
 	public static boolean isGadgetSpecXML(IFile file) {
 		IContentTypeManager manager = Platform.getContentTypeManager();
