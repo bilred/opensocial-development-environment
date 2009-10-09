@@ -95,6 +95,9 @@ public class PreviewIGoogleJobTest {
         String rootPath = "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/"
                 + "production/testdata/";
         String gadgetXmlFileRelativePath = "gadget.xml";
+
+        // TODO: Prepare gadgetXmlFile via InputStream instead of path String,
+        // so that this test code is portable when the date files are stored in a jar.
         File gadgetXmlFile = new File(rootPath, gadgetXmlFileRelativePath);
         logger.info("gadgetXmlFile abs path: " + gadgetXmlFile.getAbsolutePath());
         PreviewIGoogleJob job = new PreviewIGoogleJob(
