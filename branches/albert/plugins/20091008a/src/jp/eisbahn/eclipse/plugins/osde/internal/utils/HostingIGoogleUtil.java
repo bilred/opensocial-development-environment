@@ -179,13 +179,13 @@ public class HostingIGoogleUtil {
     }
 
     /**
-     * Uploads a file to iGoogle.
+     * Uploads a text file to iGoogle.
      *
      * @throws ClientProtocolException
      * @throws IOException
      * @throws HostingException
      */
-    public static void uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
+    public static void uploadTextFile(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath, String sourceFileRelativePath)
             throws ClientProtocolException, IOException, HostingException {
         // Validate prefEditToken.
@@ -221,20 +221,20 @@ public class HostingIGoogleUtil {
     }
 
     /**
-     * Uploads a list of files to iGoogle.
+     * Uploads a list of text files to iGoogle.
      *
      * @throws ClientProtocolException
      * @throws IOException
      * @throws HostingException
      */
-    public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
+    public static void uploadTextFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath, List <String> sourceFileRelativePaths)
             throws ClientProtocolException, IOException, HostingException {
         if (sourceFileRelativePaths == null) {
             return;
         }
-        for (String sourceFileRelativePath: sourceFileRelativePaths) {
-            uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, sourceFileRelativePath);
+        for (String relativePath : sourceFileRelativePaths) {
+            uploadTextFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
         }
     }
 

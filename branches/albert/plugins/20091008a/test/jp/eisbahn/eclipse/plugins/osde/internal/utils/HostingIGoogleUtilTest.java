@@ -40,7 +40,7 @@ public class HostingIGoogleUtilTest {
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
     /**
-     * Test method for {@link HostingIGoogleUtil#uploadFile(
+     * Test method for {@link HostingIGoogleUtil#uploadTextFile(
      * String, String, IgPrefEditToken, File, String)}.
      * @throws IOException
      * @throws ClientProtocolException
@@ -62,10 +62,10 @@ public class HostingIGoogleUtilTest {
 
         // Upload file.
         String relativeFilePath = "dummy_gadget.xml";
-        ArrayList <String> relativeFilePaths = new ArrayList <String> ();
+        ArrayList<String> relativeFilePaths = new ArrayList<String>();
         relativeFilePaths.add(relativeFilePath);
         String rootPath = "test/jp/eisbahn/eclipse/plugins/osde/internal/utils/";
-        HostingIGoogleUtil.uploadFiles(sid, publicId, prefEditToken, rootPath, relativeFilePaths);
+        HostingIGoogleUtil.uploadTextFiles(sid, publicId, prefEditToken, rootPath, relativeFilePaths);
 
         // Retrieve directory info.
         String quotaByte = retrieveQuotaByte(sid, publicId);
