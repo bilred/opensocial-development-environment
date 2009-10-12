@@ -6,11 +6,32 @@
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
             base-type="org.eclipse.core.runtime.xml"
-            describer="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlDescriber"
             file-extensions="xml"
             id="gadgetXml"
             name="Gadget XML File"
-            priority="high" />
+            priority="high">
+         <describer
+               class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
+            <parameter
+                  name="element"
+                  value="Module">
+            </parameter>
+         </describer>
+      </content-type>
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            file-extensions="xml"
+            id="messagebundle"
+            name="Message Bundle File"
+            priority="high">
+         <describer
+               class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
+            <parameter
+                  name="element"
+                  value="messagebundle">
+            </parameter>
+         </describer>
+      </content-type>
    </extension>
    
    <extension
