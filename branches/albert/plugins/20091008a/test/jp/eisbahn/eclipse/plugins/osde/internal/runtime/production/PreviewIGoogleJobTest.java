@@ -47,7 +47,7 @@ public class PreviewIGoogleJobTest {
     }
 
     /**
-     * Test method for {@link PreviewIGoogleJob#uploadTextFilesToIg()}.
+     * Test method for {@link PreviewIGoogleJob#uploadFilesToIg()}.
      * @throws CoreException
      * @throws IOException
      * @throws ClientProtocolException
@@ -67,7 +67,7 @@ public class PreviewIGoogleJobTest {
         logger.info("gadgetXmlFile abs path: " + gadgetXmlFile.getAbsolutePath());
         PreviewIGoogleJob job = new PreviewIGoogleJob(
                 "Preview iGoogle gadget", shell, username, password, false, gadgetXmlFile);
-        String gadgetPreviewUrl = job.uploadTextFilesToIg();
+        String gadgetPreviewUrl = job.uploadFilesToIg();
         logger.info("gadgetPreviewUrl: " + gadgetPreviewUrl);
         assertTrue(gadgetPreviewUrl.endsWith(gadgetXmlFileRelativePath));
     }
