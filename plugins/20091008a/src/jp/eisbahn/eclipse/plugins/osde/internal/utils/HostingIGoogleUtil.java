@@ -179,13 +179,13 @@ public class HostingIGoogleUtil {
     }
 
     /**
-     * Uploads a text file to iGoogle.
+     * Uploads a file to iGoogle.
      *
      * @throws ClientProtocolException
      * @throws IOException
      * @throws HostingException
      */
-    public static void uploadTextFile(String sid, String publicId, IgPrefEditToken prefEditToken,
+    public static void uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath, String sourceFileRelativePath)
             throws ClientProtocolException, IOException, HostingException {
         // Validate prefEditToken.
@@ -198,6 +198,8 @@ public class HostingIGoogleUtil {
             + sourceFileRelativePath + "?et=" + prefEditToken.getEditToken();
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
+
+        // TODO: Support non-text/plain file.
         httpPost.setHeader("Content-Type", "text/plain");
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
         FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
@@ -221,20 +223,20 @@ public class HostingIGoogleUtil {
     }
 
     /**
-     * Uploads a list of text files to iGoogle.
+     * Uploads a list of files to iGoogle.
      *
      * @throws ClientProtocolException
      * @throws IOException
      * @throws HostingException
      */
-    public static void uploadTextFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
+    public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath, List <String> sourceFileRelativePaths)
             throws ClientProtocolException, IOException, HostingException {
         if (sourceFileRelativePaths == null) {
             return;
         }
         for (String relativePath : sourceFileRelativePaths) {
-            uploadTextFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
+            uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
         }
     }
 
