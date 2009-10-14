@@ -16,7 +16,7 @@ open-social gadget to a production container (say, iGoogle) from within OSDE, an
    * (p1) "Run" tab menu
    * (p1) "OSDE" tab menu
  # OSDE displays a dropdown list of functions.
- # Developer selects "Preview on production container" and a (dropdown sub-menu) list of container options appear.
+ # Developer selects "Run this application on production" and a (dropdown sub-menu) list of container options appear.
    * (done) Support iGoogle container
    * (p1) Prepare to support more containers.
  # OSDE pops up a dialog asking for:
