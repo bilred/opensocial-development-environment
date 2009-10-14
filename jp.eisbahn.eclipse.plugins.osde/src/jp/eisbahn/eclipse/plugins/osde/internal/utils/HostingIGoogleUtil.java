@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpStatus;
@@ -55,7 +56,7 @@ public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    public static final String OSDE_HOST_DIRECTORY = "osde/";
+    private static final String OSDE_HOST_DIRECTORY = "osde/";
 
     private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
     private static final String URL_IG_PREF_EDIT_TOKEN = "http://www.google.com/ig/resetprefs.html";
@@ -66,8 +67,6 @@ public class HostingIGoogleUtil {
     private static final String URL_IG_GADGETS_FILE = URL_IG_GADGETS + "/file/";
     private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
 
-    private static final int EDIT_TOKEN_LENGTH = 16;
-
     private HostingIGoogleUtil() {
         // Disable instantiation of this utility class.
     }
@@ -76,9 +75,11 @@ public class HostingIGoogleUtil {
      * Retrieves the authentication SID token.
      *
      * @return the SID
+     * @throws HostingException
      */
     public static String retrieveSid(String emailUserName, String password,
-            String loginCaptchaToken, String loginCaptchaAnswer) {
+            String loginCaptchaToken, String loginCaptchaAnswer)
+            throws HostingException {
         // TODO: Can we get sid and Ig...Token all together?
 
         String response = null;
@@ -87,10 +88,7 @@ public class HostingIGoogleUtil {
                 emailUserName, password, loginCaptchaToken, loginCaptchaAnswer);
             logger.fine("response:\n" + " " + response);
         } catch (IOException e) {
-            logger.severe("Error:\n" + e.getMessage());
-
-            // TODO: Handle IOException
-            return null;
+            throw new HostingException(e);
         }
 
         // Parse the output
@@ -183,61 +181,63 @@ public class HostingIGoogleUtil {
     /**
      * Uploads a file to iGoogle.
      *
-     * @return status line of HTTP response
      * @throws ClientProtocolException
      * @throws IOException
+     * @throws HostingException
      */
-    public static String uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
-            File sourceFile, String targetFilePath)
-            throws ClientProtocolException, IOException {
-        // Verify prefEditToken.
-        String editToken = prefEditToken.getEditToken();
-        if (editToken == null) {
-            logger.warning("editToken is null");
-            return "ERROR: editToken is null";
-        }
-        String pref = prefEditToken.getPref();
-        if (pref == null) {
-            logger.warning("pref is null");
-            return "ERROR: pref is null";
-        }
-
-        // Verify sourceFile to make sure it does have contents in it.
-        if (sourceFile.length() <= 0L) {
-            logger.severe("sourceFile length: " + sourceFile.length());
-            logger.severe("sourceFile path: " + sourceFile.getAbsolutePath());
-
-            // TODO: Is there a better way to handle the error of empty/non-existing file?
-            return null;
+    public static void uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
+            String sourceFileRootPath, String sourceFileRelativePath)
+            throws ClientProtocolException, IOException, HostingException {
+        // Validate prefEditToken.
+        if (!prefEditToken.validate()) {
+            throw new HostingException("Invalid prefEditToken: " + prefEditToken);
         }
 
         // Prepare HttpPost.
-        String url = URL_IG_GADGETS_FILE + publicId + "/" + targetFilePath + "?et=" + editToken;
+        String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_HOST_DIRECTORY
+            + sourceFileRelativePath + "?et=" + prefEditToken.getEditToken();
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
+
+        // TODO: Support non-text/plain file.
+        httpPost.setHeader("Content-Type", "text/plain");
+        File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
         FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
         logger.fine("fileEntity length: " + fileEntity.getContentLength());
         httpPost.setEntity(fileEntity);
-        httpPost.setHeader("Content-Type", "text/plain");
 
-        // Cookie PREF must be placed before SID.
-        logger.fine("preparing headers");
-        httpPost.addHeader("Cookie", "PREF=" + pref);
+        // Add cookie headers. Cookie PREF must be placed before SID.
+        httpPost.addHeader("Cookie", "PREF=" + prefEditToken.getPref());
         httpPost.addHeader("Cookie", "SID=" + sid);
 
         // Execute request.
-        logger.fine("preparing HttpClient");
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpPost);
-        logger.fine("httpResponse: " + httpResponse);
         StatusLine statusLine = httpResponse.getStatusLine();
+        logger.fine("statusLine: " + statusLine);
         if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
             String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
-            logger.warning("response: " + response);
+            throw new HostingException("Failed file-upload with status line: "
+                    + statusLine.toString() + "\nand response:\n" + response);
         }
-        String statusLineString = statusLine.toString();
-        logger.fine("statusLine: " + statusLineString);
-        return statusLineString;
+    }
+
+    /**
+     * Uploads a list of files to iGoogle.
+     *
+     * @throws ClientProtocolException
+     * @throws IOException
+     * @throws HostingException
+     */
+    public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
+            String sourceFileRootPath, List <String> sourceFileRelativePaths)
+            throws ClientProtocolException, IOException, HostingException {
+        if (sourceFileRelativePaths == null) {
+            return;
+        }
+        for (String relativePath : sourceFileRelativePaths) {
+            uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
+        }
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
@@ -269,7 +269,7 @@ public class HostingIGoogleUtil {
     }
 
     private static String formHostedFileUrl(String publicId, String filePath) {
-        return URL_GMODULE_FILE + publicId + "/" + filePath;
+        return URL_GMODULE_FILE + publicId + "/" + OSDE_HOST_DIRECTORY + filePath;
     }
 
     public static String retrievePublicId(String sid)
@@ -320,21 +320,8 @@ public class HostingIGoogleUtil {
         }
 
         String responseString = retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
-        String editToken = retrieveEditTokenFromPageContent(responseString);
+        String editToken = IgPrefEditToken.retrieveEditTokenFromPageContent(responseString);
         return new IgPrefEditToken(pref, editToken);
-    }
-
-    private static String retrieveEditTokenFromPageContent(String pageContent) {
-        int indexOfEditToken = pageContent.indexOf("?et=");
-
-        // TODO: Check indexOfEditToken != -1
-
-        // Retrieve the 16 chars after "?et=" (of which the length is 4)
-        int indexOfEditTokenValue = indexOfEditToken + 4;
-        String editToken = pageContent.substring(indexOfEditTokenValue,
-                indexOfEditTokenValue + EDIT_TOKEN_LENGTH);
-        logger.fine("editToken: " + editToken);
-        return editToken;
     }
 
     private static String retrieveHttpResponseAsString(
@@ -393,28 +380,5 @@ public class HostingIGoogleUtil {
         String hostedFileUrl = formHostedFileUrl(publicId, filePath);
         return "http://www.gmodules.com/gadgets/ifr?&view=home&hl=en&gl=us&nocache=1&url="
                + hostedFileUrl;
-    }
-
-    /**
-     * Data used for interacting with iGoogle service.
-     *
-     * @author albert.cheng.ig@gmail.com
-     */
-    public static class IgPrefEditToken {
-        private String pref;
-        private String editToken;
-
-        private IgPrefEditToken(String pref, String editToken) {
-            this.pref = pref;
-            this.editToken = editToken;
-        }
-
-        String getPref() {
-            return pref;
-        }
-
-        String getEditToken() {
-            return editToken;
-        }
     }
 }
