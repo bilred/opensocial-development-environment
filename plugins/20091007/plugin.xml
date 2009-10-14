@@ -10,7 +10,7 @@
             id="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML"
             name="Gadget Spec XML File"
             priority="high">
-         <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber">
+         <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
             <parameter name="element" value="Module"/>
          </describer>
       </content-type>
@@ -19,7 +19,7 @@
             file-extensions="xml"
             id="jp.eisbahn.eclipse.plugins.osde.messageBundleXML"
             name="Message Bundle XML File">
-         <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber">
+         <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
             <parameter name="element" value="messagebundle"/>
          </describer>
       </content-type>
