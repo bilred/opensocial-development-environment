@@ -40,7 +40,7 @@ open-social gadget to a production container (say, iGoogle) from within OSDE, an
  * (p0) Caching error - fixed
    * Description: Developer might see an old version of gadget file (if already uploaded) during preview. Developer might be able to successfully see the new gadget file if he/she continue to try to use this preview function several times.
 
- * (p0) Uploading file fails.
+ * (p0) Uploading file fails - fixed.
    * Analysis: it is caused by a server error and spec changes. The server error was fixed, and the spec changes will be reflected in our code soon.
 
 = References =
