@@ -100,7 +100,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 						IFolder destFolder = project.getFolder(targetDirectory.getProjectRelativePath() + "/" + parent);
 						IFile destFile = destFolder.getFile(orgFile.getName());
 						orgFile.copy(destFile.getFullPath(), false, monitor);
-						if (OpenSocialUtil.isGadgetXml(destFile)) {
+						if (OpenSocialUtil.isGadgetSpecXML(destFile)) {
 							try {
 								IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 								Module module = (Module) gadgetXMLParser.parse(orgFile.getContents());
