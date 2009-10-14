@@ -96,7 +96,7 @@ public class PreviewIGoogleAction
             Job job = new PreviewIGoogleJob("Preview iGoogle gadget", shell, username,
                     password, dialog.isUseExternalBrowser(), gadgetXmlFile);
             logger.fine("job: " + job);
-            job.schedule(1000);
+            job.schedule();
         }
         logger.fine("leaving run");
     }
