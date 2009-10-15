@@ -20,13 +20,13 @@ package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpStatus;
@@ -230,14 +230,36 @@ public class HostingIGoogleUtil {
      * @throws HostingException
      */
     public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
-            String sourceFileRootPath, List <String> sourceFileRelativePaths)
+            String sourceFileRootPath)
             throws ClientProtocolException, IOException, HostingException {
-        if (sourceFileRelativePaths == null) {
-            return;
-        }
-        for (String relativePath : sourceFileRelativePaths) {
+        String [] relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
+        for (String relativePath : relativeFilePaths) {
             uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
         }
+    }
+
+    /**
+     * Finds all relative file paths under given folder.
+     * These files will be uploaded to iGoogle server.
+     */
+    static String [] findAllRelativeFilePaths(String targetFolder) {
+        // List filtered files.
+        // System/hidden files and folders are filtered out.
+        // TODO: Support list files recursively.
+        FileFilter fileFilter = new FileFilter() {
+            public boolean accept(File pathname) {
+                return !pathname.getName().startsWith(".")
+                        && pathname.isFile();
+            }
+        };
+        File [] files = new File(targetFolder).listFiles(fileFilter);
+
+        // TODO: Make sure the file paths are relative to targetFolder.
+        String [] relativeFilePaths = new String [files.length];
+        for (int i = 0; i < files.length; i++) {
+            relativeFilePaths[i] = files[i].getName();
+        }
+        return relativeFilePaths;
     }
 
     static String retrieveQuotaByte(String sid, String publicId)

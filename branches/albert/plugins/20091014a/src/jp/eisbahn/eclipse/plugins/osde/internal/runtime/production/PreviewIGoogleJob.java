@@ -20,17 +20,17 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
 
 import org.apache.http.client.ClientProtocolException;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -52,22 +52,24 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class PreviewIGoogleJob extends Job {
     private static Logger logger = Logger.getLogger(PreviewIGoogleJob.class.getName());
 
+    static final String TARGET_FOLDER_NAME = "target";
+
     private String jobName;
     private Shell shell;
     private String username;
     private String password;
     private boolean useExternalBrowser;
-    private File gadgetXmlFile;
+    private IFile gadgetXmlIFile;
 
     public PreviewIGoogleJob(String jobName, Shell shell, String username, String password,
-            boolean useExternalBrowser, File gadgetXmlFile) {
+            boolean useExternalBrowser, IFile gadgetXmlIFile) {
         super(jobName);
         this.jobName = jobName;
         this.shell = shell;
         this.username = username;
         this.password = password;
         this.useExternalBrowser = useExternalBrowser;
-        this.gadgetXmlFile = gadgetXmlFile;
+        this.gadgetXmlIFile = gadgetXmlIFile;
     }
 
     @Override
@@ -138,14 +140,15 @@ public class PreviewIGoogleJob extends Job {
         String publicId = retrievePublicId(sid);
         IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
 
-        // TODO: Get list of files in target folder.
-        ArrayList<String> relativeFilePaths = new ArrayList<String>();
-        relativeFilePaths.add(gadgetXmlFile.getName());
+        IProject project = gadgetXmlIFile.getProject();
+        String targetPath = project.getFolder(TARGET_FOLDER_NAME).getLocation().toOSString();
+        logger.fine("targetPath: " + targetPath);
 
         // Upload files.
-        String rootPath = gadgetXmlFile.getParent();
-        uploadFiles(sid, publicId, prefEditToken, rootPath, relativeFilePaths);
-        String previewGadgetUrl = formPreviewGadgetUrl(publicId, gadgetXmlFile.getName());
+        uploadFiles(sid, publicId, prefEditToken, targetPath);
+
+        // Form url for preview gadget.
+        String previewGadgetUrl = formPreviewGadgetUrl(publicId, gadgetXmlIFile.getName());
         return previewGadgetUrl;
     }
 }
