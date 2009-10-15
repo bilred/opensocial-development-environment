@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
+   <feature url="features/jp.eisbahn.eclipse.features.osde_0.3.0.C2.jar"
+            id="jp.eisbahn.eclipse.features.osde"
+            version="0.3.0.C2">
+      <category name="jp.eisbahn.eclipse.plugins.osde.category" />
+   </feature>
    <feature url="features/jp.eisbahn.eclipse.features.osde_0.3.0.C1.jar"
             id="jp.eisbahn.eclipse.features.osde"
             version="0.3.0.C1">
