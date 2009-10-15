@@ -1,5 +1,11 @@
 = Change log =
 
+=== October 15, 2009 ===
+  Version 0.3.0 Candidate 2 has been released.
+
+ * The option of "TAIWAN, PROVINCE OF CHINA (TW)" has been changed to "TAIWAN".
+ * Open default XML editor when user double clicks on the message bundle file.
+
 === October 4, 2009 ===
  Version 0.3.0 Candidate 1 has been released.
 
