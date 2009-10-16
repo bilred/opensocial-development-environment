@@ -95,24 +95,24 @@ public class OpenSocialUtil {
 		}
 	}
 	
-	public static boolean isGadgetSpecXML(IFile file) {
+	public static boolean isGadgetSpecXML(IFile file) throws IOException, CoreException {
 		IContentTypeManager manager = Platform.getContentTypeManager();
-		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
-		for (IContentType contentType : contentTypes) {
-			if (contentType.getId().equals("jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML")) {
-				return true;
-			}
+		IContentType[] contentTypes = manager.findContentTypesFor(file.getContents(), file.getLocation().toOSString());
+		
+		if (contentTypes.length > 0 &&
+				contentTypes[0].getId().equals("jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML")) {
+			return true;
 		}
 		return false;
 	}
 	
-	public static boolean isMessageBundleXML(IFile file) {
+	public static boolean isMessageBundleXML(IFile file) throws IOException, CoreException {
 		IContentTypeManager manager = Platform.getContentTypeManager();
-		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
-		for (IContentType contentType : contentTypes) {
-			if (contentType.getId().equals("jp.eisbahn.eclipse.plugins.osde.messageBundleXML")) {
-				return true;
-			}
+		IContentType[] contentTypes = manager.findContentTypesFor(file.getContents(), file.getLocation().toOSString());
+		
+		if (contentTypes.length > 0 &&
+				contentTypes[0].getId().equals("jp.eisbahn.eclipse.plugins.osde.messageBundleXML")) {
+			return true;
 		}
 		return false;
 	}
