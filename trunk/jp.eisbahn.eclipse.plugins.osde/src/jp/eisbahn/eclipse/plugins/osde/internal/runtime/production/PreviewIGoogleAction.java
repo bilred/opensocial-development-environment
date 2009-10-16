@@ -18,7 +18,6 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
-import java.io.File;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
@@ -92,9 +91,8 @@ public class PreviewIGoogleAction
             logger.fine("OK pressed");
             String username = dialog.getUsername();
             String password = dialog.getPassword();
-            File gadgetXmlFile = gadgetXmlIFile.getRawLocation().toFile();
             Job job = new PreviewIGoogleJob("Preview iGoogle gadget", shell, username,
-                    password, dialog.isUseExternalBrowser(), gadgetXmlFile);
+                    password, dialog.isUseExternalBrowser(), gadgetXmlIFile);
             logger.fine("job: " + job);
             job.schedule();
         }

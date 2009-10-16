@@ -20,17 +20,17 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
 
 import org.apache.http.client.ClientProtocolException;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -52,22 +52,40 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class PreviewIGoogleJob extends Job {
     private static Logger logger = Logger.getLogger(PreviewIGoogleJob.class.getName());
 
+    /**
+     * This constant stands for the folder name of "target".
+     * This folder stores all the gadget-related files.
+     * This folder is created in
+     * {@link jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder GadgetBuilder}
+     * which determines what files are for deployment purpose.
+     */
+    // TODO: Reduce the impact caused by changes in GadgetBuilder:
+    // The first approach is to make this a global constant and make
+    // sure every corresponding code calls this constant instead of
+    // using a string literal "target".
+    // By doing this, any change in GadgetBuilder can be reflected to
+    // all the places immediately, and thus reduce the impact from
+    // changes in one place.
+    // Also, we need to make sure this folder exists prior to using
+    // it here.
+    static final String TARGET_FOLDER_NAME = "target";
+
     private String jobName;
     private Shell shell;
     private String username;
     private String password;
     private boolean useExternalBrowser;
-    private File gadgetXmlFile;
+    private IFile gadgetXmlIFile;
 
     public PreviewIGoogleJob(String jobName, Shell shell, String username, String password,
-            boolean useExternalBrowser, File gadgetXmlFile) {
+            boolean useExternalBrowser, IFile gadgetXmlIFile) {
         super(jobName);
         this.jobName = jobName;
         this.shell = shell;
         this.username = username;
         this.password = password;
         this.useExternalBrowser = useExternalBrowser;
-        this.gadgetXmlFile = gadgetXmlFile;
+        this.gadgetXmlIFile = gadgetXmlIFile;
     }
 
     @Override
@@ -138,14 +156,15 @@ public class PreviewIGoogleJob extends Job {
         String publicId = retrievePublicId(sid);
         IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
 
-        // TODO: Get list of files in target folder.
-        ArrayList<String> relativeFilePaths = new ArrayList<String>();
-        relativeFilePaths.add(gadgetXmlFile.getName());
+        IProject project = gadgetXmlIFile.getProject();
+        String targetPath = project.getFolder(TARGET_FOLDER_NAME).getLocation().toOSString();
+        logger.fine("targetPath: " + targetPath);
 
         // Upload files.
-        String rootPath = gadgetXmlFile.getParent();
-        uploadFiles(sid, publicId, prefEditToken, rootPath, relativeFilePaths);
-        String previewGadgetUrl = formPreviewGadgetUrl(publicId, gadgetXmlFile.getName());
+        uploadFiles(sid, publicId, prefEditToken, targetPath);
+
+        // Form url for preview gadget.
+        String previewGadgetUrl = formPreviewGadgetUrl(publicId, gadgetXmlIFile.getName());
         return previewGadgetUrl;
     }
 }
