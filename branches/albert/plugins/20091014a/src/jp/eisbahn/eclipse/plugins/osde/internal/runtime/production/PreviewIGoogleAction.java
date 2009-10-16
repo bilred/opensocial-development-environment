@@ -18,7 +18,6 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
-import java.io.File;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
