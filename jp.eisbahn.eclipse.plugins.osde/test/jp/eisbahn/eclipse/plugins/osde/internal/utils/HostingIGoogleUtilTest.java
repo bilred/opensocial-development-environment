@@ -18,9 +18,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
@@ -41,7 +39,7 @@ public class HostingIGoogleUtilTest {
 
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
-     * String, String, IgPrefEditToken, File, String)}.
+     * String, String, IgPrefEditToken, String, String)}.
      * @throws IOException
      * @throws ClientProtocolException
      * @throws HostingException
@@ -62,10 +60,8 @@ public class HostingIGoogleUtilTest {
 
         // Upload file.
         String relativeFilePath = "dummy_gadget.xml";
-        ArrayList<String> relativeFilePaths = new ArrayList<String>();
-        relativeFilePaths.add(relativeFilePath);
         String rootPath = "test/jp/eisbahn/eclipse/plugins/osde/internal/utils/";
-        HostingIGoogleUtil.uploadFiles(sid, publicId, prefEditToken, rootPath, relativeFilePaths);
+        HostingIGoogleUtil.uploadFiles(sid, publicId, prefEditToken, rootPath);
 
         // Retrieve directory info.
         String quotaByte = retrieveQuotaByte(sid, publicId);
@@ -84,4 +80,19 @@ public class HostingIGoogleUtilTest {
         assertTrue(previewUrl.endsWith(relativeFilePath));
     }
 
+    /**
+     * Test method for {@link HostingIGoogleUtil#findAllRelativeFilePaths(String)}.
+     */
+    @Test
+    public final void testFindAllRelativeFilePaths() {
+        // TODO: Get a better place to store test data.
+        String [] filePaths = findAllRelativeFilePaths(
+                "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/production/testdata/");
+
+        // Verify the 3 testing files are found.
+        assertEquals(3, filePaths.length);
+        for (String filePath : filePaths) {
+            logger.info("filePath: " + filePath);
+        }
+    }
 }
