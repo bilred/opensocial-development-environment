@@ -55,21 +55,19 @@ public class PreviewIGoogleJob extends Job {
     /**
      * This constant stands for the folder name of "target".
      * This folder stores all the gadget-related files.
-     * It is created in {@link
-     * jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder
-     * GadgetBuilder}
-     * and also used in {@link
-     * jp.eisbahn.eclipse.plugins.osde.internal.runtime.AbstractRunAction.CreateWebContextJob
-     * CreateWebContextJob}.
-     * This class {@code PreviewIGoogleJob} uses this constant in a similar way to {@link
-     * jp.eisbahn.eclipse.plugins.osde.internal.runtime.AbstractRunAction.CreateWebContextJob
-     * CreateWebContextJob}.
+     * This folder is created in
+     * {@link jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder GadgetBuilder}
+     * which determines what files are for deployment purpose.
      */
     // TODO: Reduce the impact caused by changes in GadgetBuilder:
-    //       One approach is to make this a global constant and make sure every
-    //       corresponding code calls this constant instead of using a string literal "target".
-    //       By doing this, any change in a place can be reflected to all the places immediately,
-    //       and thus reduce the potential impact by changes in one place.
+    // The first approach is to make this a global constant and make
+    // sure every corresponding code calls this constant instead of
+    // using a string literal "target".
+    // By doing this, any change in GadgetBuilder can be reflected to
+    // all the places immediately, and thus reduce the impact from
+    // changes in one place.
+    // Also, we need to make sure this folder exists prior to using
+    // it here.
     static final String TARGET_FOLDER_NAME = "target";
 
     private String jobName;
