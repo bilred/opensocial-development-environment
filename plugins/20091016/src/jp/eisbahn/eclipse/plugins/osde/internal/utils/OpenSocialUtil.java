@@ -99,7 +99,7 @@ public class OpenSocialUtil {
 		IContentTypeManager manager = Platform.getContentTypeManager();
 		IContentType[] contentTypes = manager.findContentTypesFor(file.getContents(), file.getLocation().toOSString());
 		
-		if (contentTypes.length > 0 &&
+		if (contentTypes != null && contentTypes.length > 0 &&
 				contentTypes[0].getId().equals("jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML")) {
 			return true;
 		}
@@ -110,7 +110,7 @@ public class OpenSocialUtil {
 		IContentTypeManager manager = Platform.getContentTypeManager();
 		IContentType[] contentTypes = manager.findContentTypesFor(file.getContents(), file.getLocation().toOSString());
 		
-		if (contentTypes.length > 0 &&
+		if (contentTypes != null && contentTypes.length > 0 &&
 				contentTypes[0].getId().equals("jp.eisbahn.eclipse.plugins.osde.messageBundleXML")) {
 			return true;
 		}
