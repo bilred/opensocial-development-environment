@@ -13,35 +13,28 @@ open-social gadget to a production container (say, iGoogle) from within OSDE, an
 
  # Developer (right-)clicks on anyone of the following
    * (done) gadget.xml
-   * (p1) "Run" tab menu
-   * (p1) "OSDE" tab menu
+   * (p2) "Run" tab menu
+   * (p2) "OSDE" tab menu
  # OSDE displays a dropdown list of functions.
  # Developer selects "Run this application on production" and a (dropdown sub-menu) list of container options appear.
    * (done) Support iGoogle container
-   * (p1) Prepare to support more containers.
+   * (p2) Prepare to support more containers.
  # OSDE pops up a dialog asking for:
    * (done) google account and password
      * (p2) if developer has already input account/password info, OSDE stores the corresponding session tokens and does not ask for account/password again during the current session.
    * (done) a checkbox asking whether to use external browser or not
-   * (p2) preview home view or canvas view
+   * (p1) preview home view or canvas view
    * (p3) country and language
  # Devloper clicks on OK button
  # OSDE interacts with iGoogle server to authenticate the user
  # OSDE uploads gadget files to iGoogle server
    * (done) support one gadget xml file
-   * (p1) support multiple files
+   * (done) support multiple files
  # OSDE opens a browser
  # OSDE previews the gadget against iGoogle production server.
    * (done) support previewing the whole iframe of the gadget
    * (p3) support interacting with the whole iGoogle container (not just inside the iframe of the gadget) during preview.
 
-= Known Bug(s) =
-
- * (p0) Caching error - fixed
-   * Description: Developer might see an old version of gadget file (if already uploaded) during preview. Developer might be able to successfully see the new gadget file if he/she continue to try to use this preview function several times.
-
- * (p0) Uploading file fails - fixed.
-   * Analysis: it is caused by a server error and spec changes. The server error was fixed, and the spec changes will be reflected in our code soon.
 
 = References =
 
