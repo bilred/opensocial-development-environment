@@ -149,17 +149,6 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		viewers.setLayoutData(layoutData);
 		//
 		label = new Label(panel, SWT.NONE);
-		label.setText("Country:");
-		countries = new Combo(panel, SWT.READ_ONLY);
-		for (int i = 1; i < OpenSocialUtil.COUNTRIES.length; i++) {
-			countries.add(OpenSocialUtil.COUNTRIES[i]);
-		}
-		countries.select(0);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = 3;
-		countries.setLayoutData(layoutData);
-		//
-		label = new Label(panel, SWT.NONE);
 		label.setText("Language:");
 		languages = new Combo(panel, SWT.READ_ONLY);
 		for (int i = 1; i < OpenSocialUtil.LANGUAGES.length; i++) {
@@ -169,6 +158,17 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 3;
 		languages.setLayoutData(layoutData);
+		//
+		label = new Label(panel, SWT.NONE);
+		label.setText("Country:");
+		countries = new Combo(panel, SWT.READ_ONLY);
+		for (int i = 1; i < OpenSocialUtil.COUNTRIES.length; i++) {
+			countries.add(OpenSocialUtil.COUNTRIES[i]);
+		}
+		countries.select(0);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 3;
+		countries.setLayoutData(layoutData);
 		//
 		Label separator = new Label(panel, SWT.SEPARATOR | SWT.HORIZONTAL);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
