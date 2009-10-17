@@ -35,7 +35,7 @@ public class RunFromEditorAction extends AbstractRunAction implements IEditorAct
 	
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		this.targetEditor = targetEditor;
-		shell = targetEditor.getSite().getShell();
+		shell = targetEditor != null ? targetEditor.getSite().getShell() : null;
 		targetPart = targetEditor;
 	}
 
