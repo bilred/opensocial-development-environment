@@ -126,10 +126,8 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 							} 
 						} catch (IOException e) {
 							Logging.warn("Building and copying the Gadget XML file failed.", e);
-							Logging.warn(e.toString());
 						} catch (ParserException e) {
 							Logging.warn("Building and copying the Gadget XML file failed.", e);
-							Logging.warn(e.toString());
 						}
 					}
 					return false;
