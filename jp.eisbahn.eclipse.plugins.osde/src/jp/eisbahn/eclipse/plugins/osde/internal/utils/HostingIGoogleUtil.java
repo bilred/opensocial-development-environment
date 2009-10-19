@@ -232,7 +232,7 @@ public class HostingIGoogleUtil {
     public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath)
             throws ClientProtocolException, IOException, HostingException {
-        String [] relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
+        String[] relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
             uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
         }
@@ -242,7 +242,7 @@ public class HostingIGoogleUtil {
      * Finds all relative file paths under given folder.
      * These files will be uploaded to iGoogle server.
      */
-    static String [] findAllRelativeFilePaths(String targetFolder) {
+    static String[] findAllRelativeFilePaths(String targetFolder) {
         // List filtered files.
         // System/hidden files and folders are filtered out.
         // TODO: Support list files recursively.
@@ -252,10 +252,10 @@ public class HostingIGoogleUtil {
                         && pathname.isFile();
             }
         };
-        File [] files = new File(targetFolder).listFiles(fileFilter);
+        File[] files = new File(targetFolder).listFiles(fileFilter);
 
         // TODO: Make sure the file paths are relative to targetFolder.
-        String [] relativeFilePaths = new String [files.length];
+        String[] relativeFilePaths = new String [files.length];
         for (int i = 0; i < files.length; i++) {
             relativeFilePaths[i] = files[i].getName();
         }
