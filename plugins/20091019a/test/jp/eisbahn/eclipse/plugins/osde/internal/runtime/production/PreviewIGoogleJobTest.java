@@ -85,8 +85,8 @@ public class PreviewIGoogleJobTest {
         Shell shell = new Shell();
         String username = "osde.test.001";
         String password = "osdetest888";
-        PreviewIGoogleJob job = new PreviewIGoogleJob(
-                "Preview iGoogle gadget", shell, username, password, false, gadgetXmlIFile);
+        PreviewIGoogleJob job =
+                new PreviewIGoogleJob(shell, username, password, false, false, gadgetXmlIFile);
 
         // Test and verify the method call.
         String gadgetPreviewUrl = job.uploadFilesToIg();

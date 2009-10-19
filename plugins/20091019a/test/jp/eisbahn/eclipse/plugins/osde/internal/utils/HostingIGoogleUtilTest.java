@@ -75,7 +75,7 @@ public class HostingIGoogleUtilTest {
         String fileContent = retrieveFile(sid, publicId, relativeFilePath);
         logger.info("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith("<?xml version"));
-        String previewUrl = formPreviewGadgetUrl(publicId, relativeFilePath);
+        String previewUrl = formPreviewGadgetUrl(publicId, relativeFilePath, false);
         logger.info("previewUrl: " + previewUrl);
         assertTrue(previewUrl.endsWith(relativeFilePath));
     }
