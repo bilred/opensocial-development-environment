@@ -20,6 +20,8 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
 import java.util.logging.Logger;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -66,31 +68,43 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
         Composite composite = (Composite) super.createDialogArea(parent);
         Composite panel = new Composite(composite, SWT.NONE);
         GridLayout layout = new GridLayout();
-        layout.numColumns = 2;
+        layout.numColumns = 3;
         panel.setLayout(layout);
         GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
         panel.setLayoutData(layoutData);
 
         // Prepare username.
-        Label usernameLabel = new Label(panel, SWT.RIGHT);
+        Label usernameLabel = new Label(panel, SWT.LEFT);
         usernameLabel.setText("username: ");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 1;
+        usernameLabel.setLayoutData(layoutData);
         usernameText = new Text(panel, SWT.SINGLE);
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        layoutData.horizontalSpan = 1;
+        layoutData.horizontalSpan = 2;
         usernameText.setLayoutData(layoutData);
 
         // Prepare password.
-        Label passwordLabel = new Label(panel, SWT.RIGHT);
+        Label passwordLabel = new Label(panel, SWT.LEFT);
         passwordLabel.setText("password: ");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 1;
+        passwordLabel.setLayoutData(layoutData);
         passwordText = new Text(panel, SWT.SINGLE);
         passwordText.setEchoChar('*');
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        layoutData.horizontalSpan = 1;
+        layoutData.horizontalSpan = 2;
         passwordText.setLayoutData(layoutData);
+
+        // Prepare radio buttons for choosing view type.
+        Label viewTypeLabel = new Label(panel, SWT.LEFT);
+        viewTypeLabel.setText("View type: ");
+        layoutData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        viewTypeLabel.setLayoutData(layoutData);
+
+        Button homeViewButton = ComponentUtils.createRadio(panel, "Home");
+        homeViewButton.setSelection(true); // default view is home view
+        Button canvasViewButton = ComponentUtils.createRadio(panel, "Canvas");
 
         // Prepare checkbox of useExternalBrowser.
         useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
