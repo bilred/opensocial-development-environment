@@ -20,8 +20,6 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
 import java.util.logging.Logger;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils;
-
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -47,9 +45,11 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
 
     private String username;
     private String password;
+    private boolean useCanvasView;
     private boolean useExternalBrowser;
     private Text usernameText;
     private Text passwordText;
+    private Button canvasViewButton;
     private Button useExternalBrowserCheckbox;
 
     public PreviewIGoogleDialog(Shell shell) {
@@ -67,51 +67,42 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
         // Prepare composite and panel.
         Composite composite = (Composite) super.createDialogArea(parent);
         Composite panel = new Composite(composite, SWT.NONE);
-        GridLayout layout = new GridLayout();
-        layout.numColumns = 3;
+        GridLayout layout = new GridLayout(3, true);
         panel.setLayout(layout);
-        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        panel.setLayoutData(layoutData);
+        panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         // Prepare username.
         Label usernameLabel = new Label(panel, SWT.LEFT);
-        usernameLabel.setText("username: ");
-        layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        layoutData.horizontalSpan = 1;
-        usernameLabel.setLayoutData(layoutData);
+        usernameLabel.setText("Username: ");
+        usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         usernameText = new Text(panel, SWT.SINGLE);
-        layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        layoutData.horizontalSpan = 2;
-        usernameText.setLayoutData(layoutData);
+        usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
         // Prepare password.
         Label passwordLabel = new Label(panel, SWT.LEFT);
-        passwordLabel.setText("password: ");
-        layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        layoutData.horizontalSpan = 1;
-        passwordLabel.setLayoutData(layoutData);
+        passwordLabel.setText("Password: ");
+        passwordLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         passwordText = new Text(panel, SWT.SINGLE);
         passwordText.setEchoChar('*');
-        layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        layoutData.horizontalSpan = 2;
-        passwordText.setLayoutData(layoutData);
+        passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
         // Prepare radio buttons for choosing view type.
         Label viewTypeLabel = new Label(panel, SWT.LEFT);
         viewTypeLabel.setText("View type: ");
-        layoutData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-        viewTypeLabel.setLayoutData(layoutData);
-
-        Button homeViewButton = ComponentUtils.createRadio(panel, "Home");
+        viewTypeLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+        Button homeViewButton = new Button(panel, SWT.RADIO);
+        homeViewButton.setText("Home");
+        homeViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         homeViewButton.setSelection(true); // default view is home view
-        Button canvasViewButton = ComponentUtils.createRadio(panel, "Canvas");
+        canvasViewButton = new Button(panel, SWT.RADIO);
+        canvasViewButton.setText("Canvas");
+        canvasViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 
         // Prepare checkbox of useExternalBrowser.
         useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
         useExternalBrowserCheckbox.setText("Use an external Web browser.");
-        layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        layoutData.horizontalSpan = 2;
-        useExternalBrowserCheckbox.setLayoutData(layoutData);
+        useExternalBrowserCheckbox.setLayoutData(
+                new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
         IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
         if (!browserSupport.isInternalWebBrowserAvailable()) {
             useExternalBrowserCheckbox.setSelection(true);
@@ -124,7 +115,7 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
     @Override
     protected Point getInitialSize() {
         logger.fine("getInitialSize");
-        return new Point(550, 400);
+        return new Point(350, 300);
     }
 
     @Override
@@ -135,6 +126,7 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
         logger.fine("username: " + username);
         password = passwordText.getText();
         logger.fine("password: " + password);
+        useCanvasView = canvasViewButton.getSelection();
         useExternalBrowser = useExternalBrowserCheckbox.getSelection();
         logger.fine("useExternalBrowser: " + useExternalBrowser);
 
@@ -150,6 +142,10 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
 
     String getPassword() {
         return password;
+    }
+
+    boolean isUseCanvasView() {
+        return useCanvasView;
     }
 
     boolean isUseExternalBrowser() {
