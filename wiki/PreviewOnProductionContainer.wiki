@@ -18,13 +18,13 @@ open-social gadget to a production container (say, iGoogle) from within OSDE, an
  # OSDE displays a dropdown list of functions.
  # Developer selects "Run this application on production" and a (dropdown sub-menu) list of container options appear.
    * (done) Support iGoogle container
-   * (p2) Prepare to support more containers.
+   * (p4) Prepare to support more containers.
  # OSDE pops up a dialog asking for:
    * (done) google account and password
-     * (p2) if developer has already input account/password info, OSDE stores the corresponding session tokens and does not ask for account/password again during the current session.
+     * (p3) if developer has already input account/password info, OSDE stores the corresponding session tokens and does not ask for account/password again during the current session.
    * (done) a checkbox asking whether to use external browser or not
    * (p1) preview home view or canvas view
-   * (p3) country and language
+   * (p4) country and language
  # Devloper clicks on OK button
  # OSDE interacts with iGoogle server to authenticate the user
  # OSDE uploads gadget files to iGoogle server
@@ -33,7 +33,7 @@ open-social gadget to a production container (say, iGoogle) from within OSDE, an
  # OSDE opens a browser
  # OSDE previews the gadget against iGoogle production server.
    * (done) support previewing the whole iframe of the gadget
-   * (p3) support interacting with the whole iGoogle container (not just inside the iframe of the gadget) during preview.
+   * (p4) support interacting with the whole iGoogle container (not just inside the iframe of the gadget) during preview.
 
 
 = References =
