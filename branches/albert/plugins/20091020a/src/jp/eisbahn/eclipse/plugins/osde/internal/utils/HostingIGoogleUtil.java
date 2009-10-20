@@ -93,7 +93,7 @@ public class HostingIGoogleUtil {
 
         // Parse the output
         response.trim();
-        String [] tokens = response.split("\n");
+        String[] tokens = response.split("\n");
 
         // TODO: (p4) Refactor the following block of code to be more flexible.
         String sid = null;
@@ -232,33 +232,80 @@ public class HostingIGoogleUtil {
     public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath)
             throws ClientProtocolException, IOException, HostingException {
-        String[] relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
+        String[] relativeFilePaths =
+                findAllRelativeFilePaths(sourceFileRootPath, File.pathSeparator);
         for (String relativePath : relativeFilePaths) {
             uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
         }
     }
 
+//    /**
+//     * Finds all relative file paths under given folder.
+//     * These files will be uploaded to iGoogle server.
+//     */
+//    static String[] findAllRelativeFilePaths(String targetFolder) {
+//        // List filtered files.
+//        // System/hidden files and folders are filtered out.
+//        // TODO: (p0) Support list files recursively.
+//        FileFilter fileFilter = new FileFilter() {
+//            public boolean accept(File pathname) {
+//                return !pathname.getName().startsWith(".")
+//                        && pathname.isFile();
+//            }
+//        };
+//        File[] files = new File(targetFolder).listFiles(fileFilter);
+//
+//        // TODO: (p0) Make sure the file paths are relative to targetFolder.
+//        String[] relativeFilePaths = new String [files.length];
+//        for (int i = 0; i < files.length; i++) {
+//            relativeFilePaths[i] = files[i].getName();
+//        }
+//        return relativeFilePaths;
+//    }
+
     /**
      * Finds all relative file paths under given folder.
      * These files will be uploaded to iGoogle server.
      */
-    static String[] findAllRelativeFilePaths(String targetFolder) {
+    static String[] findAllRelativeFilePaths(String baseFolder, String relativeFolder) {
         // List filtered files.
         // System/hidden files and folders are filtered out.
-        // TODO: (p0) Support list files recursively.
         FileFilter fileFilter = new FileFilter() {
             public boolean accept(File pathname) {
                 return !pathname.getName().startsWith(".")
                         && pathname.isFile();
             }
         };
-        File[] files = new File(targetFolder).listFiles(fileFilter);
+        File currentFolder = new File(baseFolder, relativeFolder);
+        File[] files = currentFolder.listFiles(fileFilter);
 
-        // TODO: (p0) Make sure the file paths are relative to targetFolder.
-        String[] relativeFilePaths = new String [files.length];
+        String[] relativeFilePaths = new String[files.length];
         for (int i = 0; i < files.length; i++) {
-            relativeFilePaths[i] = files[i].getName();
+            relativeFilePaths[i] = relativeFolder + files[i].getName();
         }
+
+        // List files in folders recursively.
+        FileFilter folderFilter = new FileFilter() {
+            public boolean accept(File pathname) {
+                return pathname.isDirectory();
+            }
+        };
+        File[] folders = currentFolder.listFiles(folderFilter);
+        for (File folder : folders) {
+            String newRelativeFolder = relativeFolder + folder.getName() + File.pathSeparator;
+            String[] recursiveRelativeFilePaths =
+                    findAllRelativeFilePaths(baseFolder, newRelativeFolder);
+            String[] newRelativeFilePaths =
+                    new String[relativeFilePaths.length + recursiveRelativeFilePaths.length];
+            for (int i = 0; i < relativeFilePaths.length; i++) {
+                newRelativeFilePaths[i] = relativeFilePaths[i];
+            }
+            for (int i = 0; i < recursiveRelativeFilePaths.length; i++) {
+                newRelativeFilePaths[relativeFilePaths.length + i] = recursiveRelativeFilePaths[i];
+            }
+            relativeFilePaths = newRelativeFilePaths;
+        }
+
         return relativeFilePaths;
     }
 

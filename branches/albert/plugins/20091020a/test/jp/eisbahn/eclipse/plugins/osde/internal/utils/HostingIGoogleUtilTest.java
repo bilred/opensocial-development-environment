@@ -87,7 +87,7 @@ public class HostingIGoogleUtilTest {
     public final void testFindAllRelativeFilePaths() {
         // TODO: (p2) Get a better place to store test data.
         String[] filePaths = findAllRelativeFilePaths(
-                "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/production/testdata/");
+                "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/production/testdata/", "/");
 
         // Verify the 3 testing files are found.
         assertEquals(3, filePaths.length);
