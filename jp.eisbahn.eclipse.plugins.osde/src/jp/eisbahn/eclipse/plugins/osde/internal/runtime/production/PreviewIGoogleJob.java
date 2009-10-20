@@ -18,7 +18,11 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
-import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.*;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.formPreviewGadgetUrl;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrieveIgPrefEditToken;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrievePublicId;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrieveSid;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.uploadFiles;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -50,6 +54,11 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  */
 public class PreviewIGoogleJob extends Job {
+    private static final String PREVIEW_IGOOGLE_BROWSER_ID = "pig_bid";
+    private static final String PREVIEW_IGOOGLE_JOB_NAME = "Preview gadget on iGoogle";
+    private static final String PREVIEW_IGOOGLE_BROWSER_NAME = "Preview gadget on iGoogle";
+    private static final String PREVIEW_IGOOGLE_TOOLTIP = "Preview gadget on iGoogle";
+
     private static Logger logger = Logger.getLogger(PreviewIGoogleJob.class.getName());
 
     /**
@@ -70,20 +79,20 @@ public class PreviewIGoogleJob extends Job {
     // it here.
     static final String TARGET_FOLDER_NAME = "target";
 
-    private String jobName;
     private Shell shell;
     private String username;
     private String password;
+    private boolean useCanvasView;
     private boolean useExternalBrowser;
     private IFile gadgetXmlIFile;
 
-    public PreviewIGoogleJob(String jobName, Shell shell, String username, String password,
-            boolean useExternalBrowser, IFile gadgetXmlIFile) {
-        super(jobName);
-        this.jobName = jobName;
+    public PreviewIGoogleJob(Shell shell, String username, String password,
+            boolean useCanvasView, boolean useExternalBrowser, IFile gadgetXmlIFile) {
+        super(PREVIEW_IGOOGLE_JOB_NAME);
         this.shell = shell;
         this.username = username;
         this.password = password;
+        this.useCanvasView = useCanvasView;
         this.useExternalBrowser = useExternalBrowser;
         this.gadgetXmlIFile = gadgetXmlIFile;
     }
@@ -119,9 +128,9 @@ public class PreviewIGoogleJob extends Job {
                         int style = IWorkbenchBrowserSupport.LOCATION_BAR
                                   | IWorkbenchBrowserSupport.NAVIGATION_BAR
                                   | IWorkbenchBrowserSupport.AS_EDITOR;
-                        String browserId = null;
-                        String browserName = jobName;
-                        String tooltip = jobName;
+                        String browserId = PREVIEW_IGOOGLE_BROWSER_ID;
+                        String browserName = PREVIEW_IGOOGLE_BROWSER_NAME;
+                        String tooltip = PREVIEW_IGOOGLE_TOOLTIP;
                         browser = support.createBrowser(style, browserId, browserName, tooltip);
                     }
                     browser.openURL(new URL(previewGadgetUrl));
@@ -164,7 +173,8 @@ public class PreviewIGoogleJob extends Job {
         uploadFiles(sid, publicId, prefEditToken, targetPath);
 
         // Form url for preview gadget.
-        String previewGadgetUrl = formPreviewGadgetUrl(publicId, gadgetXmlIFile.getName());
+        String previewGadgetUrl =
+                formPreviewGadgetUrl(publicId, gadgetXmlIFile.getName(), useCanvasView);
         return previewGadgetUrl;
     }
 }

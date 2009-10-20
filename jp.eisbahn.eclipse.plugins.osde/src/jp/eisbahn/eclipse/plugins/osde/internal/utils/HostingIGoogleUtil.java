@@ -397,10 +397,19 @@ public class HostingIGoogleUtil {
         return sb.substring(0, sb.length() - 1); // ignore the last '\n'
     }
 
-    public static String formPreviewGadgetUrl(String publicId, String filePath) {
-        // TODO: support various views, languages, and countries.
+    public static String formPreviewGadgetUrl(
+            String publicId, String filePath, boolean useCanvasView) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("http://www.gmodules.com/gadgets/ifr?&hl=en&gl=us&nocache=1&view=");
+        sb.append(useCanvasView ? "canvas" : "home"); // default is home view
+
+        // Append hosted file's url.
+        sb.append("&url=");
         String hostedFileUrl = formHostedFileUrl(publicId, filePath);
-        return "http://www.gmodules.com/gadgets/ifr?&view=home&hl=en&gl=us&nocache=1&url="
-               + hostedFileUrl;
+        sb.append(hostedFileUrl);
+
+        // TODO: support various languages, and countries.
+
+        return sb.toString();
     }
 }
