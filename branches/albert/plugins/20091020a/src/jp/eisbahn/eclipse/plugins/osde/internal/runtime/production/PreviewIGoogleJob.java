@@ -59,7 +59,7 @@ public class PreviewIGoogleJob extends Job {
      * {@link jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder GadgetBuilder}
      * which determines what files are for deployment purpose.
      */
-    // TODO: Reduce the impact caused by changes in GadgetBuilder:
+    // TODO: (p3) Reduce the impact caused by changes in GadgetBuilder:
     // The first approach is to make this a global constant and make
     // sure every corresponding code calls this constant instead of
     // using a string literal "target".
@@ -149,8 +149,8 @@ public class PreviewIGoogleJob extends Job {
      */
     String uploadFilesToIg()
             throws ClientProtocolException, IOException, CoreException, HostingException {
-        // TODO: Support save SID etc in session.
-        // TODO: Support captcha.
+        // TODO: (p2) Support save SID etc in session.
+        // TODO: (p3) Support captcha.
         logger.fine("in PreviewIGoogleJob.uploadFilesToIg");
         String sid = retrieveSid(username, password, null, null);
         String publicId = retrievePublicId(sid);
