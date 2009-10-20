@@ -2,7 +2,7 @@
 <feature
       id="jp.eisbahn.eclipse.features.osde"
       label="OpenSocial Development Environment Feature"
-      version="0.3.0.C2"
+      version="0.3.0.C3"
       provider-name="Yoichiro Tanaka"
       plugin="jp.eisbahn.eclipse.plugins.osde">
 
