@@ -100,8 +100,8 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 						IFolder destFolder = project.getFolder(targetDirectory.getProjectRelativePath() + "/" + parent);
 						IFile destFile = destFolder.getFile(orgFile.getName());
 						orgFile.copy(destFile.getFullPath(), false, monitor);
-						if (OpenSocialUtil.isGadgetSpecXML(destFile)) {
-							try {
+						try {
+							if (OpenSocialUtil.isGadgetSpecXML(destFile)) {
 								IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 								Module module = (Module) gadgetXMLParser.parse(orgFile.getContents());
 								List<Content> contents = module.getContent();
@@ -123,11 +123,11 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								String serialize = GadgetXmlSerializer.serialize(module);
 								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								destFile.setContents(in, true, false, monitor);
-							} catch (IOException e) {
-								Logging.warn("Building and copying the Gadget XML file failed.", e);
-							} catch (ParserException e) {
-								Logging.warn("Building and copying the Gadget XML file failed.", e);
-							}
+							} 
+						} catch (IOException e) {
+							Logging.warn("Building and copying the Gadget XML file failed.", e);
+						} catch (ParserException e) {
+							Logging.warn("Building and copying the Gadget XML file failed.", e);
 						}
 					}
 					return false;

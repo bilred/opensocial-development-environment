@@ -95,24 +95,31 @@ public class OpenSocialUtil {
 		}
 	}
 	
-	public static boolean isGadgetSpecXML(IFile file) {
-		IContentTypeManager manager = Platform.getContentTypeManager();
-		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
-		for (IContentType contentType : contentTypes) {
-			if (contentType.getId().equals("jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML")) {
-				return true;
-			}
-		}
-		return false;
+	public static boolean isGadgetSpecXML(IFile file) throws IOException, CoreException {
+		return isContentType(file, "jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML");
 	}
 	
-	public static boolean isMessageBundleXML(IFile file) {
+	public static boolean isMessageBundleXML(IFile file) throws IOException, CoreException {
+		return isContentType(file, "jp.eisbahn.eclipse.plugins.osde.messageBundleXML");
+	}
+	
+	/**
+	 * Checks if the file is of content type contentTypeId
+	 * 
+	 * @param file file to be checked for its content type
+	 * @param contentTypeId content type id to be compared 
+	 * @return true if the file is of the content type contentTypeId
+	 * 			false otherwise
+	 * @throws IOException
+	 * @throws CoreException
+	 */
+	public static boolean isContentType(IFile file, String contentTypeId) throws IOException, CoreException {
 		IContentTypeManager manager = Platform.getContentTypeManager();
-		IContentType[] contentTypes = manager.findContentTypesFor(file.getLocation().toOSString());
-		for (IContentType contentType : contentTypes) {
-			if (contentType.getId().equals("jp.eisbahn.eclipse.plugins.osde.messageBundleXML")) {
-				return true;
-			}
+		IContentType contentType = manager.findContentTypeFor(file.getContents(), file.getLocation().toOSString());
+		
+		if (contentType != null &&
+				contentType.getId().equals(contentTypeId)) {
+			return true;
 		}
 		return false;
 	}
