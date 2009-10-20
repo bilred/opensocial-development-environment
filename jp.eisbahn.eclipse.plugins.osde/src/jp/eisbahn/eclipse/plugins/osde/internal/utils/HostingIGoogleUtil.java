@@ -93,7 +93,7 @@ public class HostingIGoogleUtil {
 
         // Parse the output
         response.trim();
-        String [] tokens = response.split("\n");
+        String[] tokens = response.split("\n");
 
         // TODO: Refactor the following block of code to be more flexible.
         String sid = null;
@@ -255,7 +255,7 @@ public class HostingIGoogleUtil {
         File[] files = new File(targetFolder).listFiles(fileFilter);
 
         // TODO: Make sure the file paths are relative to targetFolder.
-        String[] relativeFilePaths = new String [files.length];
+        String[] relativeFilePaths = new String[files.length];
         for (int i = 0; i < files.length; i++) {
             relativeFilePaths[i] = files[i].getName();
         }
