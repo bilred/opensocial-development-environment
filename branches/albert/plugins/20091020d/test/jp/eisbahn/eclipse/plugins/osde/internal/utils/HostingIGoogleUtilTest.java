@@ -37,6 +37,10 @@ public class HostingIGoogleUtilTest {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
+    // TODO: Get a better place to store test data.
+    private static final String TEST_DATA_PATH =
+            "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/production/testdata/";
+
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
      * String, String, IgPrefEditToken, String, String)}.
@@ -59,8 +63,7 @@ public class HostingIGoogleUtilTest {
         assertTrue("Invalid prefEditToken: " + prefEditToken, prefEditToken.validate());
 
         // Upload file.
-        String relativeFilePath = "dummy_gadget.xml";
-        String rootPath = "test/jp/eisbahn/eclipse/plugins/osde/internal/utils/";
+        String rootPath = TEST_DATA_PATH;
         HostingIGoogleUtil.uploadFiles(sid, publicId, prefEditToken, rootPath);
 
         // Retrieve directory info.
@@ -72,6 +75,7 @@ public class HostingIGoogleUtilTest {
         String fileList = retrieveFileList(sid, publicId);
         logger.info("fileList:\n" + fileList);
         assertTrue(fileList.length() > 50);
+        String relativeFilePath = "dummy_gadget.xml";
         String fileContent = retrieveFile(sid, publicId, relativeFilePath);
         logger.info("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith("<?xml version"));
@@ -81,16 +85,14 @@ public class HostingIGoogleUtilTest {
     }
 
     /**
-     * Test method for {@link HostingIGoogleUtil#findAllRelativeFilePaths(String)}.
+     * Test method for {@link HostingIGoogleUtil#findAllRelativeFilePaths(String, String)}.
      */
     @Test
     public final void testFindAllRelativeFilePaths() {
-        // TODO: Get a better place to store test data.
-        String[] filePaths = findAllRelativeFilePaths(
-                "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/production/testdata/");
+        String[] filePaths = findAllRelativeFilePaths(TEST_DATA_PATH);
 
-        // Verify the 3 testing files are found.
-        assertEquals(3, filePaths.length);
+        // Verify the 5 testing files are found.
+        assertEquals(5, filePaths.length);
         for (String filePath : filePaths) {
             logger.info("filePath: " + filePath);
         }
