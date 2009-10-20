@@ -80,7 +80,7 @@ public class HostingIGoogleUtil {
     public static String retrieveSid(String emailUserName, String password,
             String loginCaptchaToken, String loginCaptchaAnswer)
             throws HostingException {
-        // TODO: Can we get sid and Ig...Token all together?
+        // TODO: (p2) Can we get sid and Ig...Token all together?
 
         String response = null;
         try {
@@ -95,7 +95,7 @@ public class HostingIGoogleUtil {
         response.trim();
         String [] tokens = response.split("\n");
 
-        // TODO: Refactor the following block of code to be more flexible.
+        // TODO: (p4) Refactor the following block of code to be more flexible.
         String sid = null;
         String errorMsg = null;
         for (String token : tokens) {
@@ -108,7 +108,7 @@ public class HostingIGoogleUtil {
         }
 
         if (sid == null) {
-            // TODO: Handle errors such as errorMsg="CaptchaRequired".
+            // TODO: (p3) Handle errors such as errorMsg="CaptchaRequired".
         }
 
         return sid;
@@ -127,7 +127,7 @@ public class HostingIGoogleUtil {
     private static String requestAuthentication(String emailUserName, String password,
             String loginTokenOfCaptcha, String loginCaptchaAnswer)
             throws IOException {
-        // TODO: Refactor this method utilizing HttpPost.
+        // TODO: (p4) Refactor this method utilizing HttpPost.
 
         // Prepare connection.
         URL url = new URL(URL_GOOGLE_LOGIN);
@@ -163,7 +163,7 @@ public class HostingIGoogleUtil {
         }
 
         // Retrieve response.
-        // TODO: Should the caller of this method need to know the responseCode?
+        // TODO: (p4) Should the caller of this method need to know the responseCode?
         int responseCode = urlConnection.getResponseCode();
         InputStream inputStream = (responseCode == HttpURLConnection.HTTP_OK)
                                   ? urlConnection.getInputStream()
@@ -199,7 +199,7 @@ public class HostingIGoogleUtil {
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
 
-        // TODO: Support non-text/plain file.
+        // TODO: (p1) Support non-text/plain file.
         httpPost.setHeader("Content-Type", "text/plain");
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
         FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
@@ -245,7 +245,7 @@ public class HostingIGoogleUtil {
     static String[] findAllRelativeFilePaths(String targetFolder) {
         // List filtered files.
         // System/hidden files and folders are filtered out.
-        // TODO: Support list files recursively.
+        // TODO: (p0) Support list files recursively.
         FileFilter fileFilter = new FileFilter() {
             public boolean accept(File pathname) {
                 return !pathname.getName().startsWith(".")
@@ -254,7 +254,7 @@ public class HostingIGoogleUtil {
         };
         File[] files = new File(targetFolder).listFiles(fileFilter);
 
-        // TODO: Make sure the file paths are relative to targetFolder.
+        // TODO: (p0) Make sure the file paths are relative to targetFolder.
         String[] relativeFilePaths = new String [files.length];
         for (int i = 0; i < files.length; i++) {
             relativeFilePaths[i] = files[i].getName();
@@ -317,7 +317,7 @@ public class HostingIGoogleUtil {
         // Retrieve HttpResponse.
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpGet);
-        logger.info("status line: " + httpResponse.getStatusLine());
+        logger.fine("status line: " + httpResponse.getStatusLine());
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
@@ -328,7 +328,7 @@ public class HostingIGoogleUtil {
         httpGet.addHeader("Cookie", "SID=" + sid);
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpGet);
-        logger.info("status line: " + httpResponse.getStatusLine());
+        logger.fine("status line: " + httpResponse.getStatusLine());
 
         String pref = null;
         for (Header header : httpResponse.getHeaders("Set-Cookie")) {
@@ -398,7 +398,7 @@ public class HostingIGoogleUtil {
     }
 
     public static String formPreviewGadgetUrl(String publicId, String filePath) {
-        // TODO: support various views, languages, and countries.
+        // TODO: (p2) support various views, languages, and countries.
         String hostedFileUrl = formHostedFileUrl(publicId, filePath);
         return "http://www.gmodules.com/gadgets/ifr?&view=home&hl=en&gl=us&nocache=1&url="
                + hostedFileUrl;

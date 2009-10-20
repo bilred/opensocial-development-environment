@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 /**
  * @author albert.cheng.ig@gmail.com
  */
-// TODO: Annotate test as large.
+// TODO: (p3) Annotate test as large.
 public class HostingIGoogleUtilTest {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
@@ -85,7 +85,7 @@ public class HostingIGoogleUtilTest {
      */
     @Test
     public final void testFindAllRelativeFilePaths() {
-        // TODO: Get a better place to store test data.
+        // TODO: (p2) Get a better place to store test data.
         String[] filePaths = findAllRelativeFilePaths(
                 "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/production/testdata/");
 

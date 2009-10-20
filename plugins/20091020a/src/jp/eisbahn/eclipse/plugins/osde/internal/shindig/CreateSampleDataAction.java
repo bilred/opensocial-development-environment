@@ -67,11 +67,11 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 
 	private Shell shell;
 	private IWorkbenchPart targetPart;
-	
+
 	public CreateSampleDataAction() {
 		super();
 	}
-	
+
 	public void run(IAction action) {
 		try {
 			final PersonService personService = Activator.getDefault().getPersonService();
@@ -104,7 +104,7 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 									PersonView personView = (PersonView)window.getActivePage().showView(PersonView.ID);
 									personView.loadPeople();
 								} catch(PartInitException e) {
-									// TODO
+									// TODO: Handle PartInitException.
 									throw new IllegalStateException(e);
 								}
 							}
@@ -329,5 +329,5 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
 		targetPart = window.getActivePage().getActivePart();
 		shell = targetPart.getSite().getShell();
 	}
-	
+
 }
