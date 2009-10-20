@@ -18,7 +18,11 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
-import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.*;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.formPreviewGadgetUrl;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrieveIgPrefEditToken;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrievePublicId;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrieveSid;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.uploadFiles;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
