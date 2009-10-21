@@ -62,11 +62,11 @@ import com.google.gadgets.model.Module.ModulePrefs.Locale;
 import com.google.gadgets.model.MessageBundle.Msg;
 
 public class SuportedLocalePart extends SectionPart implements IPartSelectionListener {
-	
+
 	private LocalePage page;
-	
+
 	private TableViewer supportedLocaleList;
-	
+
 	public SuportedLocalePart(Composite parent, IManagedForm managedForm, LocalePage page) {
 		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
 		initialize(managedForm);
@@ -74,7 +74,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		createContents(getSection(), managedForm.getToolkit());
 		displayInitialValue();
 	}
-	
+
 	private void createContents(Section section, FormToolkit toolkit) {
 		section.setText("Supported Locales ");
 		Composite composite = toolkit.createComposite(section);
@@ -136,12 +136,12 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		}
 		supportedLocaleList.setInput(models);
 	}
-	
+
 	private IProject getProject() {
 		IFile file = (IFile)page.getEditorInput().getAdapter(IResource.class);
 		return file.getProject();
 	}
-	
+
 	public void selectionChanged(IFormPart part, ISelection selection) {
 		if (part == this) {
 			return;
@@ -151,7 +151,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		}
 		supportedLocaleList.refresh((LocaleModel)((IStructuredSelection)selection).getFirstElement());
 	}
-	
+
 	private Module getModule() {
 		return page.getModule();
 	}
@@ -198,10 +198,10 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 					for (Map.Entry<String, String> entry : messages.entrySet()) {
 						msgBundle.addMessage(new Msg(entry.getKey(), entry.getValue()));
 					}
-					
+
 					ByteArrayInputStream in = new ByteArrayInputStream(msgBundle.toString().getBytes("UTF-8"));
 					bundleFile.create(in, true, new NullProgressMonitor());
-					
+
 					locale.setMessages("http://localhost:8080/" + project.getName() + "/" + fileName);
 					locale.setMessageBundle(msgBundle);
 				} catch (CoreException e) {
@@ -213,7 +213,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 			locales.add(locale);
 		}
 	}
-	
+
 	private void removeAllMessageBundleFiles(IProject project) {
 		try {
 			project.accept(new IResourceVisitor() {
@@ -236,7 +236,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 				}
 			});
 		} catch (CoreException e) {
-			// TODO 
+			// TODO: Handle CoreException.
 			throw new IllegalStateException(e);
 		}
 	}
@@ -262,7 +262,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 				}
 			}
 		}
-		
+
 		private boolean contains(List<LocaleModel> models, LocaleModel model) {
 			for (LocaleModel localeModel : models) {
 				if (equalsLocaleModel(localeModel, model)) {
@@ -271,16 +271,16 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 			}
 			return false;
 		}
-		
+
 		private boolean equalsLocaleModel(LocaleModel m1, LocaleModel m2) {
 			return new EqualsBuilder()
 					.append(m1.getCountry(), m2.getCountry())
 					.append(m1.getLang(), m2.getLang())
 					.isEquals();
 		}
-		
+
 	}
-	
+
 	private class DeleteButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -305,10 +305,10 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 				}
 			}
 		}
-		
+
 	}
 
-	
+
 	@SuppressWarnings("unchecked")
 	public List<LocaleModel> getLocaleModels() {
 		return (List<LocaleModel>) supportedLocaleList.getInput();
