@@ -20,13 +20,14 @@ package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpStatus;
@@ -199,7 +200,7 @@ public class HostingIGoogleUtil {
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
 
-        // TODO: Support non-text/plain file.
+        // TODO: (p0) Support non-text/plain file.
         httpPost.setHeader("Content-Type", "text/plain");
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
         FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
@@ -232,34 +233,39 @@ public class HostingIGoogleUtil {
     public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath)
             throws ClientProtocolException, IOException, HostingException {
-        String[] relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
+        List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
             uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
         }
     }
 
     /**
-     * Finds all relative file paths under given folder.
+     * Finds all relative file paths under given base folder.
      * These files will be uploaded to iGoogle server.
      */
-    static String[] findAllRelativeFilePaths(String targetFolder) {
-        // List filtered files.
-        // System/hidden files and folders are filtered out.
-        // TODO: Support list files recursively.
-        FileFilter fileFilter = new FileFilter() {
-            public boolean accept(File pathname) {
-                return !pathname.getName().startsWith(".")
-                        && pathname.isFile();
-            }
-        };
-        File[] files = new File(targetFolder).listFiles(fileFilter);
+    static List<String> findAllRelativeFilePaths(String baseFolder) {
+        List<String> allPaths = new ArrayList<String>();
+        findAllRelativeFilePaths(baseFolder, "", allPaths);
+        return allPaths;
+    }
 
-        // TODO: Make sure the file paths are relative to targetFolder.
-        String[] relativeFilePaths = new String[files.length];
-        for (int i = 0; i < files.length; i++) {
-            relativeFilePaths[i] = files[i].getName();
+    private static void findAllRelativeFilePaths(
+            String baseFolder, String relativeFolder, List<String> allPaths) {
+        // Assert that relativeFolder ends with "/" unless it is empty.
+        assert((relativeFolder.length() == 0)
+                || (relativeFolder.charAt(relativeFolder.length() - 1) == '/'));
+
+        File currentFolder = new File(baseFolder, relativeFolder);
+        for (File file : currentFolder.listFiles()) {
+            String relativeFilePath = relativeFolder + file.getName();
+            if (file.isHidden()) {
+                // Ignore any hidden file.
+            } else if (file.isDirectory()) {
+                findAllRelativeFilePaths(baseFolder, relativeFilePath + "/", allPaths);
+            } else if (file.isFile()) {
+                allPaths.add(relativeFilePath);
+            } // Ignore all other kinds of files.
         }
-        return relativeFilePaths;
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
@@ -317,7 +323,7 @@ public class HostingIGoogleUtil {
         // Retrieve HttpResponse.
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpGet);
-        logger.info("status line: " + httpResponse.getStatusLine());
+        logger.fine("status line: " + httpResponse.getStatusLine());
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
@@ -328,7 +334,7 @@ public class HostingIGoogleUtil {
         httpGet.addHeader("Cookie", "SID=" + sid);
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpGet);
-        logger.info("status line: " + httpResponse.getStatusLine());
+        logger.fine("status line: " + httpResponse.getStatusLine());
 
         String pref = null;
         for (Header header : httpResponse.getHeaders("Set-Cookie")) {
@@ -408,7 +414,7 @@ public class HostingIGoogleUtil {
         String hostedFileUrl = formHostedFileUrl(publicId, filePath);
         sb.append(hostedFileUrl);
 
-        // TODO: support various languages, and countries.
+        // TODO: Support various languages, and countries.
 
         return sb.toString();
     }
