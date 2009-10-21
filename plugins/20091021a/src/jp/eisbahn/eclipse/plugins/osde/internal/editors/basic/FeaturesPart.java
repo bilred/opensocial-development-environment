@@ -26,7 +26,6 @@ import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -35,6 +34,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -59,11 +60,11 @@ import com.google.gadgets.model.Module.ModulePrefs.Require;
 public class FeaturesPart extends AbstractFormPart {
 
 	private ModulePrefsPage page;
-	
+
 	private Map<FeatureName, Button> buttonMap;
-	
+
 	private TableViewer freeFraturesList;
-	
+
 	private SelectionListener selectionListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
@@ -71,23 +72,23 @@ public class FeaturesPart extends AbstractFormPart {
 			markDirty();
 		}
 	};
-	
+
 	public FeaturesPart(ModulePrefsPage page) {
 		this.page = page;
 		buttonMap = new EnumMap<FeatureName, Button>(FeatureName.class);
 	}
-	
+
 	private Module getModule() {
 		return page.getModule();
 	}
-	
+
 	@Override
 	public void initialize(IManagedForm form) {
 		super.initialize(form);
 		createControls(form);
 		displayInitialValue();
 	}
-	
+
 	private void displayInitialValue() {
 		Collection<Button> buttons = buttonMap.values();
 		for (Button button : buttons) {
@@ -116,7 +117,8 @@ public class FeaturesPart extends AbstractFormPart {
 		ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
-		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(form.getBody(),
+		        ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText("Features");
 		section.setDescription("The checked features will be used in your application.");
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -201,7 +203,7 @@ public class FeaturesPart extends AbstractFormPart {
 		deleteButton.setLayoutData(layoutData);
 		deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
 	}
-	
+
 	private Button createCheckbox(Composite parent, String text, FormToolkit toolkit) {
 		Button button = toolkit.createButton(parent, text, SWT.CHECK);
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -209,7 +211,7 @@ public class FeaturesPart extends AbstractFormPart {
 		button.addSelectionListener(selectionListener);
 		return button;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void setValuesToModule() {
 		Module module = getModule();
@@ -233,11 +235,11 @@ public class FeaturesPart extends AbstractFormPart {
 			requires.add(require);
 		}
 	}
-	
+
 	public void changeModel() {
 		displayInitialValue();
 	}
-	
+
 	private class AddButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -257,7 +259,7 @@ public class FeaturesPart extends AbstractFormPart {
 						}
 					}
 			);
-			if (dialog.open() == Dialog.OK) {
+			if (dialog.open() == Window.OK) {
 				String featureRealName = dialog.getValue();
 				FeatureName featureName = FeatureName.getFeatureName(featureRealName);
 				if (featureName != null) {
@@ -269,9 +271,9 @@ public class FeaturesPart extends AbstractFormPart {
 				markDirty();
 			}
 		}
-		
+
 	}
-	
+
 	private class DeleteButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -292,7 +294,7 @@ public class FeaturesPart extends AbstractFormPart {
 				}
 			}
 		}
-		
+
 	}
 
 }

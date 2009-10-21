@@ -35,15 +35,16 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class ActivityPage implements IDetailsPage {
-	
+
 	private IManagedForm managedForm;
-	
+
 	private ActivitiesView activitiesView;
-	
+
 	private Activity activity;
 
 	private Text titleText;
@@ -67,7 +68,7 @@ public class ActivityPage implements IDetailsPage {
 	private TableViewer templateParamsList;
 
 	private TableViewer mediaItemList;
-	
+
 	public ActivityPage(ActivitiesView activitiesView) {
 		super();
 		this.activitiesView = activitiesView;
@@ -80,7 +81,7 @@ public class ActivityPage implements IDetailsPage {
 		parent.setLayout(layout);
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
-		Section detailSection = toolkit.createSection(parent, Section.TITLE_BAR);
+		Section detailSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		detailSection.setText("Details");
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		detailSection.setLayoutData(layoutData);
@@ -143,7 +144,7 @@ public class ActivityPage implements IDetailsPage {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		externalIdText.setLayoutData(layoutData);
 		//
-		Section mediaItemsSection = toolkit.createSection(parent, Section.TITLE_BAR);
+		Section mediaItemsSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		mediaItemsSection.setText("Media items");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		mediaItemsSection.setLayoutData(layoutData);
@@ -170,7 +171,7 @@ public class ActivityPage implements IDetailsPage {
 		mediaItemList.setContentProvider(new MediaItemListContentProvider());
 		mediaItemList.setLabelProvider(new MediaItemListLabelProvider());
 		//
-		Section templateParamsSection = toolkit.createSection(parent, Section.TITLE_BAR);
+		Section templateParamsSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		templateParamsSection.setText("Template parameters");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		templateParamsSection.setLayoutData(layoutData);
@@ -237,5 +238,5 @@ public class ActivityPage implements IDetailsPage {
 		templateParamsList.setInput(activity.getTemplateParams());
 		mediaItemList.setInput(activity.getMediaItems());
 	}
-	
+
 }

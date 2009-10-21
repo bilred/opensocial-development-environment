@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -39,20 +40,21 @@ import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class MessageBundlePage implements IDetailsPage {
-	
+
 	private IManagedForm managedForm;
-	
+
 	private LocalePage page;
 	private LocaleModel model;
-	
+
 	private TableViewer messagesList;
 
 	private Button internalButton;
-	
+
 	public MessageBundlePage(LocalePage page) {
 		super();
 		this.page = page;
@@ -65,7 +67,7 @@ public class MessageBundlePage implements IDetailsPage {
 		parent.setLayout(layout);
 		FormToolkit toolkit = managedForm.getToolkit();
 		// Message bundle
-		Section messagesSection = toolkit.createSection(parent, Section.TITLE_BAR);
+		Section messagesSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
 		messagesSection.setText("Message bundle");
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		messagesSection.setLayoutData(layoutData);
@@ -124,15 +126,15 @@ public class MessageBundlePage implements IDetailsPage {
 		messagesList.setInput(model.getMessages());
 		internalButton.setSelection(model.isInternal());
 	}
-	
+
 	private class InternalButtonSelectionListener implements SelectionListener {
-		
+
 		private SectionPart sectionPart;
-		
+
 		public InternalButtonSelectionListener(SectionPart sectionPart) {
 			this.sectionPart = sectionPart;
 		}
-		
+
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
@@ -149,9 +151,9 @@ public class MessageBundlePage implements IDetailsPage {
 	}
 
 	private class AddButtonSelectionListener implements SelectionListener {
-		
+
 		private SectionPart sectionPart;
-		
+
 		public AddButtonSelectionListener(SectionPart sectionPart) {
 			this.sectionPart = sectionPart;
 		}
@@ -162,7 +164,7 @@ public class MessageBundlePage implements IDetailsPage {
 		public void widgetSelected(SelectionEvent e) {
 			List<LocaleModel> localeModels = page.getLocaleModels();
 			AddMessageDialog dialog = new AddMessageDialog(page.getSite().getShell(), localeModels, model);
-			if (dialog.open() == AddMessageDialog.OK) {
+			if (dialog.open() == Window.OK) {
 				String name = dialog.getName();
 				Map<LocaleModel, String> contentMap = dialog.getContentMap();
 				for (LocaleModel localeModel : localeModels) {
@@ -177,13 +179,13 @@ public class MessageBundlePage implements IDetailsPage {
 				makeDirty();
 			}
 		}
-		
+
 	}
-	
+
 	private class RemoveButtonSelectionListener implements SelectionListener {
-		
+
 		private SectionPart sectionPart;
-		
+
 		public RemoveButtonSelectionListener(SectionPart sectionPart) {
 			this.sectionPart = sectionPart;
 		}
@@ -208,7 +210,7 @@ public class MessageBundlePage implements IDetailsPage {
 				}
 			}
 		}
-		
+
 	}
 
 	public void commit(boolean onSave) {
@@ -234,5 +236,5 @@ public class MessageBundlePage implements IDetailsPage {
 	public boolean setFormInput(Object input) {
 		return false;
 	}
-	
+
 }

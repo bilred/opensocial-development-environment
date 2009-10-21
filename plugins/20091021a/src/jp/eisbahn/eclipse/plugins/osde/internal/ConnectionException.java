@@ -18,8 +18,10 @@
 package jp.eisbahn.eclipse.plugins.osde.internal;
 
 public class ConnectionException extends Exception {
-	
-	public ConnectionException(String message) {
+
+    private static final long serialVersionUID = -3368737047093656778L;
+
+    public ConnectionException(String message) {
 		super(message);
 	}
 

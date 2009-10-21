@@ -35,21 +35,22 @@ import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IPartSelectionListener;
 import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class HttpLogsPart extends SectionPart implements IPartSelectionListener {
-	
+
 	private TableViewer httpLogList;
 	private ShindigMonitorView shindigMonitorView;
 
 	public HttpLogsPart(Composite parent, IManagedForm managedForm, ShindigMonitorView shindigMonitorView) {
-		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
+		super(parent, managedForm.getToolkit(), ExpandableComposite.TITLE_BAR);
 		initialize(managedForm);
 		createContents(getSection(), managedForm.getToolkit());
 		this.shindigMonitorView = shindigMonitorView;
 	}
-	
+
 	private void createContents(Section section, FormToolkit toolkit) {
 		section.setText("HTTP logs ");
 		Composite composite = toolkit.createComposite(section);
@@ -92,7 +93,7 @@ public class HttpLogsPart extends SectionPart implements IPartSelectionListener 
 		}
 		httpLogList.refresh((HttpLog)((IStructuredSelection)selection).getFirstElement());
 	}
-	
+
 	public Set<HttpLog> getLogs() {
 		return (Set<HttpLog>)httpLogList.getInput();
 	}
