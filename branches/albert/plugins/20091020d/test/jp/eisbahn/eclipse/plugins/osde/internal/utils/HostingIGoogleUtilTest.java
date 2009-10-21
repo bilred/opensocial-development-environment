@@ -19,6 +19,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
@@ -85,14 +86,14 @@ public class HostingIGoogleUtilTest {
     }
 
     /**
-     * Test method for {@link HostingIGoogleUtil#findAllRelativeFilePaths(String, String)}.
+     * Test method for {@link HostingIGoogleUtil#findAllRelativeFilePaths(String)}.
      */
     @Test
     public final void testFindAllRelativeFilePaths() {
-        String[] filePaths = findAllRelativeFilePaths(TEST_DATA_PATH);
+        List<String> filePaths = findAllRelativeFilePaths(TEST_DATA_PATH);
 
         // Verify the 5 testing files are found.
-        assertEquals(5, filePaths.length);
+        assertEquals(5, filePaths.size());
         for (String filePath : filePaths) {
             logger.info("filePath: " + filePath);
         }
