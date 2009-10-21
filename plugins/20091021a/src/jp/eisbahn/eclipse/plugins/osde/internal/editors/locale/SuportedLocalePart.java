@@ -255,7 +255,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 				model.setCountry(dialog.getCountry());
 				model.setLang(dialog.getLanguage());
 				model.setInternal(dialog.isInternal());
-		        @SuppressWarnings("unchecked")
+				@SuppressWarnings("unchecked")
 				List<LocaleModel> models = (List<LocaleModel>) supportedLocaleList.getInput();
 				if (!contains(models, model)) {
 					models.add(model);
