@@ -20,13 +20,14 @@ package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpStatus;
@@ -232,7 +233,7 @@ public class HostingIGoogleUtil {
     public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath)
             throws ClientProtocolException, IOException, HostingException {
-        String[] relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
+        List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
             uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
         }
@@ -242,59 +243,29 @@ public class HostingIGoogleUtil {
      * Finds all relative file paths under given base folder.
      * These files will be uploaded to iGoogle server.
      */
-    static String[] findAllRelativeFilePaths(String baseFolder) {
-        return findAllRelativeFilePaths(baseFolder, "");
+    static List<String> findAllRelativeFilePaths(String baseFolder) {
+        List<String> allPaths = new ArrayList<String>();
+        findAllRelativeFilePaths(baseFolder, "", allPaths);
+        return allPaths;
     }
 
-    private static String[] findAllRelativeFilePaths(String baseFolder, String relativeFolder) {
-        // Make sure relativeFolder ends with "/" unless it is empty.
-        if ((relativeFolder.length() > 0)
-                && (relativeFolder.charAt(relativeFolder.length() - 1) != '/')) {
-            relativeFolder += "/";
-        }
+    private static void findAllRelativeFilePaths(
+            String baseFolder, String relativeFolder, List<String> allPaths) {
+        // Assert that relativeFolder ends with "/" unless it is empty.
+        assert((relativeFolder.length() == 0)
+                || (relativeFolder.charAt(relativeFolder.length() - 1) == '/'));
 
-        // List filtered files in the current folder non-recursively.
-        // System/hidden files and folders are filtered out.
-        FileFilter fileFilter = new FileFilter() {
-            public boolean accept(File pathname) {
-                return !pathname.getName().startsWith(".")
-                        && pathname.isFile();
-            }
-        };
         File currentFolder = new File(baseFolder, relativeFolder);
-        File[] currentFolderFiles = currentFolder.listFiles(fileFilter);
-        String[] relativeFilePaths = new String[currentFolderFiles.length];
-        for (int i = 0; i < currentFolderFiles.length; i++) {
-            relativeFilePaths[i] = relativeFolder + currentFolderFiles[i].getName();
+        for (File file : currentFolder.listFiles()) {
+            String relativeFilePath = relativeFolder + file.getName();
+            if (file.isHidden()) {
+                // Ignore any hidden file.
+            } else if (file.isDirectory()) {
+                findAllRelativeFilePaths(baseFolder, relativeFilePath + "/", allPaths);
+            } else if (file.isFile()) {
+                allPaths.add(relativeFilePath);
+            } // Ignore all other kinds of files.
         }
-
-        // List filtered files in sub-folders recursively.
-        // System/hidden files and folders are filtered out.
-        FileFilter folderFilter = new FileFilter() {
-            public boolean accept(File pathname) {
-                return !pathname.getName().startsWith(".")
-                        && pathname.isDirectory();
-            }
-        };
-        File[] folders = currentFolder.listFiles(folderFilter);
-        for (File folder : folders) {
-            String newRelativeFolder = relativeFolder + folder.getName() + "/";
-            String[] recursiveRelativeFilePaths =
-                    findAllRelativeFilePaths(baseFolder, newRelativeFolder);
-
-            // Update relativeFilePaths.
-            // TODO: Try to refactor the following block of code.
-            String[] newRelativeFilePaths =
-                    new String[relativeFilePaths.length + recursiveRelativeFilePaths.length];
-            for (int i = 0; i < relativeFilePaths.length; i++) {
-                newRelativeFilePaths[i] = relativeFilePaths[i];
-            }
-            for (int i = 0; i < recursiveRelativeFilePaths.length; i++) {
-                newRelativeFilePaths[relativeFilePaths.length + i] = recursiveRelativeFilePaths[i];
-            }
-            relativeFilePaths = newRelativeFilePaths;
-        }
-        return relativeFilePaths;
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
