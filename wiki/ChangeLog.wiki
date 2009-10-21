@@ -5,7 +5,6 @@
 
  * Building and copying the Gadget XML file failed.
  * Could not create action delegate for id: ......editorActions.runAction.
- * Language should come before Country.
 
 === October 15, 2009 ===
   Version 0.3.0 Candidate 2 has been released.
