@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -50,9 +51,9 @@ import com.google.gadgets.model.Module.ModulePrefs.Optional;
 public class ContentRewritePart extends AbstractFormPart {
 
 	private ModulePrefsPage page;
-	
+
 	private boolean initializing;
-	
+
 	private SelectionListener selectionListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
@@ -63,7 +64,7 @@ public class ContentRewritePart extends AbstractFormPart {
 			}
 		}
 	};
-	
+
 	private Listener modifyListener = new Listener() {
 		public void handleEvent(Event event) {
 			if (!initializing) {
@@ -81,15 +82,15 @@ public class ContentRewritePart extends AbstractFormPart {
 	private Text includeTagsText;
 
 	private Spinner expiresSpinner;
-	
+
 	public ContentRewritePart(ModulePrefsPage page) {
 		this.page = page;
 	}
-	
+
 	private Module getModule() {
 		return page.getModule();
 	}
-	
+
 	@Override
 	public void initialize(IManagedForm form) {
 		initializing = true;
@@ -99,14 +100,14 @@ public class ContentRewritePart extends AbstractFormPart {
 		setEnabledControls(useButton.getSelection());
 		initializing = false;
 	}
-	
+
 	private void setEnabledControls(boolean enabled) {
 		includeUrlsText.setEnabled(enabled);
 		excludeUrlsText.setEnabled(enabled);
 		includeTagsText.setEnabled(enabled);
 		expiresSpinner.setEnabled(enabled);
 	}
-	
+
 	private void displayInitialValue() {
 		useButton.setSelection(false);
 		includeUrlsText.setText("");
@@ -151,7 +152,8 @@ public class ContentRewritePart extends AbstractFormPart {
 		ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
-		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(form.getBody(),
+		        ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText("Content rewrite");
 		section.setDescription("Content-rewrite feature allows you to control the cache configuration.");
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -181,7 +183,7 @@ public class ContentRewritePart extends AbstractFormPart {
 		expiresSpinner.setSelection(86400);
 		expiresSpinner.addListener(SWT.Modify, modifyListener);
 	}
-	
+
 	private Button createCheckbox(Composite parent, String text, FormToolkit toolkit) {
 		Button button = toolkit.createButton(parent, text, SWT.CHECK);
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -189,7 +191,7 @@ public class ContentRewritePart extends AbstractFormPart {
 		button.addSelectionListener(selectionListener);
 		return button;
 	}
-	
+
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
@@ -230,7 +232,7 @@ public class ContentRewritePart extends AbstractFormPart {
 			optionals.add(optional);
 		}
 	}
-	
+
 	private Optional getContentRewriteNode(List<Optional> optionals) {
 		for (Optional optional : optionals) {
 			if (optional.getFeature().equals("content-rewrite")) {
@@ -239,7 +241,7 @@ public class ContentRewritePart extends AbstractFormPart {
 		}
 		return null;
 	}
-	
+
 	public void changeModel() {
 		displayInitialValue();
 	}

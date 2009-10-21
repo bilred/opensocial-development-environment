@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -47,11 +48,11 @@ public class ApplicationInformationPart extends AbstractFormPart {
 	private Text screenshotText;
 	private Text thumbnailText;
 	private Text descriptionText;
-	
+
 	private ModulePrefsPage page;
-	
+
 	private boolean initializing;
-	
+
 	private Listener modifyListener = new Listener() {
 		public void handleEvent(Event event) {
 			if (!initializing) {
@@ -59,15 +60,15 @@ public class ApplicationInformationPart extends AbstractFormPart {
 			}
 		}
 	};
-	
+
 	public ApplicationInformationPart(ModulePrefsPage page) {
 		this.page = page;
 	}
-	
+
 	private Module getModule() {
 		return page.getModule();
 	}
-	
+
 	@Override
 	public void initialize(IManagedForm form) {
 		initializing = true;
@@ -76,7 +77,7 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		displayInitialValue();
 		initializing = false;
 	}
-	
+
 	private void displayInitialValue() {
 		Module module = getModule();
 		if (module != null) {
@@ -100,7 +101,8 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		form.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
-		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
+		        | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
 		section.setText("Attributes");
 		section.setDescription("These fields describe this OpenSocial application.");
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -134,7 +136,7 @@ public class ApplicationInformationPart extends AbstractFormPart {
 		//
 		createLabel(sectionPanel, toolkit, "");
 	}
-	
+
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();

@@ -39,6 +39,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -52,6 +53,7 @@ import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IPartSelectionListener;
 import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -68,7 +70,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 	private TableViewer supportedLocaleList;
 
 	public SuportedLocalePart(Composite parent, IManagedForm managedForm, LocalePage page) {
-		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
+		super(parent, managedForm.getToolkit(), ExpandableComposite.TITLE_BAR);
 		initialize(managedForm);
 		this.page = page;
 		createContents(getSection(), managedForm.getToolkit());
@@ -246,14 +248,14 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
-		@SuppressWarnings("unchecked")
 		public void widgetSelected(SelectionEvent e) {
 			AddLocaleDialog dialog = new AddLocaleDialog(page.getSite().getShell());
-			if (dialog.open() == AddLocaleDialog.OK) {
+			if (dialog.open() == Window.OK) {
 				LocaleModel model = new LocaleModel();
 				model.setCountry(dialog.getCountry());
 				model.setLang(dialog.getLanguage());
 				model.setInternal(dialog.isInternal());
+		        @SuppressWarnings("unchecked")
 				List<LocaleModel> models = (List<LocaleModel>) supportedLocaleList.getInput();
 				if (!contains(models, model)) {
 					models.add(model);
@@ -286,7 +288,6 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
-		@SuppressWarnings("unchecked")
 		public void widgetSelected(SelectionEvent e) {
 			ISelection selection = supportedLocaleList.getSelection();
 			if (!selection.isEmpty()) {
@@ -298,6 +299,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
 				lang = StringUtils.isEmpty(lang) ? "(any)" : lang;
 				if (MessageDialog.openConfirm(page.getSite().getShell(),
 						"Deleting locale", "Do you want to delete locale '" + lang + "_" + country + "'?")) {
+			        @SuppressWarnings("unchecked")
 					List<LocaleModel> models = (List<LocaleModel>) supportedLocaleList.getInput();
 					models.remove(model);
 					supportedLocaleList.refresh();

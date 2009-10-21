@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.AbstractFormPart;
 import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -57,7 +58,7 @@ import com.google.gadgets.model.Module.ModulePrefs.Icon;
 public class IconPart extends AbstractFormPart {
 
 	private ModulePrefsPage page;
-	
+
 	private boolean initializing;
 
 	private String encodedIcon;
@@ -72,7 +73,7 @@ public class IconPart extends AbstractFormPart {
 			}
 		}
 	};
-	
+
 	private Listener modifyListener = new Listener() {
 		public void handleEvent(Event event) {
 			if (!initializing) {
@@ -92,11 +93,11 @@ public class IconPart extends AbstractFormPart {
 	public IconPart(ModulePrefsPage page) {
 		this.page = page;
 	}
-	
+
 	private Module getModule() {
 		return page.getModule();
 	}
-	
+
 	@Override
 	public void initialize(IManagedForm form) {
 		initializing = true;
@@ -106,7 +107,7 @@ public class IconPart extends AbstractFormPart {
 		setEnabledControls();
 		initializing = false;
 	}
-	
+
 	private void setEnabledControls() {
 		boolean use = useButton.getSelection();
 		urlRadio.setEnabled(use);
@@ -124,7 +125,7 @@ public class IconPart extends AbstractFormPart {
 			browseButton.setEnabled(base64);
 		}
 	}
-	
+
 	private void displayInitialValue() {
 		useButton.setSelection(false);
 		urlText.setText("");
@@ -158,7 +159,8 @@ public class IconPart extends AbstractFormPart {
 		ScrolledForm form = managedForm.getForm();
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
-		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.TWISTIE);
+		Section section = toolkit.createSection(form.getBody(),
+		        ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
 		section.setText("Icon");
 		section.setDescription("Define the icon for this application.");
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -237,7 +239,7 @@ public class IconPart extends AbstractFormPart {
 			}
 		});
 	}
-	
+
 	private Button createCheckbox(Composite parent, String text, FormToolkit toolkit) {
 		Button button = toolkit.createButton(parent, text, SWT.CHECK);
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -245,13 +247,13 @@ public class IconPart extends AbstractFormPart {
 		button.addSelectionListener(selectionListener);
 		return button;
 	}
-	
+
 	public void setValuesToModule() {
 		Module module = getModule();
 		ModulePrefs modulePrefs = module.getModulePrefs();
 		List<Icon> icons = modulePrefs.getIcons();
 		icons.clear();
-		
+
 		if (useButton.getSelection()) {
 			Icon icon = new Icon();
 			if (urlRadio.getSelection()) {
@@ -264,7 +266,7 @@ public class IconPart extends AbstractFormPart {
 			icons.add(icon);
 		}
 	}
-	
+
 	public void changeModel() {
 		displayInitialValue();
 	}
