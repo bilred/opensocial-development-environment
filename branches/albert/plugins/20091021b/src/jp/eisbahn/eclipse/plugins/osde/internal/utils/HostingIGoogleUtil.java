@@ -42,6 +42,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 
 /**
  * This iGoogle utility class provides authentication and
@@ -49,7 +50,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
  * (http://www.google.com/ig) gadget container.
  * <p>
  * Samples of usages could be found at
- * {@link HostingIGoogleUtilTest#testAllMethods()}.
+ * {@link HostingIGoogleUtilTest#testAuthenticationAndUploadAndRetrieveFiles()}.
  *
  * @author albert.cheng.ig@gmail.com
  */
@@ -57,8 +58,11 @@ public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    private static final String OSDE_HOST_DIRECTORY = "osde/";
-
+    private static final String OSDE_PREVIEW_DIRECTORY = "osde/preview/";
+    private static final String HTTP_HEADER_COOKIE = "Cookie";
+    private static final String HTTP_HEADER_SET_COOKIE = "Set-Cookie";
+    private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
+        HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + HTTP.UTF_8;
     private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
     private static final String URL_IG_PREF_EDIT_TOKEN = "http://www.google.com/ig/resetprefs.html";
     private static final String URL_IG_GADGETS = "http://www.google.com/ig/gadgets";
@@ -137,7 +141,7 @@ public class HostingIGoogleUtil {
         urlConnection.setDoOutput(true);
         urlConnection.setUseCaches(false);
         urlConnection.setRequestMethod("POST");
-        urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        urlConnection.setRequestProperty(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded");
 
         // Form the POST params.
         StringBuilder params = new StringBuilder();
@@ -195,21 +199,22 @@ public class HostingIGoogleUtil {
         }
 
         // Prepare HttpPost.
-        String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_HOST_DIRECTORY
+        String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_PREVIEW_DIRECTORY
             + sourceFileRelativePath + "?et=" + prefEditToken.getEditToken();
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
-
-        // TODO: (p0) Support non-text/plain file.
-        httpPost.setHeader("Content-Type", "text/plain");
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
-        FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
+        String httpContentType = isTextExtensionForGadgetFile(sourceFileRelativePath)
+                ? HTTP_PLAIN_TEXT_TYPE_UTF8
+                : HTTP.DEFAULT_CONTENT_TYPE;
+        httpPost.setHeader(HTTP.CONTENT_TYPE, httpContentType);
+        FileEntity fileEntity = new FileEntity(sourceFile, httpContentType);
         logger.fine("fileEntity length: " + fileEntity.getContentLength());
         httpPost.setEntity(fileEntity);
 
         // Add cookie headers. Cookie PREF must be placed before SID.
-        httpPost.addHeader("Cookie", "PREF=" + prefEditToken.getPref());
-        httpPost.addHeader("Cookie", "SID=" + sid);
+        httpPost.addHeader(HTTP_HEADER_COOKIE, "PREF=" + prefEditToken.getPref());
+        httpPost.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
 
         // Execute request.
         HttpClient httpClient = new DefaultHttpClient();
@@ -221,6 +226,27 @@ public class HostingIGoogleUtil {
             throw new HostingException("Failed file-upload with status line: "
                     + statusLine.toString() + "\nand response:\n" + response);
         }
+    }
+
+    private static boolean isTextExtensionForGadgetFile(String fileName) {
+        int lastIndexOfDot = fileName.lastIndexOf(".");
+        if (lastIndexOfDot == -1) { // No dot found.
+            return false;
+        }
+
+        // The following extensions in textExtensions are treated as text types.
+        // It is ok to treat all the other extensions as default types.
+        String[] textExtensions = new String[] {
+                "xml", "js", "javascript", "script", "css", "html", "htm"
+        };
+        String extension = fileName.substring(lastIndexOfDot + 1).toLowerCase();
+
+        for (String textExtension : textExtensions) {
+            if (textExtension.equals(extension)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -297,7 +323,7 @@ public class HostingIGoogleUtil {
     }
 
     private static String formHostedFileUrl(String publicId, String filePath) {
-        return URL_GMODULE_FILE + publicId + "/" + OSDE_HOST_DIRECTORY + filePath;
+        return URL_GMODULE_FILE + publicId + "/" + OSDE_PREVIEW_DIRECTORY + filePath;
     }
 
     public static String retrievePublicId(String sid)
@@ -317,8 +343,8 @@ public class HostingIGoogleUtil {
             throws ClientProtocolException, IOException {
         // Prepare HttpGet.
         HttpGet httpGet = new HttpGet(url);
-        httpGet.setHeader("Content-Type", "text/plain");
-        httpGet.addHeader("Cookie", "SID=" + sid);
+        httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
+        httpGet.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
 
         // Retrieve HttpResponse.
         HttpClient httpClient = new DefaultHttpClient();
@@ -330,14 +356,14 @@ public class HostingIGoogleUtil {
     public static IgPrefEditToken retrieveIgPrefEditToken(String sid)
             throws ClientProtocolException, IOException {
         HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
-        httpGet.setHeader("Content-Type", "text/plain");
-        httpGet.addHeader("Cookie", "SID=" + sid);
+        httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
+        httpGet.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpGet);
         logger.fine("status line: " + httpResponse.getStatusLine());
 
         String pref = null;
-        for (Header header : httpResponse.getHeaders("Set-Cookie")) {
+        for (Header header : httpResponse.getHeaders(HTTP_HEADER_SET_COOKIE)) {
             String headerValue = header.getValue();
             if (headerValue.startsWith("PREF=ID=")) {
                 // pref starts with "ID=" and ends before ";"
