@@ -44,13 +44,15 @@ public class HostingIGoogleUtilTest {
 
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
-     * String, String, IgPrefEditToken, String, String)}.
+     * String, String, IgPrefEditToken, String, String)} etc.
+     *
      * @throws IOException
      * @throws ClientProtocolException
      * @throws HostingException
      */
     @Test
-    public void testAllMethods() throws ClientProtocolException, IOException, HostingException {
+    public void testAuthenticationAndUploadAndRetrieveFiles()
+            throws ClientProtocolException, IOException, HostingException {
         // Prepare Authentication.
         String emailUserName = "osde.test.001";
         String password = "osdetest888";
@@ -76,7 +78,7 @@ public class HostingIGoogleUtilTest {
         String fileList = retrieveFileList(sid, publicId);
         logger.info("fileList:\n" + fileList);
         assertTrue(fileList.length() > 50);
-        String relativeFilePath = "dummy_gadget.xml";
+        String relativeFilePath = "gadget.xml";
         String fileContent = retrieveFile(sid, publicId, relativeFilePath);
         logger.info("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith("<?xml version"));
@@ -92,8 +94,8 @@ public class HostingIGoogleUtilTest {
     public final void testFindAllRelativeFilePaths() {
         List<String> filePaths = findAllRelativeFilePaths(TEST_DATA_PATH);
 
-        // Verify the 5 testing files are found.
-        assertEquals(5, filePaths.size());
+        // Verify the 6 testing files are found.
+        assertEquals(6, filePaths.size());
         for (String filePath : filePaths) {
             logger.info("filePath: " + filePath);
         }
