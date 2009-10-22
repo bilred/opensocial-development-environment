@@ -230,14 +230,17 @@ public class HostingIGoogleUtil {
 
     private static boolean isTextExtensionForGadgetFile(String fileName) {
         int lastIndexOfDot = fileName.lastIndexOf(".");
-        if (lastIndexOfDot == -1) { // No dot found.
+
+        // Return false if no dot found or the last char is dot.
+        if ((lastIndexOfDot == -1)
+                || (lastIndexOfDot == (fileName.length() - 1))) {
             return false;
         }
 
         // The following extensions in textExtensions are treated as text types.
         // It is ok to treat all the other extensions as default types.
         String[] textExtensions = new String[] {
-                "xml", "js", "javascript", "script", "css", "html", "htm"
+                "xml", "js", "css", "html", "htm"
         };
         String extension = fileName.substring(lastIndexOfDot + 1).toLowerCase();
 
