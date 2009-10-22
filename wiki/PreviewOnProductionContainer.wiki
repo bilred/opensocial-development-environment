@@ -20,9 +20,9 @@ open-social gadget to a production container (say, iGoogle) from within OSDE, an
    * (p4) Prepare to support more containers.
  # OSDE pops up a dialog asking for:
    * (done) google account and password
-     * (p3) if developer has already input account/password info, OSDE stores the corresponding session tokens and does not ask for account/password again during the current session.
    * (done) a checkbox asking whether to use external browser or not
    * (done) preview home view or canvas view
+   * (p2) if developer has already input account/password info, OSDE stores the corresponding session tokens and does not ask for account/password again during the current session.
    * (p4) country and language
  # Devloper clicks on OK button
  # OSDE interacts with iGoogle server to authenticate the user
