@@ -30,7 +30,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -44,7 +43,6 @@ import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IPartSelectionListener;
 import org.eclipse.ui.forms.SectionPart;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -53,19 +51,19 @@ import com.google.gadgets.model.Module.UserPref;
 import com.google.gadgets.model.Module.UserPref.EnumValue;
 
 public class UserPrefsPart extends SectionPart implements IPartSelectionListener {
-
+	
 	private UserPrefsPage page;
-
+	
 	private TableViewer userPrefsList;
-
+	
 	public UserPrefsPart(Composite parent, IManagedForm managedForm, UserPrefsPage page) {
-		super(parent, managedForm.getToolkit(), ExpandableComposite.TITLE_BAR);
+		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
 		initialize(managedForm);
 		this.page = page;
 		createContents(getSection(), managedForm.getToolkit());
 		displayInitialValue();
 	}
-
+	
 	private void createContents(Section section, FormToolkit toolkit) {
 		section.setText("User Preferences");
 		Composite composite = toolkit.createComposite(section);
@@ -125,7 +123,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 		}
 		userPrefsList.setInput(models);
 	}
-
+	
 	public void selectionChanged(IFormPart part, ISelection selection) {
 		if (part == this) {
 			return;
@@ -135,7 +133,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 		}
 		userPrefsList.refresh((UserPrefModel)((IStructuredSelection)selection).getFirstElement());
 	}
-
+	
 	private Module getModule() {
 		return page.getModule();
 	}
@@ -174,7 +172,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 			userPrefList.add(userPref);
 		}
 	}
-
+	
 	private class AddButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -182,7 +180,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 
 		public void widgetSelected(SelectionEvent e) {
 			AddUserPrefDialog dialog = new AddUserPrefDialog(page.getSite().getShell());
-			if (dialog.open() == Window.OK) {
+			if (dialog.open() == AddUserPrefDialog.OK) {
 				UserPrefModel model = new UserPrefModel();
 				model.setName(dialog.getName());
 				model.setDisplayName(dialog.getDisplayName());
@@ -195,7 +193,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 				}
 			}
 		}
-
+		
 		private boolean contains(List<UserPrefModel> models, UserPrefModel model) {
 			for (UserPrefModel userPrefModel : models) {
 				if (userPrefModel.getName().equals(model.getName())) {
@@ -204,9 +202,9 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 			}
 			return false;
 		}
-
+		
 	}
-
+	
 	private class DeleteButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -227,7 +225,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
 				}
 			}
 		}
-
+		
 	}
 
 	public void changeModel() {

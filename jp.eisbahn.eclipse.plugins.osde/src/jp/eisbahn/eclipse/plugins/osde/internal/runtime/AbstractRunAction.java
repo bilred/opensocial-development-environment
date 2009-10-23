@@ -43,7 +43,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -51,31 +50,31 @@ import org.eclipse.ui.IWorkbenchWindow;
 import com.google.gadgets.parser.ParserException;
 
 public abstract class AbstractRunAction {
-
+	
 	protected Shell shell;
 	protected IWorkbenchPart targetPart;
 
 	protected void notifyUserPrefsView(LaunchApplicationInformation information) {
 		UserPrefsViewNotifier.fire(information, shell, targetPart);
 	}
-
+	
 	public void init(IWorkbenchWindow window) {
 		targetPart = window.getActivePage().getActivePart();
 		shell = targetPart.getSite().getShell();
 	}
-
+	
 	protected void launch(IFile gadgetXmlFile, IProject project) {
 		try {
 			ApplicationInformation appInfo;
 			appInfo = OpenSocialUtil.createApplicationInformation(gadgetXmlFile);
-
+			
 			ApplicationService applicationService = Activator.getDefault().getApplicationService();
 			applicationService.storeAppInfo(appInfo);
 			//
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<Person> people = personService.getPeople();
 			RunApplicationDialog dialog = new RunApplicationDialog(shell, people, gadgetXmlFile);
-			if (dialog.open() == Window.OK) {
+			if (dialog.open() == RunApplicationDialog.OK) {
 				Job job = new CreateWebContextJob("Create web context", project);
 				job.schedule();
 				String view = dialog.getView();
@@ -105,7 +104,7 @@ public abstract class AbstractRunAction {
 	}
 
 	private class CreateWebContextJob extends Job {
-
+		
 		private IProject project;
 
 		private CreateWebContextJob(String name, IProject project) {
@@ -137,7 +136,7 @@ public abstract class AbstractRunAction {
 				IOUtils.closeQuietly(fos);
 			}
 		}
-
+		
 	}
 
 }

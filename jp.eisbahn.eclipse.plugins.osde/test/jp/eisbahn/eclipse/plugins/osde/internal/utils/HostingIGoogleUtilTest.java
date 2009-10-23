@@ -19,7 +19,6 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
@@ -38,21 +37,15 @@ public class HostingIGoogleUtilTest {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    // TODO: Get a better place to store test data.
-    private static final String TEST_DATA_PATH =
-            "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/production/testdata/";
-
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
-     * String, String, IgPrefEditToken, String, String)} etc.
-     *
+     * String, String, IgPrefEditToken, String, String)}.
      * @throws IOException
      * @throws ClientProtocolException
      * @throws HostingException
      */
     @Test
-    public void testAuthenticationAndUploadAndRetrieveFiles()
-            throws ClientProtocolException, IOException, HostingException {
+    public void testAllMethods() throws ClientProtocolException, IOException, HostingException {
         // Prepare Authentication.
         String emailUserName = "osde.test.001";
         String password = "osdetest888";
@@ -66,7 +59,8 @@ public class HostingIGoogleUtilTest {
         assertTrue("Invalid prefEditToken: " + prefEditToken, prefEditToken.validate());
 
         // Upload file.
-        String rootPath = TEST_DATA_PATH;
+        String relativeFilePath = "dummy_gadget.xml";
+        String rootPath = "test/jp/eisbahn/eclipse/plugins/osde/internal/utils/";
         HostingIGoogleUtil.uploadFiles(sid, publicId, prefEditToken, rootPath);
 
         // Retrieve directory info.
@@ -78,7 +72,6 @@ public class HostingIGoogleUtilTest {
         String fileList = retrieveFileList(sid, publicId);
         logger.info("fileList:\n" + fileList);
         assertTrue(fileList.length() > 50);
-        String relativeFilePath = "gadget.xml";
         String fileContent = retrieveFile(sid, publicId, relativeFilePath);
         logger.info("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith("<?xml version"));
@@ -92,10 +85,12 @@ public class HostingIGoogleUtilTest {
      */
     @Test
     public final void testFindAllRelativeFilePaths() {
-        List<String> filePaths = findAllRelativeFilePaths(TEST_DATA_PATH);
+        // TODO: Get a better place to store test data.
+        String[] filePaths = findAllRelativeFilePaths(
+                "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/production/testdata/");
 
-        // Verify the 6 testing files are found.
-        assertEquals(6, filePaths.size());
+        // Verify the 3 testing files are found.
+        assertEquals(3, filePaths.length);
         for (String filePath : filePaths) {
             logger.info("filePath: " + filePath);
         }

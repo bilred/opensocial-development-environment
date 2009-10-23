@@ -28,7 +28,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -48,23 +47,22 @@ import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets.*;
 
 public class UserPrefPage implements IDetailsPage {
-
+	
 	private IManagedForm managedForm;
-
+	
 	private UserPrefsPage page;
 	private UserPrefModel model;
-
+	
 	private Text nameText;
 
 	private Label errorLabel;
-
+	
 	private boolean initialize = false;
 
 	private Text displayNameText;
@@ -78,7 +76,7 @@ public class UserPrefPage implements IDetailsPage {
 	private Section enumValuesSection;
 
 	private TableViewer enumValuesList;
-
+	
 	public UserPrefPage(UserPrefsPage page) {
 		super();
 		this.page = page;
@@ -91,7 +89,7 @@ public class UserPrefPage implements IDetailsPage {
 		parent.setLayout(layout);
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
-		Section detailsSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		Section detailsSection = toolkit.createSection(parent, Section.TITLE_BAR);
 		detailsSection.setText("Details");
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		detailsSection.setLayoutData(layoutData);
@@ -143,7 +141,7 @@ public class UserPrefPage implements IDetailsPage {
 		errorLabel.setLayoutData(layoutData);
 		//
 		// Enum values
-		enumValuesSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		enumValuesSection = toolkit.createSection(parent, Section.TITLE_BAR);
 		enumValuesSection.setText("Enum values");
 		layoutData = new GridData(GridData.FILL_BOTH);
 		enumValuesSection.setLayoutData(layoutData);
@@ -207,7 +205,7 @@ public class UserPrefPage implements IDetailsPage {
 		errorLabel.setText("");
 		initialize = true;
 	}
-
+	
 	private void makeDirty() {
 		page.updateUserPrefModel();
 	}
@@ -235,11 +233,11 @@ public class UserPrefPage implements IDetailsPage {
 	public boolean setFormInput(Object input) {
 		return false;
 	}
-
+	
 	private class UpdateFieldsListener implements ModifyListener, SelectionListener {
-
+		
 		private SectionPart sectionPart;
-
+		
 		public UpdateFieldsListener(SectionPart sectionPart) {
 			this.sectionPart = sectionPart;
 		}
@@ -251,7 +249,7 @@ public class UserPrefPage implements IDetailsPage {
 		public void widgetSelected(SelectionEvent e) {
 			updateFields();
 		}
-
+		
 		private void updateFields() {
 			if (initialize) {
 				String name = nameText.getText();
@@ -271,16 +269,16 @@ public class UserPrefPage implements IDetailsPage {
 				makeDirty();
 			}
 		}
-
+		
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
 	}
-
+	
 	private class AddButtonSelectionListener implements SelectionListener {
-
+		
 		private SectionPart sectionPart;
-
+		
 		public AddButtonSelectionListener(SectionPart sectionPart) {
 			this.sectionPart = sectionPart;
 		}
@@ -290,7 +288,7 @@ public class UserPrefPage implements IDetailsPage {
 
 		public void widgetSelected(SelectionEvent e) {
 			AddEnumValueDialog dialog = new AddEnumValueDialog(page.getSite().getShell());
-			if (dialog.open() == Window.OK) {
+			if (dialog.open() == AddEnumValueDialog.OK) {
 				Map<String, String> enumValuesMap = (Map<String, String>)enumValuesList.getInput();
 				enumValuesMap.put(dialog.getValue(), dialog.getDisplayValue());
 				enumValuesList.refresh();
@@ -298,13 +296,13 @@ public class UserPrefPage implements IDetailsPage {
 				makeDirty();
 			}
 		}
-
+		
 	}
-
+	
 	private class DeleteButtonSelectionListener implements SelectionListener {
 
 		private SectionPart sectionPart;
-
+		
 		public DeleteButtonSelectionListener(SectionPart sectionPart) {
 			this.sectionPart = sectionPart;
 		}
@@ -327,7 +325,7 @@ public class UserPrefPage implements IDetailsPage {
 				}
 			}
 		}
-
+		
 	}
-
+	
 }

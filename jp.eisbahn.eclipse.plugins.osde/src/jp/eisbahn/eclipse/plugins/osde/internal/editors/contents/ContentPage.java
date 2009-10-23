@@ -42,19 +42,18 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.google.gadgets.ViewType;
 
 public class ContentPage implements IDetailsPage {
-
+	
 	private IManagedForm managedForm;
-
+	
 	private ContentsPage page;
 	private ContentModel model;
-
+	
 	private Listener modifyListener = new Listener() {
 		public void handleEvent(Event event) {
 			if (!initializing) {
@@ -70,9 +69,9 @@ public class ContentPage implements IDetailsPage {
 	private Text hrefText;
 
 	private SourceViewer editor;
-
+	
 	private boolean initializing = true;
-
+	
 	private SelectionListener selectionListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
@@ -80,7 +79,7 @@ public class ContentPage implements IDetailsPage {
 			changeComponentEnabled();
 		}
 	};
-
+	
 	public ContentPage(ContentsPage page) {
 		super();
 		this.page = page;
@@ -92,8 +91,8 @@ public class ContentPage implements IDetailsPage {
 		layout.marginHeight = 0;
 		parent.setLayout(layout);
 		FormToolkit toolkit = managedForm.getToolkit();
-		//
-		Section contentSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+		// 
+		Section contentSection = toolkit.createSection(parent, Section.TITLE_BAR);
 		contentSection.setText("Content");
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		contentSection.setLayoutData(layoutData);
@@ -148,7 +147,7 @@ public class ContentPage implements IDetailsPage {
 		changeComponentEnabled();
 		initializing = false;
 	}
-
+	
 	private void displayInitialValue() {
 		hrefText.setText("http://");
 		ViewType type = model.getType();
@@ -167,19 +166,19 @@ public class ContentPage implements IDetailsPage {
 			throw new IllegalStateException("Unknown type.");
 		}
 	}
-
+	
 	private void makeDirty() {
 		setValuesToModel();
 		page.updateContentsModel();
 	}
-
+	
 	private void changeComponentEnabled() {
 		boolean htmlButtonSelected = htmlButton.getSelection();
 		boolean urlButtonSelected = urlButton.getSelection();
 		editor.getTextWidget().setEnabled(htmlButtonSelected);
 		hrefText.setEnabled(urlButtonSelected);
 	}
-
+	
 	private void setValuesToModel() {
 		if (htmlButton.getSelection()) {
 			model.setType(ViewType.html);
@@ -215,5 +214,5 @@ public class ContentPage implements IDetailsPage {
 	public boolean setFormInput(Object input) {
 		return false;
 	}
-
+	
 }

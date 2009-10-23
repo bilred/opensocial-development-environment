@@ -49,21 +49,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class UserPrefsView extends AbstractView {
-
+	
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.UserPrefsView";
-
+	
 	private Composite userPrefFieldsComposite;
 
 	private ScrolledForm form;
-
+	
 	private SelectionListener listener = new SaveButtonSelectionListener();
-
+	
 	private Map<String, Control> fieldMap;
 
 	private LaunchApplicationInformation information;
@@ -72,7 +71,7 @@ public class UserPrefsView extends AbstractView {
 		super();
 		this.fieldMap = new HashMap<String, Control>();
 	}
-
+	
 	protected void createForm(Composite parent) {
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
@@ -81,7 +80,7 @@ public class UserPrefsView extends AbstractView {
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		body.setLayout(layout);
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR);
+		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		section.setLayoutData(layoutData);
 		section.setText("Settings");
@@ -96,10 +95,10 @@ public class UserPrefsView extends AbstractView {
 		userPrefFieldsComposite.setLayout(layout);
 		section.setClient(userPrefFieldsComposite);
 	}
-
+	
 	public void setFocus() {
 	}
-
+	
 	private void removeAllFields() {
 		getSite().getShell().getDisplay().syncExec(new Runnable() {
 			public void run() {
@@ -111,7 +110,7 @@ public class UserPrefsView extends AbstractView {
 			}
 		});
 	}
-
+	
 	private void setupFields(
 			final List<UserPrefModel> userPrefModels, final LaunchApplicationInformation information) {
 		getSite().getShell().getDisplay().syncExec(new Runnable() {
@@ -170,7 +169,7 @@ public class UserPrefsView extends AbstractView {
 				userPrefFieldsComposite.layout();
 				form.reflow(true);
 			}
-
+			
 			private void createLabel(String text, int span, FormToolkit toolkit) {
 				Label label = toolkit.createLabel(userPrefFieldsComposite, text);
 				GridData layoutData = new GridData();
@@ -179,10 +178,10 @@ public class UserPrefsView extends AbstractView {
 			}
 		});
 	}
-
+	
 	public void connectedDatabase() {
 	}
-
+	
 	private void retrieveUserPrefValues(
 			final String appId, final String viewerId, final Map<String, UserPrefModel> models) {
 		getSite().getShell().getDisplay().syncExec(new Runnable() {
@@ -226,7 +225,7 @@ public class UserPrefsView extends AbstractView {
 			}
 		});
 	}
-
+	
 	public void showUserPrefFields(final LaunchApplicationInformation information, final String url) {
 		Job job = new Job("Fetch metadata") {
 			@Override
@@ -237,7 +236,7 @@ public class UserPrefsView extends AbstractView {
 					monitor.worked(1);
 					List<UserPrefModel> userPrefModels =
 						MetaDataFetcher.fetch(information.getView(), information.getViewer(),
-								information.getOwner(), information.getAppId(),
+								information.getOwner(), information.getAppId(), 
 								information.getCountry(), information.getLanguage(), url);
 					monitor.worked(1);
 					setupFields(userPrefModels, information);

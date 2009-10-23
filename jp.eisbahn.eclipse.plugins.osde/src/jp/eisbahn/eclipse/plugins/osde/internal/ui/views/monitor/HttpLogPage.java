@@ -35,15 +35,14 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class HttpLogPage implements IDetailsPage {
-
+	
 	private IManagedForm managedForm;
 	private DateFormat formatter;
-
+	
 	private ShindigMonitorView shindigMonitorView;
 	private HttpLog log;
 
@@ -55,7 +54,7 @@ public class HttpLogPage implements IDetailsPage {
 	private Label methodLabel;
 	private TableViewer reqHeaderList;
 	private TableViewer reqParamList;
-
+	
 	public HttpLogPage(ShindigMonitorView shindigMonitorView) {
 		super();
 		this.shindigMonitorView = shindigMonitorView;
@@ -69,8 +68,7 @@ public class HttpLogPage implements IDetailsPage {
 		parent.setLayout(layout);
 		FormToolkit toolkit = managedForm.getToolkit();
 		// Basic
-		Section basicSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR
-		        | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+		Section basicSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
 		basicSection.setText("Basic");
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		basicSection.setLayoutData(layoutData);
@@ -99,8 +97,7 @@ public class HttpLogPage implements IDetailsPage {
 		methodLabel.setLayoutData(layoutData);
 		//
 		// Request Parameter
-		Section reqParamSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR
-		        | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+		Section reqParamSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
 		reqParamSection.setText("Request parameters");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		reqParamSection.setLayoutData(layoutData);
@@ -128,8 +125,7 @@ public class HttpLogPage implements IDetailsPage {
 		reqParamList.setLabelProvider(new JSONListLabelProvider());
 		//
 		// Request Body
-		Section reqBodySection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR
-		        | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+		Section reqBodySection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
 		reqBodySection.setText("Request body");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		reqBodySection.setLayoutData(layoutData);
@@ -143,8 +139,7 @@ public class HttpLogPage implements IDetailsPage {
 		reqBodyText.setLayoutData(layoutData);
 		//
 		// Request Header
-		Section reqHeaderSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR
-		        | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED);
+		Section reqHeaderSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
 		reqHeaderSection.setText("Request headers");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		reqHeaderSection.setLayoutData(layoutData);
@@ -171,7 +166,7 @@ public class HttpLogPage implements IDetailsPage {
 		reqHeaderList.setContentProvider(new JSONListContentProvider());
 		reqHeaderList.setLabelProvider(new JSONListLabelProvider());
 	}
-
+	
 	public void initialize(IManagedForm managedForm) {
 		this.managedForm = managedForm;
 	}
@@ -212,7 +207,7 @@ public class HttpLogPage implements IDetailsPage {
 		reqParamList.setInput(log.getJSON().get("parameterMap"));
 		reqBodyText.setText(getValue(log, "body"));
 	}
-
+	
 	private String getValue(HttpLog log, String name) {
 		Object object = log.getJSON().get(name);
 		if (object != null) {
@@ -221,5 +216,5 @@ public class HttpLogPage implements IDetailsPage {
 			return "";
 		}
 	}
-
+	
 }

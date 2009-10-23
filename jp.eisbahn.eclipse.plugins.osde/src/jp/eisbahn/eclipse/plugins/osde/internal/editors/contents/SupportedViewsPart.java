@@ -29,7 +29,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -43,7 +42,6 @@ import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.IPartSelectionListener;
 import org.eclipse.ui.forms.SectionPart;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -52,19 +50,19 @@ import com.google.gadgets.ViewType;
 import com.google.gadgets.model.Module.Content;
 
 public class SupportedViewsPart extends SectionPart implements IPartSelectionListener {
-
+	
 	private ContentsPage page;
-
+	
 	private TableViewer supportedViewList;
-
+	
 	public SupportedViewsPart(Composite parent, IManagedForm managedForm, ContentsPage page) {
-		super(parent, managedForm.getToolkit(), ExpandableComposite.TITLE_BAR);
+		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
 		initialize(managedForm);
 		this.page = page;
 		createContents(getSection(), managedForm.getToolkit());
 		displayInitialValue();
 	}
-
+	
 	private void createContents(Section section, FormToolkit toolkit) {
 		section.setText("Supported Views ");
 		Composite composite = toolkit.createComposite(section);
@@ -138,7 +136,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 		}
 		supportedViewList.setInput(models);
 	}
-
+	
 	public void selectionChanged(IFormPart part, ISelection selection) {
 		if (part == this) {
 			return;
@@ -148,7 +146,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 		}
 		supportedViewList.refresh((ContentModel)((IStructuredSelection)selection).getFirstElement());
 	}
-
+	
 	private Module getModule() {
 		return page.getModule();
 	}
@@ -167,7 +165,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 			contents.add(content);
 		}
 	}
-
+	
 	private class AddButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -175,7 +173,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 
 		public void widgetSelected(SelectionEvent e) {
 			AddContentDialog dialog = new AddContentDialog(page.getSite().getShell());
-			if (dialog.open() == Window.OK) {
+			if (dialog.open() == AddContentDialog.OK) {
 				ContentModel model = new ContentModel();
 				model.setView(dialog.getView());
 				model.setType(dialog.getType());
@@ -185,9 +183,9 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 				markDirty();
 			}
 		}
-
+		
 	}
-
+	
 	private class DeleteButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -209,7 +207,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 				}
 			}
 		}
-
+		
 	}
 
 	private class UpButtonSelectionListener implements SelectionListener {
@@ -231,7 +229,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 				}
 			}
 		}
-
+		
 	}
 
 	private class DownButtonSelectionListener implements SelectionListener {
@@ -254,7 +252,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 				}
 			}
 		}
-
+		
 	}
 
 	public List<ContentModel> getContentModels() {

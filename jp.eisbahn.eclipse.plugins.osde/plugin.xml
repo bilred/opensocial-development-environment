@@ -106,7 +106,7 @@
             id="jp.eisbahn.eclipse.plugins.osde.editorActions"
             targetID="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor">
          <action id="jp.eisbahn.eclipse.plugins.osde.editorActions.runAction"
-               label="Run this application locally"
+               label="Run this application"
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunFromEditorAction"
                definitionId="jp.eisbahn.eclipse.plugins.osde.commands.runGadgetCommand" /> 
       </editorContribution>
@@ -162,11 +162,11 @@
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.runAction2"
-               label="Run this application locally"
+               label="Run this application"
                icon="icons/action_go.gif"
                menubarPath="opensocialMenu/opensocialGroup2"
                toolbarPath="opensocialGroup"
-               tooltip="Run this application locally.">
+               tooltip="Run this application.">
             <enablement>
                <objectState
 	                     name="contentTypeId"
@@ -174,24 +174,6 @@
 	           </objectState>
             </enablement>
          </action>
-         <!-- TODO: enable this feature when it is ready
-         <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleAction"
-               enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.runActionOnIGoogle2"
-               label="Run this application on iGoogle"
-               icon="icons/action_go.gif"
-               menubarPath="opensocialMenu/opensocialGroup2">
-               toolbarPath="opensocialGroup"
-               tooltip="Run this application locally.">
-            <enablement>
-               <objectState
-                   name="contentTypeId"
-	               value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
-	           </objectState>
-            </enablement>
-         </action>
-         -->
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.CreateSampleDataAction"
                icon="icons/icon_download.gif"

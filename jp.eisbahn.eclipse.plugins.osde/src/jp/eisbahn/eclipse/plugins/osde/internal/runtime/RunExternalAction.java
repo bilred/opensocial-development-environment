@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -48,7 +47,7 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 
 	private Shell shell;
 	private IWorkbenchPart targetPart;
-
+	
 	public RunExternalAction() {
 		super();
 	}
@@ -58,7 +57,7 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 			PersonService personService = Activator.getDefault().getPersonService();
 			List<Person> people = personService.getPeople();
 			RunExternalApplicationDialog dialog = new RunExternalApplicationDialog(shell, people);
-			if (dialog.open() == Window.OK) {
+			if (dialog.open() == RunApplicationDialog.OK) {
 				String url = dialog.getUrl();
 				ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(url);
 				ApplicationService applicationService = Activator.getDefault().getApplicationService();
@@ -91,7 +90,7 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + e.getMessage());
 		}
 	}
-
+	
 	private void notifyUserPrefsView(final LaunchApplicationInformation information) {
 		final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
 		shell.getDisplay().syncExec(new Runnable() {

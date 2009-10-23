@@ -16,27 +16,27 @@ public class MessagBundleTest {
 
 	@Test
 	public final void testMessageBundle() {
-		// TODO: implement test method
+		// TODO
 	}
 
 	@Test
 	public final void testAddMessage() {
-		// TODO: implement test method
+		// TODO
 	}
 
 	@Test
 	public final void testRemoveMessage() {
-		// TODO: implement test method
+		// TODO
 	}
 
 	@Test
 	public final void testGetMessages() {
-		// TODO: implement test method
+		// TODO
 	}
 
 	@Test
 	public final void testToString() {
-		// TODO: implement test method
+		// TODO
 	}
 
 }

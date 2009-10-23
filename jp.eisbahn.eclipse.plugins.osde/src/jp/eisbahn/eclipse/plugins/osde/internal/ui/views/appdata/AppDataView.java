@@ -34,7 +34,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionEvent;
@@ -49,14 +48,13 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class AppDataView extends AbstractView {
-
+	
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.AppDataView";
 	private Combo personCombo;
 	private Combo applicationCombo;
@@ -66,10 +64,10 @@ public class AppDataView extends AbstractView {
 	private Action removeAllAction;
 	private Button addButton;
 	private Button deleteButton;
-
+	
 	public AppDataView() {
 	}
-
+	
 	@Override
 	protected void fillContextMenu(IMenuManager manager) {
 		super.fillContextMenu(manager);
@@ -124,7 +122,7 @@ public class AppDataView extends AbstractView {
 		layout.marginWidth = 0;
 		layout.marginHeight = 0;
 		body.setLayout(layout);
-		Section section = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR);
+		Section section = toolkit.createSection(form.getBody(), Section.TITLE_BAR);
 		GridData layoutData = new GridData(GridData.FILL_BOTH);
 		section.setLayoutData(layoutData);
 		section.setText("AppData");
@@ -215,10 +213,10 @@ public class AppDataView extends AbstractView {
 		deleteButton.setLayoutData(layoutData);
 		deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
 	}
-
+	
 	public void setFocus() {
 	}
-
+	
 	private void updateValue() {
 		int selectionIndex = keyList.getSelectionIndex();
 		if (selectionIndex >= 0) {
@@ -226,7 +224,7 @@ public class AppDataView extends AbstractView {
 			valueText.setText(value);
 		}
 	}
-
+	
 	private void updateDataMap() {
 		if (Activator.getDefault().isRunningShindig()) {
 			try {
@@ -249,7 +247,7 @@ public class AppDataView extends AbstractView {
 			ShindigLauncher.launchWithConfirm(getSite().getShell(), this);
 		}
 	}
-
+	
 	private void loadPeopleAndApplications() {
 		if (Activator.getDefault().isRunningShindig()) {
 			try {
@@ -288,7 +286,7 @@ public class AppDataView extends AbstractView {
 		keyList.removeAll();
 		valueText.setText("");
 	}
-
+	
 	public void removeAllAppData() {
 		try {
 			AppDataService appDataService = Activator.getDefault().getAppDataService();
@@ -300,7 +298,7 @@ public class AppDataView extends AbstractView {
 			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
 		}
 	}
-
+	
 	private class DeleteButtonSelectionListener implements SelectionListener {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
@@ -333,7 +331,7 @@ public class AppDataView extends AbstractView {
 				ApplicationImpl application = (ApplicationImpl)applicationCombo.getData(applicationCombo.getText());
 				if (person != null && application != null) {
 					AddAppDataDialog dialog = new AddAppDataDialog(getSite().getShell());
-					if (dialog.open() == Window.OK) {
+					if (dialog.open() == AddAppDataDialog.OK) {
 						try {
 							String key = dialog.getKey();
 							String value = dialog.getValue();
@@ -348,5 +346,5 @@ public class AppDataView extends AbstractView {
 			}
 		}
 	}
-
+	
 }

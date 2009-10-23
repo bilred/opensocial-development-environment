@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class ModuleTest {
 
-
+	
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -17,32 +17,32 @@ public class ModuleTest {
 
 	@Test
 	public final void testGetModulePrefs() {
-		// TODO: implement test method
+		// TODO
 	}
 
 	@Test
 	public final void testSetModulePrefs() {
-		// TODO: implement test method
+		// TODO
 	}
 
 	@Test
 	public final void testGetUserPref() {
-		// TODO: implement test method
+		// TODO
 	}
 
 	@Test
 	public final void testAddUserPref() {
-		// TODO: implement test method
+		// TODO
 	}
 
 	@Test
 	public final void testGetContent() {
-		// TODO: implement test method
+		// TODO
 	}
 
 	@Test
 	public final void testAddContent() {
-		// TODO: implement test method
+		// TODO
 	}
 
 }

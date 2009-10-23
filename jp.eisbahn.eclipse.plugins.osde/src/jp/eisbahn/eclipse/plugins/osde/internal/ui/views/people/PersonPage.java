@@ -56,7 +56,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -76,17 +75,16 @@ import org.eclipse.ui.forms.IDetailsPage;
 import org.eclipse.ui.forms.IFormPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class PersonPage implements IDetailsPage {
-
+	
 	private IManagedForm managedForm;
-
+	
 	private PersonView personView;
 	private Person person;
-
+	
 	private TableViewer friendsList;
 
 	private Label idLabel;
@@ -143,8 +141,7 @@ public class PersonPage implements IDetailsPage {
 		parent.setLayout(layout);
 		FormToolkit toolkit = managedForm.getToolkit();
 		// Basic
-		Section basicSection = toolkit.createSection(parent,
-		        ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+		Section basicSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
 		basicSection.setText("Basic");
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		basicSection.setLayoutData(layoutData);
@@ -173,8 +170,7 @@ public class PersonPage implements IDetailsPage {
 		thumbnailUrlText.addFocusListener(basicValueChangeListener);
 		//
 		// General
-		Section generalSection = toolkit.createSection(parent,
-		        ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+		Section generalSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
 		generalSection.setText("General");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		generalSection.setLayoutData(layoutData);
@@ -254,8 +250,7 @@ public class PersonPage implements IDetailsPage {
 		statusText = createText("Status:", generalPane, toolkit, generalValueChangeListener);
 		//
 		// Name
-		Section nameSection = toolkit.createSection(parent,
-		        ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+		Section nameSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
 		nameSection.setText("Name");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		nameSection.setLayoutData(layoutData);
@@ -273,8 +268,7 @@ public class PersonPage implements IDetailsPage {
 		nameUnstructuredText = createText("Unstructured:", namePane, toolkit, nameValueChangeListener);
 		//
 		// Body type
-		Section bodyTypeSection = toolkit.createSection(parent,
-		        ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+		Section bodyTypeSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
 		bodyTypeSection.setText("Body type");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		bodyTypeSection.setLayoutData(layoutData);
@@ -291,8 +285,7 @@ public class PersonPage implements IDetailsPage {
 		weightText = createText("Weight:", bodyTypePane, toolkit, bodyTypeValueChangeListener);
 		//
 		// Friends
-		Section friendsSection = toolkit.createSection(parent,
-		        ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+		Section friendsSection = toolkit.createSection(parent, Section.TITLE_BAR | Section.TWISTIE);
 		friendsSection.setText("Relationship");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		friendsSection.setLayoutData(layoutData);
@@ -334,7 +327,7 @@ public class PersonPage implements IDetailsPage {
 		deleteButton.setLayoutData(layoutData);
 		deleteButton.addSelectionListener(new RemoveButtonSelectionListener());
 	}
-
+	
 	private Text createText(String label, Composite parent, FormToolkit toolkit, ValueChangeListener listener) {
 		toolkit.createLabel(parent, label);
 		Text text = toolkit.createText(parent, "", SWT.BORDER);
@@ -483,7 +476,7 @@ public class PersonPage implements IDetailsPage {
 			MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
 		}
 	}
-
+	
 	private void setDate(DateTime dateTime, Date date) {
 		if (date != null) {
 			Calendar cal = Calendar.getInstance();
@@ -494,7 +487,7 @@ public class PersonPage implements IDetailsPage {
 			dateTime.setDay(cal.get(Calendar.DATE));
 		}
 	}
-
+	
 	private class ValueChangeListener implements FocusListener, SelectionListener {
 		private final SectionPart part;
 
@@ -512,7 +505,7 @@ public class PersonPage implements IDetailsPage {
 		public void focusLost(FocusEvent evt) {
 			updatePerson();
 		}
-
+		
 		private void updatePerson() {
 			try {
 				person.setDisplayName(normalize(displayNameText.getText()));
@@ -577,7 +570,7 @@ public class PersonPage implements IDetailsPage {
 				MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
 			}
 		}
-
+		
 		private Date getDate(DateTime dateTime) {
 			int year = dateTime.getYear();
 			int month = dateTime.getMonth();
@@ -592,7 +585,7 @@ public class PersonPage implements IDetailsPage {
 		}
 
 	}
-
+	
 	private class AddButtonSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -613,7 +606,7 @@ public class PersonPage implements IDetailsPage {
 					people.remove(idx);
 				}
 				AddRelationshipDialog dialog = new AddRelationshipDialog(personView.getSite().getShell(), people);
-				if (dialog.open() == Window.OK) {
+				if (dialog.open() == AddRelationshipDialog.OK) {
 					final String groupId = dialog.getGroupId();
 					final Person target = dialog.getTarget();
 					Job job = new Job("Add relationship") {
@@ -636,7 +629,7 @@ public class PersonPage implements IDetailsPage {
 				MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
 			}
 		}
-
+	
 	}
 
 	private class RemoveButtonSelectionListener implements SelectionListener {
@@ -679,7 +672,7 @@ public class PersonPage implements IDetailsPage {
 				}
 			}
 		}
-
+	
 	}
 
 }

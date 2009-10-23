@@ -20,14 +20,13 @@ package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpStatus;
@@ -42,7 +41,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 
 /**
  * This iGoogle utility class provides authentication and
@@ -50,7 +48,7 @@ import org.apache.http.protocol.HTTP;
  * (http://www.google.com/ig) gadget container.
  * <p>
  * Samples of usages could be found at
- * {@link HostingIGoogleUtilTest#testAuthenticationAndUploadAndRetrieveFiles()}.
+ * {@link HostingIGoogleUtilTest#testAllMethods()}.
  *
  * @author albert.cheng.ig@gmail.com
  */
@@ -58,11 +56,8 @@ public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    private static final String OSDE_PREVIEW_DIRECTORY = "osde/preview/";
-    private static final String HTTP_HEADER_COOKIE = "Cookie";
-    private static final String HTTP_HEADER_SET_COOKIE = "Set-Cookie";
-    private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
-        HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + HTTP.UTF_8;
+    private static final String OSDE_HOST_DIRECTORY = "osde/";
+
     private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
     private static final String URL_IG_PREF_EDIT_TOKEN = "http://www.google.com/ig/resetprefs.html";
     private static final String URL_IG_GADGETS = "http://www.google.com/ig/gadgets";
@@ -141,7 +136,7 @@ public class HostingIGoogleUtil {
         urlConnection.setDoOutput(true);
         urlConnection.setUseCaches(false);
         urlConnection.setRequestMethod("POST");
-        urlConnection.setRequestProperty(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded");
+        urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
         // Form the POST params.
         StringBuilder params = new StringBuilder();
@@ -199,22 +194,21 @@ public class HostingIGoogleUtil {
         }
 
         // Prepare HttpPost.
-        String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_PREVIEW_DIRECTORY
+        String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_HOST_DIRECTORY
             + sourceFileRelativePath + "?et=" + prefEditToken.getEditToken();
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
+
+        // TODO: Support non-text/plain file.
+        httpPost.setHeader("Content-Type", "text/plain");
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
-        String httpContentType = isTextExtensionForGadgetFile(sourceFileRelativePath)
-                ? HTTP_PLAIN_TEXT_TYPE_UTF8
-                : HTTP.DEFAULT_CONTENT_TYPE;
-        httpPost.setHeader(HTTP.CONTENT_TYPE, httpContentType);
-        FileEntity fileEntity = new FileEntity(sourceFile, httpContentType);
+        FileEntity fileEntity = new FileEntity(sourceFile, "text/plain; charset=\"UTF-8\"");
         logger.fine("fileEntity length: " + fileEntity.getContentLength());
         httpPost.setEntity(fileEntity);
 
         // Add cookie headers. Cookie PREF must be placed before SID.
-        httpPost.addHeader(HTTP_HEADER_COOKIE, "PREF=" + prefEditToken.getPref());
-        httpPost.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
+        httpPost.addHeader("Cookie", "PREF=" + prefEditToken.getPref());
+        httpPost.addHeader("Cookie", "SID=" + sid);
 
         // Execute request.
         HttpClient httpClient = new DefaultHttpClient();
@@ -228,30 +222,6 @@ public class HostingIGoogleUtil {
         }
     }
 
-    private static boolean isTextExtensionForGadgetFile(String fileName) {
-        int lastIndexOfDot = fileName.lastIndexOf(".");
-
-        // Return false if no dot found or the last char is dot.
-        if ((lastIndexOfDot == -1)
-                || (lastIndexOfDot == (fileName.length() - 1))) {
-            return false;
-        }
-
-        // The following extensions in textExtensions are treated as text types.
-        // It is ok to treat all the other extensions as default types.
-        String[] textExtensions = new String[] {
-                "xml", "js", "css", "html", "htm"
-        };
-        String extension = fileName.substring(lastIndexOfDot + 1).toLowerCase();
-
-        for (String textExtension : textExtensions) {
-            if (textExtension.equals(extension)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Uploads a list of files to iGoogle.
      *
@@ -262,39 +232,34 @@ public class HostingIGoogleUtil {
     public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath)
             throws ClientProtocolException, IOException, HostingException {
-        List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
+        String[] relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
             uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
         }
     }
 
     /**
-     * Finds all relative file paths under given base folder.
+     * Finds all relative file paths under given folder.
      * These files will be uploaded to iGoogle server.
      */
-    static List<String> findAllRelativeFilePaths(String baseFolder) {
-        List<String> allPaths = new ArrayList<String>();
-        findAllRelativeFilePaths(baseFolder, "", allPaths);
-        return allPaths;
-    }
+    static String[] findAllRelativeFilePaths(String targetFolder) {
+        // List filtered files.
+        // System/hidden files and folders are filtered out.
+        // TODO: Support list files recursively.
+        FileFilter fileFilter = new FileFilter() {
+            public boolean accept(File pathname) {
+                return !pathname.getName().startsWith(".")
+                        && pathname.isFile();
+            }
+        };
+        File[] files = new File(targetFolder).listFiles(fileFilter);
 
-    private static void findAllRelativeFilePaths(
-            String baseFolder, String relativeFolder, List<String> allPaths) {
-        // Assert that relativeFolder ends with "/" unless it is empty.
-        assert((relativeFolder.length() == 0)
-                || (relativeFolder.charAt(relativeFolder.length() - 1) == '/'));
-
-        File currentFolder = new File(baseFolder, relativeFolder);
-        for (File file : currentFolder.listFiles()) {
-            String relativeFilePath = relativeFolder + file.getName();
-            if (file.isHidden()) {
-                // Ignore any hidden file.
-            } else if (file.isDirectory()) {
-                findAllRelativeFilePaths(baseFolder, relativeFilePath + "/", allPaths);
-            } else if (file.isFile()) {
-                allPaths.add(relativeFilePath);
-            } // Ignore all other kinds of files.
+        // TODO: Make sure the file paths are relative to targetFolder.
+        String[] relativeFilePaths = new String[files.length];
+        for (int i = 0; i < files.length; i++) {
+            relativeFilePaths[i] = files[i].getName();
         }
+        return relativeFilePaths;
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
@@ -326,7 +291,7 @@ public class HostingIGoogleUtil {
     }
 
     private static String formHostedFileUrl(String publicId, String filePath) {
-        return URL_GMODULE_FILE + publicId + "/" + OSDE_PREVIEW_DIRECTORY + filePath;
+        return URL_GMODULE_FILE + publicId + "/" + OSDE_HOST_DIRECTORY + filePath;
     }
 
     public static String retrievePublicId(String sid)
@@ -346,27 +311,27 @@ public class HostingIGoogleUtil {
             throws ClientProtocolException, IOException {
         // Prepare HttpGet.
         HttpGet httpGet = new HttpGet(url);
-        httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
-        httpGet.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
+        httpGet.setHeader("Content-Type", "text/plain");
+        httpGet.addHeader("Cookie", "SID=" + sid);
 
         // Retrieve HttpResponse.
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpGet);
-        logger.fine("status line: " + httpResponse.getStatusLine());
+        logger.info("status line: " + httpResponse.getStatusLine());
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
     public static IgPrefEditToken retrieveIgPrefEditToken(String sid)
             throws ClientProtocolException, IOException {
         HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
-        httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
-        httpGet.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
+        httpGet.setHeader("Content-Type", "text/plain");
+        httpGet.addHeader("Cookie", "SID=" + sid);
         HttpClient httpClient = new DefaultHttpClient();
         HttpResponse httpResponse = httpClient.execute(httpGet);
-        logger.fine("status line: " + httpResponse.getStatusLine());
+        logger.info("status line: " + httpResponse.getStatusLine());
 
         String pref = null;
-        for (Header header : httpResponse.getHeaders(HTTP_HEADER_SET_COOKIE)) {
+        for (Header header : httpResponse.getHeaders("Set-Cookie")) {
             String headerValue = header.getValue();
             if (headerValue.startsWith("PREF=ID=")) {
                 // pref starts with "ID=" and ends before ";"
@@ -443,7 +408,7 @@ public class HostingIGoogleUtil {
         String hostedFileUrl = formHostedFileUrl(publicId, filePath);
         sb.append(hostedFileUrl);
 
-        // TODO: Support various languages, and countries.
+        // TODO: support various languages, and countries.
 
         return sb.toString();
     }

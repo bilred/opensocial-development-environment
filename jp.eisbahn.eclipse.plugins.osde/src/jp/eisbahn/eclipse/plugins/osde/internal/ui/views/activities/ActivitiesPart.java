@@ -49,24 +49,23 @@ import org.eclipse.ui.forms.IPartSelectionListener;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class ActivitiesPart extends SectionPart implements IPartSelectionListener {
-
+	
 	private ActivitiesView activitiesView;
 	private Combo peopleCombo;
 	private TableViewer activityList;
 
 	public ActivitiesPart(Composite parent, IManagedForm managedForm, ActivitiesView activitiesView) {
-		super(parent, managedForm.getToolkit(), ExpandableComposite.TITLE_BAR);
+		super(parent, managedForm.getToolkit(), Section.TITLE_BAR);
 		initialize(managedForm);
 		createContents(getSection(), managedForm.getToolkit());
 		this.activitiesView = activitiesView;
 	}
-
+	
 	private void createContents(Section section, FormToolkit toolkit) {
 		section.setText("Activities ");
 		Composite composite = toolkit.createComposite(section);
