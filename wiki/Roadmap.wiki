@@ -25,3 +25,16 @@ This version is a next major version, and will be supported !OpenSocial Specific
   * Can't execute the gadget in a sub folder (Issue #73)
   * Subversion committing problem (Issue #75)
   * Removing the legacy of h2-library (Issue #81)
+
+==v0.4==
+
+(Proposed by Albert) This version will support the feature of "Preview gadgets on iGoogle".
+
+==v0.5==
+
+(Proposed by Albert) This version will support "Publish/manage gadgets on iGoogle".
+
+==v1.0==
+
+What milestones should be achieved here?
+Please note that we should not wait for OpenSocial v1.0.
