@@ -28,13 +28,13 @@ This version is a next major version, and will be supported !OpenSocial Specific
 
 ==v0.4==
 
-(Proposed by Albert) This version will support the feature of "Preview gadgets on iGoogle".
+(Proposed by Albert) This version will support the feature of "Preview gadgets on at least one container".
 
 Expected release date: 2009-11-14
 
 ==v0.5==
 
-(Proposed by Albert) This version will support "Publish/manage gadgets on iGoogle".
+(Proposed by Albert) This version will support "Publish/manage gadgets on at least one container".
 
 Expected release date: 2009-12-05
 
