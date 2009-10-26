@@ -37,4 +37,4 @@ This version is a next major version, and will be supported !OpenSocial Specific
 ==v1.0==
 
 What milestones should be achieved here?
-Please note that we should not wait for OpenSocial v1.0.
+Please note that we should not wait for !OpenSocial v1.0.
