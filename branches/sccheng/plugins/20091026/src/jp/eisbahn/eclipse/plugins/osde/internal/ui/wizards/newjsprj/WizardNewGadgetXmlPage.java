@@ -21,8 +21,7 @@ import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils
 import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createLabel;
 import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createText;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.commons.validator.EmailValidator;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
@@ -168,10 +167,9 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 	}
 	
 	/**
-	 * Validate user input
+	 * Validates user input.
 	 * 
-	 * @return true if the title and gadget spec file names are not empty, and the email is valid
-	 * 			false otherwise 
+	 * @return true if the title and gadget spec file names are not empty, and the email is valid 
 	 */
 	private boolean validatePage() {
 		String specFilename = specFilenameText.getText().trim();
@@ -187,7 +185,8 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 			return false;
 		}
 		String authorEmail = authorEmailText.getText().trim();
-		if (authorEmail.length() == 0 || !isValidEmail(authorEmail)) {
+		EmailValidator emailValidator = EmailValidator.getInstance();
+		if (!emailValidator.isValid(authorEmail)) {
 			setErrorMessage("Invalid author email. Please enter a valid email.");
 			setMessage(null);
 			return false;
@@ -195,12 +194,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		setErrorMessage(null);
 		setMessage("Click Next to continue.");
 		return true;
-	}
-	
-	public static boolean isValidEmail(String email) {
-		Pattern p = Pattern.compile("^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$");
-		Matcher m = p.matcher(email);
-		return m.matches();
 	}
 
 	public GadgetXmlData getInputtedData() {
