@@ -130,7 +130,7 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
 		final IProject newProjectHandle = workspace.getRoot().getProject(projectName);
 		final IProjectDescription description = workspace.newProjectDescription(projectName);
 		description.setLocationURI(location);
-		final GadgetXmlData gadgetXmlData = gadgetXmlPage.getInputedData();
+		final GadgetXmlData gadgetXmlData = gadgetXmlPage.getInputtedData();
 		final EnumMap<ViewName, GadgetViewData> gadgetViewData = viewPage.getInputedData();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {

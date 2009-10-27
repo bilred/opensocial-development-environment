@@ -21,6 +21,8 @@ import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils
 import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createLabel;
 import static jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.ComponentUtils.createText;
 
+import org.apache.commons.validator.EmailValidator;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -129,7 +131,7 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		layoutData.heightHint = 50;
 		descriptionText.setLayoutData(layoutData);
 		descriptionText.setFont(parent.getFont());
-		Label noticeLabel = createLabel(infoGroup, "The fields which has (*) mark are required.");
+		Label noticeLabel = createLabel(infoGroup, "The fields marked (*) are required.");
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalAlignment = GridData.END;
 		layoutData.horizontalSpan = 4;
@@ -164,31 +166,37 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 		tabsButton = createCheckbox(featuresGroup, "Tabs");
 	}
 	
+	/**
+	 * Validates user input.
+	 * 
+	 * @return true if the title and gadget spec file names are not empty, and the email is valid 
+	 */
 	private boolean validatePage() {
 		String specFilename = specFilenameText.getText().trim();
 		if (specFilename.length() == 0) {
-			setErrorMessage(null);
-			setMessage("Gadget spec file name is empty.");
+			setErrorMessage("Gadget spec file name is empty. Please enter gadget spec file name.");
+			setMessage(null);
 			return false;
 		}
 		String title = titleText.getText().trim();
 		if (title.length() == 0) {
-			setErrorMessage(null);
-			setMessage("Title is empty.");
+			setErrorMessage("Title is empty. Please enter the title.");
+			setMessage(null);
 			return false;
 		}
 		String authorEmail = authorEmailText.getText().trim();
-		if (authorEmail.length() == 0) {
-			setErrorMessage(null);
-			setMessage("Author Email is empty.");
+		EmailValidator emailValidator = EmailValidator.getInstance();
+		if (!emailValidator.isValid(authorEmail)) {
+			setErrorMessage("Invalid author email. Please enter a valid email.");
+			setMessage(null);
 			return false;
 		}
 		setErrorMessage(null);
-		setMessage(null);
+		setMessage("Click Next to continue.");
 		return true;
 	}
 
-	public GadgetXmlData getInputedData() {
+	public GadgetXmlData getInputtedData() {
 		GadgetXmlData data = new GadgetXmlData();
 		data.setAuthorEmail(authorEmailText.getText().trim());
 		data.setDescription(descriptionText.getText().trim());
