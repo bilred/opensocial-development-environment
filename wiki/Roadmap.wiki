@@ -60,7 +60,7 @@ Expected release date: 2010-01-15
 
 Milestone release
 
-Expected release date: 2010-01-15
+Expected release date: 2010-02-01
 
 ==v1.0==
 
