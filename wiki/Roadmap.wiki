@@ -28,31 +28,31 @@ This version is a next major version, and will be supported !OpenSocial Specific
 
 ==v0.4==
 
-(Proposed by Albert) This version will support the feature of "Preview gadgets on at least one container".
+(Proposed by Albert) This version will support the feature of "Preview gadgets on at least one container" (Issue 39).
 
 Expected release date: 2009-11-15
 
 ==v0.5==
 
-(Proposed by Albert) This version will support "Publish/manage gadgets on at least one container".
+(Proposed by Albert) This version will support "Publish/manage gadgets on at least one container" (Issue 154 and Issue 155).
 
 Expected release date: 2009-12-01
 
 ==v0.6==
 
-(Proposed by Albert) This version will support "Gadget Checker".
+(Proposed by Albert) This version will support "Gadget Checker" (Issue 47).
 
 Expected release date: 2010-12-15
 
 ==v0.7==
 
-(Proposed by Sega) This version will support "Gadget Translation".
+(Proposed by Sega) This version will support "Gadget Translation" (Issue 46).
 
 Expected release date: 2010-01-01
 
 ==v0.8==
 
-(Proposed by Dolphin) This version will support "Latency Reduction Tools".
+(Proposed by Dolphin) This version will support "Latency Reduction Tools" (Issue 127).
 
 Expected release date: 2010-01-15
 
