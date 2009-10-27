@@ -36,20 +36,19 @@ Expected release date: 2009-11-15
 
 (Proposed by Albert) This version will support "Publish/manage gadgets on at least one container" (Issue 154 and Issue 155).
 
-Expected release date: 2009-12-01
+Expected release date: 2009-11-30
 
 ==v0.6==
 
 (Proposed by Albert) This version will support "Gadget Checker" (Issue 47).
 
-Expected release date: 2010-12-15
+Expected release date: 2009-12-15
 
 ==v0.7==
 
 (Proposed by Sega) This version will support "Gadget Translation" (Issue 46).
 
-Expected release date: 2010-01-01
-
+Expected release date: 2009-12-31
 ==v0.8==
 
 (Proposed by Dolphin) This version will support "Latency Reduction Tools" (Issue 127).
@@ -60,7 +59,7 @@ Expected release date: 2010-01-15
 
 Milestone release
 
-Expected release date: 2010-02-01
+Expected release date: 2010-01-31
 
 ==v1.0==
 
