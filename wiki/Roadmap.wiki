@@ -34,10 +34,8 @@ Expected release date: 2009-11-15
 
 ==v0.5==
 
-(Proposed by Albert) This version will support "Publish/manage gadgets on at least one container" (Issue 154 and Issue 155).
-
-(Proposed by Yoichiro) This version will support the configuration to change the port number of Jetty. 
-
+(Proposed by Albert) This version will support "Publish/manage gadgets on at least one container" (Issue 154 and Issue 155).<br />
+(Proposed by Yoichiro) This version will support the configuration to change the port number of Jetty (Issue 104). <br />
 (Proposed by Yoichiro) This version will support the HAS_APP filter (Issue 106).
 
 Expected release date: 2009-11-30
