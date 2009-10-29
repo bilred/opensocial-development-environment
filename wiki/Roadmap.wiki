@@ -26,8 +26,6 @@ This version is a next major version, and will be supported !OpenSocial Specific
   * Subversion committing problem (Issue #75)
   * Removing the legacy of h2-library (Issue #81)
 
-==v0.4==
-
 (Proposed by Albert) This version will support the feature of "Preview gadgets on at least one container" (Issue 39).
 
 Expected release date: 2009-11-15
@@ -40,9 +38,10 @@ Expected release date: 2009-11-15
 
 Expected release date: 2009-11-30
 
-==v0.6==
-
 (Proposed by Albert) This version will support "Gadget Checker" (Issue 47).
+Code completion and code high-lighting for OS API and templates.
+New editor for gadget xml files.
+Support Shindig v1 beta 3.
 
 Expected release date: 2009-12-15
 
@@ -51,7 +50,6 @@ Expected release date: 2009-12-15
 (Proposed by Sega) This version will support "Gadget Translation" (Issue 46).
 
 Expected release date: 2009-12-31
-==v0.8==
 
 (Proposed by Dolphin) This version will support "Latency Reduction Tools" (Issue 127).
 
