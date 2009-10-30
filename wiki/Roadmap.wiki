@@ -40,14 +40,14 @@ This version covers:
  * Publish/manage gadgets on at least one container (Issue 154 and Issue 155).
  * The configuration to change the port number of Jetty (Issue 104).
  * The HAS_APP filter (Issue 106).
- * New editor for gadget xml files - code highlighting for OS API and templates.
+ * New editor for gadget xml files - code highlighting for OS API and templates (Issue 159).
 
 Expected release date: 2009-12-15
 
 ==v0.9==
 
 This version covers:
- * New editor for gadget xml files - code completion for OS API and templates.
+ * New editor for gadget xml files - code completion for OS API and templates (Issue 160).
  * Gadget Checker (Issue 47).
  * Gadget Translation (Issue 46).
  * Latency Reduction Tools (Issue 127).
