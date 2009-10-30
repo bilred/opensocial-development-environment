@@ -30,7 +30,7 @@ This version is a next major version, and will be supported !OpenSocial Specific
 
 This version covers:
  * Preview gadgets on at least one container (Issue 39).
- * Rename package name to com.googlecode.osde
+ * Rename package name to com.googlecode.osde (Issue 158).
 
 Expected release date: 2009-11-15
 
