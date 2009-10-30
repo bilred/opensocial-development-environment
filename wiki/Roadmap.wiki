@@ -26,40 +26,34 @@ This version is a next major version, and will be supported !OpenSocial Specific
   * Subversion committing problem (Issue #75)
   * Removing the legacy of h2-library (Issue #81)
 
-(Proposed by Albert) This version will support the feature of "Preview gadgets on at least one container" (Issue 39).
+==v0.5==
+
+This version covers:
+ * Preview gadgets on at least one container (Issue 39).
+ * Rename package name to com.googlecode.osde
 
 Expected release date: 2009-11-15
 
-==v0.5==
+==v0.7==
 
-(Proposed by Albert) This version will support "Publish/manage gadgets on at least one container" (Issue 154 and Issue 155).<br />
-(Proposed by Yoichiro) This version will support the configuration to change the port number of Jetty (Issue 104). <br />
-(Proposed by Yoichiro) This version will support the HAS_APP filter (Issue 106).
-
-Expected release date: 2009-11-30
-
-(Proposed by Albert) This version will support "Gadget Checker" (Issue 47).
-Code completion and code high-lighting for OS API and templates.
-New editor for gadget xml files.
-Support Shindig v1 beta 3.
+This version covers:
+ * Publish/manage gadgets on at least one container (Issue 154 and Issue 155).
+ * The configuration to change the port number of Jetty (Issue 104).
+ * The HAS_APP filter (Issue 106).
+ * New editor for gadget xml files - code highlighting for OS API and templates.
 
 Expected release date: 2009-12-15
 
-==v0.7==
-
-(Proposed by Sega) This version will support "Gadget Translation" (Issue 46).
-
-Expected release date: 2009-12-31
-
-(Proposed by Dolphin) This version will support "Latency Reduction Tools" (Issue 127).
-
-Expected release date: 2010-01-15
-
 ==v0.9==
 
-Milestone release
+This version covers:
+ * New editor for gadget xml files - code completion for OS API and templates.
+ * Gadget Checker (Issue 47).
+ * Gadget Translation (Issue 46).
+ * Latency Reduction Tools (Issue 127).
+ * Support Shindig v1.1 (beta 3).
 
-Expected release date: 2010-01-31
+Expected release date: 2010-01-15
 
 ==v1.0==
 
