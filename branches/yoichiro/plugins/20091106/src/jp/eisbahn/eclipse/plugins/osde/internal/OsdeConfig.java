@@ -33,6 +33,7 @@ public class OsdeConfig {
 	public static final String EXTERNAL_DATABASE_USERNAME = "external_database_username";
 	public static final String EXTERNAL_DATABASE_PASSWORD = "external_database_password";
 	public static final String EXTERNAL_DATABASE_NAME = "external_database_name";
+	public static final String WORK_DIRECTORY = "work_directory";
 	
 	private String defaultLanguage;
 	private String defaultCountry;
@@ -46,6 +47,7 @@ public class OsdeConfig {
 	private String externalDatabaseUsername;
 	private String externalDatabasePassword;
 	private String externalDatabaseName;
+	private String workDirectory;
 	
 	public String getExternalDatabaseName() {
 		return externalDatabaseName;
@@ -141,6 +143,14 @@ public class OsdeConfig {
 	
 	public void setDefaultCountry(String defaultCountry) {
 		this.defaultCountry = defaultCountry;
+	}
+
+	public String getWorkDirectory() {
+		return workDirectory;
+	}
+
+	public void setWorkDirectory(String workDirectory) {
+		this.workDirectory = workDirectory;
 	}
 
 }

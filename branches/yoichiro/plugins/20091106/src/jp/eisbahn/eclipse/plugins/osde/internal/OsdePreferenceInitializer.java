@@ -34,6 +34,10 @@ public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 		node.put(OsdeConfig.EXTERNAL_DATABASE_USERNAME, "");
 		node.put(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, "");
 		node.put(OsdeConfig.EXTERNAL_DATABASE_NAME, "osde");
+		String userHome = System.getProperty("user.home");
+		file = new File(userHome, ".osde");
+		file.mkdirs();
+		node.put(OsdeConfig.WORK_DIRECTORY, file.getAbsolutePath());
 	}
 
 }
