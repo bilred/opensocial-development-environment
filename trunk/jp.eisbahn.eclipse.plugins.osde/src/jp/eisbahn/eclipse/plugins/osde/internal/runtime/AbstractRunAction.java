@@ -115,26 +115,40 @@ public abstract class AbstractRunAction {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			FileOutputStream fos = null;
+			FileOutputStream fos1 = null;
+			FileOutputStream fos2 = null;
 			try {
-				String code = ResourceUtil.loadTextResourceFile("/shindig/context.tmpl");
-				code = code.replace("$project_name$", project.getName());
-				IPath location = project.getFolder("target").getLocation();
-				code = code.replace("$context_dir$", location.toOSString());
+				// Generate a webdefault.xml file
+				File workDirectory = Activator.getDefault().getWorkDirectory();
+				File webDefaultFile = new File(workDirectory, "webdefault.xml");
+				if (!webDefaultFile.isFile()) {
+					String code = ResourceUtil.loadTextResourceFile("/shindig/webdefault.xml");
+					fos1 = new FileOutputStream(webDefaultFile);
+					ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
+					IOUtils.copy(bytes, fos1);
+				}
+				// Create directories for Jetty
 				String jettyDir = Activator.getDefault().getOsdeConfiguration().getJettyDir();
 				File jettyDirFile = new File(jettyDir);
 				if (!jettyDirFile.isDirectory()) {
 					jettyDirFile.mkdirs();
 				}
-				File file = new File(jettyDirFile, "osde_context_" + project.getName() + ".xml");
-				fos = new FileOutputStream(file);
+				// Generate a context file
+				String code = ResourceUtil.loadTextResourceFile("/shindig/context.tmpl");
+				code = code.replace("$project_name$", project.getName());
+				IPath location = project.getFolder("target").getLocation();
+				code = code.replace("$context_dir$", location.toOSString());
+				code = code.replace("$descriptor$", webDefaultFile.getAbsolutePath());
+				File contextFile = new File(jettyDirFile, "osde_context_" + project.getName() + ".xml");
+				fos2 = new FileOutputStream(contextFile);
 				ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
-				IOUtils.copy(bytes, fos);
+				IOUtils.copy(bytes, fos2);
 				return Status.OK_STATUS;
 			} catch(IOException e) {
 				return Logging.warn("Creating the web context file failed.", e);
 			} finally {
-				IOUtils.closeQuietly(fos);
+				IOUtils.closeQuietly(fos1);
+				IOUtils.closeQuietly(fos2);
 			}
 		}
 
