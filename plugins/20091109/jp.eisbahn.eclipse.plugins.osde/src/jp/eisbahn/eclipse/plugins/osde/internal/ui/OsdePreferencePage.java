@@ -17,6 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.ui;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -59,6 +60,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 	private Text passwordText;
 	private Button databaseBrowseButton;
 	private Text nameText;
+	private Text workDirectoryText;
 
 	public OsdePreferencePage() {
 		super();
@@ -74,8 +76,35 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		composite.setLayout(new GridLayout());
 		//
 		Group group = new Group(composite, SWT.NONE);
-		group.setText("Default locale");
+		group.setText("General");
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		group.setLayoutData(layoutData);
+		group.setLayout(new GridLayout(3, false));
+		//
+		Label workDirLabel = new Label(group, SWT.NONE);
+		workDirLabel.setText("Work directory:");
+		workDirectoryText = new Text(group, SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		workDirectoryText.setLayoutData(layoutData);
+		Button workDirectoryButton = new Button(group, SWT.PUSH);
+		workDirectoryButton.setText("Browse...");
+		workDirectoryButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			public void widgetSelected(SelectionEvent e) {
+				DirectoryDialog dialog = new DirectoryDialog(getShell());
+				dialog.setText("Work directory");
+				dialog.setMessage("Please select the directory to work OSDE.");
+				String dir = dialog.open();
+				if (dir != null) {
+					workDirectoryText.setText(dir);
+				}
+			}
+		});
+		//
+		group = new Group(composite, SWT.NONE);
+		group.setText("Default locale");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayoutData(layoutData);
 		group.setLayout(new GridLayout(2, false));
 		//
@@ -283,6 +312,10 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		config.setExternalDatabaseUsername(usernameText.getText());
 		config.setExternalDatabaseType(databaseTypeCombo.getText());
 		config.setExternalDatabaseName(nameText.getText());
+		String workDirectory = workDirectoryText.getText();
+		File workDirectoryFile = new File(workDirectory);
+		workDirectoryFile.mkdirs();
+		config.setWorkDirectory(workDirectory);
 		Activator.getDefault().storePreferences(config);
 	}
 	
@@ -326,6 +359,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		usernameText.setText(config.getExternalDatabaseUsername());
 		passwordText.setText(config.getExternalDatabasePassword());
 		nameText.setText(config.getExternalDatabaseName());
+		workDirectoryText.setText(config.getWorkDirectory());
 		//
 		changeDatabaseControlEnabled();
 	}

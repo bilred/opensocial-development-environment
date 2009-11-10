@@ -424,6 +424,7 @@ public class Activator extends AbstractUIPlugin {
 			config.setExternalDatabaseUsername(store.getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
 			config.setExternalDatabasePassword(store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
 			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
+			config.setWorkDirectory(store.getString(OsdeConfig.WORK_DIRECTORY));
 			return config;
 		} catch(IOException e) {
 			Logging.error("Something went wrong while getting OSDE configurations.", e);
@@ -450,6 +451,7 @@ public class Activator extends AbstractUIPlugin {
 			config.setExternalDatabaseUsername(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
 			config.setExternalDatabasePassword(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
 			config.setExternalDatabaseName(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
+			config.setWorkDirectory(store.getDefaultString(OsdeConfig.WORK_DIRECTORY));
 			return config;
 		} catch(IOException e) {
 			Logging.error("Retrieving preference values failed.", e);
@@ -478,6 +480,7 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, config.getExternalDatabasePassword());
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_TYPE, config.getExternalDatabaseType());
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_NAME, config.getExternalDatabaseName());
+			store.setValue(OsdeConfig.WORK_DIRECTORY, config.getWorkDirectory());
 		} catch(IOException e) {
 			Logging.error("Storing preference values failed.", e);
 			throw new IllegalStateException(e);
@@ -514,15 +517,17 @@ public class Activator extends AbstractUIPlugin {
 		}
 	}
 	public File getWorkDirectory() {
-		String userHome = System.getProperty("user.home");
-		File workDir = new File(userHome, WORK_DIR_NAME);
-		if (!workDir.exists()) {
-			boolean result = workDir.mkdir();
-			if (!result) {
-				throw new IllegalStateException("Could not create the work directory. " + workDir.getAbsolutePath());
-			}
+		OsdeConfig config = getOsdeConfiguration();
+		String workDirectory = config.getWorkDirectory();
+		if (workDirectory == null) {
+			String userHome = System.getProperty("user.home");
+			File dir = new File(userHome, ".osde");
+			dir.mkdirs();
+			workDirectory = dir.getAbsolutePath();
+			config.setWorkDirectory(workDirectory);
+			storePreferences(config);
 		}
-		return workDir;
+		return new File(workDirectory);
 	}
 	
 }
