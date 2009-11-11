@@ -18,13 +18,11 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
 
-import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.*;
@@ -46,13 +44,11 @@ public class HostingIGoogleUtilTest {
      * Test method for {@link HostingIGoogleUtil#uploadFile(
      * String, String, IgPrefEditToken, String, String)} etc.
      *
-     * @throws IOException
-     * @throws ClientProtocolException
      * @throws HostingException
      */
     @Test
     public void testAuthenticationAndUploadAndRetrieveFiles()
-            throws ClientProtocolException, IOException, HostingException {
+            throws HostingException {
         // Prepare Authentication.
         String emailUserName = "osde.test.001";
         String password = "osdetest888";
