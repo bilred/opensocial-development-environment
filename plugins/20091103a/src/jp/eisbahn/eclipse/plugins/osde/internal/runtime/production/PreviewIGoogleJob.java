@@ -105,7 +105,7 @@ public class PreviewIGoogleJob extends Job {
         final String previewGadgetUrl;
         try {
             previewGadgetUrl = uploadFilesToIg();
-        } catch (Exception e) {
+        } catch (HostingException e) {
             logger.warning(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;
@@ -157,17 +157,20 @@ public class PreviewIGoogleJob extends Job {
      * @throws HostingException
      */
     String uploadFilesToIg()
-            throws ClientProtocolException, IOException, CoreException, HostingException {
+            throws HostingException {
         // TODO: Support save SID etc in session.
         // TODO: Support captcha.
-        logger.fine("in PreviewIGoogleJob.uploadFilesToIg");
+        logger.info("in PreviewIGoogleJob.uploadFilesToIg");
         String sid = retrieveSid(username, password, null, null);
+        logger.info("sid: " + sid);
         String publicId = retrievePublicId(sid);
+        logger.info("publicId: " + publicId);
         IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
+        logger.info("prefEditToken: " + prefEditToken);
 
         IProject project = gadgetXmlIFile.getProject();
         String targetPath = project.getFolder(TARGET_FOLDER_NAME).getLocation().toOSString();
-        logger.fine("targetPath: " + targetPath);
+        logger.info("targetPath: " + targetPath);
 
         // Upload files.
         uploadFiles(sid, publicId, prefEditToken, targetPath);
@@ -175,6 +178,7 @@ public class PreviewIGoogleJob extends Job {
         // Form url for preview gadget.
         String previewGadgetUrl =
                 formPreviewGadgetUrl(publicId, gadgetXmlIFile.getName(), useCanvasView);
+        logger.info("previewGadgetUrl: " + previewGadgetUrl);
         return previewGadgetUrl;
     }
 }
