@@ -36,6 +36,8 @@ import static org.junit.Assert.*;
 // TODO: Annotate test as large.
 public class HostingIGoogleUtilTest {
 
+    private static final String DUMMY_HOST_FOLDER = "/dummy_host_folder/";
+
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
     // TODO: Get a better place to store test data.
@@ -44,7 +46,7 @@ public class HostingIGoogleUtilTest {
 
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
-     * String, String, IgPrefEditToken, String, String)} etc.
+     * String, String, IgPrefEditToken, String, String, String)} etc.
      *
      * @throws IOException
      * @throws ClientProtocolException
@@ -67,7 +69,7 @@ public class HostingIGoogleUtilTest {
 
         // Upload file.
         String rootPath = TEST_DATA_PATH;
-        HostingIGoogleUtil.uploadFiles(sid, publicId, prefEditToken, rootPath);
+        HostingIGoogleUtil.uploadFiles(sid, publicId, prefEditToken, rootPath, DUMMY_HOST_FOLDER);
 
         // Retrieve directory info.
         String quotaByte = retrieveQuotaByte(sid, publicId);
@@ -79,10 +81,11 @@ public class HostingIGoogleUtilTest {
         logger.info("fileList:\n" + fileList);
         assertTrue(fileList.length() > 50);
         String relativeFilePath = "gadget.xml";
-        String fileContent = retrieveFile(sid, publicId, relativeFilePath);
+        String fileContent = retrieveFile(sid, publicId, DUMMY_HOST_FOLDER, relativeFilePath);
         logger.info("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith("<?xml version"));
-        String previewUrl = formPreviewGadgetUrl(publicId, relativeFilePath, false);
+        String previewUrl =
+                formPreviewGadgetUrl(publicId, DUMMY_HOST_FOLDER, relativeFilePath, false);
         logger.info("previewUrl: " + previewUrl);
         assertTrue(previewUrl.endsWith(relativeFilePath));
     }

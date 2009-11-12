@@ -43,7 +43,6 @@ public class PreviewIGoogleAction
     private static Logger logger = Logger.getLogger(PreviewIGoogleAction.class.getName());
 
     private IFile gadgetXmlIFile;
-    private IWorkbenchPart targetPart;
     private Shell shell;
 
     /**
@@ -51,7 +50,7 @@ public class PreviewIGoogleAction
      */
     public void init(IWorkbenchWindow window) {
         logger.fine("in init");
-        targetPart = window.getActivePage().getActivePart();
+        IWorkbenchPart targetPart = window.getActivePage().getActivePart();
         shell = targetPart.getSite().getShell();
     }
 
@@ -74,7 +73,6 @@ public class PreviewIGoogleAction
      */
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         logger.fine("in setActivePart");
-        this.targetPart = targetPart;
         shell = targetPart.getSite().getShell();
     }
 
@@ -93,8 +91,8 @@ public class PreviewIGoogleAction
             String password = dialog.getPassword();
             boolean useCanvasView = dialog.isUseCanvasView();
             boolean useExternalBrowser = dialog.isUseExternalBrowser();
-            Job job = new PreviewIGoogleJob(shell, username, password, useCanvasView,
-                    useExternalBrowser, gadgetXmlIFile);
+            Job job = new PreviewIGoogleJob(username, password, gadgetXmlIFile, shell,
+                    useCanvasView, useExternalBrowser);
             logger.fine("job: " + job);
             job.schedule();
         }
