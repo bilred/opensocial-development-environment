@@ -39,6 +39,7 @@ public class IgPrefEditToken {
     }
 
     static String retrieveEditTokenFromPageContent(String pageContent) {
+        logger.info("pageContent:\n" + pageContent);
         int startIndexOfEditTokenIdentifier = pageContent.indexOf(EDIT_TOKEN_IDENTIFIER);
 
         if (startIndexOfEditTokenIdentifier == -1) {
@@ -49,7 +50,7 @@ public class IgPrefEditToken {
                 startIndexOfEditTokenIdentifier + EDIT_TOKEN_IDENTIFIER.length();
         String editToken = pageContent.substring(startIndexOfEditTokenValue,
                 startIndexOfEditTokenValue + EDIT_TOKEN_LENGTH);
-        logger.fine("editToken: " + editToken);
+        logger.info("editToken: " + editToken);
         return editToken;
     }
 
