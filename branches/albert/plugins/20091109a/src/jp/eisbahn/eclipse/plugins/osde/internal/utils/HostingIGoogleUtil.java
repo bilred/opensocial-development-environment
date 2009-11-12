@@ -58,7 +58,6 @@ public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    private static final String OSDE_PREVIEW_DIRECTORY = "osde/preview/";
     private static final String HTTP_HEADER_COOKIE = "Cookie";
     private static final String HTTP_HEADER_SET_COOKIE = "Set-Cookie";
     private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
@@ -191,7 +190,7 @@ public class HostingIGoogleUtil {
      * @throws HostingException
      */
     public static void uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
-            String sourceFileRootPath, String sourceFileRelativePath)
+            String sourceFileRootPath, String sourceFileRelativePath, String hostingFolder)
             throws ClientProtocolException, IOException, HostingException {
         // Validate prefEditToken.
         if (!prefEditToken.validate()) {
@@ -199,7 +198,7 @@ public class HostingIGoogleUtil {
         }
 
         // Prepare HttpPost.
-        String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_PREVIEW_DIRECTORY
+        String url = URL_IG_GADGETS_FILE + publicId + hostingFolder
             + sourceFileRelativePath + "?et=" + prefEditToken.getEditToken();
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
@@ -260,11 +259,12 @@ public class HostingIGoogleUtil {
      * @throws HostingException
      */
     public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
-            String sourceFileRootPath)
+            String sourceFileRootPath, String hostingFolder)
             throws ClientProtocolException, IOException, HostingException {
         List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
-            uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
+            uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath,
+                    hostingFolder);
         }
     }
 
@@ -318,15 +318,16 @@ public class HostingIGoogleUtil {
         return response;
     }
 
-    static String retrieveFile(String sid, String publicId, String filePath)
+    static String retrieveFile(String sid, String publicId, String hostingFolder, String filePath)
             throws ClientProtocolException, IOException {
-        String url = formHostedFileUrl(publicId, filePath);
+        String url = formHostedFileUrl(publicId, hostingFolder, filePath);
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
-    private static String formHostedFileUrl(String publicId, String filePath) {
-        return URL_GMODULE_FILE + publicId + "/" + OSDE_PREVIEW_DIRECTORY + filePath;
+    private static String formHostedFileUrl(
+            String publicId, String hostingFolder, String filePath) {
+        return URL_GMODULE_FILE + publicId + hostingFolder + filePath;
     }
 
     public static String retrievePublicId(String sid)
@@ -433,14 +434,14 @@ public class HostingIGoogleUtil {
     }
 
     public static String formPreviewGadgetUrl(
-            String publicId, String filePath, boolean useCanvasView) {
+            String publicId, String hostingFolder, String filePath, boolean useCanvasView) {
         StringBuilder sb = new StringBuilder();
         sb.append("http://www.gmodules.com/gadgets/ifr?&hl=en&gl=us&nocache=1&view=");
         sb.append(useCanvasView ? "canvas" : "home"); // default is home view
 
         // Append hosted file's url.
         sb.append("&url=");
-        String hostedFileUrl = formHostedFileUrl(publicId, filePath);
+        String hostedFileUrl = formHostedFileUrl(publicId, hostingFolder, filePath);
         sb.append(hostedFileUrl);
 
         // TODO: Support various languages, and countries.

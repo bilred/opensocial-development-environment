@@ -18,6 +18,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
+import static jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleJob.OSDE_PREVIEW_DIRECTORY;
 import static jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleJob.TARGET_FOLDER_NAME;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.eq;
@@ -56,7 +57,7 @@ public class PreviewIGoogleJobTest {
     }
 
     /**
-     * Test method for {@link PreviewIGoogleJob#uploadFilesToIg()}.
+     * Test method for {@link PreviewIGoogleJob#uploadFilesToIg(String, boolean)}.
      * @throws CoreException
      * @throws IOException
      * @throws ClientProtocolException
@@ -86,10 +87,10 @@ public class PreviewIGoogleJobTest {
         String username = "osde.test.001";
         String password = "osdetest888";
         PreviewIGoogleJob job =
-                new PreviewIGoogleJob(shell, username, password, false, false, gadgetXmlIFile);
+                new PreviewIGoogleJob(username, password, gadgetXmlIFile, shell, false, false);
 
         // Test and verify the method call.
-        String gadgetPreviewUrl = job.uploadFilesToIg();
+        String gadgetPreviewUrl = job.uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, false);
         logger.info("gadgetPreviewUrl: " + gadgetPreviewUrl);
         assertTrue(gadgetPreviewUrl.endsWith(gadgetXmlFileRelativePath));
         verify(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
