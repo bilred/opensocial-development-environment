@@ -77,11 +77,11 @@ public class HostingIGoogleUtilTest {
         logger.info("fileList:\n" + fileList);
         assertTrue(fileList.length() > 50);
         String relativeFilePath = "gadget.xml";
-        String fileContent = retrieveFile(sid, publicId, DUMMY_HOST_FOLDER, relativeFilePath);
+        String hostedFileUrl = formHostedFileUrl(publicId, DUMMY_HOST_FOLDER, relativeFilePath);
+        String fileContent = sendHttpRequestToIg(hostedFileUrl, sid);
         logger.info("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith("<?xml version"));
-        String previewUrl =
-                formPreviewGadgetUrl(publicId, DUMMY_HOST_FOLDER, relativeFilePath, false);
+        String previewUrl = formPreviewGadgetUrl(hostedFileUrl, false);
         logger.info("previewUrl: " + previewUrl);
         assertTrue(previewUrl.endsWith(relativeFilePath));
     }

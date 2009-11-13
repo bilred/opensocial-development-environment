@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -62,10 +64,12 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
         logger.fine("in run");
         monitor.beginTask("Running PublishIGoogleJob", 3);
 
-        final String previewGadgetUrl;
+        final String publishGadgetUrl;
         try {
-            // FIXME previewGadgetUrl should be hostedFileUrl
-            previewGadgetUrl = uploadFilesToIg(OSDE_PUBLISH_DIRECTORY + projectName, false);
+            String urlOfHostedFile =
+                    uploadFilesToIg(OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
+            publishGadgetUrl = HostingIGoogleUtil.formPublishGadgetUrl(urlOfHostedFile);
+
         } catch (Exception e) {
             logger.warning(e.getMessage());
             monitor.setCanceled(true);
@@ -79,8 +83,7 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
         display.syncExec(new Runnable() {
             public void run() {
                 logger.fine("in Runnable's run");
-                // FIXME prepare url for publish gadget. show it in a popup.
-                logger.info("previewGadgetUrl: " + previewGadgetUrl);
+                logger.info("publishGadgetUrl: " + publishGadgetUrl);
                 try {
                     IWorkbenchBrowserSupport support =
                             PlatformUI.getWorkbench().getBrowserSupport();
@@ -89,7 +92,11 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
                               | IWorkbenchBrowserSupport.AS_EDITOR;
                     IWebBrowser browser = support.createBrowser(style, PUBLISH_IGOOGLE_BROWSER_ID,
                             PUBLISH_IGOOGLE_BROWSER_NAME, PUBLISH_IGOOGLE_TOOLTIP);
-                    browser.openURL(new URL(previewGadgetUrl)); // FIXME open publish url and feed hosting url
+                    // TODO: (p0) Provide SID cookie when open the browser so that
+                    // the user does not need to login again on the publish page.
+                    // Or, we need 2 features of: host file and publish file.
+                    URL url = new URL(publishGadgetUrl);
+                    browser.openURL(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (PartInitException e) {
