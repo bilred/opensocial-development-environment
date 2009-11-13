@@ -79,7 +79,7 @@ public abstract class BaseIGoogleJob extends Job {
     /**
      * Uploads files to iGoogle and returns the url for gadget preview.
      *
-     * @return the url for gadget preview
+     * @return the url for gadget preview FIXME return the hosted url
      * @throws ClientProtocolException
      * @throws IOException
      * @throws CoreException
