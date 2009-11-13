@@ -18,15 +18,12 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
-import java.util.logging.Logger;
-
 /**
  * Data and corresponding methods used for interacting with iGoogle service.
  *
  * @author albert.cheng.ig@gmail.com
  */
 public class IgPrefEditToken {
-    private static Logger logger = Logger.getLogger(IgPrefEditToken.class.getName());
     private static final int MIN_PREF_LENGTH = 50;
     private static final int EDIT_TOKEN_LENGTH = 16;
     private static final String EDIT_TOKEN_IDENTIFIER = "?et=";
@@ -38,8 +35,7 @@ public class IgPrefEditToken {
         this.editToken = editToken;
     }
 
-    static String retrieveEditTokenFromPageContent(String pageContent) {
-        logger.info("pageContent:\n" + pageContent);
+    static String retrieveEditTokenFromPageContent(String pageContent) throws HostingException {
         int startIndexOfEditTokenIdentifier = pageContent.indexOf(EDIT_TOKEN_IDENTIFIER);
 
         if (startIndexOfEditTokenIdentifier == -1) {
@@ -50,7 +46,10 @@ public class IgPrefEditToken {
                 startIndexOfEditTokenIdentifier + EDIT_TOKEN_IDENTIFIER.length();
         String editToken = pageContent.substring(startIndexOfEditTokenValue,
                 startIndexOfEditTokenValue + EDIT_TOKEN_LENGTH);
-        logger.info("editToken: " + editToken);
+        if (!validateEditToken(editToken)) {
+            throw new HostingException("Invalid editToken: '" + editToken + "'\n"
+                    + "with pageContent:\n" + pageContent);
+        }
         return editToken;
     }
 
@@ -73,8 +72,12 @@ public class IgPrefEditToken {
     }
 
     private boolean validateEditToken() {
+        return validateEditToken(editToken);
+    }
+
+    static boolean validateEditToken(String editToken) {
         return (editToken != null)
-            && (editToken.length() == EDIT_TOKEN_LENGTH);
+                && (editToken.length() == EDIT_TOKEN_LENGTH);
     }
 
     public String toString() {
