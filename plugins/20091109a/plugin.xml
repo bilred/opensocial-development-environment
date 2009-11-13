@@ -324,7 +324,6 @@
 	           </objectState>
             </enablement>
          </action>
-         <!-- TODO: enable this feature when it is ready
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleAction"
                enablesFor="1"
@@ -339,7 +338,6 @@
 	           </objectState>
             </enablement>
          </action>
-         -->
       </objectContribution>
    </extension>
    

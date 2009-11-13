@@ -185,13 +185,11 @@ public class HostingIGoogleUtil {
     /**
      * Uploads a file to iGoogle.
      *
-     * @throws ClientProtocolException
-     * @throws IOException
      * @throws HostingException
      */
     public static void uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath, String sourceFileRelativePath, String hostingFolder)
-            throws ClientProtocolException, IOException, HostingException {
+            throws HostingException {
         // Validate prefEditToken.
         if (!prefEditToken.validate()) {
             throw new HostingException("Invalid prefEditToken: " + prefEditToken);
@@ -217,7 +215,14 @@ public class HostingIGoogleUtil {
 
         // Execute request.
         HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpPost);
+        } catch (ClientProtocolException e) {
+            throw new HostingException(e);
+        } catch (IOException e) {
+            throw new HostingException(e);
+        }
         StatusLine statusLine = httpResponse.getStatusLine();
         logger.fine("statusLine: " + statusLine);
         if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
@@ -254,13 +259,11 @@ public class HostingIGoogleUtil {
     /**
      * Uploads a list of files to iGoogle.
      *
-     * @throws ClientProtocolException
-     * @throws IOException
      * @throws HostingException
      */
     public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
             String sourceFileRootPath, String hostingFolder)
-            throws ClientProtocolException, IOException, HostingException {
+            throws HostingException {
         List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
             uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath,
@@ -298,28 +301,28 @@ public class HostingIGoogleUtil {
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         String url = URL_IG_GADGETS_BYTE_QUOTA + publicId;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
     static String retrieveQuotaByteUsed(String sid, String publicId)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         String url = URL_IG_GADGETS_BYTES_USED + publicId;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
     static String retrieveFileList(String sid, String publicId)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         String url = URL_IG_GADGETS_DIRECTORY + publicId;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
     static String retrieveFile(String sid, String publicId, String hostingFolder, String filePath)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         String url = formHostedFileUrl(publicId, hostingFolder, filePath);
         String response = sendHttpRequestToIg(url, sid);
         return response;
@@ -331,7 +334,7 @@ public class HostingIGoogleUtil {
     }
 
     public static String retrievePublicId(String sid)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         String response = sendHttpRequestToIg(URL_IG_GADGETS, sid);
         return response;
     }
@@ -344,7 +347,7 @@ public class HostingIGoogleUtil {
      * @throws IOException
      */
     private static String sendHttpRequestToIg(String url, String sid)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         // Prepare HttpGet.
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
@@ -352,18 +355,32 @@ public class HostingIGoogleUtil {
 
         // Retrieve HttpResponse.
         HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse httpResponse = httpClient.execute(httpGet);
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpGet);
+        } catch (ClientProtocolException e) {
+            throw new HostingException(e);
+        } catch (IOException e) {
+            throw new HostingException(e);
+        }
         logger.fine("status line: " + httpResponse.getStatusLine());
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
     public static IgPrefEditToken retrieveIgPrefEditToken(String sid)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
         httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
         httpGet.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
         HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse httpResponse = httpClient.execute(httpGet);
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpGet);
+        } catch (ClientProtocolException e) {
+            throw new HostingException(e);
+        } catch (IOException e) {
+            throw new HostingException(e);
+        }
         logger.fine("status line: " + httpResponse.getStatusLine());
 
         String pref = null;
@@ -384,7 +401,7 @@ public class HostingIGoogleUtil {
 
     private static String retrieveHttpResponseAsString(
             HttpClient httpClient, HttpRequestBase httpRequest, HttpResponse httpResponse)
-            throws IOException {
+            throws HostingException {
         HttpEntity entity = httpResponse.getEntity();
         String response = null;
         if (entity != null) {
@@ -396,16 +413,20 @@ public class HostingIGoogleUtil {
                 // The HttpClient's connection will be automatically released
                 // back to the connection manager.
                 logger.severe("Error:\n" + e.getMessage());
-                throw e;
+                throw new HostingException(e);
             } catch (RuntimeException e) { // To catch unchecked exception intentionally.
                 // Abort HttpRequest in order to release HttpClient's connection
                 // back to the connection manager.
                 logger.severe("Error:\n" + e.getMessage());
                 httpRequest.abort();
-                throw e;
+                throw new HostingException(e);
             } finally {
                 if (inputStream != null) {
-                    inputStream.close();
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        throw new HostingException(e);
+                    }
                 }
             }
             httpClient.getConnectionManager().shutdown();

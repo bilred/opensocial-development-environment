@@ -86,7 +86,7 @@ public abstract class BaseIGoogleJob extends Job {
      * @throws HostingException
      */
     protected String uploadFilesToIg(String hostingFolder, boolean useCanvasView)
-            throws ClientProtocolException, IOException, CoreException, HostingException {
+            throws HostingException {
         // TODO: Support save SID etc in session.
         // TODO: Support captcha.
         logger.fine("in PreviewIGoogleJob.uploadFilesToIg");
