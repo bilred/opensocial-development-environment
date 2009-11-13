@@ -84,9 +84,9 @@ public class PreviewIGoogleJobTest {
                 new PreviewIGoogleJob(username, password, gadgetXmlIFile, shell, false, false);
 
         // Test and verify the method call.
-        String gadgetPreviewUrl = job.uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, false);
-        logger.info("gadgetPreviewUrl: " + gadgetPreviewUrl);
-        assertTrue(gadgetPreviewUrl.endsWith(gadgetXmlFileRelativePath));
+        String urlOfHostedGadgetFile = job.uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, false);
+        logger.info("urlOfHostedGadgetFile: " + urlOfHostedGadgetFile);
+        assertTrue(urlOfHostedGadgetFile.endsWith("/" + gadgetXmlFileRelativePath));
         verify(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
     }
 }

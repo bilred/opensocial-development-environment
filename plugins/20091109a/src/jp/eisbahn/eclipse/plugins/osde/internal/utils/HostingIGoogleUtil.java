@@ -70,6 +70,8 @@ public class HostingIGoogleUtil {
     private static final String URL_IG_GADGETS_DIRECTORY = URL_IG_GADGETS + "/directory/";
     private static final String URL_IG_GADGETS_FILE = URL_IG_GADGETS + "/file/";
     private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
+    private static final String URL_IG_SUBMIT_GADGET =
+            "http://www.google.com/ig/submit?prefill_url=";
 
     private HostingIGoogleUtil() {
         // Disable instantiation of this utility class.
@@ -321,14 +323,16 @@ public class HostingIGoogleUtil {
         return response;
     }
 
-    static String retrieveFile(String sid, String publicId, String hostingFolder, String filePath)
-            throws HostingException {
-        String url = formHostedFileUrl(publicId, hostingFolder, filePath);
-        String response = sendHttpRequestToIg(url, sid);
-        return response;
-    }
-
-    private static String formHostedFileUrl(
+    /**
+     * Returns the url for the hosted file given hosting folder,
+     * file path, and public id.
+     *
+     * @param publicId iGoogle public id
+     * @param hostingFolder hosting folder
+     * @param filePath path of the hosted file
+     * @return the url for the hosted file
+     */
+    public static String formHostedFileUrl(
             String publicId, String hostingFolder, String filePath) {
         return URL_GMODULE_FILE + publicId + hostingFolder + filePath;
     }
@@ -346,7 +350,7 @@ public class HostingIGoogleUtil {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    private static String sendHttpRequestToIg(String url, String sid)
+    static String sendHttpRequestToIg(String url, String sid)
             throws HostingException {
         // Prepare HttpGet.
         HttpGet httpGet = new HttpGet(url);
@@ -455,18 +459,22 @@ public class HostingIGoogleUtil {
     }
 
     public static String formPreviewGadgetUrl(
-            String publicId, String hostingFolder, String filePath, boolean useCanvasView) {
+            String hostedFileUrl, boolean useCanvasView) {
         StringBuilder sb = new StringBuilder();
         sb.append("http://www.gmodules.com/gadgets/ifr?&hl=en&gl=us&nocache=1&view=");
         sb.append(useCanvasView ? "canvas" : "home"); // default is home view
 
         // Append hosted file's url.
         sb.append("&url=");
-        String hostedFileUrl = formHostedFileUrl(publicId, hostingFolder, filePath);
         sb.append(hostedFileUrl);
 
         // TODO: Support various languages, and countries.
 
         return sb.toString();
     }
+
+    public static String formPublishGadgetUrl(String hostedFileUrl) {
+        return URL_IG_SUBMIT_GADGET + hostedFileUrl;
+    }
+
 }

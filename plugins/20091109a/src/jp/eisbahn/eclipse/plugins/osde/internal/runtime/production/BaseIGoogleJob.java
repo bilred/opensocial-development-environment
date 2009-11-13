@@ -18,7 +18,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
-import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.formPreviewGadgetUrl;
+import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.formHostedFileUrl;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrieveIgPrefEditToken;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrievePublicId;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrieveSid;
@@ -77,9 +77,9 @@ public abstract class BaseIGoogleJob extends Job {
     }
 
     /**
-     * Uploads files to iGoogle and returns the url for gadget preview.
+     * Uploads files to iGoogle and returns the url for the hosted gadget file.
      *
-     * @return the url for gadget preview FIXME return the hosted url
+     * @return the url for the hosted gadget file
      * @throws ClientProtocolException
      * @throws IOException
      * @throws CoreException
@@ -101,9 +101,9 @@ public abstract class BaseIGoogleJob extends Job {
         // Upload files.
         uploadFiles(sid, publicId, prefEditToken, uploadFromPath, hostingFolder);
 
-        // Form url for preview gadget.
-        String previewGadgetUrl = formPreviewGadgetUrl(
-                publicId, hostingFolder, gadgetXmlIFile.getName(), useCanvasView);
-        return previewGadgetUrl;
+        // Form hosted gadget file url.
+        String urlOfHostedGadgetFile =
+                formHostedFileUrl(publicId, hostingFolder, gadgetXmlIFile.getName());
+        return urlOfHostedGadgetFile;
     }
 }
