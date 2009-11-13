@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -48,14 +50,12 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
     private static final String PREVIEW_IGOOGLE_TOOLTIP = "Preview gadget on iGoogle";
 
     private Shell shell;
-    private boolean useCanvasView;
     private boolean useExternalBrowser;
 
     public PreviewIGoogleJob(String username, String password, IFile gadgetXmlIFile,
             Shell shell, boolean useCanvasView, boolean useExternalBrowser) {
         super(username, password, gadgetXmlIFile);
         this.shell = shell;
-        this.useCanvasView = useCanvasView;
         this.useExternalBrowser = useExternalBrowser;
     }
 
@@ -66,8 +66,8 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
 
         final String previewGadgetUrl;
         try {
-            previewGadgetUrl = uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, useCanvasView);
-        } catch (Exception e) {
+            previewGadgetUrl = uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
+        } catch (HostingException e) {
             logger.warning(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;
