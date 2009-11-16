@@ -26,6 +26,15 @@ This version is a next major version, and will be supported !OpenSocial Specific
   * Subversion committing problem (Issue #75)
   * Removing the legacy of h2-library (Issue #81)
 
+===v0.3.1===
+
+ * Purpose: Fix some issues.
+ * Release date: 2009-11-1*
+ * Fixed issues:
+  * Check for valid author_email format when creating a new OSDE project (Issue #152)
+  * 'Building workspace' has encountered a problem - Eclipse couldn't refresh the "target" directory (Issue #156)
+  * 'Building workspace' has encountered a problem. Errors occured during the build. (Issue #157)
+
 ==v0.5==
 
 This version covers:
