@@ -22,7 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -37,42 +36,41 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
- * The job to open a browser and preview a gadget against iGoogle.
+ * The job to publish a gadget against iGoogle.
  *
  * @author albert.cheng.ig@gmail.com
  *
  */
-public class PreviewIGoogleJob extends BaseIGoogleJob {
-    private static Logger logger = Logger.getLogger(PreviewIGoogleJob.class.getName());
+public class PublishIGoogleJob extends BaseIGoogleJob {
+    private static Logger logger = Logger.getLogger(PublishIGoogleJob.class.getName());
 
-    static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
-    private static final String PREVIEW_IGOOGLE_BROWSER_ID = "preview_ig_bid";
-    private static final String PREVIEW_IGOOGLE_BROWSER_NAME = "Preview gadget on iGoogle";
-    private static final String PREVIEW_IGOOGLE_TOOLTIP = "Preview gadget on iGoogle";
+    private static final String OSDE_PUBLISH_DIRECTORY = "/osde/publish/";
+    private static final String PUBLISH_IGOOGLE_BROWSER_ID = "publish_ig_bid";
+    private static final String PUBLISH_IGOOGLE_BROWSER_NAME = "Publish gadget on iGoogle";
+    private static final String PUBLISH_IGOOGLE_TOOLTIP = "Publish gadget on iGoogle";
 
     private Shell shell;
-    private boolean useCanvasView;
-    private boolean useExternalBrowser;
+    private String projectName; // contains only chars of A-Z, a-z, or 0-9.
 
-    public PreviewIGoogleJob(String username, String password, IFile gadgetXmlIFile,
-            Shell shell, boolean useCanvasView, boolean useExternalBrowser) {
+    public PublishIGoogleJob(Shell shell, String username, String password, String projectName,
+            IFile gadgetXmlIFile) {
         super(username, password, gadgetXmlIFile);
         this.shell = shell;
-        this.useExternalBrowser = useExternalBrowser;
+        this.projectName = projectName;
     }
 
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
-        monitor.beginTask("Running PreviewIGoogleJob", 3);
+        monitor.beginTask("Running PublishIGoogleJob", 3);
 
-        final String previewGadgetUrl;
+        final String publishGadgetUrl;
         try {
-            String urlOfHostedGadgetFile =
-                    uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
-            previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(
-                    urlOfHostedGadgetFile, useCanvasView);
-        } catch (HostingException e) {
+            String urlOfHostedFile =
+                    uploadFilesToIg(OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
+            publishGadgetUrl = HostingIGoogleUtil.formPublishGadgetUrl(urlOfHostedFile);
+
+        } catch (Exception e) {
             logger.warning(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;
@@ -85,20 +83,20 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
         display.syncExec(new Runnable() {
             public void run() {
                 logger.fine("in Runnable's run");
+                logger.info("publishGadgetUrl: " + publishGadgetUrl);
                 try {
                     IWorkbenchBrowserSupport support =
                             PlatformUI.getWorkbench().getBrowserSupport();
-                    IWebBrowser browser;
-                    if (useExternalBrowser) {
-                        browser = support.getExternalBrowser();
-                    } else {
-                        int style = IWorkbenchBrowserSupport.LOCATION_BAR
-                                  | IWorkbenchBrowserSupport.NAVIGATION_BAR
-                                  | IWorkbenchBrowserSupport.AS_EDITOR;
-                        browser = support.createBrowser(style, PREVIEW_IGOOGLE_BROWSER_ID,
-                                PREVIEW_IGOOGLE_BROWSER_NAME, PREVIEW_IGOOGLE_TOOLTIP);
-                    }
-                    browser.openURL(new URL(previewGadgetUrl));
+                    int style = IWorkbenchBrowserSupport.LOCATION_BAR
+                              | IWorkbenchBrowserSupport.NAVIGATION_BAR
+                              | IWorkbenchBrowserSupport.AS_EDITOR;
+                    IWebBrowser browser = support.createBrowser(style, PUBLISH_IGOOGLE_BROWSER_ID,
+                            PUBLISH_IGOOGLE_BROWSER_NAME, PUBLISH_IGOOGLE_TOOLTIP);
+                    // TODO: (p1) Provide SID cookie when open the browser so that
+                    // the user does not need to login again on the publish page.
+                    // Or, we need 2 features of: host file and publish file.
+                    URL url = new URL(publishGadgetUrl);
+                    browser.openURL(url);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (PartInitException e) {

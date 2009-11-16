@@ -27,36 +27,29 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
- * The Action for processing preview a gadget against iGoogle server.
+ * The Action for processing publish a gadget against iGoogle server.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class PreviewIGoogleAction
+public class PublishIGoogleAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
-    private static Logger logger = Logger.getLogger(PreviewIGoogleAction.class.getName());
+    private static Logger logger = Logger.getLogger(PublishIGoogleAction.class.getName());
 
     private IFile gadgetXmlIFile;
     private Shell shell;
 
-    /**
-     * {@inheritDoc}
-     */
     public void init(IWorkbenchWindow window) {
         logger.fine("in init");
         IWorkbenchPart targetPart = window.getActivePage().getActivePart();
         shell = targetPart.getSite().getShell();
     }
 
-    /**
-     * @see IActionDelegate#selectionChanged(IAction, ISelection)
-     */
     public void selectionChanged(IAction action, ISelection selection) {
         logger.fine("in selectionChanged");
         if (selection instanceof IStructuredSelection) {
@@ -68,20 +61,14 @@ public class PreviewIGoogleAction
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         logger.fine("in setActivePart");
         shell = targetPart.getSite().getShell();
     }
 
-    /**
-     * @see IActionDelegate#run(IAction)
-     */
     public void run(IAction action) {
         logger.fine("in run");
-        PreviewIGoogleDialog dialog = new PreviewIGoogleDialog(shell);
+        PublishIGoogleDialog dialog = new PublishIGoogleDialog(shell);
         logger.fine("dialog: " + dialog);
         int openResult = dialog.open();
         logger.fine("openResult: " + openResult);
@@ -89,10 +76,8 @@ public class PreviewIGoogleAction
             logger.fine("OK pressed");
             String username = dialog.getUsername();
             String password = dialog.getPassword();
-            boolean useCanvasView = dialog.isUseCanvasView();
-            boolean useExternalBrowser = dialog.isUseExternalBrowser();
-            Job job = new PreviewIGoogleJob(username, password, gadgetXmlIFile, shell,
-                    useCanvasView, useExternalBrowser);
+            String projectName = dialog.getProjectName();
+            Job job = new PublishIGoogleJob(shell, username, password, projectName, gadgetXmlIFile);
             logger.fine("job: " + job);
             job.schedule();
         }

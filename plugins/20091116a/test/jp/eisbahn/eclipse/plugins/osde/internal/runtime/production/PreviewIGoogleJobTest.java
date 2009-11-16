@@ -18,6 +18,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
+import static jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleJob.OSDE_PREVIEW_DIRECTORY;
 import static jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleJob.TARGET_FOLDER_NAME;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.eq;
@@ -26,16 +27,13 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
 
-import org.apache.http.client.ClientProtocolException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.Test;
@@ -48,23 +46,12 @@ public class PreviewIGoogleJobTest {
     private static Logger logger = Logger.getLogger(PreviewIGoogleJobTest.class.getName());
 
     /**
-     * Test method for {@link PreviewIGoogleJob#run(org.eclipse.core.runtime.IProgressMonitor)}.
-     */
-    @Test
-    public void testRunIProgressMonitor() {
-        // TODO: Implement testRunIProgressMonitor()
-    }
-
-    /**
-     * Test method for {@link PreviewIGoogleJob#uploadFilesToIg()}.
-     * @throws CoreException
-     * @throws IOException
-     * @throws ClientProtocolException
+     * Test method for {@link BaseIGoogleJob#uploadFilesToIg(String, boolean)}.
      * @throws HostingException
      */
     @Test
     public void testUploadFilesToIg()
-            throws ClientProtocolException, IOException, CoreException, HostingException {
+            throws HostingException {
         String targetPath = "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/"
             + "production/testdata/";
         String gadgetXmlFileRelativePath = "gadget.xml";
@@ -86,12 +73,12 @@ public class PreviewIGoogleJobTest {
         String username = "osde.test.001";
         String password = "osdetest888";
         PreviewIGoogleJob job =
-                new PreviewIGoogleJob(shell, username, password, false, false, gadgetXmlIFile);
+                new PreviewIGoogleJob(username, password, gadgetXmlIFile, shell, false, false);
 
         // Test and verify the method call.
-        String gadgetPreviewUrl = job.uploadFilesToIg();
-        logger.info("gadgetPreviewUrl: " + gadgetPreviewUrl);
-        assertTrue(gadgetPreviewUrl.endsWith(gadgetXmlFileRelativePath));
+        String urlOfHostedGadgetFile = job.uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, false);
+        logger.info("urlOfHostedGadgetFile: " + urlOfHostedGadgetFile);
+        assertTrue(urlOfHostedGadgetFile.endsWith("/" + gadgetXmlFileRelativePath));
         verify(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
     }
 }
