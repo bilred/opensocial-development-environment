@@ -1,5 +1,12 @@
 = Change log =
 
+=== November 16, 2009 ===
+  Version 0.3.1 has been released.
+
+ * Check for valid author_email format when creating a new OSDE project.
+ * 'Building workspace' has encountered a problem - Eclipse couldn't refresh the "target" directory.
+ * 'Building workspace' has encountered a problem. Errors occured during the build.
+
 === October 24, 2009 ===
   Version 0.3.0 stable has been released.
 
