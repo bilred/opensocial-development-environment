@@ -54,7 +54,7 @@ public class PreviewIGoogleJobTest {
     }
 
     /**
-     * Test method for {@link PreviewIGoogleJob#uploadFilesToIg(String, boolean)}.
+     * Test method for {@link BaseIGoogleJob#uploadFilesToIg(String, boolean)}.
      * @throws HostingException
      */
     @Test
