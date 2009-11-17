@@ -198,7 +198,7 @@ public class HostingIGoogleUtil {
             throws HostingException {
         // Validate prefEditToken.
         if (!prefEditToken.validate()) {
-            throw new HostingException("Invalid prefEditToken: " + prefEditToken);
+            throw new HostingException("20091117a1 Invalid prefEditToken: " + prefEditToken);
         }
 
         // Prepare HttpPost.
@@ -405,7 +405,7 @@ public class HostingIGoogleUtil {
         String editToken = IgPrefEditToken.retrieveEditTokenFromPageContent(responseString);
         IgPrefEditToken prefEditToken = new IgPrefEditToken(pref, editToken);
         if (!prefEditToken.validate()) {
-            throw new HostingException("Invalid prefEditToken: " + prefEditToken);
+            throw new HostingException("20091117a2 Invalid prefEditToken: " + prefEditToken);
         }
         return prefEditToken;
     }
