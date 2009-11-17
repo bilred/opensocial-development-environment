@@ -18,12 +18,16 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
+import java.util.logging.Logger;
+
 /**
  * Data and corresponding methods used for interacting with iGoogle service.
  *
  * @author albert.cheng.ig@gmail.com
  */
 public class IgPrefEditToken {
+    private static Logger logger = Logger.getLogger(IgPrefEditToken.class.getName());
+
     private static final int MIN_PREF_LENGTH = 50;
     private static final int EDIT_TOKEN_LENGTH = 16;
     private static final String EDIT_TOKEN_IDENTIFIER = "?et=";
@@ -36,6 +40,7 @@ public class IgPrefEditToken {
     }
 
     static String retrieveEditTokenFromPageContent(String pageContent) throws HostingException {
+        logger.info("pageContent: " + pageContent);
         int startIndexOfEditTokenIdentifier = pageContent.indexOf(EDIT_TOKEN_IDENTIFIER);
 
         if (startIndexOfEditTokenIdentifier == -1) {
