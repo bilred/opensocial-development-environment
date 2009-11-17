@@ -45,9 +45,6 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
     private static Logger logger = Logger.getLogger(PublishIGoogleJob.class.getName());
 
     private static final String OSDE_PUBLISH_DIRECTORY = "/osde/publish/";
-    private static final String PUBLISH_IGOOGLE_BROWSER_ID = "publish_ig_bid";
-    private static final String PUBLISH_IGOOGLE_BROWSER_NAME = "Publish gadget on iGoogle";
-    private static final String PUBLISH_IGOOGLE_TOOLTIP = "Publish gadget on iGoogle";
 
     private Shell shell;
     private String projectName; // contains only chars of A-Z, a-z, or 0-9.
@@ -80,33 +77,43 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
         Display display = shell.getDisplay();
         monitor.worked(1);
 
-        display.syncExec(new Runnable() {
-            public void run() {
-                logger.fine("in Runnable's run");
-                logger.info("publishGadgetUrl: " + publishGadgetUrl);
-                try {
-                    IWorkbenchBrowserSupport support =
-                            PlatformUI.getWorkbench().getBrowserSupport();
-                    int style = IWorkbenchBrowserSupport.LOCATION_BAR
-                              | IWorkbenchBrowserSupport.NAVIGATION_BAR
-                              | IWorkbenchBrowserSupport.AS_EDITOR;
-                    IWebBrowser browser = support.createBrowser(style, PUBLISH_IGOOGLE_BROWSER_ID,
-                            PUBLISH_IGOOGLE_BROWSER_NAME, PUBLISH_IGOOGLE_TOOLTIP);
-                    // TODO: (p1) Provide SID cookie when open the browser so that
-                    // the user does not need to login again on the publish page.
-                    // Or, we need 2 features of: host file and publish file.
-                    URL url = new URL(publishGadgetUrl);
-                    browser.openURL(url);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (PartInitException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        display.syncExec(new PublishingRunnable(publishGadgetUrl));
         monitor.worked(1);
 
         monitor.done();
         return Status.OK_STATUS;
+    }
+
+    private static class PublishingRunnable implements Runnable {
+        private static final String PUBLISH_IGOOGLE_BROWSER_ID = "publish_ig_bid";
+        private static final String PUBLISH_IGOOGLE_BROWSER_NAME = "Publish gadget on iGoogle";
+        private static final String PUBLISH_IGOOGLE_TOOLTIP = "Publish gadget on iGoogle";
+        private String publishGadgetUrl;
+
+        private PublishingRunnable(String publishGadgetUrl) {
+            this.publishGadgetUrl = publishGadgetUrl;
+        }
+
+        public void run() {
+            logger.info("publishGadgetUrl: " + publishGadgetUrl);
+            try {
+                IWorkbenchBrowserSupport support =
+                        PlatformUI.getWorkbench().getBrowserSupport();
+                int style = IWorkbenchBrowserSupport.LOCATION_BAR
+                          | IWorkbenchBrowserSupport.NAVIGATION_BAR
+                          | IWorkbenchBrowserSupport.AS_EDITOR;
+                IWebBrowser browser = support.createBrowser(style, PUBLISH_IGOOGLE_BROWSER_ID,
+                        PUBLISH_IGOOGLE_BROWSER_NAME, PUBLISH_IGOOGLE_TOOLTIP);
+                // TODO: (p1) Provide SID cookie when open the browser so that
+                // the user does not need to login again on the publish page.
+                // Or, we need 2 features of: host file and publish file.
+                URL url = new URL(publishGadgetUrl);
+                browser.openURL(url);
+            } catch (MalformedURLException e) {
+                logger.warning(e.getMessage());
+            } catch (PartInitException e) {
+                logger.warning(e.getMessage());
+            }
+        }
     }
 }

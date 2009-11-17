@@ -21,7 +21,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 import java.util.List;
 import java.util.logging.Logger;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgCredentials;
 
 import org.junit.Test;
 
@@ -44,7 +44,7 @@ public class HostingIGoogleUtilTest {
 
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
-     * String, String, IgPrefEditToken, String, String, String)} etc.
+     * String, String, IgCredentials, String, String, String)} etc.
      *
      * @throws HostingException
      */
@@ -60,12 +60,12 @@ public class HostingIGoogleUtilTest {
         String publicId = retrievePublicId(sid);
         logger.info("publicId: " + publicId);
         assertTrue(publicId.length() > 20);
-        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
-        assertTrue("Invalid prefEditToken: " + prefEditToken, prefEditToken.validate());
+        IgCredentials igCredentials = retrieveIgPrefEditToken(sid);
+        assertTrue("Invalid igCredentials: " + igCredentials, igCredentials.validate());
 
         // Upload file.
         String rootPath = TEST_DATA_PATH;
-        HostingIGoogleUtil.uploadFiles(sid, publicId, prefEditToken, rootPath, DUMMY_HOST_FOLDER);
+        HostingIGoogleUtil.uploadFiles(sid, publicId, igCredentials, rootPath, DUMMY_HOST_FOLDER);
 
         // Retrieve directory info.
         String quotaByte = retrieveQuotaByte(sid, publicId);

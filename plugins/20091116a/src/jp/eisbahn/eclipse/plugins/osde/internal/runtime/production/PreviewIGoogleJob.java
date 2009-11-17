@@ -46,9 +46,6 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
     private static Logger logger = Logger.getLogger(PreviewIGoogleJob.class.getName());
 
     static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
-    private static final String PREVIEW_IGOOGLE_BROWSER_ID = "preview_ig_bid";
-    private static final String PREVIEW_IGOOGLE_BROWSER_NAME = "Preview gadget on iGoogle";
-    private static final String PREVIEW_IGOOGLE_TOOLTIP = "Preview gadget on iGoogle";
 
     private Shell shell;
     private boolean useCanvasView;
@@ -82,33 +79,47 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
         Display display = shell.getDisplay();
         monitor.worked(1);
 
-        display.syncExec(new Runnable() {
-            public void run() {
-                logger.fine("in Runnable's run");
-                try {
-                    IWorkbenchBrowserSupport support =
-                            PlatformUI.getWorkbench().getBrowserSupport();
-                    IWebBrowser browser;
-                    if (useExternalBrowser) {
-                        browser = support.getExternalBrowser();
-                    } else {
-                        int style = IWorkbenchBrowserSupport.LOCATION_BAR
-                                  | IWorkbenchBrowserSupport.NAVIGATION_BAR
-                                  | IWorkbenchBrowserSupport.AS_EDITOR;
-                        browser = support.createBrowser(style, PREVIEW_IGOOGLE_BROWSER_ID,
-                                PREVIEW_IGOOGLE_BROWSER_NAME, PREVIEW_IGOOGLE_TOOLTIP);
-                    }
-                    browser.openURL(new URL(previewGadgetUrl));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (PartInitException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        display.syncExec(new PreviewingRunnable(previewGadgetUrl, useExternalBrowser));
         monitor.worked(1);
 
         monitor.done();
         return Status.OK_STATUS;
+    }
+
+    private static class PreviewingRunnable implements Runnable {
+        private static final String PREVIEW_IGOOGLE_BROWSER_ID = "preview_ig_bid";
+        private static final String PREVIEW_IGOOGLE_BROWSER_NAME = "Preview gadget on iGoogle";
+        private static final String PREVIEW_IGOOGLE_TOOLTIP = "Preview gadget on iGoogle";
+
+        private String previewGadgetUrl;
+        private boolean useExternalBrowser;
+
+        private PreviewingRunnable(String previewGadgetUrl, boolean useExternalBrowser) {
+            this.previewGadgetUrl = previewGadgetUrl;
+            this.useExternalBrowser = useExternalBrowser;
+        }
+
+        public void run() {
+            logger.fine("in Runnable's run");
+            try {
+                IWorkbenchBrowserSupport support =
+                        PlatformUI.getWorkbench().getBrowserSupport();
+                IWebBrowser browser;
+                if (useExternalBrowser) {
+                    browser = support.getExternalBrowser();
+                } else {
+                    int style = IWorkbenchBrowserSupport.LOCATION_BAR
+                              | IWorkbenchBrowserSupport.NAVIGATION_BAR
+                              | IWorkbenchBrowserSupport.AS_EDITOR;
+                    browser = support.createBrowser(style, PREVIEW_IGOOGLE_BROWSER_ID,
+                            PREVIEW_IGOOGLE_BROWSER_NAME, PREVIEW_IGOOGLE_TOOLTIP);
+                }
+                browser.openURL(new URL(previewGadgetUrl));
+            } catch (MalformedURLException e) {
+                logger.warning(e.getMessage());
+            } catch (PartInitException e) {
+                logger.warning(e.getMessage());
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgCredentials;
 
 import org.apache.http.client.ClientProtocolException;
 import org.eclipse.core.resources.IFile;
@@ -94,12 +94,12 @@ public abstract class BaseIGoogleJob extends Job {
         // Prepare params.
         String sid = retrieveSid(username, password, null, null);
         String publicId = retrievePublicId(sid);
-        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
+        IgCredentials igCredentials = retrieveIgPrefEditToken(sid);
         IProject project = gadgetXmlIFile.getProject();
         String uploadFromPath = project.getFolder(TARGET_FOLDER_NAME).getLocation().toOSString();
 
         // Upload files.
-        uploadFiles(sid, publicId, prefEditToken, uploadFromPath, hostingFolder);
+        uploadFiles(sid, publicId, igCredentials, uploadFromPath, hostingFolder);
 
         // Form hosted gadget file url.
         String urlOfHostedGadgetFile =

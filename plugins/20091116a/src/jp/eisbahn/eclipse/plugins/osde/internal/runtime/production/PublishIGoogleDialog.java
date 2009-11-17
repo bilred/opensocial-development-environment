@@ -56,7 +56,7 @@ public class PublishIGoogleDialog extends TitleAreaDialog {
         logger.fine("createDialogArea");
 
         // Set title and message.
-        setTitle("Public Gadget on iGoogle");
+        setTitle("Publish Gadget on iGoogle");
         setMessage("Please enter your gmail account info.");
 
         // Prepare composite and panel.
