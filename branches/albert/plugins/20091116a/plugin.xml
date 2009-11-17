@@ -193,6 +193,7 @@
 	           </objectState>
             </enablement>
          </action>
+         <!--
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PublishIGoogleAction"
                enablesFor="1"
@@ -209,6 +210,7 @@
                </objectState>
             </enablement>
          </action>
+         -->
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.CreateSampleDataAction"
                icon="icons/icon_download.gif"
@@ -341,6 +343,7 @@
 	           </objectState>
             </enablement>
          </action>
+         <!--
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PublishIGoogleAction"
                enablesFor="1"
@@ -355,6 +358,7 @@
                </objectState>
             </enablement>
          </action>
+         -->
       </objectContribution>
    </extension>
    
