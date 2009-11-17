@@ -58,7 +58,6 @@ public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    private static final String OSDE_PREVIEW_DIRECTORY = "osde/preview/";
     private static final String HTTP_HEADER_COOKIE = "Cookie";
     private static final String HTTP_HEADER_SET_COOKIE = "Set-Cookie";
     private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
@@ -71,6 +70,8 @@ public class HostingIGoogleUtil {
     private static final String URL_IG_GADGETS_DIRECTORY = URL_IG_GADGETS + "/directory/";
     private static final String URL_IG_GADGETS_FILE = URL_IG_GADGETS + "/file/";
     private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
+    private static final String URL_IG_SUBMIT_GADGET =
+            "http://www.google.com/ig/submit?prefill_url=";
 
     private HostingIGoogleUtil() {
         // Disable instantiation of this utility class.
@@ -186,21 +187,19 @@ public class HostingIGoogleUtil {
     /**
      * Uploads a file to iGoogle.
      *
-     * @throws ClientProtocolException
-     * @throws IOException
      * @throws HostingException
      */
-    public static void uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
-            String sourceFileRootPath, String sourceFileRelativePath)
-            throws ClientProtocolException, IOException, HostingException {
-        // Validate prefEditToken.
-        if (!prefEditToken.validate()) {
-            throw new HostingException("Invalid prefEditToken: " + prefEditToken);
+    public static void uploadFile(String sid, String publicId, IgCredentials igCredentials,
+            String sourceFileRootPath, String sourceFileRelativePath, String hostingFolder)
+            throws HostingException {
+        // Validate igCredentials.
+        if (!igCredentials.validate()) {
+            throw new HostingException("Invalid igCredentials: " + igCredentials);
         }
 
         // Prepare HttpPost.
-        String url = URL_IG_GADGETS_FILE + publicId + "/" + OSDE_PREVIEW_DIRECTORY
-            + sourceFileRelativePath + "?et=" + prefEditToken.getEditToken();
+        String url = URL_IG_GADGETS_FILE + publicId + hostingFolder
+            + sourceFileRelativePath + "?et=" + igCredentials.getEditToken();
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
@@ -213,12 +212,19 @@ public class HostingIGoogleUtil {
         httpPost.setEntity(fileEntity);
 
         // Add cookie headers. Cookie PREF must be placed before SID.
-        httpPost.addHeader(HTTP_HEADER_COOKIE, "PREF=" + prefEditToken.getPref());
+        httpPost.addHeader(HTTP_HEADER_COOKIE, "PREF=" + igCredentials.getPref());
         httpPost.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
 
         // Execute request.
         HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpPost);
+        } catch (ClientProtocolException e) {
+            throw new HostingException(e);
+        } catch (IOException e) {
+            throw new HostingException(e);
+        }
         StatusLine statusLine = httpResponse.getStatusLine();
         logger.fine("statusLine: " + statusLine);
         if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
@@ -255,16 +261,15 @@ public class HostingIGoogleUtil {
     /**
      * Uploads a list of files to iGoogle.
      *
-     * @throws ClientProtocolException
-     * @throws IOException
      * @throws HostingException
      */
-    public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
-            String sourceFileRootPath)
-            throws ClientProtocolException, IOException, HostingException {
+    public static void uploadFiles(String sid, String publicId, IgCredentials igCredentials,
+            String sourceFileRootPath, String hostingFolder)
+            throws HostingException {
         List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
-            uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath);
+            uploadFile(sid, publicId, igCredentials, sourceFileRootPath, relativePath,
+                    hostingFolder);
         }
     }
 
@@ -298,39 +303,42 @@ public class HostingIGoogleUtil {
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         String url = URL_IG_GADGETS_BYTE_QUOTA + publicId;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
     static String retrieveQuotaByteUsed(String sid, String publicId)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         String url = URL_IG_GADGETS_BYTES_USED + publicId;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
     static String retrieveFileList(String sid, String publicId)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         String url = URL_IG_GADGETS_DIRECTORY + publicId;
         String response = sendHttpRequestToIg(url, sid);
         return response;
     }
 
-    static String retrieveFile(String sid, String publicId, String filePath)
-            throws ClientProtocolException, IOException {
-        String url = formHostedFileUrl(publicId, filePath);
-        String response = sendHttpRequestToIg(url, sid);
-        return response;
-    }
-
-    private static String formHostedFileUrl(String publicId, String filePath) {
-        return URL_GMODULE_FILE + publicId + "/" + OSDE_PREVIEW_DIRECTORY + filePath;
+    /**
+     * Returns the url for the hosted file given hosting folder,
+     * file path, and public id.
+     *
+     * @param publicId iGoogle public id
+     * @param hostingFolder hosting folder
+     * @param filePath path of the hosted file
+     * @return the url for the hosted file
+     */
+    public static String formHostedFileUrl(
+            String publicId, String hostingFolder, String filePath) {
+        return URL_GMODULE_FILE + publicId + hostingFolder + filePath;
     }
 
     public static String retrievePublicId(String sid)
-            throws ClientProtocolException, IOException {
+            throws HostingException {
         String response = sendHttpRequestToIg(URL_IG_GADGETS, sid);
         return response;
     }
@@ -342,8 +350,8 @@ public class HostingIGoogleUtil {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    private static String sendHttpRequestToIg(String url, String sid)
-            throws ClientProtocolException, IOException {
+    static String sendHttpRequestToIg(String url, String sid)
+            throws HostingException {
         // Prepare HttpGet.
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
@@ -351,18 +359,32 @@ public class HostingIGoogleUtil {
 
         // Retrieve HttpResponse.
         HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse httpResponse = httpClient.execute(httpGet);
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpGet);
+        } catch (ClientProtocolException e) {
+            throw new HostingException(e);
+        } catch (IOException e) {
+            throw new HostingException(e);
+        }
         logger.fine("status line: " + httpResponse.getStatusLine());
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
-    public static IgPrefEditToken retrieveIgPrefEditToken(String sid)
-            throws ClientProtocolException, IOException {
+    public static IgCredentials retrieveIgPrefEditToken(String sid)
+            throws HostingException {
         HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
         httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
         httpGet.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
         HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse httpResponse = httpClient.execute(httpGet);
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpGet);
+        } catch (ClientProtocolException e) {
+            throw new HostingException(e);
+        } catch (IOException e) {
+            throw new HostingException(e);
+        }
         logger.fine("status line: " + httpResponse.getStatusLine());
 
         String pref = null;
@@ -377,13 +399,13 @@ public class HostingIGoogleUtil {
         }
 
         String responseString = retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
-        String editToken = IgPrefEditToken.retrieveEditTokenFromPageContent(responseString);
-        return new IgPrefEditToken(pref, editToken);
+        String editToken = IgCredentials.retrieveEditTokenFromPageContent(responseString);
+        return new IgCredentials(pref, editToken);
     }
 
     private static String retrieveHttpResponseAsString(
             HttpClient httpClient, HttpRequestBase httpRequest, HttpResponse httpResponse)
-            throws IOException {
+            throws HostingException {
         HttpEntity entity = httpResponse.getEntity();
         String response = null;
         if (entity != null) {
@@ -395,16 +417,20 @@ public class HostingIGoogleUtil {
                 // The HttpClient's connection will be automatically released
                 // back to the connection manager.
                 logger.severe("Error:\n" + e.getMessage());
-                throw e;
+                throw new HostingException(e);
             } catch (RuntimeException e) { // To catch unchecked exception intentionally.
                 // Abort HttpRequest in order to release HttpClient's connection
                 // back to the connection manager.
                 logger.severe("Error:\n" + e.getMessage());
                 httpRequest.abort();
-                throw e;
+                throw new HostingException(e);
             } finally {
                 if (inputStream != null) {
-                    inputStream.close();
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        throw new HostingException(e);
+                    }
                 }
             }
             httpClient.getConnectionManager().shutdown();
@@ -433,18 +459,22 @@ public class HostingIGoogleUtil {
     }
 
     public static String formPreviewGadgetUrl(
-            String publicId, String filePath, boolean useCanvasView) {
+            String hostedFileUrl, boolean useCanvasView) {
         StringBuilder sb = new StringBuilder();
         sb.append("http://www.gmodules.com/gadgets/ifr?&hl=en&gl=us&nocache=1&view=");
         sb.append(useCanvasView ? "canvas" : "home"); // default is home view
 
         // Append hosted file's url.
         sb.append("&url=");
-        String hostedFileUrl = formHostedFileUrl(publicId, filePath);
         sb.append(hostedFileUrl);
 
         // TODO: Support various languages, and countries.
 
         return sb.toString();
     }
+
+    public static String formPublishGadgetUrl(String hostedFileUrl) {
+        return URL_IG_SUBMIT_GADGET + hostedFileUrl;
+    }
+
 }
