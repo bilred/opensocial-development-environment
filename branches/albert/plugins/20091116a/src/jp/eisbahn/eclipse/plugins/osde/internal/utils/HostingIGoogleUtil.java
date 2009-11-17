@@ -189,17 +189,17 @@ public class HostingIGoogleUtil {
      *
      * @throws HostingException
      */
-    public static void uploadFile(String sid, String publicId, IgPrefEditToken prefEditToken,
+    public static void uploadFile(String sid, String publicId, IgCredentials igCredentials,
             String sourceFileRootPath, String sourceFileRelativePath, String hostingFolder)
             throws HostingException {
-        // Validate prefEditToken.
-        if (!prefEditToken.validate()) {
-            throw new HostingException("Invalid prefEditToken: " + prefEditToken);
+        // Validate igCredentials.
+        if (!igCredentials.validate()) {
+            throw new HostingException("Invalid igCredentials: " + igCredentials);
         }
 
         // Prepare HttpPost.
         String url = URL_IG_GADGETS_FILE + publicId + hostingFolder
-            + sourceFileRelativePath + "?et=" + prefEditToken.getEditToken();
+            + sourceFileRelativePath + "?et=" + igCredentials.getEditToken();
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
@@ -212,7 +212,7 @@ public class HostingIGoogleUtil {
         httpPost.setEntity(fileEntity);
 
         // Add cookie headers. Cookie PREF must be placed before SID.
-        httpPost.addHeader(HTTP_HEADER_COOKIE, "PREF=" + prefEditToken.getPref());
+        httpPost.addHeader(HTTP_HEADER_COOKIE, "PREF=" + igCredentials.getPref());
         httpPost.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
 
         // Execute request.
@@ -263,12 +263,12 @@ public class HostingIGoogleUtil {
      *
      * @throws HostingException
      */
-    public static void uploadFiles(String sid, String publicId, IgPrefEditToken prefEditToken,
+    public static void uploadFiles(String sid, String publicId, IgCredentials igCredentials,
             String sourceFileRootPath, String hostingFolder)
             throws HostingException {
         List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
-            uploadFile(sid, publicId, prefEditToken, sourceFileRootPath, relativePath,
+            uploadFile(sid, publicId, igCredentials, sourceFileRootPath, relativePath,
                     hostingFolder);
         }
     }
@@ -371,7 +371,7 @@ public class HostingIGoogleUtil {
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
-    public static IgPrefEditToken retrieveIgPrefEditToken(String sid)
+    public static IgCredentials retrieveIgPrefEditToken(String sid)
             throws HostingException {
         HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
         httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
@@ -399,8 +399,8 @@ public class HostingIGoogleUtil {
         }
 
         String responseString = retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
-        String editToken = IgPrefEditToken.retrieveEditTokenFromPageContent(responseString);
-        return new IgPrefEditToken(pref, editToken);
+        String editToken = IgCredentials.retrieveEditTokenFromPageContent(responseString);
+        return new IgCredentials(pref, editToken);
     }
 
     private static String retrieveHttpResponseAsString(

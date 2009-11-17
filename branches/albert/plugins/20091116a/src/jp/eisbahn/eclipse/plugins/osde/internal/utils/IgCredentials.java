@@ -19,18 +19,22 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 /**
- * Data and corresponding methods used for interacting with iGoogle service.
+ * Data and corresponding methods used for interacting with iGoogle
+ * credentials service.
+ *
+ * TODO: Move other credentials info (such SID, PREF cookies, etc) and
+ * utility here.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgPrefEditToken {
+public class IgCredentials {
     private static final int MIN_PREF_LENGTH = 50;
     private static final int EDIT_TOKEN_LENGTH = 16;
     private static final String EDIT_TOKEN_IDENTIFIER = "?et=";
     private String pref;
     private String editToken;
 
-    IgPrefEditToken(String pref, String editToken) {
+    IgCredentials(String pref, String editToken) {
         this.pref = pref;
         this.editToken = editToken;
     }
