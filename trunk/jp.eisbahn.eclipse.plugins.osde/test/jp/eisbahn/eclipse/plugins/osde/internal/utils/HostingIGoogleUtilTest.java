@@ -18,13 +18,11 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgPrefEditToken;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgCredentials;
 
-import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.*;
@@ -36,6 +34,8 @@ import static org.junit.Assert.*;
 // TODO: Annotate test as large.
 public class HostingIGoogleUtilTest {
 
+    private static final String DUMMY_HOST_FOLDER = "/dummy_host_folder/";
+
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
     // TODO: Get a better place to store test data.
@@ -44,15 +44,13 @@ public class HostingIGoogleUtilTest {
 
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
-     * String, String, IgPrefEditToken, String, String)} etc.
+     * String, String, IgCredentials, String, String, String)} etc.
      *
-     * @throws IOException
-     * @throws ClientProtocolException
      * @throws HostingException
      */
     @Test
     public void testAuthenticationAndUploadAndRetrieveFiles()
-            throws ClientProtocolException, IOException, HostingException {
+            throws HostingException {
         // Prepare Authentication.
         String emailUserName = "osde.test.001";
         String password = "osdetest888";
@@ -62,12 +60,12 @@ public class HostingIGoogleUtilTest {
         String publicId = retrievePublicId(sid);
         logger.info("publicId: " + publicId);
         assertTrue(publicId.length() > 20);
-        IgPrefEditToken prefEditToken = retrieveIgPrefEditToken(sid);
-        assertTrue("Invalid prefEditToken: " + prefEditToken, prefEditToken.validate());
+        IgCredentials igCredentials = retrieveIgPrefEditToken(sid);
+        assertTrue("Invalid igCredentials: " + igCredentials, igCredentials.validate());
 
         // Upload file.
         String rootPath = TEST_DATA_PATH;
-        HostingIGoogleUtil.uploadFiles(sid, publicId, prefEditToken, rootPath);
+        HostingIGoogleUtil.uploadFiles(sid, publicId, igCredentials, rootPath, DUMMY_HOST_FOLDER);
 
         // Retrieve directory info.
         String quotaByte = retrieveQuotaByte(sid, publicId);
@@ -79,10 +77,11 @@ public class HostingIGoogleUtilTest {
         logger.info("fileList:\n" + fileList);
         assertTrue(fileList.length() > 50);
         String relativeFilePath = "gadget.xml";
-        String fileContent = retrieveFile(sid, publicId, relativeFilePath);
+        String hostedFileUrl = formHostedFileUrl(publicId, DUMMY_HOST_FOLDER, relativeFilePath);
+        String fileContent = sendHttpRequestToIg(hostedFileUrl, sid);
         logger.info("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith("<?xml version"));
-        String previewUrl = formPreviewGadgetUrl(publicId, relativeFilePath, false);
+        String previewUrl = formPreviewGadgetUrl(hostedFileUrl, false);
         logger.info("previewUrl: " + previewUrl);
         assertTrue(previewUrl.endsWith(relativeFilePath));
     }
