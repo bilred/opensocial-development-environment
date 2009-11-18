@@ -45,8 +45,6 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class PreviewIGoogleJob extends BaseIGoogleJob {
     private static Logger logger = Logger.getLogger(PreviewIGoogleJob.class.getName());
 
-    static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
-
     private Shell shell;
     private boolean useCanvasView;
     private boolean useExternalBrowser;
