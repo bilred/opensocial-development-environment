@@ -347,8 +347,7 @@ public class HostingIGoogleUtil {
      * Sends HTTP request to iGoogle server.
      *
      * @return response as String
-     * @throws ClientProtocolException
-     * @throws IOException
+     * @throws HostingException
      */
     static String sendHttpRequestToIg(String url, String sid)
             throws HostingException {
@@ -477,4 +476,47 @@ public class HostingIGoogleUtil {
         return URL_IG_SUBMIT_GADGET + hostedFileUrl;
     }
 
+    public static void deleteFile(String sid, String publicId, String fileName,
+            IgCredentials igCredentials)
+            throws HostingException {
+        // Validate igCredentials.
+        if (!igCredentials.validate()) {
+            throw new HostingException("Invalid igCredentials: " + igCredentials);
+        }
+
+        // Prepare HttpPost.
+        String url = URL_IG_GADGETS_FILE + publicId + fileName
+                + "?synd=gde&action=delete&et=" + igCredentials.getEditToken();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setHeader(HTTP.CONTENT_TYPE, "application/xml; charset=UTF-8");
+        // Do not set Content-Length header.
+
+        // Add cookie headers. Cookie PREF must be placed before SID.
+        httpPost.addHeader(HTTP_HEADER_COOKIE, "PREF=" + igCredentials.getPref());
+        httpPost.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
+
+        // Execute request.
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpPost);
+        } catch (ClientProtocolException e) {
+            throw new HostingException(e);
+        } catch (IOException e) {
+            throw new HostingException(e);
+        }
+        StatusLine statusLine = httpResponse.getStatusLine();
+
+        // Verify result status.
+        if (HttpStatus.SC_NO_CONTENT != statusLine.getStatusCode()) {
+            String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
+            throw new HostingException("Failed delete file with status line: "
+                    + statusLine.toString() + "\nand response:\n" + response);
+        }
+    }
+
+    public static void cleanFiles(String sid, String publicId, IgCredentials igCredentials,
+            String hostingFolder) {
+        // TODO: (p0) Implement cleanFiles()
+    }
 }

@@ -64,8 +64,8 @@ public class HostingIGoogleUtilTest {
         assertTrue("Invalid igCredentials: " + igCredentials, igCredentials.validate());
 
         // Upload file.
-        String rootPath = TEST_DATA_PATH;
-        HostingIGoogleUtil.uploadFiles(sid, publicId, igCredentials, rootPath, DUMMY_HOST_FOLDER);
+        HostingIGoogleUtil.uploadFiles(
+                sid, publicId, igCredentials, TEST_DATA_PATH, DUMMY_HOST_FOLDER);
 
         // Retrieve directory info.
         String quotaByte = retrieveQuotaByte(sid, publicId);
@@ -84,13 +84,18 @@ public class HostingIGoogleUtilTest {
         String previewUrl = formPreviewGadgetUrl(hostedFileUrl, false);
         logger.info("previewUrl: " + previewUrl);
         assertTrue(previewUrl.endsWith(relativeFilePath));
+
+        // Delete the gadget file.
+        String fileName = DUMMY_HOST_FOLDER + relativeFilePath;
+        HostingIGoogleUtil.deleteFile(sid, publicId, fileName, igCredentials);
+        // TODO: (p0) Assert something for delete.
     }
 
     /**
      * Test method for {@link HostingIGoogleUtil#findAllRelativeFilePaths(String)}.
      */
     @Test
-    public final void testFindAllRelativeFilePaths() {
+    public void testFindAllRelativeFilePaths() {
         List<String> filePaths = findAllRelativeFilePaths(TEST_DATA_PATH);
 
         // Verify the 6 testing files are found.

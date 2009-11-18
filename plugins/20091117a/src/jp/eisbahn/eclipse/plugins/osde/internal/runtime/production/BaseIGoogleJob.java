@@ -24,28 +24,31 @@ import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.retrieveSid;
 import static jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil.uploadFiles;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.IgCredentials;
 
-import org.apache.http.client.ClientProtocolException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.Job;
 
 /**
  * The base job for iGoogle usage.
  *
  * @author albert.cheng.ig@gmail.com
- *
  */
+// TODO: The methods in this class might better be static,
+// and thus some variable(s) and constructor(s) might be unnecessary.
+// In other words, we might think about making this class a utility
+// class instead of a parent class.
 public abstract class BaseIGoogleJob extends Job {
     private static Logger logger = Logger.getLogger(BaseIGoogleJob.class.getName());
 
     private static final String IGOOGLE_JOB_NAME = "iGoogle job";
+    static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
+    static final String OSDE_PUBLISH_DIRECTORY = "/osde/publish/";
 
     /**
      * This constant stands for the folder name of "target".
@@ -76,13 +79,14 @@ public abstract class BaseIGoogleJob extends Job {
         this.gadgetXmlIFile = gadgetXmlIFile;
     }
 
+    public BaseIGoogleJob(String username, String password) {
+        this(username, password, null);
+    }
+
     /**
      * Uploads files to iGoogle and returns the url for the hosted gadget file.
      *
      * @return the url for the hosted gadget file
-     * @throws ClientProtocolException
-     * @throws IOException
-     * @throws CoreException
      * @throws HostingException
      */
     protected String uploadFilesToIg(String hostingFolder, boolean useCanvasView)
@@ -105,5 +109,18 @@ public abstract class BaseIGoogleJob extends Job {
         String urlOfHostedGadgetFile =
                 formHostedFileUrl(publicId, hostingFolder, gadgetXmlIFile.getName());
         return urlOfHostedGadgetFile;
+    }
+
+    protected void cleanFiles(String hostingFolder) throws HostingException {
+        // TODO: Make the following "prepare params" function common
+        // to this method and uploadFilesToIg().
+
+        // Prepare params.
+        String sid = retrieveSid(username, password, null, null);
+        String publicId = retrievePublicId(sid);
+        IgCredentials igCredentials = retrieveIgPrefEditToken(sid);
+
+        // Clean files.
+        HostingIGoogleUtil.cleanFiles(sid, publicId, igCredentials, hostingFolder);
     }
 }
