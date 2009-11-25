@@ -210,6 +210,16 @@
                </objectState>
             </enablement>
          </action>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.CleanIGoogleAction"
+               enablesFor="0"
+               id="jp.eisbahn.eclipse.plugins.osde.runActionCleanOnIGoogle2"
+               label="iGoogle - clean preview files"
+               icon="icons/action_go.gif"
+               menubarPath="opensocialMenu/opensocialGroup4">
+               toolbarPath="opensocialGroup"
+               tooltip="iGoogle - clean preview files">
+         </action>
          -->
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.CreateSampleDataAction"
@@ -357,6 +367,14 @@
                    value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
                </objectState>
             </enablement>
+         </action>
+         <action
+               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.CleanIGoogleAction"
+               enablesFor="0"
+               id="jp.eisbahn.eclipse.plugins.osde.runActionCleanOnIGoogle1"
+               label="iGoogle - clean preview files"
+               icon="icons/action_go.gif"
+               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group4">
          </action>
          -->
       </objectContribution>

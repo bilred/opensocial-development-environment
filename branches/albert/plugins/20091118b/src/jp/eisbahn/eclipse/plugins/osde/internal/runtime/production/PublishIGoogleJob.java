@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingIGoogleUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -44,8 +45,6 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class PublishIGoogleJob extends BaseIGoogleJob {
     private static Logger logger = Logger.getLogger(PublishIGoogleJob.class.getName());
 
-    private static final String OSDE_PUBLISH_DIRECTORY = "/osde/publish/";
-
     private Shell shell;
     private String projectName; // contains only chars of A-Z, a-z, or 0-9.
 
@@ -67,7 +66,7 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
                     uploadFilesToIg(OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
             publishGadgetUrl = HostingIGoogleUtil.formPublishGadgetUrl(urlOfHostedFile);
 
-        } catch (Exception e) {
+        } catch (HostingException e) {
             logger.warning(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;
