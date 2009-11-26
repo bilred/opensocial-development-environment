@@ -1,0 +1,22 @@
+<!-- Posting activity code for OpenSocial 0.8 -->
+<div>
+  <input type='text' id='title' />
+  <button onclick='postActivity();'>Post activity</button>
+  <div id='result_activity'></div>
+</div>
+<script type='text/javascript'>
+function postActivity() {
+  var params = {};
+  params[opensocial.Activity.Field.TITLE] = document.getElementById('title').value;
+  var activity = opensocial.newActivity(params);
+  opensocial.requestCreateActivity(
+      activity, opensocial.CreateActivityPriority.HIGH, function(response) {
+        if (response.hadError()) {
+          document.getElementById('result_activity').innerHTML = response.getErrorMessage();
+        } else {
+          document.getElementById('result_activity').innerHTML = 'Succeeded!';
+        }
+        gadgets.window.adjustHeight();
+      });
+}
+</script>
