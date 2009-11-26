@@ -28,7 +28,8 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.runtime.AbstractRunAction;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.StatusUtil;
 
@@ -59,6 +60,8 @@ import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
 public class OpenSocialApplicationExportWizard extends Wizard implements IExportWizard {
+
+    private static final Logger logger = new Logger(OpenSocialApplicationExportWizard.class);
 
 	private WizardOpenSocialApplicationExportPage page;
 
@@ -177,7 +180,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								IOUtils.copy(in, out);
 							} catch(ParserException e) {
-								Logging.error("Exporting/Parsing the project files failed.", e);
+								logger.error("Exporting/Parsing the project files failed.", e);
 							}
 						} else {
 							IOUtils.copy(orgFile.getContents(), out);
