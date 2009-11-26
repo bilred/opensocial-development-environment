@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Handler;
-import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
@@ -43,8 +42,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.EclipseLogHandler;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
-
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
@@ -90,6 +88,8 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
 
+    private static final Logger logger = new Logger(Activator.class);
+
 	// The plug-in ID
 	public static final String PLUGIN_ID = "jp.eisbahn.eclipse.plugins.osde";
 	
@@ -127,8 +127,7 @@ public class Activator extends AbstractUIPlugin {
 
         logHandler = new EclipseLogHandler();
 
-        Logger plog = Logger.getLogger(PLUGIN_ID);
-        plog.addHandler(logHandler);
+        java.util.logging.Logger.getLogger(PLUGIN_ID).addHandler(logHandler);
 
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
@@ -169,7 +168,7 @@ public class Activator extends AbstractUIPlugin {
 			}
 		}
 		disposeColors();
-		Logger.getLogger(PLUGIN_ID).removeHandler(logHandler);
+		java.util.logging.Logger.getLogger(PLUGIN_ID).removeHandler(logHandler);
 		plugin = null;
 		super.stop(context);
 	}
@@ -308,14 +307,14 @@ public class Activator extends AbstractUIPlugin {
 					userPrefsView.disconnectedDatabase();
 					monitor.worked(1);
 				} catch (PartInitException e) {
-					Logging.warn("Disconnecting Shindig Database failed.", e);
+					logger.warn("Disconnecting Shindig Database failed.", e);
 				}
 			}
 		});
     }
     
 	public void connect(final IWorkbenchWindow window) {
-		Logging.info("Connecting to Shindig database");
+		logger.info("Connecting to Shindig database");
 		Job job = new Job("Connecting to Shindig database.") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -347,7 +346,7 @@ public class Activator extends AbstractUIPlugin {
 							UserPrefsView userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
 							userPrefsView.connectedDatabase();
 						} catch (PartInitException e) {
-							Logging.error("Connecting to Shindig Database failed.", e);
+							logger.error("Connecting to Shindig Database failed.", e);
 						} catch(JDBCException e) {
 							MessageDialog.openError(
 									window.getShell(), "Error",
@@ -425,10 +424,10 @@ public class Activator extends AbstractUIPlugin {
 			config.setWorkDirectory(store.getString(OsdeConfig.WORK_DIRECTORY));
 			return config;
 		} catch(IOException e) {
-			Logging.error("Something went wrong while getting OSDE configurations.", e);
+			logger.error("Something went wrong while getting OSDE configurations.", e);
 			throw new IllegalStateException(e);
 		} catch (ClassNotFoundException e) {
-			Logging.error("Retrieving the preference values failed.", e);
+			logger.error("Retrieving the preference values failed.", e);
 			throw new IllegalStateException(e);
 		}
 	}
@@ -452,10 +451,10 @@ public class Activator extends AbstractUIPlugin {
 			config.setWorkDirectory(store.getDefaultString(OsdeConfig.WORK_DIRECTORY));
 			return config;
 		} catch(IOException e) {
-			Logging.error("Retrieving preference values failed.", e);
+			logger.error("Retrieving preference values failed.", e);
 			throw new IllegalStateException(e);
 		} catch (ClassNotFoundException e) {
-			Logging.error("Retrieving preference values failed.", e);
+			logger.error("Retrieving preference values failed.", e);
 			throw new IllegalStateException(e);
 		}
 	}
@@ -480,7 +479,7 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_NAME, config.getExternalDatabaseName());
 			store.setValue(OsdeConfig.WORK_DIRECTORY, config.getWorkDirectory());
 		} catch(IOException e) {
-			Logging.error("Storing preference values failed.", e);
+			logger.error("Storing preference values failed.", e);
 			throw new IllegalStateException(e);
 		}
 	}
