@@ -30,7 +30,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 public class IgCredentials {
     private static final int MIN_PREF_LENGTH = 50;
     private static final int EDIT_TOKEN_LENGTH = 16;
-    private static final String EDIT_TOKEN_IDENTIFIER = "?et=";
+    private static final String EDIT_TOKEN_IDENTIFIER = "id=\"et\" value=\"";
     private String pref;
     private String editToken;
 
