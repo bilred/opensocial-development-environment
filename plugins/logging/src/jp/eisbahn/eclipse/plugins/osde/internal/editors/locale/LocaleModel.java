@@ -26,7 +26,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -42,6 +42,8 @@ import com.google.gadgets.model.Module.ModulePrefs.Locale;
 import com.google.gadgets.model.MessageBundle.Msg;
 
 public class LocaleModel implements Comparable<LocaleModel> {
+
+    private static final Logger logger = new Logger(LocaleModel.class);
 
 	public static final String MESSAGE_BUNDLE_FILENAME_PREFIX = "messages_";
 	
@@ -87,13 +89,13 @@ public class LocaleModel implements Comparable<LocaleModel> {
 					messages.put(name, value);
 				}
 			} catch (ParserConfigurationException e) {
-				Logging.warn("Loading message bundle file failed.", e);
+				logger.warn("Loading message bundle file failed.", e);
 			} catch (SAXException e) {
-				Logging.warn("Loading message bundle file failed.", e);
+				logger.warn("Loading message bundle file failed.", e);
 			} catch (IOException e) {
-				Logging.warn("Loading message bundle file failed.", e);
+				logger.warn("Loading message bundle file failed.", e);
 			} catch (CoreException e) {
-				Logging.warn("Loading message bundle file failed.", e);
+				logger.warn("Loading message bundle file failed.", e);
 			}
 		}
 	}

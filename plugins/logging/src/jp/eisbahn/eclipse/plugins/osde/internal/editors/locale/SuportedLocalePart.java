@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -64,6 +64,8 @@ import com.google.gadgets.model.Module.ModulePrefs.Locale;
 import com.google.gadgets.model.MessageBundle.Msg;
 
 public class SuportedLocalePart extends SectionPart implements IPartSelectionListener {
+    
+    private static final Logger logger = new Logger(SuportedLocalePart.class);
 
     private LocalePage page;
 
@@ -207,9 +209,9 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
                     locale.setMessages("http://localhost:8080/" + project.getName() + "/" + fileName);
                     locale.setMessageBundle(msgBundle);
                 } catch (CoreException e) {
-                    Logging.warn("Creating the message bundle file failed.", e);
+                    logger.warn("Creating the message bundle file failed.", e);
                 } catch (UnsupportedEncodingException e) {
-                    Logging.warn("Creating the message bundle file failed.", e);
+                    logger.warn("Creating the message bundle file failed.", e);
                 }
             }
             locales.add(locale);
