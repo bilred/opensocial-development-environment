@@ -27,7 +27,6 @@ import java.io.StringReader;
 import java.util.Set;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-import jp.eisbahn.eclipse.plugins.osde.internal.runtime.AbstractRunAction;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 

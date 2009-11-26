@@ -3,11 +3,15 @@ package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 import java.util.logging.Level;
 
 /**
- * A wrapper class around a JUL Logger to remove verboseness.
+ * A wrapper class around a JUL Logger to remove verboseness. This class
+ * enforces proper usage of JUL e.g. use class.getCanonicalName() instead of
+ * class.getName().
  * 
  * @author Dolphin Chi-Ngai Wan
  */
 public class Logger {
+    // We can safely keep a Logger instance here as LogManager also keeps
+    // loggers forever.
     private final java.util.logging.Logger delegate;
 
     public Logger(Class<?> owner) {
