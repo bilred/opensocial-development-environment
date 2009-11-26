@@ -25,7 +25,6 @@ import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel.DataType;
-import jp.eisbahn.eclipse.plugins.osde.internal.runtime.AbstractRunAction;
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationJob;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;

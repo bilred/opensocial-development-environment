@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature;
-import jp.eisbahn.eclipse.plugins.osde.internal.runtime.AbstractRunAction;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.commons.lang.StringUtils;

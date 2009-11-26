@@ -37,7 +37,6 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.h2.util.New;
 
 public class ShutoffShindigAction extends Action implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 

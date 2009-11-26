@@ -49,7 +49,7 @@ public class EclipseLogHandler extends Handler {
      */
     private int convert(Level level) {
         // Note: Since JUL allows API users to define their own log levels, I
-        // use a range check instead of a identity check to the Level constants.
+        // use a range check instead of an identity check to the Level constants.
 
         // INFO, CONFIG, FINE, FINER, FINEST
         if (level.intValue() <= Level.CONFIG.intValue()) {
