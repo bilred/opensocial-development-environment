@@ -28,6 +28,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
@@ -40,8 +42,8 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesVi
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.EclipseLogHandler;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.LogListener;
 
 
 import org.apache.commons.codec.binary.Base64;
@@ -97,9 +99,6 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 	
-	// For writing logs to files
-	private static LogListener logger;
-	
 	private Map<RGB, Color> colorMap = new HashMap<RGB, Color>();
 
 	private SessionFactory sessionFactory;
@@ -111,11 +110,12 @@ public class Activator extends AbstractUIPlugin {
 	private boolean runningShindig = false;
 	private LaunchApplicationInformation lastApplicationInformation;
 
+    private Handler logHandler;
+
 	/**
 	 * The constructor
 	 */
 	public Activator() {
-		
 	}
 
 	/**
@@ -124,13 +124,12 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		
-		// Attach a log listener to write logs to the file
-		// Note that the logging events are still written to the default Error Log
-		// This Listener is for backing up the logs
-		logger = new LogListener();
-		getLog().addLogListener(logger);
-		
+
+        logHandler = new EclipseLogHandler();
+
+        Logger plog = Logger.getLogger(PLUGIN_ID);
+        plog.addHandler(logHandler);
+
 		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
 		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
 		registerIcon();
@@ -170,8 +169,7 @@ public class Activator extends AbstractUIPlugin {
 			}
 		}
 		disposeColors();
-		getLog().removeLogListener(logger);
-		logger.dispose();
+		Logger.getLogger(PLUGIN_ID).removeHandler(logHandler);
 		plugin = null;
 		super.stop(context);
 	}
