@@ -23,8 +23,9 @@ import java.net.MalformedURLException;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
+import jp.eisbahn.eclipse.plugins.osde.internal.runtime.AbstractRunAction;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.core.runtime.CoreException;
@@ -46,7 +47,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class OsdePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-	
+    private static final Logger logger = new Logger(OsdePreferencePage.class);	
 	private Combo languages;
 	private Combo countries;
 	private Text databaseDirText;
@@ -288,11 +289,11 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 			Activator activator = Activator.getDefault();
 			(new DatabaseLaunchConfigurationCreator()).create(activator.getStatusMonitor());
 		} catch (MalformedURLException e) {
-			Logging.error("Storing preference values failed.", e);
+			logger.error("Storing preference values failed.", e);
 		} catch (CoreException e) {
-			Logging.error("Storing preference values failed.", e);
+			logger.error("Storing preference values failed.", e);
 		} catch (IOException e) {
-			Logging.error("Storing preference values failed.", e);
+			logger.error("Storing preference values failed.", e);
 		}
 		return true;
 	}

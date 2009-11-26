@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.runtime.AbstractRunAction;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
@@ -54,7 +55,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 public class WizardOpenSocialApplicationExportPage extends WizardPage {
-
+    private static final Logger logger = new Logger(WizardOpenSocialApplicationExportPage.class);
 	private TableViewer projectList;
 	private Text urlText;
 	private Text outputText;
@@ -175,7 +176,7 @@ public class WizardOpenSocialApplicationExportPage extends WizardPage {
 					openSocialProjects.add(project);
 				}
 			} catch (CoreException e) {
-				Logging.error("Initializing the Export page failed.", e);
+				logger.error("Initializing the Export page failed.", e);
 			}
 		}
 		projectList.setInput(openSocialProjects);

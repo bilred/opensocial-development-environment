@@ -26,7 +26,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.shindig.social.opensocial.model.Person;
@@ -45,7 +45,7 @@ import org.eclipse.ui.PartInitException;
 import com.google.gadgets.parser.ParserException;
 
 public class RunExternalAction implements IWorkbenchWindowActionDelegate {
-
+    private static final Logger logger = new Logger(RunExternalAction.class);
 	private Shell shell;
 	private IWorkbenchPart targetPart;
 
@@ -81,13 +81,13 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 		} catch(ConnectionException e) {
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
 		} catch (CoreException e) {
-			Logging.warn("Invalid gadget file.", e);
+			logger.warn("Invalid gadget file.", e);
 			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
 		} catch (IOException e) {
-			Logging.warn("Invalid gadget file.", e);
+			logger.warn("Invalid gadget file.", e);
 			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + e.getMessage());
 		} catch (ParserException e) {
-			Logging.warn("Invalid gadget file.", e);
+			logger.warn("Invalid gadget file.", e);
 			MessageDialog.openError(shell, "Error", "Invalid gadget file.\n" + e.getMessage());
 		}
 	}
@@ -101,7 +101,7 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 					userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
 					userPrefsView.showUserPrefFields(information, information.getUrl());
 				} catch (PartInitException e) {
-					Logging.warn("Notifying to UserPrefs view failed.", e);
+					logger.warn("Notifying to UserPrefs view failed.", e);
 				}
 			}
 		});

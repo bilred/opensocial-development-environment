@@ -28,7 +28,6 @@ import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ApplicationInformation;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
@@ -145,7 +144,7 @@ public abstract class AbstractRunAction {
 				IOUtils.copy(bytes, fos2);
 				return Status.OK_STATUS;
 			} catch(IOException e) {
-				return Logging.warn("Creating the web context file failed.", e);
+				return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Creating the web context file failed.", e);
 			} finally {
 				IOUtils.closeQuietly(fos1);
 				IOUtils.closeQuietly(fos2);

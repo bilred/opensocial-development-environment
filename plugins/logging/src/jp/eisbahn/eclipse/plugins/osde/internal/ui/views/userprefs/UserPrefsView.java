@@ -25,11 +25,12 @@ import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel.DataType;
+import jp.eisbahn.eclipse.plugins.osde.internal.runtime.AbstractRunAction;
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation;
 import jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationJob;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
@@ -55,7 +56,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class UserPrefsView extends AbstractView {
-
+    private static final Logger logger = new Logger(UserPrefsView.class);
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.UserPrefsView";
 
 	private Composite userPrefFieldsComposite;
@@ -246,7 +247,7 @@ public class UserPrefsView extends AbstractView {
 					monitor.worked(1);
 					UserPrefsView.this.information = information;
 				} catch (final Exception e) {
-					Logging.error("To show the UserPrefs values failed.", e);
+					logger.error("To show the UserPrefs values failed.", e);
 					getSite().getShell().getDisplay().syncExec(new Runnable() {
 						public void run() {
 							MessageDialog.openError(getSite().getShell(), "Error", "Fetching metadata failed.\n" + e.getMessage());

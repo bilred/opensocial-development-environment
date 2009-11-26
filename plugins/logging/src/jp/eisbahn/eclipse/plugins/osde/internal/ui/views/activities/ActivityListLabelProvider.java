@@ -20,7 +20,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.model.Activity;
@@ -30,7 +30,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 public class ActivityListLabelProvider extends LabelProvider implements ITableLabelProvider {
-	
+    private static final Logger logger = new Logger(ActivityListLabelProvider.class);
+
 	public Image getColumnImage(Object element, int columnIndex) {
 		switch(columnIndex) {
 		case 0:
@@ -52,7 +53,7 @@ public class ActivityListLabelProvider extends LabelProvider implements ITableLa
 				ApplicationImpl application = applicationService.getApplication(activity.getAppId());
 				return application.getTitle();
 			} catch (ConnectionException e) {
-				Logging.error("Connecting to Shindig Database failed.", e);
+				logger.error("Connecting to Shindig Database failed.", e);
 				return null;
 			}
 		default:

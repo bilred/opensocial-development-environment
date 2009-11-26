@@ -18,7 +18,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.widgets.Shell;
@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
 public class UserPrefsViewNotifier {
-	
+    private static final Logger logger = new Logger(UserPrefsViewNotifier.class);
 	public static void fire(final LaunchApplicationInformation information, Shell shell, IWorkbenchPart targetPart) {
 		IProject project = information.getProject();
 		final String url = "http://localhost:8080/" + project.getName().replace(" ", "%20") + "/" + information.getUrl().replace(" ", "%20");
@@ -39,7 +39,7 @@ public class UserPrefsViewNotifier {
 					userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
 					userPrefsView.showUserPrefFields(information, url);
 				} catch (PartInitException e) {
-					Logging.error("Notifying to UserPrefs view failed.", e);
+					logger.error("Notifying to UserPrefs view failed.", e);
 					throw new IllegalStateException(e);
 				}
 			}

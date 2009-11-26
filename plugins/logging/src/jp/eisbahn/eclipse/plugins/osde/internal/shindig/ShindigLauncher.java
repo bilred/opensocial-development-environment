@@ -26,7 +26,7 @@ import java.io.StringWriter;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 
 public class ShindigLauncher {
+    private static final Logger logger = new Logger(ShindigLauncher.class);
 
 	public static boolean launchWithConfirm(Shell shell, final IWorkbenchPart targetPart) {
 		if (MessageDialog.openConfirm(shell, "Confirm", "Shindig not started yet. Would you like to start Shindig?")) {
@@ -86,7 +87,7 @@ public class ShindigLauncher {
 								try {
 									DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
 								} catch (CoreException e) {
-									Logging.error("Launching Shindig Database failed.", e);
+									logger.error("Launching Shindig Database failed.", e);
 								}
 							}
 						});
@@ -109,14 +110,14 @@ public class ShindigLauncher {
 							try {
 								DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
 							} catch (CoreException e) {
-								Logging.error("Launching Apache Shindig failed.", e);
+								logger.error("Launching Apache Shindig failed.", e);
 							}
 						}
 					});
 				}
 			}
 		} catch (CoreException e) {
-			Logging.error("Launching Apache Shindig or Shindig Database failed.", e);
+			logger.error("Launching Apache Shindig or Shindig Database failed.", e);
 		}
 	}
 
@@ -171,7 +172,7 @@ public class ShindigLauncher {
 			ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
 			IOUtils.copy(bytes, fos);
 		} catch(IOException e) {
-			Logging.error("Creating the configuration file for H2Database failed.", e);
+			logger.error("Creating the configuration file for H2Database failed.", e);
 			throw new IllegalStateException(e);
 		} finally {
 			IOUtils.closeQuietly(fos);
