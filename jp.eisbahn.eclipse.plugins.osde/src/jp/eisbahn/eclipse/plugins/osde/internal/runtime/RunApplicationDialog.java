@@ -21,7 +21,7 @@ import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,7 +47,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 public class RunApplicationDialog extends TitleAreaDialog {
-	
+    private static final Logger logger = new Logger(RunApplicationDialog.class);
 	private static final String PREF_VIEW = "pref_view";
 	private static final String PREF_OWNER = "pref_owner";
 	private static final String PREF_VIEWER = "pref_viewer";
@@ -240,7 +240,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 				widths.setSelection(Integer.parseInt(prevWidth));
 			}
 		} catch (CoreException e) {
-			Logging.error("Setting the default values to Run Application Dialog failed.", e);
+			logger.error("Setting the default values to Run Application Dialog failed.", e);
 		}
 	}
 
@@ -269,7 +269,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_WIDTH), String.valueOf(widths.getSelection()));
 			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_USE_EXTERNAL_BROWSER), String.valueOf(useExternalBrowserCheck.getSelection()));
 		} catch (CoreException e) {
-			Logging.error("Setting persistent properties failed.", e);
+			logger.error("Setting persistent properties failed.", e);
 		}
 		setReturnCode(OK);
 		close();

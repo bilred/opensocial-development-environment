@@ -18,7 +18,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,6 +40,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 public class ShutoffShindigAction extends Action implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
+    private static final Logger logger = new Logger(ShutoffShindigAction.class);
 	private Shell shell;
 	private IWorkbenchPart targetPart;
 	
@@ -97,7 +98,7 @@ public class ShutoffShindigAction extends Action implements IObjectActionDelegat
 						}
 					});
 				} catch (CoreException e) {
-					Logging.error("To shutdown Apache Shindig or Shindig Database failed.", e);
+					logger.error("To shutdown Apache Shindig or Shindig Database failed.", e);
 				}
 				monitor.done();
 				return Status.OK_STATUS;

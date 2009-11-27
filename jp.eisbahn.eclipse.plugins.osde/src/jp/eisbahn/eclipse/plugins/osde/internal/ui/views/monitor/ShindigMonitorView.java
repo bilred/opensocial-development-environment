@@ -28,7 +28,7 @@ import java.util.Set;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.AbstractView;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jface.action.Action;
@@ -42,7 +42,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class ShindigMonitorView extends AbstractView {
-	
+    private static final Logger logger = new Logger(ShindigMonitorView.class);
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.internal.views.ShindigMonitorView";
 	
 	private HttpLogsBlock block;
@@ -152,13 +152,13 @@ public class ShindigMonitorView extends AbstractView {
 									logs.add(log);
 								}
 							} catch (Exception e) {
-								Logging.warn("Parsing the log file failed.", e);
+								logger.warn("Parsing the log file failed.", e);
 							}
 						}
 					} catch(FileNotFoundException e) {
 						// nop
 					} catch(IOException e) {
-						Logging.warn("Parsing the log file failed.", e);
+						logger.warn("Parsing the log file failed.", e);
 					} finally {
 						IOUtils.closeQuietly(in);
 					}
