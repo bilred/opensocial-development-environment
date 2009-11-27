@@ -11,11 +11,6 @@ abstract class BaseJob extends Job {
 
     protected final Logger logger;
 
-    public BaseJob(String jobName, Logger logger) {
-        super(jobName);
-        this.logger = logger;
-    }
-
     public BaseJob(String jobName) {
         super(jobName);
         this.logger = new Logger(this.getClass());
