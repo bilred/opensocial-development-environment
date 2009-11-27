@@ -27,7 +27,7 @@ import jp.eisbahn.eclipse.plugins.osde.internal.editors.contents.ContentsPage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.locale.LocalePage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.outline.GadgetXmlOutlinePage;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefsPage;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -54,6 +54,7 @@ import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
 public class GadgetXmlEditor extends FormEditor {
+    private static final Logger logger = new Logger(GadgetXmlEditor.class);
 	
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor";
 	
@@ -86,7 +87,7 @@ public class GadgetXmlEditor extends FormEditor {
 			try {
 				module = (Module) gadgetXMLParser.parse(file.getContents());
 			} catch (ParserException e) {
-				Logging.error(e.getMessage());
+				logger.error(e.getMessage());
 			}
 		} catch (CoreException e) {
 			throw new PartInitException(e.getMessage(), e);
@@ -110,10 +111,10 @@ public class GadgetXmlEditor extends FormEditor {
 					try {
 						reflectModel();
 					} catch (ParserException e) {
-						Logging.warn("Reflecting to the model failed.", e);
+						logger.warn("Reflecting to the model failed.", e);
 						// Ignore
 					} catch (UnsupportedEncodingException e) {
-						Logging.warn("Reflecting to the model failed.", e);
+						logger.warn("Reflecting to the model failed.", e);
 						// Ignore
 					}
 					commitPages(true);

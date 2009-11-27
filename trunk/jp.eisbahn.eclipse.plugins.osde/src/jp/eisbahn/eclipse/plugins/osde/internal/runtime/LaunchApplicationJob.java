@@ -27,7 +27,7 @@ import java.util.StringTokenizer;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ConnectionException;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
 import org.eclipse.core.resources.IProject;
@@ -44,6 +44,8 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.json.simple.JSONObject;
 
 public class LaunchApplicationJob extends Job {
+
+    private static final Logger logger = new Logger(LaunchApplicationJob.class);
 
 	private IProject project;
 	private String viewer;
@@ -124,9 +126,9 @@ public class LaunchApplicationJob extends Job {
 						}
 						browser.openURL(new URL(kicker));
 					} catch (MalformedURLException e) {
-						Logging.error("Launching the Web Browser failed.", e);
+						logger.error("Launching the Web Browser failed.", e);
 					} catch (PartInitException e) {
-						Logging.error("Launching the Web Browser failed.", e);
+						logger.error("Launching the Web Browser failed.", e);
 					}
 				}
 			});
@@ -134,11 +136,11 @@ public class LaunchApplicationJob extends Job {
 			monitor.done();
 			return Status.OK_STATUS;
 		} catch (UnsupportedEncodingException e) {
-			Logging.warn("Launching your application failed.", e);
+			logger.warn("Launching your application failed.", e);
 			monitor.done();
 			return Status.CANCEL_STATUS;
 		} catch (ConnectionException e) {
-			Logging.warn("Launching your application failed.", e);
+			logger.warn("Launching your application failed.", e);
 			monitor.done();
 			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
 			return Status.CANCEL_STATUS;

@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
@@ -56,7 +56,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 
 class RestfulAccessProjectFactory implements IRunnableWithProgress {
-	
+    private static final Logger logger = new Logger(RestfulAccessProjectFactory.class);
 	private String srcFolderName;
 	private String libFolderName;
 	private IProject newProjectHandle;
@@ -143,10 +143,10 @@ class RestfulAccessProjectFactory implements IRunnableWithProgress {
 			}
 			return file;
 		} catch (UnsupportedEncodingException e) {
-			Logging.error("Creating the Java file failed.", e);
+			logger.error("Creating the Java file failed.", e);
 			throw new IllegalStateException(e);
 		} catch (IOException e) {
-			Logging.error("Creating the Java file failed.", e);
+			logger.error("Creating the Java file failed.", e);
 			throw new IllegalStateException(e);
 		}
 		
@@ -248,7 +248,7 @@ class RestfulAccessProjectFactory implements IRunnableWithProgress {
 					}
 				}
 			} catch (CoreException e) {
-				Logging.error("Adding the classpath entries failed.", e);
+				logger.error("Adding the classpath entries failed.", e);
 			}
 			return ices.toArray(new IClasspathEntry[ices.size()]);
 		}

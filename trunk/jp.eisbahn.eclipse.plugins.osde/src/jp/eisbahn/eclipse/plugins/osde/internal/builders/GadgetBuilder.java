@@ -25,7 +25,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
+import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.core.resources.IFile;
@@ -50,7 +50,9 @@ import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
 public class GadgetBuilder extends IncrementalProjectBuilder {
-	
+
+    private static final Logger logger = new Logger(GadgetBuilder.class);
+
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.gadgetBuilder";
 	private static final String IGNORE_FOLDERS = "(\\.svn$)|(\\.git$)|(\\.hg$)|(\\.cvs$)|(\\.bzr$)";
 	
@@ -125,9 +127,9 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								destFile.setContents(in, true, false, monitor);
 							} 
 						} catch (IOException e) {
-							Logging.warn("Building and copying the Gadget XML file failed.", e);
+							logger.warn("Building and copying the Gadget XML file failed.", e);
 						} catch (ParserException e) {
-							Logging.warn("Building and copying the Gadget XML file failed.", e);
+							logger.warn("Building and copying the Gadget XML file failed.", e);
 						}
 					}
 					return false;
