@@ -22,7 +22,6 @@ import java.io.File;
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.jface.preference.PreferencePage;
@@ -44,7 +43,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class OsdePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-    private static final Logger logger = new Logger(OsdePreferencePage.class);
 	private Combo languages;
 	private Combo countries;
 	private Text databaseDirText;
