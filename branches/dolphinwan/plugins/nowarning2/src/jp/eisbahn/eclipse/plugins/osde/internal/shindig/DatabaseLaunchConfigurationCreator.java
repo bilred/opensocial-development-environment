@@ -41,81 +41,71 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 
-public class DatabaseLaunchConfigurationCreator {
+public class DatabaseLaunchConfigurationCreator extends BaseJob {
 
-	public final static String H2_LIB_PATH = "/libs/h2-1.1.117.jar";
+    private final static String H2_LIB_PATH = "/libs/h2-1.1.117.jar";
 
-	public void delete(IProgressMonitor monitor) throws CoreException {
-		try {
-			monitor.beginTask("Deleting the launch configuration for Database.", 1);
-			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
-			for (int i = 0; i < configurations.length; i++) {
-				if (configurations[i].getName().equals("Shindig Database")) {
-					configurations[i].delete();
-				}
-			}
-		} finally {
-			monitor.done();
-		}
-	}
+    public DatabaseLaunchConfigurationCreator() {
+        super("Create the database launch configuration");
+    }
 
-	public void create(IProgressMonitor monitor) throws CoreException, MalformedURLException, IOException {
-		try {
-			monitor.beginTask("Creating the launch configuration for Database", 3);
-			monitor.subTask("Deleting the setting that already exists.");
-			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
-			for (int i = 0; i < configurations.length; i++) {
-				if (configurations[i].getName().equals("Shidig Database")) {
-					configurations[i].delete();
-				}
-			}
-			monitor.worked(1);
-			monitor.subTask("Building the classpath.");
-			IPath systemLibs = new Path(JavaRuntime.JRE_CONTAINER);
-			IRuntimeClasspathEntry systemLibsEntry = JavaRuntime.newRuntimeContainerClasspathEntry(
-					systemLibs, IRuntimeClasspathEntry.STANDARD_CLASSES);
-			systemLibsEntry.setClasspathProperty(IRuntimeClasspathEntry.BOOTSTRAP_CLASSES);
-			IRuntimeClasspathEntry h2Entry = createRuntimeClasspathEntry(H2_LIB_PATH);
-			ILaunchConfigurationWorkingCopy wc = type.newInstance(null, "Shindig Database");
-			List<String> classpath = new ArrayList<String>();
-			classpath.add(systemLibsEntry.getMemento());
-			classpath.add(h2Entry.getMemento());
-			monitor.worked(1);
-			monitor.subTask("Creating the launch configuration.");
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "org.h2.tools.Server");
-			OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
-			String args = "-tcp -tcpAllowOthers";
-			String databaseDir = config.getDatabaseDir();
-			if (StringUtils.isNotEmpty(databaseDir)) {
-				if (databaseDir.endsWith("\\")) {
-					databaseDir = databaseDir.substring(0, databaseDir.length() - 1);
-				}
-				args += " -baseDir \"" + databaseDir + "\"";
-			}
-			wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
-			wc.doSave();
-			monitor.worked(1);
-		} finally {
-			monitor.done();
-		}
-	}
+    @Override
+    protected void runImpl(IProgressMonitor monitor) throws MalformedURLException, CoreException,
+            IOException {
+        monitor.beginTask("Creating the launch configuration for Database", 3);
+        monitor.subTask("Deleting the setting that already exists.");
+        ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+        ILaunchConfigurationType type = manager
+                .getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
+        ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
+        for (int i = 0; i < configurations.length; i++) {
+            if (configurations[i].getName().equals("Shidig Database")) {
+                configurations[i].delete();
+            }
+        }
+        monitor.worked(1);
+        monitor.subTask("Building the classpath.");
+        IPath systemLibs = new Path(JavaRuntime.JRE_CONTAINER);
+        IRuntimeClasspathEntry systemLibsEntry = JavaRuntime.newRuntimeContainerClasspathEntry(
+                systemLibs, IRuntimeClasspathEntry.STANDARD_CLASSES);
+        systemLibsEntry.setClasspathProperty(IRuntimeClasspathEntry.BOOTSTRAP_CLASSES);
+        IRuntimeClasspathEntry h2Entry = createRuntimeClasspathEntry(H2_LIB_PATH);
+        ILaunchConfigurationWorkingCopy wc = type.newInstance(null, "Shindig Database");
+        List<String> classpath = new ArrayList<String>();
+        classpath.add(systemLibsEntry.getMemento());
+        classpath.add(h2Entry.getMemento());
+        monitor.worked(1);
+        monitor.subTask("Creating the launch configuration.");
+        wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
+        wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
+        wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
+                "org.h2.tools.Server");
+        OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+        String args = "-tcp -tcpAllowOthers";
+        String databaseDir = config.getDatabaseDir();
+        if (StringUtils.isNotEmpty(databaseDir)) {
+            if (databaseDir.endsWith("\\")) {
+                databaseDir = databaseDir.substring(0, databaseDir.length() - 1);
+            }
+            args += " -baseDir \"" + databaseDir + "\"";
+        }
+        wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
+        wc.doSave();
+        monitor.worked(1);
+    }
 
-	private IRuntimeClasspathEntry createRuntimeClasspathEntry(String path) throws MalformedURLException, IOException {
-		URL url = getBundleEntryUrl(path);
-		IRuntimeClasspathEntry entry = JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(url.getPath()));
-		entry.setClasspathProperty(IRuntimeClasspathEntry.USER_CLASSES);
-		return entry;
-	}
+    private IRuntimeClasspathEntry createRuntimeClasspathEntry(String path)
+            throws MalformedURLException, IOException {
+        URL url = getBundleEntryUrl(path);
+        IRuntimeClasspathEntry entry = JavaRuntime.newArchiveRuntimeClasspathEntry(new Path(url
+                .getPath()));
+        entry.setClasspathProperty(IRuntimeClasspathEntry.USER_CLASSES);
+        return entry;
+    }
 
-	private URL getBundleEntryUrl(String path) throws MalformedURLException, IOException {
-		return FileLocator.toFileURL(new URL(
-				Activator.getDefault().getBundle().getEntry(path).toExternalForm()));
-	}
+    private URL getBundleEntryUrl(String path) throws MalformedURLException, IOException {
+        return FileLocator.toFileURL(new URL(Activator.getDefault().getBundle().getEntry(path)
+                .toExternalForm()));
+    }
 
 }

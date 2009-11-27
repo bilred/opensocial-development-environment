@@ -35,8 +35,10 @@ import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ActivityService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.AppDataService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ApplicationService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationDeleter;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.PersonService;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationCreator;
+import jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShindigLaunchConfigurationDeleter;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView;
@@ -49,13 +51,11 @@ import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -63,12 +63,8 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
@@ -129,8 +125,8 @@ public class Activator extends AbstractUIPlugin {
 
         java.util.logging.Logger.getLogger(PLUGIN_ID).addHandler(logHandler);
 
-		(new ShindigLaunchConfigurationCreator()).create(getStatusMonitor());
-		(new DatabaseLaunchConfigurationCreator()).create(getStatusMonitor());
+		new ShindigLaunchConfigurationCreator().schedule();
+		new DatabaseLaunchConfigurationCreator().schedule();
 		registerIcon();
 	}
 
@@ -158,8 +154,8 @@ public class Activator extends AbstractUIPlugin {
 				launch.terminate();
 			}
 		}
-		(new ShindigLaunchConfigurationCreator()).delete(getStatusMonitor());
-		(new DatabaseLaunchConfigurationCreator()).delete(getStatusMonitor());
+		new ShindigLaunchConfigurationDeleter().schedule();
+		new DatabaseLaunchConfigurationDeleter().schedule();
 		File tmpDir = new File(getOsdeConfiguration().getJettyDir());
 		File[] files = tmpDir.listFiles();
 		for (File file : files) {
@@ -173,20 +169,6 @@ public class Activator extends AbstractUIPlugin {
 		super.stop(context);
 	}
 	
-	public IProgressMonitor getStatusMonitor() {
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		if (workbench != null) {
-			WorkbenchWindow workbenchWindow = (WorkbenchWindow)workbench.getActiveWorkbenchWindow();
-			if (workbenchWindow != null) {
-				IActionBars bars = workbenchWindow.getActionBars();
-				IStatusLineManager lineManager = bars.getStatusLineManager();
-				IProgressMonitor monitor = lineManager.getProgressMonitor();
-				return monitor;
-			}
-		}
-		return new NullProgressMonitor();
-	}
-
 	/**
 	 * Returns the shared instance
 	 *
