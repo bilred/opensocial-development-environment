@@ -43,7 +43,7 @@ import org.eclipse.jdt.launching.JavaRuntime;
 
 public class DatabaseLaunchConfigurationCreator extends BaseJob {
 
-    public final static String H2_LIB_PATH = "/libs/h2-1.1.117.jar";
+    private final static String H2_LIB_PATH = "/libs/h2-1.1.117.jar";
 
     public DatabaseLaunchConfigurationCreator() {
         super("Create the database launch configuration");
