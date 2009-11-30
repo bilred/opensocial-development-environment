@@ -40,14 +40,6 @@ public class ActivatorTest {
     }
 
     /**
-     * Test method for {@link Activator#getStatusMonitor()}.
-     */
-    @Test
-    public void testGetStatusMonitor() {
-        // TODO: implement test method
-    }
-
-    /**
      * Test method for {@link Activator#getDefault()}.
      */
     @Test
