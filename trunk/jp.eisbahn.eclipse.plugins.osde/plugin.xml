@@ -181,11 +181,11 @@
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.runActionPreviewOnIGoogle2"
-               label="iGoogle - preview gadget"
+               label="iGoogle - Preview Gadget"
                icon="icons/action_go.gif"
                menubarPath="opensocialMenu/opensocialGroup4">
                toolbarPath="opensocialGroup"
-               tooltip="iGoogle - preview gadget">
+               tooltip="iGoogle - Preview Gadget">
             <enablement>
                <objectState
                    name="contentTypeId"
@@ -193,16 +193,15 @@
 	           </objectState>
             </enablement>
          </action>
-         <!--
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PublishIGoogleAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.runActionPublishOnIGoogle2"
-               label="iGoogle - publish gadget"
+               label="iGoogle - Publish Gadget"
                icon="icons/action_go.gif"
                menubarPath="opensocialMenu/opensocialGroup4">
                toolbarPath="opensocialGroup"
-               tooltip="iGoogle - publish gadget">
+               tooltip="iGoogle - Publish Gadget">
             <enablement>
                <objectState
                    name="contentTypeId"
@@ -210,15 +209,16 @@
                </objectState>
             </enablement>
          </action>
+         <!--
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.CleanIGoogleAction"
                enablesFor="0"
                id="jp.eisbahn.eclipse.plugins.osde.runActionCleanOnIGoogle2"
-               label="iGoogle - clean preview files"
+               label="iGoogle - Clean Preview Files"
                icon="icons/action_go.gif"
                menubarPath="opensocialMenu/opensocialGroup4">
                toolbarPath="opensocialGroup"
-               tooltip="iGoogle - clean preview files">
+               tooltip="iGoogle - Clean Preview Files">
          </action>
          -->
          <action
@@ -343,7 +343,7 @@
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.runActionPreviewOnIGoogle1"
-               label="iGoogle - preview gadget"
+               label="iGoogle - Preview Gadget"
                icon="icons/action_go.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group4">
             <enablement>
@@ -353,12 +353,11 @@
 	           </objectState>
             </enablement>
          </action>
-         <!--
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PublishIGoogleAction"
                enablesFor="1"
                id="jp.eisbahn.eclipse.plugins.osde.runActionPublishOnIGoogle1"
-               label="iGoogle - publish gadget"
+               label="iGoogle - Publish Gadget"
                icon="icons/action_go.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group4">
             <enablement>
@@ -368,11 +367,12 @@
                </objectState>
             </enablement>
          </action>
+         <!--
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.CleanIGoogleAction"
                enablesFor="0"
                id="jp.eisbahn.eclipse.plugins.osde.runActionCleanOnIGoogle1"
-               label="iGoogle - clean preview files"
+               label="iGoogle - Clean Preview Files"
                icon="icons/action_go.gif"
                menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group4">
          </action>
