@@ -18,16 +18,12 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.ui;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,7 +42,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class OsdePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-    private static final Logger logger = new Logger(OsdePreferencePage.class);	
+
 	private Combo languages;
 	private Combo countries;
 	private Text databaseDirText;
@@ -281,22 +277,13 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		initializeDefaults();
 		super.performDefaults();
 	}
-	
-	public boolean performOk() {
-		try {
-			storeValues();
-			Activator activator = Activator.getDefault();
-			(new DatabaseLaunchConfigurationCreator()).create(activator.getStatusMonitor());
-		} catch (MalformedURLException e) {
-			logger.error("Storing preference values failed.", e);
-		} catch (CoreException e) {
-			logger.error("Storing preference values failed.", e);
-		} catch (IOException e) {
-			logger.error("Storing preference values failed.", e);
-		}
-		return true;
-	}
-	
+
+    public boolean performOk() {
+        storeValues();
+        new DatabaseLaunchConfigurationCreator().schedule();
+        return true;
+    }
+
 	private void storeValues() {
 		OsdeConfig config = new OsdeConfig();
 		String country = countries.getItem(countries.getSelectionIndex());
