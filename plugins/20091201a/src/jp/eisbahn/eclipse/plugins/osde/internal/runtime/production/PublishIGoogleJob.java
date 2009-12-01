@@ -50,7 +50,7 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
 
     public PublishIGoogleJob(Shell shell, String username, String password, String projectName,
             IFile gadgetXmlIFile) {
-        super(username, password, gadgetXmlIFile);
+        super("iGoogle - Publish Gadget", username, password, gadgetXmlIFile);
         this.shell = shell;
         this.projectName = projectName;
     }
