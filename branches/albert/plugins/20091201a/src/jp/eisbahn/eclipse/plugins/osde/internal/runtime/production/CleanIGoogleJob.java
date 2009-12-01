@@ -40,14 +40,15 @@ public class CleanIGoogleJob extends BaseIGoogleJob {
     private Shell shell;
 
     public CleanIGoogleJob(Shell shell, String username, String password) {
-        super(username, password);
+        super("iGoogle - Clean Host Files", username, password);
         this.shell = shell;
     }
 
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
-        monitor.beginTask("Running CleanIGoogleJob", 3);
+        monitor.beginTask("Running CleanIGoogleJob", 4);
+        monitor.worked(1);
 
         // Clean all preview files as hosted on iGoogle.
         try {
@@ -61,17 +62,17 @@ public class CleanIGoogleJob extends BaseIGoogleJob {
 
         Display display = shell.getDisplay();
         monitor.worked(1);
-
-        display.syncExec(new CleaningRunnable());
-        monitor.worked(1);
-
         monitor.done();
+
+        display.asyncExec(new CleaningRunnable());
         return Status.OK_STATUS;
     }
 
-    private static class CleaningRunnable implements Runnable {
+    private class CleaningRunnable implements Runnable {
         public void run() {
-            // TODO: (p0) open a pop-up window saying all preview files are cleaned.
+            CleanIGoogleResultDialog dialog = new CleanIGoogleResultDialog(shell);
+            int openResult = dialog.open();
+            logger.info("openResult: " + openResult);
         }
     }
 }

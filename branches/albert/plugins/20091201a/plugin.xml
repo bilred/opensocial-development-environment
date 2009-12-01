@@ -180,11 +180,10 @@
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleAction"
                enablesFor="1"
+               icon="icons/action_go.gif"
                id="jp.eisbahn.eclipse.plugins.osde.runActionPreviewOnIGoogle2"
                label="iGoogle - Preview Gadget"
-               icon="icons/action_go.gif"
-               menubarPath="opensocialMenu/opensocialGroup4">
-               toolbarPath="opensocialGroup"
+               menubarPath="opensocialMenu/opensocialGroup4"
                tooltip="iGoogle - Preview Gadget">
             <enablement>
                <objectState
@@ -196,11 +195,10 @@
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PublishIGoogleAction"
                enablesFor="1"
+               icon="icons/action_go.gif"
                id="jp.eisbahn.eclipse.plugins.osde.runActionPublishOnIGoogle2"
                label="iGoogle - Publish Gadget"
-               icon="icons/action_go.gif"
-               menubarPath="opensocialMenu/opensocialGroup4">
-               toolbarPath="opensocialGroup"
+               menubarPath="opensocialMenu/opensocialGroup4"
                tooltip="iGoogle - Publish Gadget">
             <enablement>
                <objectState
@@ -212,12 +210,10 @@
          <!--
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.CleanIGoogleAction"
-               enablesFor="0"
+               icon="icons/action_go.gif"
                id="jp.eisbahn.eclipse.plugins.osde.runActionCleanOnIGoogle2"
                label="iGoogle - Clean Preview Files"
-               icon="icons/action_go.gif"
-               menubarPath="opensocialMenu/opensocialGroup4">
-               toolbarPath="opensocialGroup"
+               menubarPath="opensocialMenu/opensocialGroup4"
                tooltip="iGoogle - Clean Preview Files">
          </action>
          -->
@@ -370,7 +366,6 @@
          <!--
          <action
                class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.CleanIGoogleAction"
-               enablesFor="0"
                id="jp.eisbahn.eclipse.plugins.osde.runActionCleanOnIGoogle1"
                label="iGoogle - Clean Preview Files"
                icon="icons/action_go.gif"
