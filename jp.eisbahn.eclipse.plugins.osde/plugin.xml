@@ -183,7 +183,7 @@
                id="jp.eisbahn.eclipse.plugins.osde.runActionPreviewOnIGoogle2"
                label="iGoogle - Preview Gadget"
                icon="icons/action_go.gif"
-               menubarPath="opensocialMenu/opensocialGroup4">
+               menubarPath="opensocialMenu/opensocialGroup4"
                toolbarPath="opensocialGroup"
                tooltip="iGoogle - Preview Gadget">
             <enablement>
@@ -199,7 +199,7 @@
                id="jp.eisbahn.eclipse.plugins.osde.runActionPublishOnIGoogle2"
                label="iGoogle - Publish Gadget"
                icon="icons/action_go.gif"
-               menubarPath="opensocialMenu/opensocialGroup4">
+               menubarPath="opensocialMenu/opensocialGroup4"
                toolbarPath="opensocialGroup"
                tooltip="iGoogle - Publish Gadget">
             <enablement>
