@@ -36,7 +36,8 @@ import org.eclipse.swt.widgets.Shell;
  * @author albert.cheng.ig@gmail.com
  */
 // TODO: (p1) Use a Dialog with only an OK button.
-// TitleAreaDialog has an unnecessary CANCEL button.
+//       TitleAreaDialog has an unnecessary CANCEL button.
+//       Try MessageDialog.
 public class CleanIGoogleResultDialog extends TitleAreaDialog {
     private static Logger logger = new Logger(CleanIGoogleResultDialog.class);
 
