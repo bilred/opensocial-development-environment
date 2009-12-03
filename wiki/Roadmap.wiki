@@ -59,7 +59,9 @@ This version covers:
  * New editor for gadget xml files - code completion for OS API and templates (Issue 160).
  * Gadget Checker (Issue 47).
  * Gadget Translation (Issue 46).
- * Latency Reduction Tools (Issue 127).
+ * Latency Reduction Tools
+   * Issue 127 - Evaluator for web performance.
+   * Issue ??? - JS Compiler.
  * Support Shindig v1.1 (beta 3).
 
 Expected release date: 2010-01-15
