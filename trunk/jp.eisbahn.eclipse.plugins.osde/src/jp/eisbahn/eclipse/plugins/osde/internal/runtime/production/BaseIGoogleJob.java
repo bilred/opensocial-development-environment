@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.jobs.Job;
 public abstract class BaseIGoogleJob extends Job {
     private static Logger logger = Logger.getLogger(BaseIGoogleJob.class.getName());
 
-    private static final String IGOOGLE_JOB_NAME = "iGoogle job";
     static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
     static final String OSDE_PUBLISH_DIRECTORY = "/osde/publish/";
 
@@ -72,15 +71,15 @@ public abstract class BaseIGoogleJob extends Job {
     private String password;
     private IFile gadgetXmlIFile;
 
-    public BaseIGoogleJob(String username, String password, IFile gadgetXmlIFile) {
-        super(IGOOGLE_JOB_NAME);
+    public BaseIGoogleJob(String jobName, String username, String password, IFile gadgetXmlIFile) {
+        super(jobName);
         this.username = username;
         this.password = password;
         this.gadgetXmlIFile = gadgetXmlIFile;
     }
 
-    public BaseIGoogleJob(String username, String password) {
-        this(username, password, null);
+    public BaseIGoogleJob(String jobName, String username, String password) {
+        this(jobName, username, password, null);
     }
 
     /**
