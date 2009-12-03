@@ -39,28 +39,27 @@ This version is a next major version, and will be supported !OpenSocial Specific
 
 This version covers:
  * (DONE) (owner=albert) Preview gadgets on at least one container (Issue 39).
- * (owner=yoichiro) Rename package name to com.googlecode.osde (Issue 158).
+ * (DONE) (owner=albert) Publish gadgets on at least one container (Issue 154).
 
-Expected release date: 2009-12-10
+Expected release date: 2009-12-05
 
 ==v0.7==
 
 This version covers:
- * (DONE) (owner=albert) Publish gadgets on at least one container (Issue 154).
  * (IN PROGRESS) (owner=albert) Manage gadgets on at least one container (Issue 155).
+ * (owner=yoichiro) Rename package name to com.googlecode.osde (Issue 158).
  * (owner=TBD) The configuration to change the port number of Jetty (Issue 104).
  * (owner=TBD) The HAS_APP filter (Issue 106).
  * (owner=TBD) New editor for gadget xml files - code highlighting for OS API and templates (Issue 159).
 
-Expected release date: 2009-12-25
-
+Expected release date: 2009-12-20
 ==v0.9==
 
 This version covers:
- * (owner=TBD) New editor for gadget xml files - code completion for OS API and templates (Issue 160).
  * (owner=albert) Gadget Checker (Issue 47).
  * (owner=dolphin) Latency Reduction Tools - Evaluator for web performance (Issue 127).
  * (owner=albert) Latency Reduction Tools - JS Compiler (Issue 180).
+ * (owner=TBD) New editor for gadget xml files - code completion for OS API and templates (Issue 160).
  * (owner=TBD) Gadget Translation (Issue 46).
  * (owner=TBD) Support Shindig v1.1 (beta 3).
 
