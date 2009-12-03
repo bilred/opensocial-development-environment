@@ -49,13 +49,16 @@ import com.google.gadgets.parser.ParserException;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
+/**
+ * Gadget builder.
+ */
 public class GadgetBuilder extends IncrementalProjectBuilder {
 
     private static final Logger logger = new Logger(GadgetBuilder.class);
 
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.gadgetBuilder";
 	private static final String IGNORE_FOLDERS = "(\\.svn$)|(\\.git$)|(\\.hg$)|(\\.cvs$)|(\\.bzr$)";
-	
+
 	private Pattern ignoreFolderPattern;
 
 	public GadgetBuilder() {
@@ -125,7 +128,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								String serialize = GadgetXmlSerializer.serialize(module);
 								ByteArrayInputStream in = new ByteArrayInputStream(serialize.getBytes("UTF-8"));
 								destFile.setContents(in, true, false, monitor);
-							} 
+							}
 						} catch (IOException e) {
 							logger.warn("Building and copying the Gadget XML file failed.", e);
 						} catch (ParserException e) {
@@ -153,11 +156,11 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 			}
 		});
 	}
-	
+
 	protected boolean shouldCopyFolder(IFolder folder) {
 		String name = folder.getName();
 		Matcher matcher = ignoreFolderPattern.matcher(name);
 		return !matcher.matches();
 	}
-	
+
 }

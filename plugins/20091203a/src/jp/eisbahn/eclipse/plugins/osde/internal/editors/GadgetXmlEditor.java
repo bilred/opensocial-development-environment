@@ -53,11 +53,14 @@ import com.google.gadgets.parser.ParserException;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
+/**
+ * Form editor for gadget xml files.
+ */
 public class GadgetXmlEditor extends FormEditor {
     private static final Logger logger = new Logger(GadgetXmlEditor.class);
-	
+
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor";
-	
+
 	private Module module;
 
 	private ModulePrefsPage modulePrefsPage;
@@ -69,14 +72,14 @@ public class GadgetXmlEditor extends FormEditor {
 	private UserPrefsPage userPrefsPage;
 
 	private StructuredTextEditor sourceEditor;
-	
+
 	private boolean reflecting = false;
-	
+
 	private GadgetXmlOutlinePage outlinePage;
-	
+
 	private boolean initializeFailed = false;
-	
-	
+
+
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		super.init(site, input);
@@ -128,7 +131,7 @@ public class GadgetXmlEditor extends FormEditor {
 				public void pageChanged(PageChangedEvent event) {
 					IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 					try {
-						parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8"))); 
+						parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
 					} catch (UnsupportedEncodingException e) {
 						MessageDialog.openError(getSite().getShell(), "Error",
 								"Encoding error in source editor: " + e.getMessage());
@@ -227,13 +230,13 @@ public class GadgetXmlEditor extends FormEditor {
 			reflecting = false;
 		}
 	}
-	
+
 	public String getSource() {
 		IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
 		String content = document.get();
 		return content;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object getAdapter(Class adapter) {
@@ -245,7 +248,7 @@ public class GadgetXmlEditor extends FormEditor {
 		}
 		return super.getAdapter(adapter);
 	}
-	
+
 	public void activateSourceEditor(int lineNumber) {
 		setActivePage(4);
 		String content = getSource();
@@ -256,7 +259,7 @@ public class GadgetXmlEditor extends FormEditor {
 		}
 		sourceEditor.selectAndReveal(pos, 0);
 	}
-	
+
 	private Map<Integer, Integer> getLineInformation(String content) {
 		Map<Integer, Integer> resultMap = new HashMap<Integer, Integer>();
 		char[] chars = content.toCharArray();

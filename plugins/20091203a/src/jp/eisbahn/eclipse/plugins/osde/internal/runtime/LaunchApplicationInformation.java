@@ -19,8 +19,12 @@ package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
 import org.eclipse.core.resources.IProject;
 
+/**
+ * Place holder for storing information of launching application
+ * with local shindig/database support.
+ */
 public class LaunchApplicationInformation {
-	
+
 	private String viewer;
 	private String owner;
 	private String view;
@@ -133,7 +137,7 @@ public class LaunchApplicationInformation {
 	public String getApplicationTitle() {
 		return applicationTitle;
 	}
-	
+
 	public void setApplicationTitle(String applicationTitle) {
 		this.applicationTitle = applicationTitle;
 	}

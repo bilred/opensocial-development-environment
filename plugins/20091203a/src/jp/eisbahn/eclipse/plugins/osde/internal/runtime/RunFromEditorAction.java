@@ -29,10 +29,13 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 
+/**
+ * Action to be run from editor.
+ */
 public class RunFromEditorAction extends AbstractRunAction implements IEditorActionDelegate {
 
 	private IEditorPart targetEditor;
-	
+
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		this.targetEditor = targetEditor;
 		shell = targetEditor != null ? targetEditor.getSite().getShell() : null;

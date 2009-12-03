@@ -46,6 +46,9 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
+/**
+ * Dialog for running application locally.
+ */
 public class RunApplicationDialog extends TitleAreaDialog {
     private static final Logger logger = new Logger(RunApplicationDialog.class);
 	private static final String PREF_VIEW = "pref_view";
@@ -57,7 +60,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	private static final String PREF_USE_EXTERNAL_BROWSER = "pref_use_external_browser";
 
 	private List<Person> people;
-	
+
 	private String view;
 	private String owner;
 	private String viewer;
@@ -65,7 +68,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	private String country;
 	private String language;
 	private boolean useExternalBrowser;
-	
+
 	private Combo viewKind;
 	private Combo owners;
 	private Combo viewers;
@@ -73,9 +76,9 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	private Combo countries;
 	private Combo languages;
 	private Button useExternalBrowserCheck;
-	
+
 	private IFile gadgetXmlFile;
-	
+
 	public RunApplicationDialog(Shell shell, List<Person> people, IFile gadgetXmlFile) {
 		super(shell);
 		this.people = people;
@@ -286,19 +289,19 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	public String getViewer() {
 		return viewer;
 	}
-	
+
 	public String getWidth() {
 		return width;
 	}
-	
+
 	public boolean isUseExternalBrowser() {
 		return useExternalBrowser;
 	}
-	
+
 	public String getCountry() {
 		return country;
 	}
-	
+
 	public String getLanguage() {
 		return language;
 	}

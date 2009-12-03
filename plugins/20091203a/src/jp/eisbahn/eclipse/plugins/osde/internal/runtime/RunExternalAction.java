@@ -44,6 +44,9 @@ import org.eclipse.ui.PartInitException;
 
 import com.google.gadgets.parser.ParserException;
 
+/**
+ * Action to run external action.
+ */
 public class RunExternalAction implements IWorkbenchWindowActionDelegate {
     private static final Logger logger = new Logger(RunExternalAction.class);
 	private Shell shell;

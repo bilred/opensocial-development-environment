@@ -24,6 +24,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * Utility class for SWT components.
+ */
 public class ComponentUtils {
 
 	public static Label createLabel(Composite parent, String text) {
@@ -36,7 +39,7 @@ public class ComponentUtils {
 		label.setFont(parent.getFont());
 		return label;
 	}
-	
+
 	public static Text createText(Composite parent) {
 		Text text = new Text(parent, SWT.BORDER);
 		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -51,11 +54,11 @@ public class ComponentUtils {
 		button.setFont(parent.getFont());
 		return button;
 	}
-	
+
 	public static Button createRadio(Composite parent, String text) {
 		return createRadio(parent, text, 1);
 	}
-	
+
 	public static Button createRadio(Composite parent, String text, int span) {
 		Button button = new Button(parent, SWT.RADIO);
 		button.setText(text);

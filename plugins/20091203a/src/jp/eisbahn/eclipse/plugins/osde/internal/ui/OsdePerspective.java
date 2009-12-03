@@ -29,6 +29,9 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.console.IConsoleConstants;
 
+/**
+ * Eclipse Perspective for OSDE.
+ */
 public class OsdePerspective implements IPerspectiveFactory {
 
 	public void createInitialLayout(IPageLayout factory) {

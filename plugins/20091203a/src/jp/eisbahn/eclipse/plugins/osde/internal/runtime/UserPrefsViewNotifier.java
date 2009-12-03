@@ -26,6 +26,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
+/**
+ * A utility class for notifying User Preference View.
+ */
 public class UserPrefsViewNotifier {
     private static final Logger logger = new Logger(UserPrefsViewNotifier.class);
 	public static void fire(final LaunchApplicationInformation information, Shell shell, IWorkbenchPart targetPart) {
