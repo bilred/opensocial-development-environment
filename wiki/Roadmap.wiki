@@ -9,7 +9,7 @@ This version is a current stream. Supporting !OpenSocial Specification 0.8.1.
 ===v0.2.9===
 
  * Purpose: Minor version up.
- * <font color="red">This version will not be released. Because the new version 0.3.0 is released prior.</font>
+ * This version will not be released. Because the new version 0.3.0 is released prior.
 
 ==v0.3==
 
@@ -26,7 +26,7 @@ This version is a next major version, and will be supported !OpenSocial Specific
   * Subversion committing problem (Issue #75)
   * Removing the legacy of h2-library (Issue #81)
 
-===v0.3.1===
+===v0.3.1 (CURRENT RELEASE)===
 
  * Purpose: Fix some issues.
  * Release date: 2009-11-16
@@ -38,20 +38,21 @@ This version is a next major version, and will be supported !OpenSocial Specific
 ==v0.5==
 
 This version covers:
- * Preview gadgets on at least one container (Issue 39).
+ * (DONE) Preview gadgets on at least one container (Issue 39).
  * Rename package name to com.googlecode.osde (Issue 158).
 
-Expected release date: 2009-11-15
+Expected release date: 2009-12-10
 
 ==v0.7==
 
 This version covers:
- * Publish/manage gadgets on at least one container (Issue 154 and Issue 155).
+ * (DONE) Publish gadgets on at least one container (Issue 154).
+ * (IN PROGRESS) Manage gadgets on at least one container (Issue 155).
  * The configuration to change the port number of Jetty (Issue 104).
  * The HAS_APP filter (Issue 106).
  * New editor for gadget xml files - code highlighting for OS API and templates (Issue 159).
 
-Expected release date: 2009-12-15
+Expected release date: 2009-12-25
 
 ==v0.9==
 
