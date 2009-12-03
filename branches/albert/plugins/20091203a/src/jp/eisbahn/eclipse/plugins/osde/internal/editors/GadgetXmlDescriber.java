@@ -31,6 +31,10 @@ import com.google.gadgets.parser.ParserException;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
+/**
+ * Content describer for gadget xml files to be used in describing
+ * what is a gadget spec file.
+ */
 public class GadgetXmlDescriber implements IContentDescriber {
     private static final Logger logger = new Logger(GadgetXmlDescriber.class);
 

@@ -25,6 +25,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+/**
+ * Action to be run again locally.
+ */
 public class RunAgainAction extends AbstractRunAction implements IWorkbenchWindowActionDelegate {
 
 	public void dispose() {

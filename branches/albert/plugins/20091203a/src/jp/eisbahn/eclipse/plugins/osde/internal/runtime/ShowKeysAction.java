@@ -44,11 +44,14 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import com.google.gadgets.parser.ParserException;
 
+/**
+ * Action to show keys.
+ */
 public class ShowKeysAction implements IObjectActionDelegate {
 
 	private IFile file;
 	private Shell shell;
-	
+
 	public ShowKeysAction() {
 		super();
 	}
@@ -118,7 +121,7 @@ public class ShowKeysAction implements IObjectActionDelegate {
 			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
 		}
 	}
-	
+
 	public void selectionChanged(IAction action, ISelection selection) {
 		file = null;
 		if (selection instanceof IStructuredSelection) {

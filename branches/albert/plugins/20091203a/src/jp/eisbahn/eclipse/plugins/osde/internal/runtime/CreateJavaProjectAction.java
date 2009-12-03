@@ -46,13 +46,16 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import com.google.gadgets.parser.ParserException;
 
+/**
+ * Action for creating a Java Project.
+ */
 public class CreateJavaProjectAction implements IObjectActionDelegate {
 
 	private IFile file;
 	private Shell shell;
 	private IStructuredSelection currentSelection;
 	private IWorkbenchPart targetPart;
-	
+
 	public CreateJavaProjectAction() {
 		super();
 	}
@@ -100,7 +103,7 @@ public class CreateJavaProjectAction implements IObjectActionDelegate {
 			MessageDialog.openError(shell, "Error", "Invalid syntax. " + e.getMessage());
 		}
 	}
-	
+
 	private Person findPersonWithFriends() throws ConnectionException {
 		PersonService service = Activator.getDefault().getPersonService();
 		List<Person> people = service.getPeople();
