@@ -6,7 +6,7 @@ import java.util.logging.Level;
  * A wrapper class around a JUL Logger to remove verboseness. This class
  * enforces proper usage of JUL e.g. use class.getCanonicalName() instead of
  * class.getName().
- * 
+ *
  * @author Dolphin Chi-Ngai Wan
  */
 public class Logger {
@@ -16,6 +16,12 @@ public class Logger {
 
     public Logger(Class<?> owner) {
         delegate = java.util.logging.Logger.getLogger(owner.getCanonicalName());
+    }
+
+    public void fine(String message) {
+        if (delegate.isLoggable(Level.FINE)) {
+            delegate.fine(message);
+        }
     }
 
     public void info(String message) {
