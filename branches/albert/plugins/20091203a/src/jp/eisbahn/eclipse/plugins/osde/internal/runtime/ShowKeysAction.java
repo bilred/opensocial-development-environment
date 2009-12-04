@@ -45,7 +45,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import com.google.gadgets.parser.ParserException;
 
 /**
- * Action to show keys.
+ * Action to show the Consumer key and the secret for accessing APIs
+ * with RESTful Protocol.
  */
 public class ShowKeysAction implements IObjectActionDelegate {
 

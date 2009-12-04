@@ -31,7 +31,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
- * Action to be run locally.
+ * Action to start up a local Shindig server to run a gadget.
  */
 public class RunAction
         extends AbstractRunAction

@@ -30,7 +30,8 @@ import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * Action to be run from editor.
+ * Action available in a gadget spec XML editor to run the gadget
+ * with a local Shindig server.
  */
 public class RunFromEditorAction extends AbstractRunAction implements IEditorActionDelegate {
 
