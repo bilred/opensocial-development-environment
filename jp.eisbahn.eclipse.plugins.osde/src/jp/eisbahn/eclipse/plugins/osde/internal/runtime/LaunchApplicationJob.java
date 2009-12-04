@@ -43,6 +43,9 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.json.simple.JSONObject;
 
+/**
+ * Job for launching application with local shindig/database support.
+ */
 public class LaunchApplicationJob extends Job {
 
     private static final Logger logger = new Logger(LaunchApplicationJob.class);
@@ -117,7 +120,7 @@ public class LaunchApplicationJob extends Job {
 							String title = appTitle + " [" + view + "]";
 							String desc = appTitle + " [" + view + "] viewer=" + viewer + " owner=" + owner;
 							browser = support.createBrowser(
-									IWorkbenchBrowserSupport.LOCATION_BAR 
+									IWorkbenchBrowserSupport.LOCATION_BAR
 										| IWorkbenchBrowserSupport.NAVIGATION_BAR
 										| IWorkbenchBrowserSupport.AS_EDITOR,
 									title, title, desc);

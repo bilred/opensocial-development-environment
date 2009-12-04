@@ -25,8 +25,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
+/**
+ * Base abstract class for all views.
+ */
 public abstract class AbstractView extends ViewPart {
-	
+
 	protected void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
@@ -36,7 +39,7 @@ public abstract class AbstractView extends ViewPart {
 			}
 		});
 	}
-	
+
 	public void createPartControl(Composite parent) {
 		createForm(parent);
 		makeActions();
@@ -59,7 +62,7 @@ public abstract class AbstractView extends ViewPart {
 	protected void fillContextMenu(IMenuManager manager) {
 //		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
-	
+
 	protected void fillLocalToolBar(IToolBarManager manager) {
 	}
 

@@ -49,6 +49,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.google.gadgets.parser.ParserException;
 
+/**
+ * Base abstract class of RunXxxxAction.
+ */
 public abstract class AbstractRunAction {
 
 	protected Shell shell;

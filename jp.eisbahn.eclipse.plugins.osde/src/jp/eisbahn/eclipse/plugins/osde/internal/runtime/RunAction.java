@@ -30,11 +30,16 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class RunAction extends AbstractRunAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+/**
+ * Action to start up a local Shindig server to run a gadget.
+ */
+public class RunAction
+        extends AbstractRunAction
+        implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
 	private IFile gadgetXmlFile;
 	private IProject project;
-	
+
 	/**
 	 * Constructor for Action1.
 	 */
@@ -49,7 +54,7 @@ public class RunAction extends AbstractRunAction implements IObjectActionDelegat
 		shell = targetPart.getSite().getShell();
 		this.targetPart = targetPart;
 	}
-	
+
 	/**
 	 * @see IActionDelegate#run(IAction)
 	 */
@@ -68,7 +73,7 @@ public class RunAction extends AbstractRunAction implements IObjectActionDelegat
 			launch(gadgetXmlFile, project);
 		}
 	}
-	
+
 	/**
 	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
 	 */

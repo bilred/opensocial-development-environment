@@ -44,8 +44,11 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
+/**
+ * Dialog for running external application.
+ */
 public class RunExternalApplicationDialog extends TitleAreaDialog {
-	
+
 	private static final String DEV_APP = "http://osda.appspot.com/gadget/osda-0.8.xml";
 
 	private static final String PREF_URL = "pref_url_for_external";
@@ -67,7 +70,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 	private String country;
 	private String language;
 	private boolean useExternalBrowser;
-	
+
 	private Combo urlCombo;
 	private Combo viewKind;
 	private Combo owners;
@@ -76,9 +79,9 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 	private Combo countries;
 	private Combo languages;
 	private Button useExternalBrowserCheck;
-	
+
 	private List<String> urls = new ArrayList<String>();
-	
+
 	public RunExternalApplicationDialog(Shell shell, List<Person> people) {
 		super(shell);
 		this.people = people;
@@ -290,23 +293,23 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 	public String getViewer() {
 		return viewer;
 	}
-	
+
 	public String getWidth() {
 		return width;
 	}
-	
+
 	public boolean isUseExternalBrowser() {
 		return useExternalBrowser;
 	}
-	
+
 	public String getCountry() {
 		return country;
 	}
-	
+
 	public String getLanguage() {
 		return language;
 	}
-	
+
 	public String getUrl() {
 		return url;
 	}

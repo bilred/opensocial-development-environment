@@ -19,8 +19,11 @@ package jp.eisbahn.eclipse.plugins.osde.internal;
 
 import java.util.Map;
 
+/**
+ * A JavaBean of the OSDE configuration.
+ */
 public class OsdeConfig {
-	
+
 	public static final String DEFAULT_LANGUAGE = "language";
 	public static final String DEFAULT_COUNTRY = "country";
 	public static final String DATABASE_DIR = "database_dir";
@@ -34,7 +37,7 @@ public class OsdeConfig {
 	public static final String EXTERNAL_DATABASE_PASSWORD = "external_database_password";
 	public static final String EXTERNAL_DATABASE_NAME = "external_database_name";
 	public static final String WORK_DIRECTORY = "work_directory";
-	
+
 	private String defaultLanguage;
 	private String defaultCountry;
 	private String databaseDir;
@@ -48,7 +51,7 @@ public class OsdeConfig {
 	private String externalDatabasePassword;
 	private String externalDatabaseName;
 	private String workDirectory;
-	
+
 	public String getExternalDatabaseName() {
 		return externalDatabaseName;
 	}
@@ -132,15 +135,15 @@ public class OsdeConfig {
 	public String getDefaultLanguage() {
 		return defaultLanguage;
 	}
-	
+
 	public void setDefaultLanguage(String defaultLanguage) {
 		this.defaultLanguage = defaultLanguage;
 	}
-	
+
 	public String getDefaultCountry() {
 		return defaultCountry;
 	}
-	
+
 	public void setDefaultCountry(String defaultCountry) {
 		this.defaultCountry = defaultCountry;
 	}

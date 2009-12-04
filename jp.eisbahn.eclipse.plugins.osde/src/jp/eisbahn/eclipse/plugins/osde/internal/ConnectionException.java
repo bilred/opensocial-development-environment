@@ -17,6 +17,9 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal;
 
+/**
+ * Exception thrown when connecting to Shindig fails.
+ */
 public class ConnectionException extends Exception {
 
     private static final long serialVersionUID = -3368737047093656778L;

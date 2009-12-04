@@ -41,6 +41,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+/**
+ * Eclipse preference page for OSDE.
+ */
 public class OsdePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private Combo languages;
@@ -62,7 +65,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		super();
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 	}
-	
+
 	public void init(IWorkbench workbench) {
 	}
 
@@ -266,13 +269,13 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		//
 		return composite;
 	}
-	
+
 	private void createSeparator(Composite parent) {
 		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		separator.setLayoutData(layoutData);
 	}
-	
+
 	protected void performDefaults() {
 		initializeDefaults();
 		super.performDefaults();
@@ -305,17 +308,17 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		config.setWorkDirectory(workDirectory);
 		Activator.getDefault().storePreferences(config);
 	}
-	
+
 	private void initializeValues() {
 		OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
 		setConfigurationToDisplay(config);
 	}
-	
+
 	private void initializeDefaults() {
 		OsdeConfig config = Activator.getDefault().getDefaultOsdeConfiguration();
 		setConfigurationToDisplay(config);
 	}
-	
+
 	private void setConfigurationToDisplay(OsdeConfig config) {
 		for (int i = 0; i < countries.getItemCount(); i++) {
 			String country = countries.getItem(i);
@@ -350,7 +353,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		//
 		changeDatabaseControlEnabled();
 	}
-	
+
 	private class DatabaseRadioSelectionListener implements SelectionListener {
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
@@ -372,5 +375,5 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		databaseTypeCombo.setEnabled(!selection);
 		nameText.setEnabled(!selection);
 	}
-	
+
 }
