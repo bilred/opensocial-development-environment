@@ -54,7 +54,7 @@ import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
 
 /**
- * Form editor for gadget xml files.
+ * Editor for a gadget spec XML file.
  */
 public class GadgetXmlEditor extends FormEditor {
     private static final Logger logger = new Logger(GadgetXmlEditor.class);

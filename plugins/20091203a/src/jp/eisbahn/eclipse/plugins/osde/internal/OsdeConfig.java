@@ -20,7 +20,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal;
 import java.util.Map;
 
 /**
- * Storage place for OSDE configuration.
+ * A JavaBean of the OSDE configuration.
  */
 public class OsdeConfig {
 
