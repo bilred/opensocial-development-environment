@@ -76,8 +76,8 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
- * 
+ * The activator class controls the plug-in life cycle.
+ *
  * Note that when the plug-in shuts down, AbstractUIPlugin automatically
  * saves any plug-in preferences. So anything specified in the preference
  * page will persist next time you activate this plug-in.
@@ -88,13 +88,13 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "jp.eisbahn.eclipse.plugins.osde";
-	
+
 	// Work directory name for OSDE
-	private static final String WORK_DIR_NAME = ".osde";
+	static final String WORK_DIR_NAME = ".osde";
 
 	// The shared instance
 	private static Activator plugin;
-	
+
 	private Map<RGB, Color> colorMap = new HashMap<RGB, Color>();
 
 	private SessionFactory sessionFactory;
@@ -168,7 +168,7 @@ public class Activator extends AbstractUIPlugin {
 		plugin = null;
 		super.stop(context);
 	}
-	
+
 	/**
 	 * Returns the shared instance
 	 *
@@ -177,14 +177,14 @@ public class Activator extends AbstractUIPlugin {
 	public static Activator getDefault() {
 		return plugin;
 	}
-	
+
 	private void disposeColors() {
 		Collection<Color> colors = colorMap.values();
 		for (Color color : colors) {
 			color.dispose();
 		}
 	}
-	
+
 	public Color getColor(RGB rgb) {
 		synchronized (colorMap) {
 			Color color = colorMap.get(rgb);
@@ -195,7 +195,7 @@ public class Activator extends AbstractUIPlugin {
 			return color;
 		}
 	}
-	
+
 	private void registerIcon() {
 		ImageRegistry registry = getImageRegistry();
 		registerIcon(registry, "icons/icon_user.gif");
@@ -222,13 +222,13 @@ public class Activator extends AbstractUIPlugin {
 		registerIcon(registry, "icons/16-circle-red-remove.gif");
 		registerIcon(registry, "icons/16-circle-blue.gif");
 	}
-	
+
     public ImageDescriptor registerIcon(ImageRegistry registry, String iconPath) {
         ImageDescriptor descriptor = createSystemImageDescriptor(iconPath);
         registry.put(iconPath, descriptor);
         return descriptor;
     }
-    
+
     public ImageDescriptor createImageDescriptor(String url) {
     	ImageRegistry registry = getImageRegistry();
     	ImageDescriptor imageDescriptor = registry.getDescriptor(url);
@@ -258,7 +258,7 @@ public class Activator extends AbstractUIPlugin {
         Bundle bundle = getBundle();
         return bundle.getEntry("/");
     }
-    
+
     public void disconnect(final IWorkbenchWindow window, final IProgressMonitor monitor) {
 		if (session != null && session.isConnected()) {
 			session.close();
@@ -294,7 +294,7 @@ public class Activator extends AbstractUIPlugin {
 			}
 		});
     }
-    
+
 	public void connect(final IWorkbenchWindow window) {
 		logger.info("Connecting to Shindig database");
 		Job job = new Job("Connecting to Shindig database.") {
@@ -346,7 +346,7 @@ public class Activator extends AbstractUIPlugin {
 		};
 		job.schedule();
 	}
-	
+
 	public PersonService getPersonService() throws ConnectionException {
 		if (personService != null) {
 			return personService;
@@ -378,11 +378,11 @@ public class Activator extends AbstractUIPlugin {
 			throw new ConnectionException("Not connect yet.");
 		}
 	}
-	
+
 	public boolean isRunningShindig() {
 		return runningShindig;
 	}
-	
+
 	public void setRunningShindig(boolean runningShindig) {
 		this.runningShindig = runningShindig;
 	}
@@ -413,7 +413,7 @@ public class Activator extends AbstractUIPlugin {
 			throw new IllegalStateException(e);
 		}
 	}
-	
+
 	public OsdeConfig getDefaultOsdeConfiguration() {
 		try {
 			IPreferenceStore store = getPreferenceStore();
@@ -440,7 +440,7 @@ public class Activator extends AbstractUIPlugin {
 			throw new IllegalStateException(e);
 		}
 	}
-	
+
 	public void storePreferences(OsdeConfig config) {
 		storePreferences(getPreferenceStore(), config);
 	}
@@ -473,7 +473,7 @@ public class Activator extends AbstractUIPlugin {
 	public void setLastApplicationInformation(LaunchApplicationInformation lastApplicationInformation) {
 		this.lastApplicationInformation = lastApplicationInformation;
 	}
-	
+
 	private String encodeSiteMap(Map<String, String> siteMap) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream out = new ObjectOutputStream(baos);
@@ -483,7 +483,7 @@ public class Activator extends AbstractUIPlugin {
 		byte[] encoded = Base64.encodeBase64(bytes);
 		return new String(encoded, "UTF-8");
 	}
-	
+
 	private Map<String, String> decodeSiteMap(String encodeSiteMap) throws IOException, ClassNotFoundException {
 		if (encodeSiteMap != null && encodeSiteMap.length() > 0) {
 			byte[] bytes = encodeSiteMap.getBytes("UTF-8");
@@ -500,7 +500,7 @@ public class Activator extends AbstractUIPlugin {
 		String workDirectory = config.getWorkDirectory();
 		if (workDirectory == null) {
 			String userHome = System.getProperty("user.home");
-			File dir = new File(userHome, ".osde");
+			File dir = new File(userHome, WORK_DIR_NAME);
 			dir.mkdirs();
 			workDirectory = dir.getAbsolutePath();
 			config.setWorkDirectory(workDirectory);
@@ -508,6 +508,6 @@ public class Activator extends AbstractUIPlugin {
 		}
 		return new File(workDirectory);
 	}
-	
+
 }
 

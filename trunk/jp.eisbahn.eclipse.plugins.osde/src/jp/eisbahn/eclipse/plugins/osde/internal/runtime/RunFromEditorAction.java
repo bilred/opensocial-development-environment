@@ -29,10 +29,14 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 
+/**
+ * Action available in a gadget spec XML editor to run the gadget
+ * with a local Shindig server.
+ */
 public class RunFromEditorAction extends AbstractRunAction implements IEditorActionDelegate {
 
 	private IEditorPart targetEditor;
-	
+
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		this.targetEditor = targetEditor;
 		shell = targetEditor != null ? targetEditor.getSite().getShell() : null;

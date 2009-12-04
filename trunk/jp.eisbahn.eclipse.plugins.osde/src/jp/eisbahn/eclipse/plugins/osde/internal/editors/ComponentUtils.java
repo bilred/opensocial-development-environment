@@ -26,6 +26,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+/**
+ * Utility class for SWT components.
+ */
 public class ComponentUtils {
 
 	public static Label createLabel(Composite parent, FormToolkit toolkit, String text) {
@@ -36,11 +39,11 @@ public class ComponentUtils {
 		label.setLayoutData(layoutData);
 		return label;
 	}
-	
+
 	public static Text createText(Composite parent, FormToolkit toolkit, Listener modifyListener) {
 		return createText(parent, toolkit, 1, modifyListener);
 	}
-	
+
 	public static Text createText(Composite parent, FormToolkit toolkit, int span, Listener modifyListener) {
 		Text text = toolkit.createText(parent, "", SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -49,7 +52,7 @@ public class ComponentUtils {
 		text.addListener(SWT.Modify, modifyListener);
 		return text;
 	}
-	
+
 	public static Text createTextArea(Composite parent, FormToolkit toolkit, int span, Listener modifyListener) {
 		Text text = toolkit.createText(parent, "", SWT.BORDER | SWT.MULTI);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -59,15 +62,15 @@ public class ComponentUtils {
 		text.addListener(SWT.Modify, modifyListener);
 		return text;
 	}
-	
+
 	public static Button createRadio(Composite parent, FormToolkit toolkit, String text, Listener modifyListener) {
 		return createRadio(parent, toolkit, text, 1, modifyListener, GridData.FILL_HORIZONTAL);
 	}
-	
+
 	public static Button createRadio(Composite parent, FormToolkit toolkit, String text, int span, Listener modifyListener) {
 		return createRadio(parent, toolkit, text, span, modifyListener, GridData.FILL_HORIZONTAL);
 	}
-	
+
 	public static Button createRadio(Composite parent, FormToolkit toolkit, String text, int span, Listener modifyListener, int gridData) {
 		Button button = toolkit.createButton(parent, text, SWT.RADIO);
 		GridData layoutData;

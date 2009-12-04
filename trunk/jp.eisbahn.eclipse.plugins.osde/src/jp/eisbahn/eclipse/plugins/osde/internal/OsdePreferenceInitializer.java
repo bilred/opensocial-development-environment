@@ -7,6 +7,9 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.osgi.service.prefs.Preferences;
 
+/**
+ * Preference Initializer for OSDE.
+ */
 public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 
 	public OsdePreferenceInitializer() {
@@ -35,7 +38,7 @@ public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 		node.put(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, "");
 		node.put(OsdeConfig.EXTERNAL_DATABASE_NAME, "osde");
 		String userHome = System.getProperty("user.home");
-		file = new File(userHome, ".osde");
+		file = new File(userHome, Activator.WORK_DIR_NAME);
 		file.mkdirs();
 		node.put(OsdeConfig.WORK_DIRECTORY, file.getAbsolutePath());
 	}

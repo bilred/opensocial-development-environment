@@ -25,10 +25,13 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
+/**
+ * Eclipse Nature of OSDE Project as used in plugin.xml file.
+ */
 public class OsdeProjectNature implements IProjectNature {
-	
+
 	public static final String ID = "jp.eisbahn.eclipse.plugins.osde.osdeNature";
-	
+
 	private IProject project;
 
 	public void configure() throws CoreException {
