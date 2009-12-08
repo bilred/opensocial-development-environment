@@ -7,9 +7,9 @@ The installation process is described in this page. You'll be able to install OS
 You must install the following software before installing OSDE.
 
  * Java SE Development Kit 5.0 or higher [http://java.sun.com/javase/downloads/index.jsp Download]
+   * We have already known the problem at running on JDK1.6.0_03 (See #47). You should use the latest version of JDK.
  * Eclipse IDE 3.4.1 or higher [http://www.eclipse.org/downloads/ Download]
-
- We have already known the problem at running on JDK1.6.0_03 (See #47). You should use the latest version of JDK.
+   * There are various versions of Eclipse, and you might need to manually install some library plugins for some versions of Eclipse. For example, you might need to install the org.eclipse.wst eclipse plugin. Please visit eclipse website for more details.
 
 == Installation of OSDE ==
 
