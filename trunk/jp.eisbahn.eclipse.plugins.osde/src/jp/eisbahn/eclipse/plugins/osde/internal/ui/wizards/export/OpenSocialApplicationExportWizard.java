@@ -121,12 +121,12 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 			Throwable t = e.getTargetException();
 			if (t.getCause() instanceof CoreException) {
 				CoreException cause = (CoreException)t.getCause();
-				StatusAdapter status = new StatusAdapter(StatusUtil.newStatus(cause.getStatus().getSeverity(), "Error occurd at exporting application.", cause));
-				status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Error occurd at exporting application.");
+				StatusAdapter status = new StatusAdapter(StatusUtil.newStatus(cause.getStatus().getSeverity(), "Error occurred when exporting application.", cause));
+				status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Error occurred when exporting application.");
 				StatusManager.getManager().handle(status, StatusManager.BLOCK);
 			} else {
-				StatusAdapter status = new StatusAdapter(StatusUtil.newStatus(IStatus.WARNING, "Error occurd at exporting application.", t));
-				status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Error occurd at exporting application.");
+				StatusAdapter status = new StatusAdapter(StatusUtil.newStatus(IStatus.WARNING, "Error occurred when exporting application.", t));
+				status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Error occurred when exporting application.");
 				StatusManager.getManager().handle(status, StatusManager.BLOCK);
 			}
 		}
