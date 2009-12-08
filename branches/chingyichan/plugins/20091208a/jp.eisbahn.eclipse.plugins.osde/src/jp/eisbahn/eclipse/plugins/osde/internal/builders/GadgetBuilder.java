@@ -19,6 +19,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.builders;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -108,7 +110,11 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 						try {
 							if (OpenSocialUtil.isGadgetSpecXML(destFile)) {
 								IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-								Module module = (Module) gadgetXMLParser.parse(orgFile.getContents());
+
+								InputStream fileContent = orgFile.getContents();
+								Module module = (Module) gadgetXMLParser.parse(fileContent);
+								IOUtils.closeQuietly(fileContent);
+
 								List<Content> contents = module.getContent();
 								Random rnd = new Random();
 								for (Content content : contents) {
