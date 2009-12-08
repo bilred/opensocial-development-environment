@@ -18,12 +18,14 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
@@ -71,7 +73,7 @@ public class OpenSocialUtil {
 			IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
 			Module module = null;
 			module = (Module)parser.parse(new URL(url).openStream());
-			
+
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] hash = digest.digest(url.getBytes("UTF-8"));
 			String appId = Gadgets.toHexString(hash);
@@ -94,20 +96,20 @@ public class OpenSocialUtil {
 			throw new IllegalStateException(e);
 		}
 	}
-	
+
 	public static boolean isGadgetSpecXML(IFile file) throws IOException, CoreException {
 		return isContentType(file, "jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML");
 	}
-	
+
 	public static boolean isMessageBundleXML(IFile file) throws IOException, CoreException {
 		return isContentType(file, "jp.eisbahn.eclipse.plugins.osde.messageBundleXML");
 	}
-	
+
 	/**
 	 * Checks if the file is of content type contentTypeId
-	 * 
+	 *
 	 * @param file file to be checked for its content type
-	 * @param contentTypeId content type id to be compared 
+	 * @param contentTypeId content type id to be compared
 	 * @return true if the file is of the content type contentTypeId
 	 * 			false otherwise
 	 * @throws IOException
@@ -115,8 +117,11 @@ public class OpenSocialUtil {
 	 */
 	public static boolean isContentType(IFile file, String contentTypeId) throws IOException, CoreException {
 		IContentTypeManager manager = Platform.getContentTypeManager();
-		IContentType contentType = manager.findContentTypeFor(file.getContents(), file.getLocation().toOSString());
-		
+
+		InputStream fileContent = file.getContents();
+		IContentType contentType = manager.findContentTypeFor(fileContent, file.getLocation().toOSString());
+		IOUtils.closeQuietly(fileContent);
+
 		if (contentType != null &&
 				contentType.getId().equals(contentTypeId)) {
 			return true;
@@ -374,7 +379,7 @@ public class OpenSocialUtil {
 		"YEMEN (YE)",
 		"ZAMBIA (ZM)",
 		"ZIMBABWE (ZW)" };
-	
+
 	public static final String[] LANGUAGES = {
 		ANY,
 		"Afar (aa)",
@@ -513,5 +518,5 @@ public class OpenSocialUtil {
 		"Yoruba (yo)",
 		"Chinese (zh)",
 		"Zulu (zu)" };
-	
+
 }
