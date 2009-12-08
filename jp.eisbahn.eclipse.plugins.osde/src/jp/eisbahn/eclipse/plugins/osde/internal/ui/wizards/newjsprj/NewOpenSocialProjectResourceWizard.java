@@ -183,12 +183,12 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
 			Throwable t = e.getTargetException();
 			if (t.getCause() instanceof CoreException) {
 				CoreException cause = (CoreException)t.getCause();
-				StatusAdapter status = new StatusAdapter(StatusUtil.newStatus(cause.getStatus().getSeverity(), "Error occurd at creating project.", cause));
-				status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Error occurd at creating project.");
+				StatusAdapter status = new StatusAdapter(StatusUtil.newStatus(cause.getStatus().getSeverity(), "Error occurred when creating project.", cause));
+				status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Error occurred when creating project.");
 				StatusManager.getManager().handle(status, StatusManager.BLOCK);
 			} else {
-				StatusAdapter status = new StatusAdapter(StatusUtil.newStatus(IStatus.WARNING, "Error occurd at creating project.", t));
-				status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Error occurd at creating project.");
+				StatusAdapter status = new StatusAdapter(StatusUtil.newStatus(IStatus.WARNING, "Error occurred when creating project.", t));
+				status.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Error occurred when creating project.");
 				StatusManager.getManager().handle(status, StatusManager.BLOCK);
 			}
 			return null;
