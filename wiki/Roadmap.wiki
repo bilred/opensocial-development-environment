@@ -58,7 +58,7 @@ Expected release date: 2009-12-20
 This version covers:
  * (owner=albert) Gadget Checker (Issue 47).
  * (owner=dolphin) Latency Reduction Tools - Evaluator for web performance (Issue 127).
- * (owner=albert) Latency Reduction Tools - JS Compiler (Issue 180).
+ * (owner=dolphin) Latency Reduction Tools - JS Compiler (Issue 180).
  * (owner=TBD) New editor for gadget xml files - code completion for OS API and templates (Issue 160).
  * (owner=TBD) Gadget Translation (Issue 46).
  * (owner=TBD) Support Shindig v1.1 (beta 3).
