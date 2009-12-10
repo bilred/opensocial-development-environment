@@ -65,11 +65,18 @@ public class ShindigLaunchConfigurationCreator extends BaseJob {
         IRuntimeClasspathEntry systemLibsEntry = JavaRuntime.newRuntimeContainerClasspathEntry(
                 systemLibs, IRuntimeClasspathEntry.STANDARD_CLASSES);
         systemLibsEntry.setClasspathProperty(IRuntimeClasspathEntry.BOOTSTRAP_CLASSES);
+
         IRuntimeClasspathEntry jettyEntry = createRuntimeClasspathEntry("/shindig/jetty-6.1.15.jar");
         IRuntimeClasspathEntry jettyUtilEntry = createRuntimeClasspathEntry("/shindig/jetty-util-6.1.15.jar");
         IRuntimeClasspathEntry servletApiEntry = createRuntimeClasspathEntry("/shindig/servlet-api-2.5-6.1.14.jar");
         IRuntimeClasspathEntry juelApiEntry = createRuntimeClasspathEntry("/shindig/juel-api-2.1.2.jar");
         IRuntimeClasspathEntry launcherEntry = createRuntimeClasspathEntry("/shindig/launcher.jar");
+
+        // hook logger library to make jetty delegate logger to slff4j and log4j
+        IRuntimeClasspathEntry logProviderEntry = createRuntimeClasspathEntry("/shindig/slf4j-api-1.5.10.jar");
+        IRuntimeClasspathEntry logBridgeEntry = createRuntimeClasspathEntry("/shindig/slf4j-log4j12-1.5.10.jar");
+        IRuntimeClasspathEntry logImplEntry = createRuntimeClasspathEntry("/libs/log4j-1.2.14.jar");
+
         ILaunchConfigurationWorkingCopy wc = type.newInstance(null, "Apache Shindig");
         List<String> classpath = new ArrayList<String>();
         classpath.add(systemLibsEntry.getMemento());
@@ -78,6 +85,11 @@ public class ShindigLaunchConfigurationCreator extends BaseJob {
         classpath.add(servletApiEntry.getMemento());
         classpath.add(juelApiEntry.getMemento());
         classpath.add(launcherEntry.getMemento());
+
+        classpath.add(logProviderEntry.getMemento());
+        classpath.add(logBridgeEntry.getMemento());
+        classpath.add(logImplEntry.getMemento());
+
         monitor.worked(1);
         monitor.subTask("Creating the launch configuration.");
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
@@ -88,6 +100,17 @@ public class ShindigLaunchConfigurationCreator extends BaseJob {
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "8080 \""
                 + warFile + "\" \"" + Activator.getDefault().getOsdeConfiguration().getJettyDir()
                 + "\"");
+
+        // set up log4j configuration
+        URL log4jCfg = getBundleEntryUrl("/shindig/log4j.xml");
+
+        // set up simple log configuration
+        URL simpleLogCfg = getBundleEntryUrl("/shindig/simplelog.properties");
+
+        wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+        	" -Dlog4j.configuration=\""+log4jCfg.toExternalForm()+"\""
+        	+ " -Djava.util.logging.config.file=\""+simpleLogCfg.toExternalForm()+"\"");
+
         wc.doSave();
         monitor.worked(1);
     }
