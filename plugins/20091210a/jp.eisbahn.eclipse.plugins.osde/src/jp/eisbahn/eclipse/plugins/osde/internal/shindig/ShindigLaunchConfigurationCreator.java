@@ -101,7 +101,7 @@ public class ShindigLaunchConfigurationCreator extends BaseJob {
                 + warFile + "\" \"" + Activator.getDefault().getOsdeConfiguration().getJettyDir()
                 + "\"");
 
-        URL loggerConfigurationFile = getBundleEntryUrl("/shindig/simplelog.properties");
+        URL loggerConfigurationFile = getBundleEntryUrl("/shindig/logging.properties");
 
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
         	" -Dlog4j.configuration=\""+loggerConfigurationFile.toExternalForm()+"\""
