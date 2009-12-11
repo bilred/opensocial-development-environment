@@ -17,6 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -101,11 +102,9 @@ public class ShindigLaunchConfigurationCreator extends BaseJob {
                 + warFile + "\" \"" + Activator.getDefault().getOsdeConfiguration().getJettyDir()
                 + "\"");
 
-        URL loggerConfigurationFile = getBundleEntryUrl("/shindig/logging.properties");
-
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-        	" -Dlog4j.configuration=\""+loggerConfigurationFile.toExternalForm()+"\""
-        	+ " -Djava.util.logging.config.file=\""+loggerConfigurationFile.toExternalForm()+"\"");
+        	" -Dlog4j.configuration=\""+getLoggerConfigurationFile().toExternalForm()+"\""
+        	+ " -Djava.util.logging.config.file=\""+getLoggerConfigurationFile().toExternalForm()+"\"");
 
         wc.doSave();
         monitor.worked(1);
@@ -124,5 +123,19 @@ public class ShindigLaunchConfigurationCreator extends BaseJob {
         return FileLocator.toFileURL(new URL(Activator.getDefault().getBundle().getEntry(path)
                 .toExternalForm()));
     }
+
+	private URL getLoggerConfigurationFile() throws MalformedURLException, IOException {
+		File logFile = new File(Activator.getDefault().getOsdeConfiguration().getLoggerConfigFile());
+		if (logFile.isFile() && logFile.exists()) {
+			logger.info("Found logger configuration file: " + logFile);
+			return logFile.toURI().toURL();
+		}
+
+		logger.warn("Logger configuration file ["
+			+ logFile.getAbsolutePath()	+ "] do not exists, use the default configuration file");
+
+		URL loggerConfigurationFile = getBundleEntryUrl("/shindig/logging.properties");
+		return loggerConfigurationFile;
+	}
 
 }
