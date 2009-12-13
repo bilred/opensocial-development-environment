@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
 import org.apache.commons.lang.StringUtils;
@@ -206,8 +207,9 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
                     ByteArrayInputStream in = new ByteArrayInputStream(msgBundle.toString().getBytes("UTF-8"));
                     bundleFile.create(in, true, new NullProgressMonitor());
 
-                    // TODO: what's the rule about the 8080 port?
-                    locale.setMessages("http://localhost:8080/" + project.getName() + "/" + fileName);
+                    locale.setMessages("http://localhost:"
+                    	+ Activator.getDefault().getOsdeConfiguration().getJettyPort()
+                    	+ "/" + project.getName() + "/" + fileName);
                     locale.setMessageBundle(msgBundle);
                 } catch (CoreException e) {
                     logger.warn("Creating the message bundle file failed.", e);
