@@ -396,6 +396,7 @@ public class Activator extends AbstractUIPlugin {
 			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
 			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
 			config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
+			config.setJettyPort(store.getInt(OsdeConfig.JETTY_PORT));
 			config.setUseInternalDatabase(store.getBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
 			config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
 			config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
@@ -423,6 +424,7 @@ public class Activator extends AbstractUIPlugin {
 			config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
 			config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
 			config.setJettyDir(store.getDefaultString(OsdeConfig.JETTY_DIR));
+			config.setJettyPort(store.getDefaultInt(OsdeConfig.JETTY_PORT));
 			config.setUseInternalDatabase(store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
 			config.setExternalDatabaseType(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
 			config.setExternalDatabaseHost(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
@@ -452,6 +454,7 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(OsdeConfig.DATABASE_DIR, config.getDatabaseDir());
 			store.setValue(OsdeConfig.DOCS_SITE_MAP, encodeSiteMap(config.getDocsSiteMap()));
 			store.setValue(OsdeConfig.JETTY_DIR, config.getJettyDir());
+			store.setValue(OsdeConfig.JETTY_PORT, config.getJettyPort());
 			store.setValue(OsdeConfig.USE_INTERNAL_DATABASE, config.isUseInternalDatabase());
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_HOST, config.getExternalDatabaseHost());
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_PORT, config.getExternalDatabasePort());
