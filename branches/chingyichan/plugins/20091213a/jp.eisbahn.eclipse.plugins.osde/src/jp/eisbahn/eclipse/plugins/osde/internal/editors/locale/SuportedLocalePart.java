@@ -64,7 +64,7 @@ import com.google.gadgets.model.Module.ModulePrefs.Locale;
 import com.google.gadgets.model.MessageBundle.Msg;
 
 public class SuportedLocalePart extends SectionPart implements IPartSelectionListener {
-    
+
     private static final Logger logger = new Logger(SuportedLocalePart.class);
 
     private LocalePage page;
@@ -206,6 +206,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
                     ByteArrayInputStream in = new ByteArrayInputStream(msgBundle.toString().getBytes("UTF-8"));
                     bundleFile.create(in, true, new NullProgressMonitor());
 
+                    // TODO: what's the rule about the 8080 port?
                     locale.setMessages("http://localhost:8080/" + project.getName() + "/" + fileName);
                     locale.setMessageBundle(msgBundle);
                 } catch (CoreException e) {
