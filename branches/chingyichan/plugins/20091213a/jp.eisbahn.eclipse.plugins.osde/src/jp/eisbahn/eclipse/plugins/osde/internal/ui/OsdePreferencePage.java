@@ -330,7 +330,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		config.setDefaultLanguage(language.substring(language.indexOf('(') + 1, language.length() - 1));
 		config.setDatabaseDir(databaseDirText.getText());
 		config.setJettyDir(jettyDirText.getText());
-		config.setJettyPort(NumberUtils.toInt(jettyPortText.getText(), 8181));
+		config.setJettyPort(NumberUtils.toInt(jettyPortText.getText()));
 		config.setUseInternalDatabase(internalDatabaseRadio.getSelection());
 		config.setExternalDatabaseHost(hostText.getText());
 		config.setExternalDatabasePassword(passwordText.getText());
