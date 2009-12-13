@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="jp.eisbahn.eclipse.features.osde"
+      id="com.googlecode.osde.features"
       label="OpenSocial Development Environment Feature"
       version="0.5.0.C2"
-      provider-name="Yoichiro Tanaka"
+      provider-name="Project OSDE"
       plugin="com.googlecode.osde">
 
-   <description url="http://www.eisbahn.jp/trac/osde">
+   <description url="http://code.google.com/p/opensocial-development-environment/">
       OSDE is the Eclipse Plug-in for developing OpenSocial application.
 When you want to develop and test a social application, you must
 use some SNS(ex. orkut.com, myspace.com, hi5.com and etc.). The
@@ -815,7 +815,7 @@ for NSIS, however, are subject to the terms of the Common Public License version
    </requires>
 
    <plugin
-         id="jp.eisbahn.eclipse.plugins.osde"
+         id="com.googlecode.osde"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
