@@ -815,7 +815,7 @@ for NSIS, however, are subject to the terms of the Common Public License version
    </requires>
 
    <plugin
-         id="com.googlecode.osde"
+         id="jp.eisbahn.eclipse.plugins.osde"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
