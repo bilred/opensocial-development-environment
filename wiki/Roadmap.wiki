@@ -48,7 +48,7 @@ Expected release date: 2009-12-05
 This version covers:
  * (IN PROGRESS) (owner=albert) Manage gadgets on at least one container (Issue 155).
  * (owner=yoichiro) Rename package name to com.googlecode.osde (Issue 158).
- * (owner=TBD) The configuration to change the port number of Jetty (Issue 104).
+ * (owner=ChingYiChan) The configuration to change the port number of Jetty (Issue 104).
  * (owner=TBD) The HAS_APP filter (Issue 106).
  * (owner=TBD) New editor for gadget xml files - code highlighting for OS API and templates (Issue 159).
 
