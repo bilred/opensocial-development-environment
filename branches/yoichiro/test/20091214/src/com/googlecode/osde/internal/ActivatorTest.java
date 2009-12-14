@@ -1,7 +1,9 @@
-package jp.eisbahn.eclipse.plugins.osde.internal;
+package com.googlecode.osde.internal;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.googlecode.osde.internal.Activator;
 
 /**
  * TODO: add javadoc for type
@@ -160,7 +162,7 @@ public class ActivatorTest {
     }
 
     /**
-     * Test method for {@link Activator#setLastApplicationInformation(jp.eisbahn.eclipse.plugins.osde.internal.runtime.LaunchApplicationInformation)}.
+     * Test method for {@link Activator#setLastApplicationInformation(com.googlecode.osde.internal.runtime.LaunchApplicationInformation)}.
      */
     @Test
     public void testSetLastApplicationInformation() {

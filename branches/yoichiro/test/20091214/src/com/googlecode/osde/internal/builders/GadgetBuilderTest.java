@@ -1,7 +1,9 @@
-package jp.eisbahn.eclipse.plugins.osde.internal.builders;
+package com.googlecode.osde.internal.builders;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.googlecode.osde.internal.builders.GadgetBuilder;
 
 /**
  * TODO: add javadoc for type
