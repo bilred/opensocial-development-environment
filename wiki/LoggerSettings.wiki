@@ -4,7 +4,7 @@
 
 OSDE is a eclipse plugin which provides the Shindig Container. The container is running in the Servlet Container, in our case, is an embedded Jetty Server. They are open source project and their development team choose different logging framework. Jetty creates its own logger factory and can switch to SLF4J. Shindig Container use log4j and the related projects use java.util.logging. In order to provider an easy way to configure logger settings, we use the SLF4J over log4j and java.util.logging and merge the log4j.properties and logging.properties (used to java.util.logging) in the same file.
 
-= The logging.properties  =
+== The logging.properties  ==
 
 If you have no logger settings, OSDE will use the default logging.properties file. It has the content shown behind:
 
@@ -27,13 +27,13 @@ log4j.category.org.apache.shindig.social.opensocial.hibernate.utils.HttpLogFilte
 
 If you have problem how to configure, please see some tutorial:
 
-Configuring Logger Default Values with a Properties File
-http://www.exampledepot.com/egs/java.util.logging/Props.html
+  * Configuring Logger Default Values with a Properties File
+    http://www.exampledepot.com/egs/java.util.logging/Props.html
 
-Short introduction to log4j
-http://logging.apache.org/log4j/1.2/manual.html
+  * Short introduction to log4j
+    http://logging.apache.org/log4j/1.2/manual.html
 
-
+== Set customized logger configuration file  ==
 
 In OSDE preference page, you can set the file location in *Logger settings* section
 
