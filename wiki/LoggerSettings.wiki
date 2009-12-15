@@ -27,3 +27,5 @@ log4j.category.org.apache.shindig.social.opensocial.hibernate.utils.HttpLogFilte
 
 
 In OSDE preference page, you can set the file location in *Logger settings* section
+
+http://opensocial-development-environment.googlecode.com/files/logger_settings.jpg
