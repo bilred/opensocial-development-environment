@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -65,6 +66,8 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 	private Button databaseBrowseButton;
 	private Text nameText;
 	private Text workDirectoryText;
+	private Text loggerCfgLocationText;
+	private Button loggerCfgBrowseButton;
 
 
 	public OsdePreferencePage() {
@@ -289,6 +292,36 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		passwordText.setLayoutData(layoutData);
 		//
 		//
+		group = new Group(composite, SWT.NONE);
+		group.setText("Logger settings");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		group.setLayoutData(layoutData);
+		group.setLayout(new GridLayout(3, false));
+		//
+		Label loggerLabel = new Label(group, SWT.NONE);
+		loggerLabel.setText("Logger configuration file:");
+		loggerCfgLocationText = new Text(group, SWT.SINGLE | SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		loggerCfgLocationText.setLayoutData(layoutData);
+		//
+		loggerCfgBrowseButton = new Button(group, SWT.PUSH);
+		loggerCfgBrowseButton.setText("Browser...");
+		loggerCfgBrowseButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog dialog = new FileDialog(getShell());
+				dialog.setFilterExtensions(new String[]{"*.properties"});
+				dialog.setText("Log directory");
+				dialog.setText("Please select the logger configuration file.");
+				String logCfgFile = dialog.open();
+				if (logCfgFile != null) {
+					loggerCfgLocationText.setText(logCfgFile);
+				}
+			}
+		});
+		//
+		//
 		createSeparator(composite);
 		//
 		Activator activator = Activator.getDefault();
@@ -342,6 +375,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		File workDirectoryFile = new File(workDirectory);
 		workDirectoryFile.mkdirs();
 		config.setWorkDirectory(workDirectory);
+		config.setLoggerConfigFile(loggerCfgLocationText.getText());
 		Activator.getDefault().storePreferences(config);
 	}
 
@@ -389,6 +423,9 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		workDirectoryText.setText(config.getWorkDirectory());
 		//
 		changeDatabaseControlEnabled();
+		//
+		//
+		loggerCfgLocationText.setText(config.getLoggerConfigFile());
 	}
 
 	private class DatabaseRadioSelectionListener implements SelectionListener {
