@@ -37,4 +37,4 @@ If you have problem how to configure, please see some tutorial:
 
 In OSDE preference page, you can set the file location in *Logger settings* section
 
-http://opensocial-development-environment.googlecode.com/files/logger_settings.jpg
+  http://opensocial-development-environment.googlecode.com/files/logger_settings.jpg
