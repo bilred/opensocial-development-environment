@@ -37,6 +37,7 @@ public class OsdeConfig {
 	public static final String EXTERNAL_DATABASE_PASSWORD = "external_database_password";
 	public static final String EXTERNAL_DATABASE_NAME = "external_database_name";
 	public static final String WORK_DIRECTORY = "work_directory";
+	public static final String LOGGER_CONFIG_FILE = "logger_config_file";
 
 	private String defaultLanguage;
 	private String defaultCountry;
@@ -51,6 +52,7 @@ public class OsdeConfig {
 	private String externalDatabasePassword;
 	private String externalDatabaseName;
 	private String workDirectory;
+	private String loggerConfigFile;
 
 	public String getExternalDatabaseName() {
 		return externalDatabaseName;
@@ -154,6 +156,14 @@ public class OsdeConfig {
 
 	public void setWorkDirectory(String workDirectory) {
 		this.workDirectory = workDirectory;
+	}
+
+	public String getLoggerConfigFile() {
+		return loggerConfigFile;
+	}
+
+	public void setLoggerConfigFile(String loggerConfigFile) {
+		this.loggerConfigFile = loggerConfigFile;
 	}
 
 }
