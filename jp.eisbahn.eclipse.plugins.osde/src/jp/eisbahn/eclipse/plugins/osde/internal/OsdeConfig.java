@@ -29,6 +29,7 @@ public class OsdeConfig {
 	public static final String DATABASE_DIR = "database_dir";
 	public static final String DOCS_SITE_MAP = "docs_site_map";
 	public static final String JETTY_DIR = "jetty_dir";
+	public static final String JETTY_PORT = "jetty_port";
 	public static final String USE_INTERNAL_DATABASE = "use_internal_database";
 	public static final String EXTERNAL_DATABASE_TYPE = "external_database_type";
 	public static final String EXTERNAL_DATABASE_HOST = "external_database_host";
@@ -44,6 +45,7 @@ public class OsdeConfig {
 	private String databaseDir;
 	private Map<String, String> docsSiteMap;
 	private String jettyDir;
+	private Integer jettyPort;
 	private boolean useInternalDatabase;
 	private String externalDatabaseType;
 	private String externalDatabaseHost;
@@ -116,6 +118,14 @@ public class OsdeConfig {
 
 	public void setJettyDir(String jettyDir) {
 		this.jettyDir = jettyDir;
+	}
+
+	public Integer getJettyPort() {
+		return jettyPort;
+	}
+
+	public void setJettyPort(Integer jettyPort) {
+		this.jettyPort = jettyPort;
 	}
 
 	public Map<String, String> getDocsSiteMap() {

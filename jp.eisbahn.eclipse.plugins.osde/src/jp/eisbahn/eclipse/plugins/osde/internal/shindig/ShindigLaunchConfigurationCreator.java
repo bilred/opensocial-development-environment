@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -98,9 +99,11 @@ public class ShindigLaunchConfigurationCreator extends BaseJob {
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, "Main");
         String warFile = getBundleEntryUrl("/shindig/shindig-server-1.1-BETA1-incubating.war")
                 .toExternalForm();
-        wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "8080 \""
-                + warFile + "\" \"" + Activator.getDefault().getOsdeConfiguration().getJettyDir()
-                + "\"");
+
+        OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+        logger.info("set jetty start port number: " + config.getJettyPort());
+        wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+        	"" + config.getJettyPort() + " \"" + warFile + "\" \"" + config.getJettyDir() + "\"");
 
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
         	" -Dlog4j.configuration=\""+getLoggerConfigurationFile().toExternalForm()+"\""

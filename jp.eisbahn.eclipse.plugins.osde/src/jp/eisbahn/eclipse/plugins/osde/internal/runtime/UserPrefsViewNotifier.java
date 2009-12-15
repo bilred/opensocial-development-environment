@@ -17,6 +17,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 
@@ -33,7 +34,8 @@ public class UserPrefsViewNotifier {
     private static final Logger logger = new Logger(UserPrefsViewNotifier.class);
 	public static void fire(final LaunchApplicationInformation information, Shell shell, IWorkbenchPart targetPart) {
 		IProject project = information.getProject();
-		final String url = "http://localhost:8080/" + project.getName().replace(" ", "%20") + "/" + information.getUrl().replace(" ", "%20");
+		final String url = "http://localhost:" + Activator.getDefault().getOsdeConfiguration().getJettyPort()
+			+ "/" + project.getName().replace(" ", "%20") + "/" + information.getUrl().replace(" ", "%20");
 		final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
 		shell.getDisplay().syncExec(new Runnable() {
 			public void run() {

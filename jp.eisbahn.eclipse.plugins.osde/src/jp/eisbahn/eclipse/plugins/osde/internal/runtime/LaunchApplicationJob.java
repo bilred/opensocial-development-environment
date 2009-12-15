@@ -87,8 +87,10 @@ public class LaunchApplicationJob extends Job {
 			String upJson = createJsonFromUserPrefs();
 			monitor.worked(1);
 			final String kicker;
+			final int port = Activator.getDefault().getOsdeConfiguration().getJettyPort();
 			if (project != null) {
-				kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:8080/" + project.getName().replace(" ", "%20") + "/"
+				kicker = "http://localhost:" + port + "/gadgets/files/osdecontainer/index.html?url="
+						+ "http://localhost:" + port + "/" + project.getName().replace(" ", "%20") + "/"
 						+ url.replace(" ", "%20")
 						+ "&view=" + view
 						+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
@@ -99,7 +101,7 @@ public class LaunchApplicationJob extends Job {
 						+ "&language=" + URLEncoder.encode(language, "UTF-8")
 						+ "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8");
 			} else {
-				kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url="
+				kicker = "http://localhost:" + port + "/gadgets/files/osdecontainer/index.html?url="
 				+ url.replace(" ", "%20")
 				+ "&view=" + view
 				+ "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
