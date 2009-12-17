@@ -77,6 +77,9 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 		if (kind == FULL_BUILD) {
 			fullBuild(project, monitor);
 		} else {
+            // The eclipse platform generates resource delta when we change the
+            // contents of the target folder. We should not need to do a full
+            // rebuild again for that.
 			IResourceDelta delta = getDelta(project);
             if (delta == null || doesNotContainTargetFolder(delta)) {
                 fullBuild(project, monitor);
@@ -162,7 +165,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 
         // Compile all JavaScript files.
         runner.schedule();
-	}
+    }
 
     private IFolder getTargetFolder() {
         return getProject().getFolder(new Path("target"));
