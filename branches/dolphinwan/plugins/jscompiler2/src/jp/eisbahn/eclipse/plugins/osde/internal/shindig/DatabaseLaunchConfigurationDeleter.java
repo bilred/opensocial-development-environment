@@ -1,5 +1,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.common.BaseJob;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
