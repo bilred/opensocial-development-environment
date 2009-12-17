@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
@@ -134,7 +133,6 @@ class RestfulAccessProjectFactory implements IRunnableWithProgress {
 	private IFile createSampleCode(IFolder examplesDir) throws CoreException {
 		try {
 			String code = ResourceUtil.loadTextResourceFile("/ocl/Sample.tmpl");
-			code = code.replace("$server_port$", "" + Activator.getDefault().getOsdeConfiguration().getJettyPort());
 			code = code.replace("$consumer_key$", application.getConsumerKey());
 			code = code.replace("$consumer_secret$", application.getConsumerSecret());
 			code = code.replace("$viewer_id$", person.getId());
@@ -151,7 +149,7 @@ class RestfulAccessProjectFactory implements IRunnableWithProgress {
 			logger.error("Creating the Java file failed.", e);
 			throw new IllegalStateException(e);
 		}
-
+		
 	}
 
 	private IFolder createExamplesDirectory(IFolder sourceDir)
@@ -225,10 +223,10 @@ class RestfulAccessProjectFactory implements IRunnableWithProgress {
 		newNatures[natures.length] = JavaCore.NATURE_ID;
 		description.setNatureIds(newNatures);
 		newProjectHandle.setDescription(description, monitor);
-	}
-
+	} 
+	
 	private class ClasspathContainerImpl implements IClasspathContainer {
-
+		
 		private IFolder libDir;
 		private IPath libPath;
 
@@ -237,7 +235,7 @@ class RestfulAccessProjectFactory implements IRunnableWithProgress {
 			this.libDir = libDir;
 			this.libPath = libPath;
 		}
-
+		
 		public IClasspathEntry[] getClasspathEntries() {
 			List<IClasspathEntry> ices = new ArrayList<IClasspathEntry>();
 			try {

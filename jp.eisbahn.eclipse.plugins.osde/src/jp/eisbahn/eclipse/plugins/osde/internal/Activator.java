@@ -396,7 +396,6 @@ public class Activator extends AbstractUIPlugin {
 			config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
 			config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
 			config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
-			config.setJettyPort(store.getInt(OsdeConfig.JETTY_PORT));
 			config.setUseInternalDatabase(store.getBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
 			config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
 			config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
@@ -405,7 +404,6 @@ public class Activator extends AbstractUIPlugin {
 			config.setExternalDatabasePassword(store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
 			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
 			config.setWorkDirectory(store.getString(OsdeConfig.WORK_DIRECTORY));
-			config.setLoggerConfigFile(store.getString(OsdeConfig.LOGGER_CONFIG_FILE));
 			return config;
 		} catch(IOException e) {
 			logger.error("Something went wrong while getting OSDE configurations.", e);
@@ -425,7 +423,6 @@ public class Activator extends AbstractUIPlugin {
 			config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
 			config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
 			config.setJettyDir(store.getDefaultString(OsdeConfig.JETTY_DIR));
-			config.setJettyPort(store.getDefaultInt(OsdeConfig.JETTY_PORT));
 			config.setUseInternalDatabase(store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
 			config.setExternalDatabaseType(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
 			config.setExternalDatabaseHost(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
@@ -434,7 +431,6 @@ public class Activator extends AbstractUIPlugin {
 			config.setExternalDatabasePassword(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
 			config.setExternalDatabaseName(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
 			config.setWorkDirectory(store.getDefaultString(OsdeConfig.WORK_DIRECTORY));
-			config.setLoggerConfigFile(store.getDefaultString(OsdeConfig.LOGGER_CONFIG_FILE));
 			return config;
 		} catch(IOException e) {
 			logger.error("Retrieving preference values failed.", e);
@@ -456,7 +452,6 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(OsdeConfig.DATABASE_DIR, config.getDatabaseDir());
 			store.setValue(OsdeConfig.DOCS_SITE_MAP, encodeSiteMap(config.getDocsSiteMap()));
 			store.setValue(OsdeConfig.JETTY_DIR, config.getJettyDir());
-			store.setValue(OsdeConfig.JETTY_PORT, config.getJettyPort());
 			store.setValue(OsdeConfig.USE_INTERNAL_DATABASE, config.isUseInternalDatabase());
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_HOST, config.getExternalDatabaseHost());
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_PORT, config.getExternalDatabasePort());
@@ -465,7 +460,6 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_TYPE, config.getExternalDatabaseType());
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_NAME, config.getExternalDatabaseName());
 			store.setValue(OsdeConfig.WORK_DIRECTORY, config.getWorkDirectory());
-			store.setValue(OsdeConfig.LOGGER_CONFIG_FILE, config.getLoggerConfigFile());
 		} catch(IOException e) {
 			logger.error("Storing preference values failed.", e);
 			throw new IllegalStateException(e);
@@ -490,7 +484,6 @@ public class Activator extends AbstractUIPlugin {
 		return new String(encoded, "UTF-8");
 	}
 
-	@SuppressWarnings("unchecked")
 	private Map<String, String> decodeSiteMap(String encodeSiteMap) throws IOException, ClassNotFoundException {
 		if (encodeSiteMap != null && encodeSiteMap.length() > 0) {
 			byte[] bytes = encodeSiteMap.getBytes("UTF-8");

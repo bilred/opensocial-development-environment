@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel;
 import jp.eisbahn.eclipse.plugins.osde.internal.editors.pref.UserPrefModel.DataType;
 
@@ -36,7 +35,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class MetaDataFetcher {
-
+	
 	private static final String METADATA_POST =
 		"{\"context\":{\"country\":\"$country$\",\"language\":\"$language$\",\"view\":\"$view$\","
 		+ "\"container\":\"default\"},\"gadgets\":[{\"url\":\"$url$\",\"moduleId\":1}]}";
@@ -46,7 +45,7 @@ public class MetaDataFetcher {
 			String country, String language, String url) throws Exception {
 		HttpClient client = new HttpClient(new MultiThreadedHttpConnectionManager());
 		client.getHttpConnectionManager().getParams().setConnectionTimeout(3000);
-		client.getHostConfiguration().setHost("localhost", Activator.getDefault().getOsdeConfiguration().getJettyPort(), "http");
+		client.getHostConfiguration().setHost("localhost", 8080, "http");
 		PostMethod post = new PostMethod("/gadgets/metadata");
 		String body = METADATA_POST.replace("$country$", country);
 		body = body.replace("$language$", language);

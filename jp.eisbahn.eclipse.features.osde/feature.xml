@@ -4,7 +4,7 @@
       label="OpenSocial Development Environment Feature"
       version="0.5.0.C2"
       provider-name="Yoichiro Tanaka"
-      plugin="com.googlecode.osde">
+      plugin="jp.eisbahn.eclipse.plugins.osde">
 
    <description url="http://www.eisbahn.jp/trac/osde">
       OSDE is the Eclipse Plug-in for developing OpenSocial application.

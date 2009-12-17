@@ -29,7 +29,6 @@ public class OsdeConfig {
 	public static final String DATABASE_DIR = "database_dir";
 	public static final String DOCS_SITE_MAP = "docs_site_map";
 	public static final String JETTY_DIR = "jetty_dir";
-	public static final String JETTY_PORT = "jetty_port";
 	public static final String USE_INTERNAL_DATABASE = "use_internal_database";
 	public static final String EXTERNAL_DATABASE_TYPE = "external_database_type";
 	public static final String EXTERNAL_DATABASE_HOST = "external_database_host";
@@ -38,14 +37,12 @@ public class OsdeConfig {
 	public static final String EXTERNAL_DATABASE_PASSWORD = "external_database_password";
 	public static final String EXTERNAL_DATABASE_NAME = "external_database_name";
 	public static final String WORK_DIRECTORY = "work_directory";
-	public static final String LOGGER_CONFIG_FILE = "logger_config_file";
 
 	private String defaultLanguage;
 	private String defaultCountry;
 	private String databaseDir;
 	private Map<String, String> docsSiteMap;
 	private String jettyDir;
-	private Integer jettyPort;
 	private boolean useInternalDatabase;
 	private String externalDatabaseType;
 	private String externalDatabaseHost;
@@ -54,7 +51,6 @@ public class OsdeConfig {
 	private String externalDatabasePassword;
 	private String externalDatabaseName;
 	private String workDirectory;
-	private String loggerConfigFile;
 
 	public String getExternalDatabaseName() {
 		return externalDatabaseName;
@@ -120,14 +116,6 @@ public class OsdeConfig {
 		this.jettyDir = jettyDir;
 	}
 
-	public Integer getJettyPort() {
-		return jettyPort;
-	}
-
-	public void setJettyPort(Integer jettyPort) {
-		this.jettyPort = jettyPort;
-	}
-
 	public Map<String, String> getDocsSiteMap() {
 		return docsSiteMap;
 	}
@@ -166,14 +154,6 @@ public class OsdeConfig {
 
 	public void setWorkDirectory(String workDirectory) {
 		this.workDirectory = workDirectory;
-	}
-
-	public String getLoggerConfigFile() {
-		return loggerConfigFile;
-	}
-
-	public void setLoggerConfigFile(String loggerConfigFile) {
-		this.loggerConfigFile = loggerConfigFile;
 	}
 
 }

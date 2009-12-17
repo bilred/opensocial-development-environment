@@ -24,7 +24,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.EnumMap;
 import java.util.Set;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.ResourceUtil;
 
 
@@ -38,13 +37,13 @@ import com.google.gadgets.ViewName;
 import com.google.gadgets.ViewType;
 
 public class GadgetXmlFileGenerator {
-
+	
 	private IProject project;
-
+	
 	private GadgetXmlData gadgetXmlData;
-
+	
 	private EnumMap<ViewName, GadgetViewData> gadgetViewData;
-
+	
 	public GadgetXmlFileGenerator(
 			IProject project, GadgetXmlData gadgetXmlData, EnumMap<ViewName, GadgetViewData> gadgetViewData) {
 		super();
@@ -52,7 +51,7 @@ public class GadgetXmlFileGenerator {
 		this.gadgetXmlData = gadgetXmlData;
 		this.gadgetViewData = gadgetViewData;
 	}
-
+	
 	public IFile generate(IProgressMonitor monitor) throws UnsupportedEncodingException, IOException, CoreException {
 		try {
 			monitor.beginTask("Generate Gadget XML file.", 100);
@@ -143,9 +142,7 @@ public class GadgetXmlFileGenerator {
 					} else {
 						if (viewData.isCreateExternalJavaScript()) {
 							content += "\n";
-							content += "<script type=\"text/javascript\" src=\"http://localhost:"
-								+ Activator.getDefault().getOsdeConfiguration().getJettyPort() + "/"
-								+ project.getName() + "/" + viewData.getFilename() + "\"></script>\n";
+							content += "<script type=\"text/javascript\" src=\"http://localhost:8080/" + project.getName() + "/" + viewData.getFilename() + "\"></script>\n";
 							if (viewData.isCreateInitFunction()) {
 								content += "\n";
 								content += "<script type=\"text/javascript\">\n";
@@ -174,7 +171,7 @@ public class GadgetXmlFileGenerator {
 			monitor.done();
 		}
 	}
-
+	
 	private boolean hasCreateSampleCodeSet() {
 		Set<ViewName> keySet = gadgetViewData.keySet();
 		for (ViewName viewName : keySet) {

@@ -77,7 +77,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 		page.setDescription("Export OpenSocial application which can deploy to your web server.");
 		addPage(page);
 	}
-
+	
 	@Override
 	public boolean performFinish() {
 		export();
@@ -131,14 +131,14 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 			}
 		}
 	}
-
+	
 	private class ApplicationExporter implements IResourceVisitor {
-
+		
 		private ZipOutputStream out;
 		private IProject project;
 		private String url;
 		private IProgressMonitor monitor;
-
+		
 		public ApplicationExporter(ZipOutputStream out, IProject project, String url, IProgressMonitor monitor) {
 			super();
 			this.out = out;
@@ -146,7 +146,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 			this.monitor = monitor;
 			this.url = url;
 		}
-
+		
 		public boolean visit(IResource resource) throws CoreException {
 			try {
 				int type = resource.getType();
@@ -165,7 +165,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 								for (Content content : contents) {
 									if (ViewType.html.toString().equals(content.getType())) {
 										String value = content.getValue();
-										Pattern pattern = Pattern.compile("http://localhost:[0-9]+/" + project.getName() + "/");
+										Pattern pattern = Pattern.compile("http://localhost:8080/" + project.getName() + "/");
 										Matcher matcher = pattern.matcher(value);
 										StringBuffer sb = new StringBuffer();
 										while(matcher.find()) {
@@ -208,9 +208,9 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 	}
 
 	private class ResourceCounter implements IResourceVisitor {
-
+		
 		private int fileCount = 0;
-
+		
 		public boolean visit(IResource resource) throws CoreException {
 			int type = resource.getType();
 			switch(type) {
@@ -228,11 +228,11 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
 				return true;
 			}
 		}
-
+		
 		public int getFileCount() {
 			return fileCount;
 		}
-
+		
 	}
 
 }

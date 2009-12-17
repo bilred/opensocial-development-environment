@@ -120,7 +120,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 								for (Content content : contents) {
 									if (ViewType.html.toString().equals(content.getType())) {
 										String value = content.getValue();
-										Pattern pattern = Pattern.compile("http://localhost:[0-9]+/" + project.getName() + "/[-_.!~*\\'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#]+\\.js");
+										Pattern pattern = Pattern.compile("http://localhost:8080/" + project.getName() + "/[-_.!~*\\'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#]+\\.js");
 										Matcher matcher = pattern.matcher(value);
 										StringBuffer sb = new StringBuffer();
 										while(matcher.find()) {
