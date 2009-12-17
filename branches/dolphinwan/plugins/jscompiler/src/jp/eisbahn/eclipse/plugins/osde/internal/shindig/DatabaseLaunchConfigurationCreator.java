@@ -25,6 +25,7 @@ import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
+import jp.eisbahn.eclipse.plugins.osde.internal.common.BaseJob;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
