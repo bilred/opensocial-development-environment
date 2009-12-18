@@ -26,6 +26,7 @@ import java.util.List;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
+import jp.eisbahn.eclipse.plugins.osde.internal.common.AbstractJob;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -41,7 +42,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 
-public class ShindigLaunchConfigurationCreator extends BaseJob {
+public class ShindigLaunchConfigurationCreator extends AbstractJob {
 
     public ShindigLaunchConfigurationCreator() {
         super("Create the Apache Shindig launch configuration");
