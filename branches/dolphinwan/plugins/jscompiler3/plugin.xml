@@ -472,5 +472,13 @@
          <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML" />
       </editor>
    </extension>
-   
+
+   <extension
+         id="jp.eisbahn.eclipse.plugins.osde.markers.JsCompileMarker"
+         name="JavaScript compilation results"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker" />
+      <persistent value="true" />
+   </extension>
+
 </plugin>
