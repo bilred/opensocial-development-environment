@@ -23,7 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.common.BaseJob;
+import jp.eisbahn.eclipse.plugins.osde.internal.common.AbstractJob;
 import jp.eisbahn.eclipse.plugins.osde.internal.common.JavaLaunchConfigurationBuilder;
 
 import org.eclipse.core.resources.IFile;
@@ -45,7 +45,7 @@ import org.eclipse.debug.core.model.IStreamsProxy;
  *
  * @author Dolphin Chi-Ngai Wan
  */
-public class JavaScriptCompilerRunner extends BaseJob {
+public class JavaScriptCompilerRunner extends AbstractJob {
 
     private final List<CompilationUnit> units;
 
@@ -84,7 +84,6 @@ public class JavaScriptCompilerRunner extends BaseJob {
 
             final ILaunch launch = configuration.launch(ILaunchManager.RUN_MODE, monitor, false);
             unit.startMonitoring(launch, monitor);
-            monitor.worked(1);
 
             if (monitor.isCanceled()) {
                 // Stop further compilation e.g. when project is closing.
@@ -174,6 +173,7 @@ public class JavaScriptCompilerRunner extends BaseJob {
                         logger.warn("Cannot remove compilation configuration of " +
                                 sourceFilePath, e); 
                     }
+                    monitor.worked(1);
                 }
             }
         }

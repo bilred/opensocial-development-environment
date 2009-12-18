@@ -27,11 +27,11 @@ import org.eclipse.core.runtime.jobs.Job;
 /**
  * A helper class for long-running jobs.
  */
-public abstract class BaseJob extends Job {
+public abstract class AbstractJob extends Job {
 
     protected final Logger logger;
 
-    public BaseJob(String jobName) {
+    public AbstractJob(String jobName) {
         super(jobName);
         this.logger = new Logger(this.getClass());
     }
