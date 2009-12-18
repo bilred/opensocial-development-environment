@@ -1,5 +1,11 @@
 = Change log =
 
+=== December 18, 2009 ===
+  Version 0.5.0 stable has been released.
+
+ * Supported to preview and publish your application on iGoogle.
+ * Fixed some bugs.
+
 === December 13, 2009 ===
   Version 0.5.0 Candidate 2 has been released.
 
