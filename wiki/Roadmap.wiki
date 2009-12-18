@@ -26,7 +26,7 @@ This version is a next major version, and will be supported !OpenSocial Specific
   * Subversion committing problem (Issue #75)
   * Removing the legacy of h2-library (Issue #81)
 
-===v0.3.1 (CURRENT RELEASE)===
+===v0.3.1===
 
  * Purpose: Fix some issues.
  * Release date: 2009-11-16
@@ -35,13 +35,13 @@ This version is a next major version, and will be supported !OpenSocial Specific
   * 'Building workspace' has encountered a problem - Eclipse couldn't refresh the "target" directory (Issue #156)
   * 'Building workspace' has encountered a problem. Errors occured during the build. (Issue #157)
 
-==v0.5==
+==v0.5 (CURRENT RELEASE)==
 
-This version covers:
- * (DONE) (owner=albert) Preview gadgets on at least one container (Issue 39).
- * (DONE) (owner=albert) Publish gadgets on at least one container (Issue 154).
-
-Expected release date: 2009-12-05
+ * Purpose: Support iGoogle.
+ * Release date: 2009-12-18
+ * This version covers:
+  * (DONE) (owner=albert) Preview gadgets on at least one container (Issue 39).
+  * (DONE) (owner=albert) Publish gadgets on at least one container (Issue 154).
 
 ==v0.7==
 
