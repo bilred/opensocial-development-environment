@@ -1,6 +1,6 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.shindig;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.common.BaseJob;
+import jp.eisbahn.eclipse.plugins.osde.internal.common.AbstractJob;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -10,7 +10,7 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 
-public class ShindigLaunchConfigurationDeleter extends BaseJob {
+public class ShindigLaunchConfigurationDeleter extends AbstractJob {
 
     public ShindigLaunchConfigurationDeleter() {
         super("Delete the Apache Shindig launch configuration");
