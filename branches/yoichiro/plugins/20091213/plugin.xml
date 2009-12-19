@@ -29,6 +29,7 @@
          id="osdeNature"
          point="org.eclipse.core.resources.natures"
          name="OpenSocial Development Environment Nature">
+      <builder id="jp.eisbahn.eclipse.plugins.osde.gadgetBuilder" />
       <runtime>
          <run class="com.googlecode.osde.internal.OsdeProjectNature" />
       </runtime>
@@ -55,11 +56,10 @@
    
    <extension
          id="gadgetBuilder"
+         name="OSDE Gadget Builder"
          point="org.eclipse.core.resources.builders">
-      <builder>
-         <run
-               class="com.googlecode.osde.internal.builders.GadgetBuilder">
-         </run>
+      <builder hasNature="true">
+         <run class="com.googlecode.osde.internal.builders.GadgetBuilder" />
       </builder>
    </extension>
    

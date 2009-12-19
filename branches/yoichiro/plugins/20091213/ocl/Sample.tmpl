@@ -10,9 +10,10 @@ import org.opensocial.client.OpenSocialClient;
 import org.opensocial.data.OpenSocialPerson;
 
 public class Sample {
-    
-    private static final String BASE_URI = "http://localhost:8080/social/rest/";
-    
+
+    // TODO Please check the http port if you have ever change it from OSDE Preference settings.
+    private static final String BASE_URI = "http://localhost:$server_port$/social/rest/";
+
     // TODO Please change to the real values for SNS which you use.
     private static final String CONSUMER_KEY = "$consumer_key$";
     private static final String CONSUMER_SECRET = "$consumer_secret$";
