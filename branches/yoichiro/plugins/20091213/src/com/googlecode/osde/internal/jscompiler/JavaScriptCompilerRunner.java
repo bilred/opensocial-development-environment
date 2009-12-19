@@ -16,15 +16,15 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package jp.eisbahn.eclipse.plugins.osde.internal.jscompiler;
+package com.googlecode.osde.internal.jscompiler;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.common.AbstractJob;
-import jp.eisbahn.eclipse.plugins.osde.internal.common.JavaLaunchConfigurationBuilder;
+import com.googlecode.osde.internal.common.AbstractJob;
+import com.googlecode.osde.internal.common.JavaLaunchConfigurationBuilder;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;

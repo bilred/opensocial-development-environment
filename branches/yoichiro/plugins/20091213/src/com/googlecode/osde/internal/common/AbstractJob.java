@@ -15,9 +15,9 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.internal.common;
+package com.googlecode.osde.internal.common;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
