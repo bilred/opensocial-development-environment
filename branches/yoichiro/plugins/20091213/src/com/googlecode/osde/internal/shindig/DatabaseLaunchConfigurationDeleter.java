@@ -8,7 +8,9 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 
-public class DatabaseLaunchConfigurationDeleter extends BaseJob {
+import com.googlecode.osde.internal.common.AbstractJob;
+
+public class DatabaseLaunchConfigurationDeleter extends AbstractJob {
 
     public DatabaseLaunchConfigurationDeleter() {
         super("Delete the database launch configuration");

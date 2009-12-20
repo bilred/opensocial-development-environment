@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.common.AbstractJob;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -39,7 +40,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 
-public class ShindigLaunchConfigurationCreator extends BaseJob {
+public class ShindigLaunchConfigurationCreator extends AbstractJob {
 
     public ShindigLaunchConfigurationCreator() {
         super("Create the Apache Shindig launch configuration");

@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.OsdeConfig;
+import com.googlecode.osde.internal.common.AbstractJob;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -41,7 +42,7 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 
-public class DatabaseLaunchConfigurationCreator extends BaseJob {
+public class DatabaseLaunchConfigurationCreator extends AbstractJob {
 
     private final static String H2_LIB_PATH = "/libs/h2-1.1.117.jar";
 

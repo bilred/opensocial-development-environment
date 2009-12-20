@@ -25,7 +25,9 @@ import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 
-public class ShindigLaunchConfigurationDeleter extends BaseJob {
+import com.googlecode.osde.internal.common.AbstractJob;
+
+public class ShindigLaunchConfigurationDeleter extends AbstractJob {
 
     public ShindigLaunchConfigurationDeleter() {
         super("Delete the Apache Shindig launch configuration");
