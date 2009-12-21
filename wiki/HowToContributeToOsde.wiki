@@ -82,7 +82,8 @@
  * Sun's code conventions: http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
 
  * indentation
-   * please use 4-spaces and avoid using tabs.
+   * (for new code) please use 4-spaces and avoid using tabs.
+   * (for existing code) please make it consistent.
 
  * javadoc
    * required for classes and public methods (except getters and setters)
