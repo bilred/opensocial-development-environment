@@ -33,7 +33,7 @@ public class JavaScriptCompilerReporter {
             "jp.eisbahn.eclipse.plugins.osde.markers.JsCompileMarker";
 
     /**
-     * Clear all existing indicators annotated in a file.
+     * Clears all existing indicators annotated in a file.
      */
     public void clear(IFile source) throws CoreException {
         source.deleteMarkers(MARKER_ID, false, IResource.DEPTH_ZERO);
