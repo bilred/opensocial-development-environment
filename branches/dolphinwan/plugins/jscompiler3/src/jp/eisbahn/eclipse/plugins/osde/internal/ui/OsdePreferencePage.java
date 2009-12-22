@@ -330,7 +330,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		group.setLayout(new GridLayout());
 
 		compileJavaScriptCheckbox = new Button(group, SWT.CHECK);
-		compileJavaScriptCheckbox.setText("Compile JavaScript files");
+		compileJavaScriptCheckbox.setText("Compile JavaScript files (Requires JDK 6)");
 		//
 		//
 		createSeparator(composite);
