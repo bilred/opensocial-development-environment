@@ -27,6 +27,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
 import jp.eisbahn.eclipse.plugins.osde.internal.jscompiler.JavaScriptCompilerRunner;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logger;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
@@ -107,6 +108,9 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
     }
 
     private void fullBuild(final IProject project, final IProgressMonitor monitor) throws CoreException {
+		final boolean enableJavaScriptCompiler =
+				Activator.getDefault().getOsdeConfiguration().isCompileJavaScript();
+
         final IFolder targetDirectory = getTargetFolder();
         if (targetDirectory.exists()) {
 			targetDirectory.delete(false, monitor);
@@ -134,7 +138,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
                         try {
                             if (OpenSocialUtil.isGadgetSpecXML(orgFile)) {
                                 compileGadgetSpec(orgFile, destFile, project, monitor);
-                            } else if (isJavaScript(orgFile)) {
+                            } else if (enableJavaScriptCompiler && isJavaScript(orgFile)) {
                                 compileJavaScript(orgFile, destFile, runner);
                             } else {
                                 orgFile.copy(destFile.getFullPath(),

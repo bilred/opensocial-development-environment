@@ -19,6 +19,7 @@
 package jp.eisbahn.eclipse.plugins.osde.internal.jscompiler;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +48,13 @@ import org.eclipse.debug.core.model.IStreamsProxy;
  */
 public class JavaScriptCompilerRunner extends AbstractJob {
 
+    private final JavaScriptCompilerReporter reporter;
     private final List<CompilationUnit> units;
 
     public JavaScriptCompilerRunner() {
         super("Compiles all JavaScript files");
         this.units = new ArrayList<CompilationUnit>();
+        this.reporter = new JavaScriptCompilerReporter();
     }
 
     /**
@@ -72,11 +75,12 @@ public class JavaScriptCompilerRunner extends AbstractJob {
         monitor.beginTask(getName(), count);
 
         for (CompilationUnit unit : units) {
-            final String sourceFilePath = unit.sourceFilePath;
+            final String sourceFilePath = pathOf(unit.sourceFile);
 
             monitor.subTask("Compiling " + sourceFilePath);
             ILaunchConfiguration configuration =
-                    new JavaLaunchConfigurationBuilder("JavaScript Compiler")
+                    new JavaLaunchConfigurationBuilder(
+                            "Compile JavaScript " + unit.sourceFile.getName())
                             .withMainClassName("com.google.javascript.jscomp.CompilerRunner")
                             .withLibrary("/jscompiler/compiler.jar")
                             .withArgument("--js=" + sourceFilePath)
@@ -92,6 +96,10 @@ public class JavaScriptCompilerRunner extends AbstractJob {
         }
     }
 
+    private static String pathOf(IFile file) {
+        return file.getLocation().toOSString();
+    }
+
     /**
      * A compilation responsible to monitor the compiler process, and
      * collect its stdout/stderr output when it exits.
@@ -100,14 +108,14 @@ public class JavaScriptCompilerRunner extends AbstractJob {
 
         private static final String ENCODING = "UTF-8";
 
-        final String sourceFilePath;
+        final IFile sourceFile;
         final IFile targetFile;
         ILaunch launch;
         IProgressMonitor monitor;
         ILaunchManager manager;
 
         CompilationUnit(IFile sourceFile, IFile targetFile) {
-            this.sourceFilePath = sourceFile.getLocation().toOSString();
+            this.sourceFile = sourceFile;
             this.targetFile = targetFile;
         }
 
@@ -141,41 +149,50 @@ public class JavaScriptCompilerRunner extends AbstractJob {
                     continue;
                 }
 
-                logger.info("Receiving:" + sourceFilePath);
+                final String sourceFilePath = pathOf(sourceFile);
 
                 IProcess process = terminated.getProcesses()[0];
-
                 try {
-                    String output =
-                            process.getStreamsProxy().getOutputStreamMonitor().getContents();
+                    reporter.clear(sourceFile);
 
-                    targetFile.create(new ByteArrayInputStream(output.getBytes(ENCODING)),
-                            IResource.FORCE | IResource.DERIVED, monitor);
+                    targetFile.create(getStdout(process), IResource.FORCE | IResource.DERIVED,
+                            monitor);
 
                     if (process.getExitValue() != 0) {
-                        // TODO: direct compiler warnings/errors to 'Problems' view.
-                        String stderr =
-                                process.getStreamsProxy().getErrorStreamMonitor()
-                                        .getContents();
-                        logger.error(stderr);
+                        String warningOrErrors =
+                                process.getStreamsProxy().getErrorStreamMonitor().getContents();
+                        reporter.reportErrorOrWarning(sourceFile, warningOrErrors);
                     }
                 } catch (CoreException e) {
-                    logger.error("Cannot write to target file " +
-                            targetFile.getLocation().toOSString());
+                    logger.error("Cannot write to target file " + pathOf(targetFile));
                 } catch (UnsupportedEncodingException e) {
-                    // TODO: direct to 'Problems' view
-                    logger.error(sourceFilePath + " contains non-UTF8 characters", e);
+                    try {
+                        reporter.reportErrorOrWarning(sourceFile, "Containing non-UTF-8 characters");
+                    } catch (CoreException e1) {
+                        logger.error("Cannot report errors to " + sourceFilePath, e1);
+                    }
                 } finally {
                     manager.removeLaunchListener(this);
-                    try {
-                        launch.getLaunchConfiguration().delete();
-                    } catch (CoreException e) {
-                        logger.warn("Cannot remove compilation configuration of " +
-                                sourceFilePath, e); 
+
+                    final ILaunchConfiguration configuration = launch.getLaunchConfiguration();
+                    if (configuration != null) {
+                        try {
+                            configuration.delete();
+                        } catch (CoreException e) {
+                            logger.error("Cannot remove compilation configuration of " +
+                                    sourceFilePath, e);
+                        }
                     }
+
                     monitor.worked(1);
                 }
             }
+        }
+
+        private InputStream getStdout(IProcess process) throws UnsupportedEncodingException {
+            String output =
+                    process.getStreamsProxy().getOutputStreamMonitor().getContents();
+            return new ByteArrayInputStream(output.getBytes(ENCODING));
         }
 
         public void launchesRemoved(ILaunch[] iLaunches) {
