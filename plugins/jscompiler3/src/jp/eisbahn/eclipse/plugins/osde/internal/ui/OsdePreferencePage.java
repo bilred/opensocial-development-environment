@@ -30,7 +30,6 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -69,7 +68,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 	private Text workDirectoryText;
 	private Text loggerCfgLocationText;
 	private Button loggerCfgBrowseButton;
-    private Button compileJavaScriptCheckbox;
+	private Button compileJavaScriptCheckbox;
 
 
 	public OsdePreferencePage() {
@@ -322,16 +321,16 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 				}
 			}
 		});
-        //
-        //
-        group = new Group(composite, SWT.NONE);
-        group.setText("Build options");
-        layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        group.setLayoutData(layoutData);
-        group.setLayout(new GridLayout());
+		//
+		//
+		group = new Group(composite, SWT.NONE);
+		group.setText("Build options");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		group.setLayoutData(layoutData);
+		group.setLayout(new GridLayout());
 
-        compileJavaScriptCheckbox = new Button(group, SWT.CHECK);
-        compileJavaScriptCheckbox.setText("Compile JavaScript files");
+		compileJavaScriptCheckbox = new Button(group, SWT.CHECK);
+		compileJavaScriptCheckbox.setText("Compile JavaScript files");
 		//
 		//
 		createSeparator(composite);
@@ -389,7 +388,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		workDirectoryFile.mkdirs();
 		config.setWorkDirectory(workDirectory);
 		config.setLoggerConfigFile(loggerCfgLocationText.getText());
-        config.setCompileJavaScript(compileJavaScriptCheckbox.getSelection());
+		config.setCompileJavaScript(compileJavaScriptCheckbox.getSelection());
 		Activator.getDefault().storePreferences(config);
 	}
 
@@ -439,7 +438,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		changeDatabaseControlEnabled();
 
 		loggerCfgLocationText.setText(config.getLoggerConfigFile());
-        compileJavaScriptCheckbox.setSelection(config.isCompileJavaScript());
+		compileJavaScriptCheckbox.setSelection(config.isCompileJavaScript());
 	}
 
 	private class DatabaseRadioSelectionListener implements SelectionListener {
