@@ -20,6 +20,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.ui;
 import java.io.File;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import jp.eisbahn.eclipse.plugins.osde.internal.common.JdkVersion;
 import jp.eisbahn.eclipse.plugins.osde.internal.OsdeConfig;
 import jp.eisbahn.eclipse.plugins.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.OpenSocialUtil;
@@ -331,6 +332,10 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 
 		compileJavaScriptCheckbox = new Button(group, SWT.CHECK);
 		compileJavaScriptCheckbox.setText("Compile JavaScript files (Requires JDK 6)");
+		if (!JdkVersion.isJdk6()) {
+			compileJavaScriptCheckbox.setEnabled(false);
+			compileJavaScriptCheckbox.setSelection(false);
+		}
 		//
 		//
 		createSeparator(composite);

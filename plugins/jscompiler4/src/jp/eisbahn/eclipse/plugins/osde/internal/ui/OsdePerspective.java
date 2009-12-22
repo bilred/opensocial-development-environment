@@ -47,6 +47,7 @@ public class OsdePerspective implements IPerspectiveFactory {
 		bottom.addView(DocumentView.ID);
 		bottom.addView(ShindigMonitorView.ID);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
+		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		//
 		IFolderLayout leftBottom = factory.createFolder("leftBottom", IPageLayout.BOTTOM, 0.6f, "left");
 		leftBottom.addView(IPageLayout.ID_OUTLINE);
