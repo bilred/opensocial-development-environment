@@ -108,8 +108,8 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
     }
 
     private void fullBuild(final IProject project, final IProgressMonitor monitor) throws CoreException {
-        final boolean enableJavaScriptCompiler =
-                Activator.getDefault().getOsdeConfiguration().isCompileJavaScript();
+		final boolean enableJavaScriptCompiler =
+				Activator.getDefault().getOsdeConfiguration().isCompileJavaScript();
 
         final IFolder targetDirectory = getTargetFolder();
         if (targetDirectory.exists()) {
