@@ -39,6 +39,7 @@ public class OsdeConfig {
 	public static final String EXTERNAL_DATABASE_NAME = "external_database_name";
 	public static final String WORK_DIRECTORY = "work_directory";
 	public static final String LOGGER_CONFIG_FILE = "logger_config_file";
+	public static final String COMPILE_JAVASCRIPT = "compile_javascript";
 
 	private String defaultLanguage;
 	private String defaultCountry;
@@ -55,6 +56,7 @@ public class OsdeConfig {
 	private String externalDatabaseName;
 	private String workDirectory;
 	private String loggerConfigFile;
+	private boolean compileJavaScript;
 
 	public String getExternalDatabaseName() {
 		return externalDatabaseName;
@@ -176,4 +178,11 @@ public class OsdeConfig {
 		this.loggerConfigFile = loggerConfigFile;
 	}
 
+	public boolean isCompileJavaScript() {
+		return compileJavaScript;
+	}
+
+	public void setCompileJavaScript(boolean compileJavaScript) {
+		this.compileJavaScript = compileJavaScript;
+	}
 }
