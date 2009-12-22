@@ -59,4 +59,5 @@ Bundle-ClassPath: .,
  libs/persistence-api-1.0.jar,
  libs/shindig-common-1.1-BETA1-incubating.jar,
  libs/shindig-hibernate-1.1-BETA1-incubating.jar,
- libs/shindig-social-api-1.1-BETA1-incubating.jar
+ libs/shindig-social-api-1.1-BETA1-incubating.jar,
+ libs/google-closure-compiler-r46.jar
