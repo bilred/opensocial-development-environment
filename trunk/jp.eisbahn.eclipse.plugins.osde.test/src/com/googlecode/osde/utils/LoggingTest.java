@@ -15,14 +15,14 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package jp.eisbahn.eclipse.plugins.osde.utils;
+package com.googlecode.osde.utils;
+
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Map.Entry;
-
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Logging;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
@@ -37,13 +37,16 @@ import org.eclipse.ui.internal.views.log.LogView;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+
+import com.googlecode.osde.internal.utils.Logger;
 
 @SuppressWarnings("restriction")
 public class LoggingTest {
 
+	private static final Logger logger = new Logger(LoggingTest.class);
+	
 	private static final String LOG_VIEW_ID = "org.eclipse.pde.runtime.LogView";
-	private static final String OSDE_PERSPECTIVE_ID = "jp.eisbahn.eclipse.plugins.osde.perspective";
+	private static final String OSDE_PERSPECTIVE_ID = "com.googlecode.osde.perspective";
 	private static final int LOGGING_COUNT = 1000;
 
 	private static final int[] LOG_LEVEL =
@@ -99,13 +102,13 @@ public class LoggingTest {
 				public void run() {
 					switch (e.getValue()) {
 					case IStatus.INFO:
-						Logging.info(e.getKey());
+						logger.info(e.getKey());
 						break;
 					case IStatus.WARNING:
-						Logging.warn(e.getKey());
+						logger.warn(e.getKey());
 						break;
 					case IStatus.ERROR:
-						Logging.error(e.getKey());
+						logger.error(e.getKey());
 						break;
 					default:
 						break;
