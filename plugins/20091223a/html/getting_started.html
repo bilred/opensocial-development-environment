@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Getting started</title>
+</head>
+
+<body>
+
+<h2>Getting started</h2>
+<p>This page describes how to use OSDE quickly. </p>
+
+<h3>Start Apache Shindig</h3>
+<p>First, you should start the Apache Shindig server.</p>
+<ul>
+<li>Push the button which have OpenSocial icon in Eclipse toolbar.</li>
+</ul>
+<img src="toolbar_button.gif" />
+<p>Then, the Apache Shindig server is started, and H2 Database is started at same time.
+In addition, three views (People, AppData, and Activities) will be opened.</p>
+
+<h3>Add person</h3>
+<p>Before you create the OpenSocial project, you should add the person to H2 Database with People view.</p>
+<ul>
+<li>Activate the People view.</li>
+<li>Push [New] button.</li>
+</ul>
+<img src="add_person_button.gif" />
+<p>Then, the dialog for adding person is opened.</p>
+<ul>
+<li>Input the new person's ID and Display name to fields.</li>
+<li>Push [OK] button.</li>
+</ul>
+<img src="new_person_dialog.gif" />
+<p>If registration is succeed, you can find the new person in People list.</p>
+
+<h3>Create new project</h3>
+<p>To develop your application, you should create a new OpenSocial project to your workspace.</p>
+<ul>
+<li>Select [File] -> [New] -> [Project...] menus.</li>
+</ul>
+<img src="project_menu.gif" />
+<p>Then, you can see the dialog which select type.</p>
+<ul>
+<li>Select OpenSocial project node after expanding the OpenSocial node.</li>
+<li>Push [Next] button.</li>
+</ul>
+<img src="select_opensocial.gif" />
+<p>The wizard for creating new OpenSocial project is started.</p>
+<ul>
+<li>Input the project name and push [Next] button.</li>
+<li>Input your application's information. Title and Author Email is required. Push [Next] button after input.</li>
+<li>Select the view type. At least, you need to support one and more views. Push [Finish] button after selecting.</li>
+</ul>
+<img src="new_os_wizard.gif" />
+<p>OSDE creates the new OpenSocial project. You can see your gadget in opened Gadget Editor.</p>
+
+<h3>Run your application</h3>
+<p>You can run your application for only some step.</p>
+<ul>
+<li>First, click the mouse right button on gadget.xml file in Package Explorer view,
+and select [OpenSocial] -> [Launch Web Server] menus.</li>
+</ul>
+<p>You must launch a local Web server to provide your gadget.xml file for Shindig
+before launching your application.</p>
+<ul>
+<li>Second, click the mouse right button on gadget.xml file in Package Explorer view,
+and select [OpenSocial] -> [Launch this application] menus.</li>
+</ul>
+<img src="os_menus.gif" />
+<p>The dialog to config about some parameters is opened.</p>
+<ul>
+<li>Select View, and push [OK] button.</li>
+</ul>
+<img src="run_dialog.gif" />
+<p>The internal browser is opened, and your application will be run in the browser.</p>
+<img src="app.gif" />
+
+<p>Have fun!</p>
+
+</body>
+</html>
