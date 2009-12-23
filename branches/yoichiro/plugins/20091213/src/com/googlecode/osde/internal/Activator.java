@@ -404,6 +404,8 @@ public class Activator extends AbstractUIPlugin {
 			config.setExternalDatabasePassword(store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
 			config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
 			config.setWorkDirectory(store.getString(OsdeConfig.WORK_DIRECTORY));
+			config.setLoggerConfigFile(store.getString(OsdeConfig.LOGGER_CONFIG_FILE));
+			config.setCompileJavaScript(store.getBoolean(OsdeConfig.COMPILE_JAVASCRIPT));
 			return config;
 		} catch(IOException e) {
 			logger.error("Something went wrong while getting OSDE configurations.", e);
@@ -431,6 +433,8 @@ public class Activator extends AbstractUIPlugin {
 			config.setExternalDatabasePassword(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
 			config.setExternalDatabaseName(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
 			config.setWorkDirectory(store.getDefaultString(OsdeConfig.WORK_DIRECTORY));
+			config.setLoggerConfigFile(store.getDefaultString(OsdeConfig.LOGGER_CONFIG_FILE));
+			config.setCompileJavaScript(store.getDefaultBoolean(OsdeConfig.COMPILE_JAVASCRIPT));
 			return config;
 		} catch(IOException e) {
 			logger.error("Retrieving preference values failed.", e);
@@ -460,6 +464,8 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_TYPE, config.getExternalDatabaseType());
 			store.setValue(OsdeConfig.EXTERNAL_DATABASE_NAME, config.getExternalDatabaseName());
 			store.setValue(OsdeConfig.WORK_DIRECTORY, config.getWorkDirectory());
+			store.setValue(OsdeConfig.LOGGER_CONFIG_FILE, config.getLoggerConfigFile());
+			store.setValue(OsdeConfig.COMPILE_JAVASCRIPT, config.isCompileJavaScript());
 		} catch(IOException e) {
 			logger.error("Storing preference values failed.", e);
 			throw new IllegalStateException(e);

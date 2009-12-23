@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -60,6 +61,9 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 	private Button databaseBrowseButton;
 	private Text nameText;
 	private Text workDirectoryText;
+	private Text loggerCfgLocationText;
+	private Button loggerCfgBrowseButton;
+	private Button compileJavaScriptCheckbox;
 
 	public OsdePreferencePage() {
 		super();
@@ -253,6 +257,44 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		passwordText.setLayoutData(layoutData);
 		//
+		group = new Group(composite, SWT.NONE);
+		group.setText("Logger settings");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		group.setLayoutData(layoutData);
+		group.setLayout(new GridLayout(3, false));
+		//
+		Label loggerLabel = new Label(group, SWT.NONE);
+		loggerLabel.setText("Logger configuration file:");
+		loggerCfgLocationText = new Text(group, SWT.SINGLE | SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		loggerCfgLocationText.setLayoutData(layoutData);
+		//
+		loggerCfgBrowseButton = new Button(group, SWT.PUSH);
+		loggerCfgBrowseButton.setText("Browser...");
+		loggerCfgBrowseButton.addSelectionListener(new SelectionListener() {
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+				public void widgetSelected(SelectionEvent e) {
+						FileDialog dialog = new FileDialog(getShell());
+						dialog.setFilterExtensions(new String[]{"*.properties"});
+						dialog.setText("Log directory");
+						dialog.setText("Please select the logger configuration file.");
+						String logCfgFile = dialog.open();
+						if (logCfgFile != null) {
+								loggerCfgLocationText.setText(logCfgFile);
+						}
+				}
+		});
+		//
+		group = new Group(composite, SWT.NONE);
+		group.setText("Build options");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		group.setLayoutData(layoutData);
+		group.setLayout(new GridLayout());
+
+		compileJavaScriptCheckbox = new Button(group, SWT.CHECK);
+		compileJavaScriptCheckbox.setText("Compile JavaScript files (Requires JDK 6)");
+		//
 		//
 		createSeparator(composite);
 		//
@@ -281,11 +323,11 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		super.performDefaults();
 	}
 
-    public boolean performOk() {
-        storeValues();
-        new DatabaseLaunchConfigurationCreator().schedule();
-        return true;
-    }
+	public boolean performOk() {
+		storeValues();
+		new DatabaseLaunchConfigurationCreator().schedule();
+		return true;
+	}
 
 	private void storeValues() {
 		OsdeConfig config = new OsdeConfig();
@@ -306,6 +348,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		File workDirectoryFile = new File(workDirectory);
 		workDirectoryFile.mkdirs();
 		config.setWorkDirectory(workDirectory);
+		config.setCompileJavaScript(compileJavaScriptCheckbox.getSelection());
 		Activator.getDefault().storePreferences(config);
 	}
 
@@ -350,8 +393,11 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		passwordText.setText(config.getExternalDatabasePassword());
 		nameText.setText(config.getExternalDatabaseName());
 		workDirectoryText.setText(config.getWorkDirectory());
-		//
+
 		changeDatabaseControlEnabled();
+
+		loggerCfgLocationText.setText(config.getLoggerConfigFile());
+		compileJavaScriptCheckbox.setSelection(config.isCompileJavaScript());
 	}
 
 	private class DatabaseRadioSelectionListener implements SelectionListener {
@@ -361,7 +407,6 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		public void widgetSelected(SelectionEvent e) {
 			changeDatabaseControlEnabled();
 		}
-
 	}
 
 	private void changeDatabaseControlEnabled() {

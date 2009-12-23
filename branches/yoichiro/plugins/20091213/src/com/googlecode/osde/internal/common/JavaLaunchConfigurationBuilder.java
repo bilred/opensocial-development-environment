@@ -48,8 +48,8 @@ import java.util.List;
 public final class JavaLaunchConfigurationBuilder {
     private final String configurationName;
     private final List<String> libraries = new ArrayList<String>();
-    private String mainClassName;
     private final List<String> programArguments = new ArrayList<String>();
+    private String mainClassName;
 
     public JavaLaunchConfigurationBuilder(String configurationName) throws IOException {
         this.configurationName = configurationName;
@@ -97,8 +97,6 @@ public final class JavaLaunchConfigurationBuilder {
         ILaunchConfigurationType type = manager
                 .getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
 
-        removeExistingConfiguration(manager, type);
-
         List<String> classpath = buildClasspath();
 
         ILaunchConfigurationWorkingCopy wc = createConfiguration(type, classpath);
@@ -136,16 +134,6 @@ public final class JavaLaunchConfigurationBuilder {
             classpath.add(entry.getMemento());
         }
         return classpath;
-    }
-
-    private void removeExistingConfiguration(ILaunchManager manager, ILaunchConfigurationType type)
-            throws CoreException {
-        ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
-        for (ILaunchConfiguration configuration : configurations) {
-            if (configuration.getName().equals(configurationName)) {
-                configuration.delete();
-            }
-        }
     }
 
     private IRuntimeClasspathEntry createJreEntry() throws CoreException {

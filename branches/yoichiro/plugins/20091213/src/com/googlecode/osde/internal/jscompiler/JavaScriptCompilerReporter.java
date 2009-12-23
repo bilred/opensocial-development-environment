@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package jp.eisbahn.eclipse.plugins.osde.internal.jscompiler;
+package com.googlecode.osde.internal.jscompiler;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class JavaScriptCompilerReporter {
     private static final String MARKER_ID =
-            "jp.eisbahn.eclipse.plugins.osde.markers.JsCompileMarker";
+            "com.googlecode.osde.markers.JsCompileMarker";
 
     /**
      * Clears all existing indicators annotated in a file.

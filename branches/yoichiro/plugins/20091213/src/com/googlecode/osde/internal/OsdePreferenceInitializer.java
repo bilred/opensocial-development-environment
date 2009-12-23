@@ -41,6 +41,8 @@ public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 		file = new File(userHome, Activator.WORK_DIR_NAME);
 		file.mkdirs();
 		node.put(OsdeConfig.WORK_DIRECTORY, file.getAbsolutePath());
+		node.put(OsdeConfig.LOGGER_CONFIG_FILE, "");
+		node.putBoolean(OsdeConfig.COMPILE_JAVASCRIPT, false);
 	}
 
 }
