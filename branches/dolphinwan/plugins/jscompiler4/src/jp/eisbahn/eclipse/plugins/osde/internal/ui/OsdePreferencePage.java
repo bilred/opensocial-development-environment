@@ -332,7 +332,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 
 		compileJavaScriptCheckbox = new Button(group, SWT.CHECK);
 		compileJavaScriptCheckbox.setText("Compile JavaScript files (Requires JDK 6)");
-		if (!JdkVersion.isJdk6()) {
+		if (!JdkVersion.isAtLeastJdk6()) {
 			compileJavaScriptCheckbox.setEnabled(false);
 			compileJavaScriptCheckbox.setSelection(false);
 		}
