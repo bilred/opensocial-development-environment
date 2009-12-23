@@ -1,8 +1,8 @@
-package jp.eisbahn.eclipse.plugins.osde.internal;
+package com.googlecode.osde.internal;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder;
-import jp.eisbahn.eclipse.plugins.osde.test.EclipseTestCase;
-import jp.eisbahn.eclipse.plugins.osde.test.TestProject;
+import com.googlecode.osde.internal.builders.GadgetBuilder;
+import com.googlecode.osde.test.EclipseTestCase;
+import com.googlecode.osde.test.TestProject;
 import junit.framework.Assert;
 
 import org.eclipse.core.resources.ICommand;
@@ -11,6 +11,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.googlecode.osde.internal.OsdeProjectNature;
 
 /**
  *	Test OsdeProject Nature

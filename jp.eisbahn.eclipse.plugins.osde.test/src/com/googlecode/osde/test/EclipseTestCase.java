@@ -1,7 +1,7 @@
-package jp.eisbahn.eclipse.plugins.osde.test;
+package com.googlecode.osde.test;
 
 import static org.junit.Assert.assertNotNull;
-import jp.eisbahn.eclipse.plugins.osde.internal.Activator;
+import com.googlecode.osde.internal.Activator;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;

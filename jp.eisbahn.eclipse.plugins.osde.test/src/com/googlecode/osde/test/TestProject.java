@@ -1,4 +1,4 @@
-package jp.eisbahn.eclipse.plugins.osde.test;
+package com.googlecode.osde.test;
 
 import java.util.Random;
 
