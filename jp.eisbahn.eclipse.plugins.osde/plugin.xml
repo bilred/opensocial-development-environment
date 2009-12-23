@@ -7,7 +7,7 @@
       <content-type
             base-type="org.eclipse.core.runtime.xml"
             file-extensions="xml"
-            id="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML"
+            id="com.googlecode.osde.gadgetSpecXML"
             name="Gadget Spec XML File"
             priority="high">
          <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
@@ -17,7 +17,7 @@
       <content-type
             base-type="org.eclipse.core.runtime.xml"
             file-extensions="xml"
-            id="jp.eisbahn.eclipse.plugins.osde.messageBundleXML"
+            id="com.googlecode.osde.messageBundleXML"
             name="Message Bundle XML File">
          <describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
             <parameter name="element" value="messagebundle"/>
@@ -29,9 +29,9 @@
          id="osdeNature"
          point="org.eclipse.core.resources.natures"
          name="OpenSocial Development Environment Nature">
-      <builder id="jp.eisbahn.eclipse.plugins.osde.gadgetBuilder" />
+      <builder id="com.googlecode.osde.gadgetBuilder" />
       <runtime>
-         <run class="jp.eisbahn.eclipse.plugins.osde.internal.OsdeProjectNature" />
+         <run class="com.googlecode.osde.internal.OsdeProjectNature" />
       </runtime>
    </extension>
    
@@ -44,11 +44,11 @@
             label="OpenSocial Project"
             icon="icons/person_small.gif"
             state="true"
-            id="jp.eisbahn.eclipse.plugins.osde.OpenSocialProjectDecorator">
+            id="com.googlecode.osde.OpenSocialProjectDecorator">
          <enablement>
             <objectState
                   name="nature"
-                  value="jp.eisbahn.eclipse.plugins.osde.osdeNature">
+                  value="com.googlecode.osde.osdeNature">
             </objectState>
          </enablement>
       </decorator>
@@ -59,20 +59,20 @@
          name="OSDE Gadget Builder"
          point="org.eclipse.core.resources.builders">
       <builder hasNature="true">
-         <run class="jp.eisbahn.eclipse.plugins.osde.internal.builders.GadgetBuilder" />
+         <run class="com.googlecode.osde.internal.builders.GadgetBuilder" />
       </builder>
    </extension>
    
    <extension
          point="org.eclipse.ui.exportWizards">
       <category
-            id="jp.eisbahn.eclipse.plugins.osde.export"
+            id="com.googlecode.osde.export"
             name="OSDE">
       </category>
       <wizard
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.export.OpenSocialApplicationExportWizard"
-            id="jp.eisbahn.eclipse.plugins.osde.ExportWizard"
-            category="jp.eisbahn.eclipse.plugins.osde.export"
+            class="com.googlecode.osde.internal.ui.wizards.export.OpenSocialApplicationExportWizard"
+            id="com.googlecode.osde.ExportWizard"
+            category="com.googlecode.osde.export"
             icon="icons/opensocial.gif"
             name="OpenSocial application">
          <description>
@@ -83,17 +83,17 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-        id="jp.eisbahn.eclipse.plugins.osde.newWizards"
+        id="com.googlecode.osde.newWizards"
         name="OSDE">
       </category>
       <wizard
-          id="jp.eisbahn.eclipse.plugins.osde.newWizards.NewOpenSocialProjectWizard"
+          id="com.googlecode.osde.newWizards.NewOpenSocialProjectWizard"
           name="OpenSocial Project"
-          category="jp.eisbahn.eclipse.plugins.osde.newWizards"
+          category="com.googlecode.osde.newWizards"
           icon="./icons/opensocial.gif"
           project="true"
-          finalPerspective="jp.eisbahn.eclipse.plugins.osde.perspective"
-          class="jp.eisbahn.eclipse.plugins.osde.internal.ui.wizards.newjsprj.NewOpenSocialProjectResourceWizard">
+          finalPerspective="com.googlecode.osde.perspective"
+          class="com.googlecode.osde.internal.ui.wizards.newjsprj.NewOpenSocialProjectResourceWizard">
           <description>
               Create an OpenSocial project.
           </description>
@@ -103,19 +103,19 @@
    <extension
          point = "org.eclipse.ui.editorActions">
       <editorContribution 
-            id="jp.eisbahn.eclipse.plugins.osde.editorActions"
-            targetID="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor">
-         <action id="jp.eisbahn.eclipse.plugins.osde.editorActions.runAction"
+            id="com.googlecode.osde.editorActions"
+            targetID="com.googlecode.osde.editors.GadgetXmlEditor">
+         <action id="com.googlecode.osde.editorActions.runAction"
                label="Run this application locally"
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunFromEditorAction"
-               definitionId="jp.eisbahn.eclipse.plugins.osde.commands.runGadgetCommand" /> 
+               class="com.googlecode.osde.internal.runtime.RunFromEditorAction"
+               definitionId="com.googlecode.osde.commands.runGadgetCommand" /> 
       </editorContribution>
    </extension>
    
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            id="jp.eisbahn.eclipse.plugins.osde.actionSet"
+            id="com.googlecode.osde.actionSet"
             label="OSDE"
             visible="true">
          <menu
@@ -135,16 +135,16 @@
             </separator>
          </menu>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCertificateAction"
-               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShowPublicCertificateAction"
+               class="com.googlecode.osde.internal.shindig.ShowPublicCertificateAction"
+               id="com.googlecode.osde.internal.shindig.ShowPublicCertificateAction"
                icon="icons/icon_key.gif"
                label="Show &amp;Public Certificate"
                menubarPath="opensocialMenu/opensocialGroup3"
                tooltip="Show Public Certificate for OAuth.">
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunExternalAction"
-               id="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunExternalAction"
+               class="com.googlecode.osde.internal.runtime.RunExternalAction"
+               id="com.googlecode.osde.internal.runtime.RunExternalAction"
                icon="icons/icon_external.gif"
                label="Run &amp;external application"
                menubarPath="opensocialMenu/opensocialGroup2"
@@ -152,9 +152,9 @@
                tooltip="Run the application to locate external.">
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAgainAction"
-               id="jp.eisbahn.eclipse.plugins.osde.runAgainAction1"
-               definitionId="jp.eisbahn.eclipse.plugins.osde.commands.runLastLaunchedGadgetCommand"
+               class="com.googlecode.osde.internal.runtime.RunAgainAction"
+               id="com.googlecode.osde.runAgainAction1"
+               definitionId="com.googlecode.osde.commands.runLastLaunchedGadgetCommand"
                label="Run last launched application"
                icon="icons/action_again.gif"
                menubarPath="opensocialMenu/opensocialGroup2"
@@ -162,9 +162,9 @@
                tooltip="Run the last launched application.">
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
+               class="com.googlecode.osde.internal.runtime.RunAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.runAction2"
+               id="com.googlecode.osde.runAction2"
                label="Run this application locally"
                icon="icons/action_go.gif"
                menubarPath="opensocialMenu/opensocialGroup2"
@@ -173,71 +173,71 @@
             <enablement>
                <objectState
 	                     name="contentTypeId"
-	                     value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	                     value="com.googlecode.osde.gadgetSpecXML">
 	           </objectState>
             </enablement>
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.production.PreviewIGoogleAction"
                enablesFor="1"
                icon="icons/action_go.gif"
-               id="jp.eisbahn.eclipse.plugins.osde.runActionPreviewOnIGoogle2"
+               id="com.googlecode.osde.runActionPreviewOnIGoogle2"
                label="iGoogle - Preview Gadget"
                menubarPath="opensocialMenu/opensocialGroup4"
                tooltip="iGoogle - Preview Gadget">
             <enablement>
                <objectState
                    name="contentTypeId"
-	               value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               value="com.googlecode.osde.gadgetSpecXML">
 	           </objectState>
             </enablement>
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PublishIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.production.PublishIGoogleAction"
                enablesFor="1"
                icon="icons/action_go.gif"
-               id="jp.eisbahn.eclipse.plugins.osde.runActionPublishOnIGoogle2"
+               id="com.googlecode.osde.runActionPublishOnIGoogle2"
                label="iGoogle - Publish Gadget"
                menubarPath="opensocialMenu/opensocialGroup4"
                tooltip="iGoogle - Publish Gadget">
             <enablement>
                <objectState
                    name="contentTypeId"
-                   value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+                   value="com.googlecode.osde.gadgetSpecXML">
                </objectState>
             </enablement>
          </action>
          <!--
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.CleanIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.production.CleanIGoogleAction"
                icon="icons/action_go.gif"
-               id="jp.eisbahn.eclipse.plugins.osde.runActionCleanOnIGoogle2"
+               id="com.googlecode.osde.runActionCleanOnIGoogle2"
                label="iGoogle - Clean Preview Files"
                menubarPath="opensocialMenu/opensocialGroup4"
                tooltip="iGoogle - Clean Preview Files">
          </action>
          -->
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.CreateSampleDataAction"
+               class="com.googlecode.osde.internal.shindig.CreateSampleDataAction"
                icon="icons/icon_download.gif"
-               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.CreateSampleDataAction"
+               id="com.googlecode.osde.internal.shindig.CreateSampleDataAction"
                label="Create sample data in Shindig"
                menubarPath="opensocialMenu/opensocialGroup1"
                tooltip="Create sample data in Shindig database.">
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShutoffShindigAction"
+               class="com.googlecode.osde.internal.shindig.ShutoffShindigAction"
                icon="icons/shindig_stop.gif"
-               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.ShutoffShindigAction"
+               id="com.googlecode.osde.internal.shindig.ShutoffShindigAction"
                label="Shut off Apache &amp;Shindig"
                menubarPath="opensocialMenu/opensocialGroup1"
                toolbarPath="opensocialGroup"
                tooltip="Shut off Apache Shindig server.">
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
+               class="com.googlecode.osde.internal.shindig.LaunchShindigAction"
                icon="icons/shindig_start.gif"
-               id="jp.eisbahn.eclipse.plugins.osde.internal.shindig.LaunchShindigAction"
+               id="com.googlecode.osde.internal.shindig.LaunchShindigAction"
                label="Launch Apache &amp;Shindig"
                menubarPath="opensocialMenu/opensocialGroup1"
                toolbarPath="opensocialGroup"
@@ -249,17 +249,17 @@
    <extension
          point="org.eclipse.ui.commands">
       <category
-            id="jp.eisbahn.eclipse.plugins.osde.commands.category1"
+            id="com.googlecode.osde.commands.category1"
             name="OSDE">
       </category>
       <command
-            id="jp.eisbahn.eclipse.plugins.osde.commands.runGadgetCommand"
-            categoryId="jp.eisbahn.eclipse.plugins.osde.commands.category1"
+            id="com.googlecode.osde.commands.runGadgetCommand"
+            categoryId="com.googlecode.osde.commands.category1"
             name="Run OpenSocial Application">
       </command>
       <command
-            id="jp.eisbahn.eclipse.plugins.osde.commands.runLastLaunchedGadgetCommand"
-            categoryId="jp.eisbahn.eclipse.plugins.osde.commands.category1"
+            id="com.googlecode.osde.commands.runLastLaunchedGadgetCommand"
+            categoryId="com.googlecode.osde.commands.category1"
             name="Run the last launched OpenSocial Application">
       </command>
    </extension>
@@ -267,8 +267,8 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePerspective"
-            id="jp.eisbahn.eclipse.plugins.osde.perspective"
+            class="com.googlecode.osde.internal.ui.OsdePerspective"
+            id="com.googlecode.osde.perspective"
             icon="icons/opensocial.gif"
             name="OpenSocial">
       </perspective>
@@ -277,10 +277,10 @@
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
-            id="jp.eisbahn.eclipse.plugins.osde.contribution2"
+            id="com.googlecode.osde.contribution2"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               id="jp.eisbahn.eclipse.plugins.osde.menu2"
+               id="com.googlecode.osde.menu2"
                label="OSDE"
                path="additions">
             <separator
@@ -294,82 +294,82 @@
             </separator>
          </menu>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.CreateJavaProjectAction"
+               class="com.googlecode.osde.internal.runtime.CreateJavaProjectAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.createJavaProjectAction"
+               id="com.googlecode.osde.createJavaProjectAction"
                label="Create Java Project for Restful Protocol"
                icon="icons/icon_wand.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
+               menubarPath="com.googlecode.osde.menu2/group3">
             <enablement>
                <objectState
                    name="contentTypeId"
-	               value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               value="com.googlecode.osde.gadgetSpecXML">
 	           </objectState>
             </enablement>
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.ShowKeysAction"
+               class="com.googlecode.osde.internal.runtime.ShowKeysAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.showKeysAction"
+               id="com.googlecode.osde.showKeysAction"
                label="Show keys"
                icon="icons/icon_key.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group3">
+               menubarPath="com.googlecode.osde.menu2/group3">
             <enablement>
                <objectState
                    name="contentTypeId"
-	               value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               value="com.googlecode.osde.gadgetSpecXML">
 	           </objectState>
             </enablement>
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.RunAction"
+               class="com.googlecode.osde.internal.runtime.RunAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.runActionLocally"
+               id="com.googlecode.osde.runActionLocally"
                label="Run this application locally"
                icon="icons/action_go.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group2">
+               menubarPath="com.googlecode.osde.menu2/group2">
             <enablement>
                <objectState
                    name="contentTypeId"
-	               value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               value="com.googlecode.osde.gadgetSpecXML">
 	           </objectState>
             </enablement>
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PreviewIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.production.PreviewIGoogleAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.runActionPreviewOnIGoogle1"
+               id="com.googlecode.osde.runActionPreviewOnIGoogle1"
                label="iGoogle - Preview Gadget"
                icon="icons/action_go.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group4">
+               menubarPath="com.googlecode.osde.menu2/group4">
             <enablement>
                <objectState
                    name="contentTypeId"
-	               value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+	               value="com.googlecode.osde.gadgetSpecXML">
 	           </objectState>
             </enablement>
          </action>
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.PublishIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.production.PublishIGoogleAction"
                enablesFor="1"
-               id="jp.eisbahn.eclipse.plugins.osde.runActionPublishOnIGoogle1"
+               id="com.googlecode.osde.runActionPublishOnIGoogle1"
                label="iGoogle - Publish Gadget"
                icon="icons/action_go.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group4">
+               menubarPath="com.googlecode.osde.menu2/group4">
             <enablement>
                <objectState
                    name="contentTypeId"
-                   value="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML">
+                   value="com.googlecode.osde.gadgetSpecXML">
                </objectState>
             </enablement>
          </action>
          <!--
          <action
-               class="jp.eisbahn.eclipse.plugins.osde.internal.runtime.production.CleanIGoogleAction"
-               id="jp.eisbahn.eclipse.plugins.osde.runActionCleanOnIGoogle1"
+               class="com.googlecode.osde.internal.runtime.production.CleanIGoogleAction"
+               id="com.googlecode.osde.runActionCleanOnIGoogle1"
                label="iGoogle - Clean Preview Files"
                icon="icons/action_go.gif"
-               menubarPath="jp.eisbahn.eclipse.plugins.osde.menu2/group4">
+               menubarPath="com.googlecode.osde.menu2/group4">
          </action>
          -->
       </objectContribution>
@@ -378,8 +378,8 @@
     <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.ui.OsdePreferencePage"
+            class="com.googlecode.osde.internal.ui.OsdePreferencePage"
+            id="com.googlecode.osde.internal.ui.OsdePreferencePage"
             name="OSDE">
       </page>
    </extension>
@@ -387,56 +387,56 @@
    <extension 
    		 point="org.eclipse.core.runtime.preferences">
    	  <initializer
-   	        class="jp.eisbahn.eclipse.plugins.osde.internal.OsdePreferenceInitializer">
+   	        class="com.googlecode.osde.internal.OsdePreferenceInitializer">
    	  </initializer> 
    </extension>
    
    <extension
          point="org.eclipse.ui.views">
       <category
-            id="jp.eisbahn.eclipse.plugins.osde"
+            id="com.googlecode.osde"
             name="OSDE">
       </category>
       <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.people.PersonView"
+            category="com.googlecode.osde"
+            class="com.googlecode.osde.internal.ui.views.people.PersonView"
             icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.PersonView"
+            id="com.googlecode.osde.internal.views.PersonView"
             name="People">
       </view>
       <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.appdata.AppDataView"
+            category="com.googlecode.osde"
+            class="com.googlecode.osde.internal.ui.views.appdata.AppDataView"
             icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.AppDataView"
+            id="com.googlecode.osde.internal.views.AppDataView"
             name="AppData">
       </view>
       <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.activities.ActivitiesView"
+            category="com.googlecode.osde"
+            class="com.googlecode.osde.internal.ui.views.activities.ActivitiesView"
             icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.ActivitiesView"
+            id="com.googlecode.osde.internal.views.ActivitiesView"
             name="Activities">
       </view>
       <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.userprefs.UserPrefsView"
+            category="com.googlecode.osde"
+            class="com.googlecode.osde.internal.ui.views.userprefs.UserPrefsView"
             icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.UserPrefsView"
+            id="com.googlecode.osde.internal.views.UserPrefsView"
             name="User Preferences">
       </view>
       <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.docs.DocumentView"
+            category="com.googlecode.osde"
+            class="com.googlecode.osde.internal.ui.views.docs.DocumentView"
             icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.DocumentView"
+            id="com.googlecode.osde.internal.views.DocumentView"
             name="Docs">
       </view>
       <view
-            category="jp.eisbahn.eclipse.plugins.osde"
-            class="jp.eisbahn.eclipse.plugins.osde.internal.ui.views.monitor.ShindigMonitorView"
+            category="com.googlecode.osde"
+            class="com.googlecode.osde.internal.ui.views.monitor.ShindigMonitorView"
             icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.internal.views.ShindigMonitorView"
+            id="com.googlecode.osde.internal.views.ShindigMonitorView"
             name="Monitor">
       </view>
    </extension>
@@ -451,11 +451,11 @@
    
    <extension point="org.eclipse.ui.bindings">
       <key sequence="M1+R"
-            commandId="jp.eisbahn.eclipse.plugins.osde.commands.runGadgetCommand"
+            commandId="com.googlecode.osde.commands.runGadgetCommand"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
       <key sequence="M3+R"
-            commandId="jp.eisbahn.eclipse.plugins.osde.commands.runLastLaunchedGadgetCommand"
+            commandId="com.googlecode.osde.commands.runLastLaunchedGadgetCommand"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension>
@@ -463,13 +463,13 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="jp.eisbahn.eclipse.plugins.osde.internal.editors.GadgetXmlEditor"
+            class="com.googlecode.osde.internal.editors.GadgetXmlEditor"
             default="false"
             extensions="xml"
             icon="icons/opensocial.gif"
-            id="jp.eisbahn.eclipse.plugins.osde.editors.GadgetXmlEditor"
+            id="com.googlecode.osde.editors.GadgetXmlEditor"
             name="Gadget Spec XML Editor">
-         <contentTypeBinding contentTypeId="jp.eisbahn.eclipse.plugins.osde.gadgetSpecXML" />
+         <contentTypeBinding contentTypeId="com.googlecode.osde.gadgetSpecXML" />
       </editor>
    </extension>
 
