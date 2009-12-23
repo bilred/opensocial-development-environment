@@ -23,7 +23,7 @@ package jp.eisbahn.eclipse.plugins.osde.internal.common;
  */
 public class JdkVersion {
 
-    static boolean jdk6;
+    private static boolean jdk6;
 
     static {
         try {
@@ -38,7 +38,7 @@ public class JdkVersion {
     private JdkVersion() {
     }
 
-    public static boolean isJdk6() {
+    public static boolean isAtLeastJdk6() {
         return jdk6;
     }
 }
