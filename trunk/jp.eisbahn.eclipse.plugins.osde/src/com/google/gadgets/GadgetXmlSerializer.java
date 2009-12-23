@@ -20,7 +20,7 @@ package com.google.gadgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.eisbahn.eclipse.plugins.osde.internal.utils.Gadgets;
+import com.googlecode.osde.internal.utils.Gadgets;
 
 import org.apache.commons.lang.StringUtils;
 
