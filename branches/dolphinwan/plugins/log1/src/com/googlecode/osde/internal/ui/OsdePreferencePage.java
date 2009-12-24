@@ -344,6 +344,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		config.setExternalDatabaseUsername(usernameText.getText());
 		config.setExternalDatabaseType(databaseTypeCombo.getText());
 		config.setExternalDatabaseName(nameText.getText());
+		config.setLoggerConfigFile(loggerCfgLocationText.getText());
 		String workDirectory = workDirectoryText.getText();
 		File workDirectoryFile = new File(workDirectory);
 		workDirectoryFile.mkdirs();
