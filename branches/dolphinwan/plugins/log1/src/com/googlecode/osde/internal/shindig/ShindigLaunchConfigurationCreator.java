@@ -133,7 +133,7 @@ public class ShindigLaunchConfigurationCreator extends AbstractJob {
         }
         
         logger.warn("Logger configuration file ["
-            + logFile.getAbsolutePath()	+ "] do not exists, use the default configuration file");
+            + logFile.getAbsolutePath()	+ "] does not exist, use the default configuration file");
         
         URL loggerConfigurationFile = getBundleEntryUrl("/shindig/logging.properties");
         return loggerConfigurationFile;
