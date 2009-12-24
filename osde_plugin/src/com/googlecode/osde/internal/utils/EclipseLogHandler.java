@@ -69,7 +69,7 @@ public class EclipseLogHandler extends Handler {
         // use a range check instead of an identity check to the Level constants.
 
         // INFO, CONFIG, FINE, FINER, FINEST
-        if (level.intValue() <= Level.CONFIG.intValue()) {
+        if (level.intValue() <= Level.INFO.intValue()) {
             return IStatus.INFO;
         }
 
