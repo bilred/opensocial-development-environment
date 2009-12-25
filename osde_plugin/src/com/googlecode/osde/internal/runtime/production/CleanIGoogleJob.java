@@ -18,6 +18,7 @@
  */
 package com.googlecode.osde.internal.runtime.production;
 
+//TODO: Change it to OSDE's Logger.
 import java.util.logging.Logger;
 
 import com.googlecode.osde.internal.utils.HostingException;
@@ -25,6 +26,8 @@ import com.googlecode.osde.internal.utils.HostingException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -70,9 +73,16 @@ public class CleanIGoogleJob extends BaseIGoogleJob {
 
     private class CleaningRunnable implements Runnable {
         public void run() {
-            CleanIGoogleResultDialog dialog = new CleanIGoogleResultDialog(shell);
+            String dialogTitle = "Your Files Are Cleaned.";
+            String dialogMessage = "All your files hosted at iGoogle for preview are cleaned.";
+            int dialogImageType = MessageDialog.INFORMATION;
+            Image dialogTitleImage = null;
+            String[] dialogButtonLabels = {"OK"};
+            int defaultIndex = 0;
+            MessageDialog dialog = new MessageDialog(shell, dialogTitle, dialogTitleImage,
+                    dialogMessage, dialogImageType, dialogButtonLabels, defaultIndex);
             int openResult = dialog.open();
-            logger.info("openResult: " + openResult);
+            logger.fine("openResult: " + openResult);
         }
     }
 }
