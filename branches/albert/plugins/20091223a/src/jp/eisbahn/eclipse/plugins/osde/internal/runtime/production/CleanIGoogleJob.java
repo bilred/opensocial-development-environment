@@ -74,7 +74,7 @@ public class CleanIGoogleJob extends BaseIGoogleJob {
     private class CleaningRunnable implements Runnable {
         public void run() {
             String dialogTitle = "Your Files Are Cleaned.";
-            String dialogMessage = "All your files as hosted at iGoogle for preview are cleaned.";
+            String dialogMessage = "All your files hosted at iGoogle for preview are cleaned.";
             int dialogImageType = MessageDialog.INFORMATION;
             Image dialogTitleImage = null;
             String[] dialogButtonLabels = {"OK"};
