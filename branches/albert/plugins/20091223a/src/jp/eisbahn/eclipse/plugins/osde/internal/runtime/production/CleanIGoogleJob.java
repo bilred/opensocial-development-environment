@@ -18,6 +18,7 @@
  */
 package jp.eisbahn.eclipse.plugins.osde.internal.runtime.production;
 
+// TODO: Change it to OSDE's Logger.
 import java.util.logging.Logger;
 
 import jp.eisbahn.eclipse.plugins.osde.internal.utils.HostingException;
@@ -81,7 +82,7 @@ public class CleanIGoogleJob extends BaseIGoogleJob {
             MessageDialog dialog = new MessageDialog(shell, dialogTitle, dialogTitleImage,
                     dialogMessage, dialogImageType, dialogButtonLabels, defaultIndex);
             int openResult = dialog.open();
-            logger.info("openResult: " + openResult);
+            logger.fine("openResult: " + openResult);
         }
     }
 }
