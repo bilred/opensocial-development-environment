@@ -20,6 +20,7 @@ package com.googlecode.osde.internal.ui;
 import java.io.File;
 
 import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.common.JdkVersion;
 import com.googlecode.osde.internal.OsdeConfig;
 import com.googlecode.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
@@ -294,6 +295,10 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 
 		compileJavaScriptCheckbox = new Button(group, SWT.CHECK);
 		compileJavaScriptCheckbox.setText("Compile JavaScript files (Requires JDK 6)");
+		if (!JdkVersion.isAtLeastJdk6()) {
+			compileJavaScriptCheckbox.setEnabled(false);
+			compileJavaScriptCheckbox.setSelection(false);
+		}
 		//
 		//
 		createSeparator(composite);
@@ -349,6 +354,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 		File workDirectoryFile = new File(workDirectory);
 		workDirectoryFile.mkdirs();
 		config.setWorkDirectory(workDirectory);
+		config.setLoggerConfigFile(loggerCfgLocationText.getText());
 		config.setCompileJavaScript(compileJavaScriptCheckbox.getSelection());
 		Activator.getDefault().storePreferences(config);
 	}

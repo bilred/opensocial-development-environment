@@ -38,5 +38,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/shindig-common-1.1-BETA1-incubating.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="libs/shindig-hibernate-1.1-BETA1-incubating.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="libs/shindig-social-api-1.1-BETA1-incubating.jar" sourcepath="jp.eisbahn.eclipse.plugins.osdesrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-closure-compiler-r46.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

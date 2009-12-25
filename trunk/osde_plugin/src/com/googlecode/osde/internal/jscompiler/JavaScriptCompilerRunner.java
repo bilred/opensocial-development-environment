@@ -18,28 +18,20 @@
 
 package com.googlecode.osde.internal.jscompiler;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.googlecode.osde.internal.common.AbstractJob;
-import com.googlecode.osde.internal.common.JavaLaunchConfigurationBuilder;
-
+import com.googlecode.osde.internal.utils.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.ILaunchesListener2;
-import org.eclipse.debug.core.model.IFlushableStreamMonitor;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStreamMonitor;
-import org.eclipse.debug.core.model.IStreamsProxy;
 
 /**
  * Invokes a JavaScript compiler as a new process.
@@ -48,18 +40,21 @@ import org.eclipse.debug.core.model.IStreamsProxy;
  */
 public class JavaScriptCompilerRunner extends AbstractJob {
 
-    private final JavaScriptCompilerReporter reporter;
+    private static final String MARKER_ID =
+            "jp.eisbahn.eclipse.plugins.osde.markers.JsCompileMarker";
+
+    private static final Logger logger = new Logger(JavaScriptCompilerRunner.class);
+
     private final List<CompilationUnit> units;
 
     public JavaScriptCompilerRunner() {
         super("Compiles all JavaScript files");
         this.units = new ArrayList<CompilationUnit>();
-        this.reporter = new JavaScriptCompilerReporter();
     }
 
     /**
      * Queues a JavaScript file for future compilation when {@link #schedule()}
-     * is called. 
+     * is called.
      */
     public void addFile(IFile sourceFile, IFile targetFile) {
         units.add(new CompilationUnit(sourceFile, targetFile));
@@ -67,33 +62,28 @@ public class JavaScriptCompilerRunner extends AbstractJob {
 
     @Override
     protected void runImpl(final IProgressMonitor monitor) throws Exception {
-        int count = units.size();
+        final int count = units.size();
         if (count == 0) {
             return;
         }
 
-        monitor.beginTask(getName(), count);
+        // Resource change events will be fired after all compilation is done.
+        ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable(){
+            public void run(IProgressMonitor iProgressMonitor) throws CoreException {
+                monitor.beginTask(getName(), count);
 
-        for (CompilationUnit unit : units) {
-            final String sourceFilePath = pathOf(unit.sourceFile);
+                for (CompilationUnit unit : units) {
+                    unit.run(monitor);
 
-            monitor.subTask("Compiling " + sourceFilePath);
-            ILaunchConfiguration configuration =
-                    new JavaLaunchConfigurationBuilder(
-                            "Compile JavaScript " + unit.sourceFile.getName())
-                            .withMainClassName("com.google.javascript.jscomp.CompilerRunner")
-                            .withLibrary("/jscompiler/compiler.jar")
-                            .withArgument("--js=" + sourceFilePath)
-                            .build();
+                    // Stop further compilation e.g. when project is closing.
+                    if (monitor.isCanceled()) {
+                        break;
+                    }
+                }
 
-            final ILaunch launch = configuration.launch(ILaunchManager.RUN_MODE, monitor, false);
-            unit.startMonitoring(launch, monitor);
-
-            if (monitor.isCanceled()) {
-                // Stop further compilation e.g. when project is closing.
-                return;
+                units.clear();
             }
-        }
+        }, monitor);
     }
 
     private static String pathOf(IFile file) {
@@ -101,110 +91,63 @@ public class JavaScriptCompilerRunner extends AbstractJob {
     }
 
     /**
-     * A compilation responsible to monitor the compiler process, and
-     * collect its stdout/stderr output when it exits.
+     * A compilation responsible to monitor the compiler process, and collect
+     * its stdout/stderr output when it exits.
      */
-    class CompilationUnit implements ILaunchesListener2 {
-
-        private static final String ENCODING = "UTF-8";
+    class CompilationUnit implements JavaScriptCompiler.Reporter {
 
         final IFile sourceFile;
         final IFile targetFile;
-        ILaunch launch;
-        IProgressMonitor monitor;
-        ILaunchManager manager;
 
         CompilationUnit(IFile sourceFile, IFile targetFile) {
             this.sourceFile = sourceFile;
             this.targetFile = targetFile;
         }
 
-        void startMonitoring(ILaunch launch, IProgressMonitor monitor) {
-            this.launch = launch;
-            this.launch.setAttribute(DebugPlugin.ATTR_CAPTURE_OUTPUT, "true");
-            this.launch.setAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, ENCODING);
-
-            IStreamsProxy streamsProxy = launch.getProcesses()[0].getStreamsProxy();
-            enableBuffering(streamsProxy.getOutputStreamMonitor());
-            enableBuffering(streamsProxy.getErrorStreamMonitor());
-
-            this.monitor = monitor;
-            this.manager = DebugPlugin.getDefault().getLaunchManager();
-            this.manager.addLaunchListener(this);
-        }
-
-        void enableBuffering(IStreamMonitor monitor) {
-            if (monitor instanceof IFlushableStreamMonitor) {
-                ((IFlushableStreamMonitor) monitor).setBuffered(true);
-            }
-        }
-
         /**
-         * When the compiler terminates, we write back its stdout to
-         * target file.
+         * After the compiler runs, we write back its stdout to target file.
          */
-        public void launchesTerminated(ILaunch[] launches) {
-            for (ILaunch terminated : launches) {
-                if (!launch.equals(terminated)) {
-                    continue;
-                }
+        public void run(IProgressMonitor monitor) {
+            final String sourceFilePath = pathOf(sourceFile);
+            final String targetFilePath = pathOf(targetFile);
 
-                final String sourceFilePath = pathOf(sourceFile);
+            monitor.subTask("Compiling " + sourceFilePath);
+            try {
+                clearMarkers();
 
-                IProcess process = terminated.getProcesses()[0];
-                try {
-                    reporter.clear(sourceFile);
+                JavaScriptCompiler compiler = new ClosureCompiler(
+                        sourceFilePath, targetFilePath, "UTF-8", this);
 
-                    targetFile.create(getStdout(process), IResource.FORCE | IResource.DERIVED,
-                            monitor);
+                InputStream compiledSource = compiler.compile();
 
-                    if (process.getExitValue() != 0) {
-                        String warningOrErrors =
-                                process.getStreamsProxy().getErrorStreamMonitor().getContents();
-                        reporter.reportErrorOrWarning(sourceFile, warningOrErrors);
-                    }
-                } catch (CoreException e) {
-                    logger.error("Cannot write to target file " + pathOf(targetFile));
-                } catch (UnsupportedEncodingException e) {
-                    try {
-                        reporter.reportErrorOrWarning(sourceFile, "Containing non-UTF-8 characters");
-                    } catch (CoreException e1) {
-                        logger.error("Cannot report errors to " + sourceFilePath, e1);
-                    }
-                } finally {
-                    manager.removeLaunchListener(this);
-
-                    final ILaunchConfiguration configuration = launch.getLaunchConfiguration();
-                    if (configuration != null) {
-                        try {
-                            configuration.delete();
-                        } catch (CoreException e) {
-                            logger.error("Cannot remove compilation configuration of " +
-                                    sourceFilePath, e);
-                        }
-                    }
-
-                    monitor.worked(1);
-                }
+                targetFile.create(compiledSource, IResource.FORCE | IResource.DERIVED, monitor);
+            } catch (CoreException e) {
+                logger.error("Failed to write to target file " + targetFilePath);
+            } catch (IOException e) {
+                logger.error("Failed to compile source file " + sourceFilePath);
+            } finally {
+                monitor.worked(1);
             }
         }
 
-        private InputStream getStdout(IProcess process) throws UnsupportedEncodingException {
-            String output =
-                    process.getStreamsProxy().getOutputStreamMonitor().getContents();
-            return new ByteArrayInputStream(output.getBytes(ENCODING));
+        public void reportIssue(boolean isError, String description, int lineNumber) {
+            try {
+                IMarker marker = sourceFile.createMarker(MARKER_ID);
+                marker.setAttribute(IMarker.MESSAGE, description);
+                marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+                marker.setAttribute(IMarker.SEVERITY,
+                        isError ? IMarker.SEVERITY_ERROR : IMarker.SEVERITY_WARNING);
+            } catch (CoreException e) {
+                logger.warn("Failed to create markers to " + pathOf(sourceFile), e);
+            }
         }
 
-        public void launchesRemoved(ILaunch[] iLaunches) {
-            // event not interested
-        }
-
-        public void launchesAdded(ILaunch[] iLaunches) {
-            // event not interested
-        }
-
-        public void launchesChanged(ILaunch[] iLaunches) {
-            // event not interested
+        private void clearMarkers() {
+            try {
+                sourceFile.deleteMarkers(MARKER_ID, false, IResource.DEPTH_ZERO);
+            } catch (CoreException e) {
+                logger.warn("Failed to delete markers to " + pathOf(sourceFile), e);
+            }
         }
     }
 }
