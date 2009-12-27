@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   
+
    <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
@@ -24,7 +24,7 @@
          </describer>
       </content-type>
    </extension>
-   
+
    <extension
          id="osdeNature"
          point="org.eclipse.core.resources.natures"
@@ -34,7 +34,7 @@
          <run class="com.googlecode.osde.internal.OsdeProjectNature" />
       </runtime>
    </extension>
-   
+
    <extension
          point="org.eclipse.ui.decorators">
       <decorator
@@ -53,7 +53,7 @@
          </enablement>
       </decorator>
    </extension>
-   
+
    <extension
          id="gadgetBuilder"
          name="OSDE Gadget Builder"
@@ -62,7 +62,7 @@
          <run class="com.googlecode.osde.internal.builders.GadgetBuilder" />
       </builder>
    </extension>
-   
+
    <extension
          point="org.eclipse.ui.exportWizards">
       <category
@@ -99,7 +99,7 @@
           </description>
       </wizard> 
    </extension>
-   
+
    <extension
          point = "org.eclipse.ui.editorActions">
       <editorContribution 
@@ -111,13 +111,20 @@
                definitionId="com.googlecode.osde.commands.runGadgetCommand" /> 
       </editorContribution>
    </extension>
-   
+
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="com.googlecode.osde.perspective">
+         <actionSet id="com.googlecode.osde.actionSet" />
+      </perspectiveExtension>
+   </extension>
+
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
             id="com.googlecode.osde.actionSet"
             label="OSDE"
-            visible="true">
+            visible="false">
          <menu
                id="opensocialMenu"
                label="&amp;OSDE">
@@ -245,7 +252,7 @@
          </action>
       </actionSet>
    </extension>
-   
+
    <extension
          point="org.eclipse.ui.commands">
       <category
@@ -263,7 +270,7 @@
             name="Run the last launched OpenSocial Application">
       </command>
    </extension>
-     
+
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
@@ -273,7 +280,7 @@
             name="OpenSocial">
       </perspective>
    </extension>
-   
+
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
@@ -374,7 +381,7 @@
          -->
       </objectContribution>
    </extension>
-   
+
     <extension
          point="org.eclipse.ui.preferencePages">
       <page
@@ -383,14 +390,14 @@
             name="OSDE">
       </page>
    </extension>
-   
+
    <extension 
    		 point="org.eclipse.core.runtime.preferences">
    	  <initializer
    	        class="com.googlecode.osde.internal.OsdePreferenceInitializer">
    	  </initializer> 
    </extension>
-   
+
    <extension
          point="org.eclipse.ui.views">
       <category
@@ -440,7 +447,7 @@
             name="Monitor">
       </view>
    </extension>
-   
+
    <extension
          point="org.eclipse.help.toc">
       <toc
@@ -448,7 +455,7 @@
             primary="true">
       </toc>
    </extension>
-   
+
    <extension point="org.eclipse.ui.bindings">
       <key sequence="M1+R"
             commandId="com.googlecode.osde.commands.runGadgetCommand"
@@ -459,7 +466,7 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
       </key>
    </extension>
-   
+
    <extension
          point="org.eclipse.ui.editors">
       <editor
