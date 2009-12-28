@@ -18,31 +18,25 @@
  */
 package com.googlecode.osde.internal.utils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
+
+import static com.googlecode.osde.internal.utils.IgCredentials.HTTP_HEADER_COOKIE;
+import static com.googlecode.osde.internal.utils.IgCredentials.retrieveHttpResponseAsString;;
 
 /**
  * This iGoogle utility class provides authentication and
@@ -54,16 +48,13 @@ import org.apache.http.protocol.HTTP;
  *
  * @author albert.cheng.ig@gmail.com
  */
+// TODO: Rename HostingIGoogleUtil to IgHostingUtil
 public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    private static final String HTTP_HEADER_COOKIE = "Cookie";
-    private static final String HTTP_HEADER_SET_COOKIE = "Set-Cookie";
     private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
         HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + HTTP.UTF_8;
-    private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
-    private static final String URL_IG_PREF_EDIT_TOKEN = "http://www.google.com/ig/resetprefs.html";
     private static final String URL_IG_GADGETS = "http://www.google.com/ig/gadgets";
     private static final String URL_IG_GADGETS_BYTE_QUOTA = URL_IG_GADGETS + "/bytequota/";
     private static final String URL_IG_GADGETS_BYTES_USED = URL_IG_GADGETS + "/bytesused/";
@@ -75,113 +66,6 @@ public class HostingIGoogleUtil {
 
     private HostingIGoogleUtil() {
         // Disable instantiation of this utility class.
-    }
-
-    /**
-     * Retrieves the authentication SID token.
-     *
-     * @return the SID
-     * @throws HostingException
-     */
-    public static String retrieveSid(String emailUserName, String password,
-            String loginCaptchaToken, String loginCaptchaAnswer)
-            throws HostingException {
-        // TODO: Can we get sid and Ig...Token all together?
-
-        String response = null;
-        try {
-            response = requestAuthentication(
-                emailUserName, password, loginCaptchaToken, loginCaptchaAnswer);
-            logger.fine("response:\n" + " " + response);
-        } catch (IOException e) {
-            throw new HostingException(e);
-        }
-
-        // Parse the output
-        response.trim();
-        String[] tokens = response.split("\n");
-
-        // TODO: Refactor the following block of code to be more flexible.
-        String sid = null;
-        String errorMsg = null;
-        for (String token : tokens) {
-            if (token.startsWith("SID=")) {
-                sid = token.substring(4); // "SID=".length = 4
-            } else if (token.startsWith("Error=")) {
-                errorMsg = token.substring(6); // "Error=".length= 6
-                logger.severe("errorMsg: " + errorMsg);
-            }
-        }
-
-        if (sid == null) {
-            // TODO: Handle errors such as errorMsg="CaptchaRequired".
-        }
-
-        return sid;
-    }
-
-    /**
-     * Makes a HTTP POST request for authentication.
-     *
-     * @param emailUserName the name of the user
-     * @param password the password of the user
-     * @param loginTokenOfCaptcha CAPTCHA token (Optional)
-     * @param loginCaptchaAnswer answer of CAPTCHA token (Optional)
-     * @return http response as a String
-     * @throws IOException
-     */
-    private static String requestAuthentication(String emailUserName, String password,
-            String loginTokenOfCaptcha, String loginCaptchaAnswer)
-            throws IOException {
-        // TODO: Refactor this method utilizing HttpPost.
-
-        // Prepare connection.
-        URL url = new URL(URL_GOOGLE_LOGIN);
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setDoInput(true);
-        urlConnection.setDoOutput(true);
-        urlConnection.setUseCaches(false);
-        urlConnection.setRequestMethod("POST");
-        urlConnection.setRequestProperty(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded");
-
-        // Form the POST params.
-        StringBuilder params = new StringBuilder();
-        params.append("Email=").append(emailUserName)
-              .append("&Passwd=").append(password)
-              .append("&source=OSDE-01&service=ig&accountType=HOSTED_OR_GOOGLE");
-        if (loginTokenOfCaptcha != null) {
-            params.append("&logintoken=").append(loginTokenOfCaptcha);
-        }
-        if (loginCaptchaAnswer != null) {
-            params.append("&logincaptcha=").append(loginCaptchaAnswer);
-        }
-
-        // Send POST.
-        OutputStream outputStream = null;
-        try {
-            outputStream = urlConnection.getOutputStream();
-            outputStream.write(params.toString().getBytes("utf-8"));
-            outputStream.flush();
-        } finally {
-            if (outputStream != null) {
-                outputStream.close();
-            }
-        }
-
-        // Retrieve response.
-        // TODO: Should the caller of this method need to know the responseCode?
-        int responseCode = urlConnection.getResponseCode();
-        InputStream inputStream = (responseCode == HttpURLConnection.HTTP_OK)
-                                  ? urlConnection.getInputStream()
-                                  : urlConnection.getErrorStream();;
-        try {
-            String response = retrieveResponseStreamAsString(inputStream);
-            return response;
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        }
     }
 
     /**
@@ -370,94 +254,7 @@ public class HostingIGoogleUtil {
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
-    public static IgCredentials retrieveIgPrefEditToken(String sid)
-            throws HostingException {
-        HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
-        httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
-        httpGet.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse httpResponse;
-        try {
-            httpResponse = httpClient.execute(httpGet);
-        } catch (ClientProtocolException e) {
-            throw new HostingException(e);
-        } catch (IOException e) {
-            throw new HostingException(e);
-        }
-        logger.fine("status line: " + httpResponse.getStatusLine());
-
-        String pref = null;
-        for (Header header : httpResponse.getHeaders(HTTP_HEADER_SET_COOKIE)) {
-            String headerValue = header.getValue();
-            if (headerValue.startsWith("PREF=ID=")) {
-                // pref starts with "ID=" and ends before ";"
-                pref = headerValue.substring(5, headerValue.indexOf(";"));
-                logger.fine("Pref: " + pref);
-                break;
-            }
-        }
-
-        String responseString = retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
-        String editToken = IgCredentials.retrieveEditTokenFromPageContent(responseString);
-        return new IgCredentials(pref, editToken);
-    }
-
-    private static String retrieveHttpResponseAsString(
-            HttpClient httpClient, HttpRequestBase httpRequest, HttpResponse httpResponse)
-            throws HostingException {
-        HttpEntity entity = httpResponse.getEntity();
-        String response = null;
-        if (entity != null) {
-            InputStream inputStream = null;
-            try {
-                inputStream = entity.getContent();
-                response = retrieveResponseStreamAsString(inputStream);
-            } catch (IOException e) {
-                // The HttpClient's connection will be automatically released
-                // back to the connection manager.
-                logger.severe("Error:\n" + e.getMessage());
-                throw new HostingException(e);
-            } catch (RuntimeException e) { // To catch unchecked exception intentionally.
-                // Abort HttpRequest in order to release HttpClient's connection
-                // back to the connection manager.
-                logger.severe("Error:\n" + e.getMessage());
-                httpRequest.abort();
-                throw new HostingException(e);
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        throw new HostingException(e);
-                    }
-                }
-            }
-            httpClient.getConnectionManager().shutdown();
-        }
-        logger.fine("response: '" + response + "'");
-        return response;
-    }
-
-    /**
-     * Retrieves response stream as String.
-     *
-     * @param inputStream response stream which needs to be closed by
-     *        the caller
-     * @throws IOException
-     */
-    private static String retrieveResponseStreamAsString(InputStream inputStream)
-            throws IOException {
-        StringBuilder sb = new StringBuilder();
-        InputStreamReader isr = new InputStreamReader(inputStream);
-        BufferedReader br = new BufferedReader(isr);
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line).append('\n');
-        }
-        return sb.substring(0, sb.length() - 1); // ignore the last '\n'
-    }
-
-    public static String formPreviewGadgetUrl(
+    public static String formPreviewLegacyGadgetUrl(
             String hostedFileUrl, boolean useCanvasView) {
         StringBuilder sb = new StringBuilder();
         sb.append("http://www.gmodules.com/gadgets/ifr?&hl=en&gl=us&nocache=1&view=");

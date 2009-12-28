@@ -65,7 +65,7 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
         try {
             String urlOfHostedGadgetFile =
                     uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
-            previewGadgetUrl = HostingIGoogleUtil.formPreviewGadgetUrl(
+            previewGadgetUrl = HostingIGoogleUtil.formPreviewLegacyGadgetUrl(
                     urlOfHostedGadgetFile, useCanvasView);
         } catch (HostingException e) {
             logger.warning(e.getMessage());
