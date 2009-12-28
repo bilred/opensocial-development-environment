@@ -19,9 +19,7 @@
 package com.googlecode.osde.internal.runtime.production;
 
 import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.formHostedFileUrl;
-import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.retrieveIgPrefEditToken;
 import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.retrievePublicId;
-import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.retrieveSid;
 import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.uploadFiles;
 
 import java.util.logging.Logger;
@@ -95,9 +93,9 @@ public abstract class BaseIGoogleJob extends Job {
         logger.fine("in PreviewIGoogleJob.uploadFilesToIg");
 
         // Prepare params.
-        String sid = retrieveSid(username, password, null, null);
+        String sid = IgCredentials.retrieveSid(username, password, null, null);
         String publicId = retrievePublicId(sid);
-        IgCredentials igCredentials = retrieveIgPrefEditToken(sid);
+        IgCredentials igCredentials = IgCredentials.retrieveIgCredentials(sid);
         IProject project = gadgetXmlIFile.getProject();
         String uploadFromPath = project.getFolder(TARGET_FOLDER_NAME).getLocation().toOSString();
 
@@ -115,9 +113,9 @@ public abstract class BaseIGoogleJob extends Job {
         // to this method and uploadFilesToIg().
 
         // Prepare params.
-        String sid = retrieveSid(username, password, null, null);
+        String sid = IgCredentials.retrieveSid(username, password, null, null);
         String publicId = retrievePublicId(sid);
-        IgCredentials igCredentials = retrieveIgPrefEditToken(sid);
+        IgCredentials igCredentials = IgCredentials.retrieveIgCredentials(sid);
 
         // Clean files.
         HostingIGoogleUtil.cleanFiles(sid, publicId, igCredentials, hostingFolder);
