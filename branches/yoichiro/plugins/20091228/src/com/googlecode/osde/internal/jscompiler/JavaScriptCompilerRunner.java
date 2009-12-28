@@ -41,7 +41,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class JavaScriptCompilerRunner extends AbstractJob {
 
     private static final String MARKER_ID =
-            "jp.eisbahn.eclipse.plugins.osde.markers.JsCompileMarker";
+            "com.googlecode.osde.markers.JsCompileMarker";
 
     private static final Logger logger = new Logger(JavaScriptCompilerRunner.class);
 
