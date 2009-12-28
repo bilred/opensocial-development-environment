@@ -48,7 +48,7 @@ import static com.googlecode.osde.internal.utils.IgCredentials.retrieveHttpRespo
  *
  * @author albert.cheng.ig@gmail.com
  */
-// TODO: Rename HostingIGoogleUtil to IgHostingUtil
+// TODO: Rename HostingIGoogleUtil to IgHostingUtil and move it to production package.
 public class HostingIGoogleUtil {
 
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
