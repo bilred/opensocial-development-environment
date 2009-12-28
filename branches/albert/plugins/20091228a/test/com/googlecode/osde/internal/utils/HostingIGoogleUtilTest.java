@@ -54,13 +54,13 @@ public class HostingIGoogleUtilTest {
         // Prepare Authentication.
         String emailUserName = "osde.test.001";
         String password = "osdetest888";
-        String sid = retrieveSid(emailUserName, password, null, null);
+        String sid = IgCredentials.retrieveSid(emailUserName, password, null, null);
         logger.info("sid: " + sid);
         assertTrue(sid.length() > 50);
         String publicId = retrievePublicId(sid);
         logger.info("publicId: " + publicId);
         assertTrue(publicId.length() > 20);
-        IgCredentials igCredentials = retrieveIgPrefEditToken(sid);
+        IgCredentials igCredentials = IgCredentials.retrieveIgCredentials(sid);
         assertTrue("Invalid igCredentials: " + igCredentials, igCredentials.validate());
 
         // Upload file.
@@ -81,7 +81,7 @@ public class HostingIGoogleUtilTest {
         String fileContent = sendHttpRequestToIg(hostedFileUrl, sid);
         logger.info("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith("<?xml version"));
-        String previewUrl = formPreviewGadgetUrl(hostedFileUrl, false);
+        String previewUrl = formPreviewLegacyGadgetUrl(hostedFileUrl, false);
         logger.info("previewUrl: " + previewUrl);
         assertTrue(previewUrl.endsWith(relativeFilePath));
 
