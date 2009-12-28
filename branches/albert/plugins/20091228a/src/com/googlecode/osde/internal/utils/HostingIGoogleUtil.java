@@ -36,7 +36,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 
 import static com.googlecode.osde.internal.utils.IgCredentials.HTTP_HEADER_COOKIE;
-import static com.googlecode.osde.internal.utils.IgCredentials.retrieveHttpResponseAsString;;
+import static com.googlecode.osde.internal.utils.IgCredentials.retrieveHttpResponseAsString;
 
 /**
  * This iGoogle utility class provides authentication and
