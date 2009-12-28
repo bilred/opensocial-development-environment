@@ -439,13 +439,6 @@
             id="com.googlecode.osde.internal.views.DocumentView"
             name="Docs">
       </view>
-      <view
-            category="com.googlecode.osde"
-            class="com.googlecode.osde.internal.ui.views.monitor.ShindigMonitorView"
-            icon="icons/opensocial.gif"
-            id="com.googlecode.osde.internal.views.ShindigMonitorView"
-            name="Monitor">
-      </view>
    </extension>
 
    <extension

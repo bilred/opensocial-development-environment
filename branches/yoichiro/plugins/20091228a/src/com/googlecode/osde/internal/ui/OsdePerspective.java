@@ -20,7 +20,6 @@ package com.googlecode.osde.internal.ui;
 import com.googlecode.osde.internal.ui.views.activities.ActivitiesView;
 import com.googlecode.osde.internal.ui.views.appdata.AppDataView;
 import com.googlecode.osde.internal.ui.views.docs.DocumentView;
-import com.googlecode.osde.internal.ui.views.monitor.ShindigMonitorView;
 import com.googlecode.osde.internal.ui.views.people.PersonView;
 import com.googlecode.osde.internal.ui.views.userprefs.UserPrefsView;
 
@@ -45,7 +44,6 @@ public class OsdePerspective implements IPerspectiveFactory {
 		bottom.addView(ActivitiesView.ID);
 		bottom.addView(AppDataView.ID);
 		bottom.addView(DocumentView.ID);
-		bottom.addView(ShindigMonitorView.ID);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		// Such that plugin user can access the compiler error/warnings easily.
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
@@ -73,7 +71,6 @@ public class OsdePerspective implements IPerspectiveFactory {
 		factory.addShowViewShortcut(AppDataView.ID);
 		factory.addShowViewShortcut(UserPrefsView.ID);
 		factory.addShowViewShortcut(DocumentView.ID);
-		factory.addShowViewShortcut(ShindigMonitorView.ID);
 		factory.addShowViewShortcut("org.eclipse.team.ccvs.ui.AnnotateView");
 		factory.addShowViewShortcut("org.eclipse.team.ui.GenericHistoryView");
 		factory.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
