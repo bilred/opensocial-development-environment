@@ -68,9 +68,9 @@ public class ShindigLaunchConfigurationCreator extends AbstractJob {
                 systemLibs, IRuntimeClasspathEntry.STANDARD_CLASSES);
         systemLibsEntry.setClasspathProperty(IRuntimeClasspathEntry.BOOTSTRAP_CLASSES);
 
-        IRuntimeClasspathEntry jettyEntry = createRuntimeClasspathEntry("/shindig/jetty-6.1.15.jar");
-        IRuntimeClasspathEntry jettyUtilEntry = createRuntimeClasspathEntry("/shindig/jetty-util-6.1.15.jar");
-        IRuntimeClasspathEntry servletApiEntry = createRuntimeClasspathEntry("/shindig/servlet-api-2.5-6.1.14.jar");
+        IRuntimeClasspathEntry jettyEntry = createRuntimeClasspathEntry("/libs/jetty-6.1.15.jar");
+        IRuntimeClasspathEntry jettyUtilEntry = createRuntimeClasspathEntry("/libs/jetty-util-6.1.15.jar");
+        IRuntimeClasspathEntry servletApiEntry = createRuntimeClasspathEntry("/libs/servlet-api-2.5-6.1.14.jar");
         IRuntimeClasspathEntry juelApiEntry = createRuntimeClasspathEntry("/shindig/juel-api-2.1.2.jar");
         IRuntimeClasspathEntry launcherEntry = createRuntimeClasspathEntry("/shindig/launcher.jar");
 
