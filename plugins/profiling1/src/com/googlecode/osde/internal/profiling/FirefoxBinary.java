@@ -21,7 +21,8 @@ package com.googlecode.osde.internal.profiling;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+
+import com.googlecode.osde.internal.utils.Logger;
 
 /**
  * Represents a Firefox executable.
@@ -29,46 +30,49 @@ import java.io.UnsupportedEncodingException;
  * @author Dolphin Chi-Ngai Wan
  */
 class FirefoxBinary {
+    private static final Logger logger = new Logger(FirefoxBinary.class);
+
     private String executableLocation;
 
     FirefoxBinary(String executableLocation) {
         this.executableLocation = executableLocation;
     }
 
-    public void createProfile(String profileName) throws IOException, InterruptedException {
+    public void createProfile(String profileName) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(
                 executableLocation, "-no-remote", "-CreateProfile", profileName);
         builder.redirectErrorStream(true);
         Process process = builder.start();
 
-        new OutputWatcher(process).start();
+        new ProcessWatcher(process).watch();
     }
 
-    public void launch(String profileName, String url) throws IOException, InterruptedException {
+    public void launch(String profileName, String url) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(
                 executableLocation, "-no-remote", "-P", profileName, url);
         builder.redirectErrorStream(true);
         Process process = builder.start();
 
-        new OutputWatcher(process).start();
+        new ProcessWatcher(process).watch();
     }
 
 
-    private static class OutputWatcher implements Runnable {
+    private static class ProcessWatcher implements Runnable {
         final Process process;
-        final ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
+        final ByteArrayOutputStream consoleOutput;
 
-        OutputWatcher(Process process) {
+        ProcessWatcher(Process process) {
             this.process = process;
+            this.consoleOutput = new ByteArrayOutputStream();
         }
 
-        void start() {
-            new Thread(this, "OutputWatcher Thread").start();
+        void watch() {
+            new Thread(this, "ProcessWatcher Thread").start();
 
             try {
                 process.waitFor();
             } catch (InterruptedException e) {
-                // TODO
+                logger.fine("Firefox process interrupted", e); 
             }
         }
 
@@ -82,14 +86,6 @@ class FirefoxBinary {
                 }
             } catch (IOException e) {
                 // nothing we can do.
-            }
-        }
-
-        String getConsoleOutput() {
-            try {
-                return consoleOutput.toString("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                return consoleOutput.toString();
             }
         }
     }

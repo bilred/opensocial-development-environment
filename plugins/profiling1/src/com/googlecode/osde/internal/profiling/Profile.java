@@ -18,21 +18,11 @@
 
 package com.googlecode.osde.internal.profiling;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,29 +30,25 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-import static org.apache.commons.io.FileUtils.copyDirectory;
-import static org.apache.commons.io.FileUtils.forceDelete;
 import static org.apache.commons.io.FileUtils.forceMkdir;
 import static org.apache.commons.io.IOUtils.closeQuietly;
+import static org.apache.commons.io.IOUtils.copy;
 
 
 /**
  * A Firefox user profile.
- * <p>
- * Note that it is a much simplified version of WebDriver's FirefoxProfile and
- * Preferences.
+ * <p/>
+ * Note that it is a much simplified version of WebDriver's Firefox driver.
  *
  * @author Dolphin Chi-Ngai Wan
  */
 class Profile {
-    private static final String EM_NAMESPACE_URI = "http://www.mozilla.org/2004/em-rdf#";
-
     private File extensionsDir;
     private File userPreferenceFile;
-    private final ZipHandler zipHandler;
 
     /**
      * Constructs a firefox profile from an existing, physical profile folder.
@@ -70,22 +56,29 @@ class Profile {
     Profile(File profileDir) {
         this.extensionsDir = new File(profileDir, "extensions");
         this.userPreferenceFile = new File(profileDir, "user.js");
-        this.zipHandler = new ZipHandler();
 
         if (!profileDir.exists()) {
-            throw new ProfilingException(MessageFormat.format("Profile directory does not exist: {0}",
-                    profileDir.getAbsolutePath()));
+            throw new ProfilingException(
+                    MessageFormat.format("Profile directory does not exist: {0}",
+                            profileDir.getAbsolutePath()));
         }
     }
 
-    public void installPageSpeed(String beaconUrl) throws IOException {
-        addExtension("firebug-1.4.5-fx.xpi");
-        addExtension("pagespeed-1.5b.xpi");
+    void installPageSpeed(String beaconUrl) throws IOException {
+        addExtension("firebug-1.4.5-fx.xpi", "firebug@software.joehewitt.com");
+        addExtension("pagespeed-1.5b.xpi", "{e3f6c2cc-d8db-498c-af6c-499fb211db97}");
         deleteExtensionsCacheIfItExists();
         saveUserPrefs(beaconUrl);
     }
 
-    private File addExtension(String classpath) throws IOException {
+    private void addExtension(String classpath, String id) throws IOException {
+        File extensionDirectory = new File(extensionsDir, id);
+        if (extensionDirectory.exists() && extensionDirectory.isDirectory()) {
+            // we assume the extension is already installed and will not do it
+            // again.
+            return;
+        }
+
         InputStream resource = Profile.class.getResourceAsStream(classpath);
         if (resource == null && !classpath.startsWith("/")) {
             resource = Profile.class.getResourceAsStream("/" + classpath);
@@ -95,116 +88,8 @@ class Profile {
             throw new FileNotFoundException("Cannot locate resource with name: " + classpath);
         }
 
-        File root;
-        try {
-            if (zipHandler.isZipped(classpath)) {
-                root = zipHandler.unzip(resource);
-            } else {
-                throw new ProfilingException("Only install zipped extensions");
-            }
-
-            addExtension(root);
-        } finally {
-            zipHandler.cleanTemporaryFiles();
-        }
-        return root;
-    }
-
-    /**
-     * Attempts to add an extension to install into this instance.
-     *
-     * @param extensionToInstall An Firefox extension folder.
-     */
-    private void addExtension(File extensionToInstall) throws IOException {
-        if (!extensionToInstall.isDirectory() &&
-                !zipHandler.isZipped(extensionToInstall.getAbsolutePath())) {
-            throw new IOException("Can only install from a zip file, an XPI or a directory");
-        }
-
-        File root = obtainRootDirectory(extensionToInstall);
-
-        String id = readIdFromInstallRdf(root);
-
-        File extensionDirectory = new File(extensionsDir, id);
-
-        if (extensionDirectory.exists()) {
-            forceDelete(extensionDirectory);
-        }
-
         forceMkdir(extensionDirectory);
-        copyDirectory(root, extensionDirectory);
-    }
-
-    private String readIdFromInstallRdf(File root) {
-        try {
-            File installRdf = new File(root, "install.rdf");
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(installRdf);
-
-            XPath xpath = XPathFactory.newInstance().newXPath();
-            xpath.setNamespaceContext(new NamespaceContext() {
-                public String getNamespaceURI(String prefix) {
-                    if ("em".equals(prefix)) {
-                        return EM_NAMESPACE_URI;
-                    } else if ("RDF".equals(prefix)) {
-                        return "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-                    }
-
-                    return XMLConstants.NULL_NS_URI;
-                }
-
-                public String getPrefix(String uri) {
-                    throw new UnsupportedOperationException("getPrefix");
-                }
-
-                public Iterator<?> getPrefixes(String uri) {
-                    throw new UnsupportedOperationException("getPrefixes");
-                }
-            });
-
-            Node idNode = (Node) xpath.compile("//em:id").evaluate(doc, XPathConstants.NODE);
-
-            String id;
-            if (idNode == null) {
-                Node descriptionNode =
-                        (Node) xpath.compile("//RDF:Description")
-                                .evaluate(doc, XPathConstants.NODE);
-                Node idAttr =
-                        descriptionNode.getAttributes().getNamedItemNS(EM_NAMESPACE_URI, "id");
-                if (idAttr == null) {
-                    throw new ProfilingException(
-                            "Cannot locate node containing extension id: " +
-                                    installRdf.getAbsolutePath());
-                }
-                id = idAttr.getNodeValue();
-            } else {
-                id = idNode.getTextContent();
-            }
-
-            if (id == null || "".equals(id.trim())) {
-                throw new FileNotFoundException("Cannot install extension with ID: " + id);
-            }
-            return id;
-        } catch (Exception e) {
-            throw new ProfilingException(e);
-        }
-    }
-
-    private File obtainRootDirectory(File extensionToInstall) throws IOException {
-        File root = extensionToInstall;
-        if (!extensionToInstall.isDirectory()) {
-            BufferedInputStream bis =
-                    new BufferedInputStream(new FileInputStream(extensionToInstall));
-            try {
-                root = zipHandler.unzip(bis);
-            } finally {
-                bis.close();
-            }
-        }
-        return root;
+        unzip(resource, extensionDirectory);
     }
 
     private Map<String, String> readExistingPrefs(File userPrefs) {
@@ -310,6 +195,39 @@ class Profile {
             throw new ProfilingException(e);
         } finally {
             closeQuietly(writer);
+        }
+    }
+
+    /**
+     * Unzips a zip content into a physical folder.
+     *
+     * @return The newly-created folder with the unzipped content.
+     */
+    private static File unzip(InputStream resource, File output) throws IOException {
+        ZipInputStream zipStream = new ZipInputStream(new BufferedInputStream(resource, 16384));
+        ZipEntry entry = zipStream.getNextEntry();
+        while (entry != null) {
+            final File target = new File(output, entry.getName());
+            if (entry.isDirectory()) {
+                forceMkdir(target);
+            } else {
+                unzipFile(target, zipStream);
+            }
+            entry = zipStream.getNextEntry();
+        }
+
+        return output;
+    }
+
+    private static void unzipFile(File target, InputStream zipStream)
+            throws IOException {
+        FileOutputStream out = null;
+        try {
+            forceMkdir(target.getParentFile());
+            out = new FileOutputStream(target);
+            copy(zipStream, out);
+        } finally {
+            closeQuietly(out);
         }
     }
 }
