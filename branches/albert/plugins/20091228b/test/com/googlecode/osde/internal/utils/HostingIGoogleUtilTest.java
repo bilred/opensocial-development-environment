@@ -88,8 +88,8 @@ public class HostingIGoogleUtilTest {
 
         // Verify preview OpenSocial gadget.
         boolean useCanvasView = false;
-        String previewUrlForOpenSocialGadget = HostingIGoogleUtil
-                .formPreviewOpenSocialGadgetUrl(hostedFileUrl, useCanvasView, sid);
+        String previewUrlForOpenSocialGadget =
+                formPreviewOpenSocialGadgetUrl(hostedFileUrl, useCanvasView, sid);
         logger.info("previewUrlForOpenSocialGadget:" + previewUrlForOpenSocialGadget);
         // TODO: assert sth when server is ready for formPreviewOpenSocialGadgetUrl().
 
