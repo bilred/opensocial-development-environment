@@ -21,44 +21,30 @@ package com.googlecode.osde.internal.profiling;
 import java.io.File;
 
 /**
- * Performs discovery of firefox instances.
- * Note that it is a simplified version of WebDriver's Executable.
+ * Performs discovery of firefox instances. This is a simplified version of
+ * <code>org.openqa.selenium.firefox.internal.Executable</code>.
  *
  * @author Dolphin Chi-Ngai Wan
  */
-class FirefoxLocator {
+public class FirefoxLocator {
     private static final File PLATFORM_BINARY = locateFirefoxBinaryFromPlatform();
 
     private final File binary;
 
-    public FirefoxLocator(String userSpecifiedBinaryPath) {
-        if (userSpecifiedBinaryPath != null) {
-
-            File file = new File(userSpecifiedBinaryPath);
-            if (file.exists() && file.isFile()) {
-                binary = file;
-                return;
-            }
-
-            throw new ProfilingException(
-                    "Specified firefox binary location does not exist or is not a real file: " +
-                            userSpecifiedBinaryPath);
-        }
-
+    public FirefoxLocator() {
         if (PLATFORM_BINARY != null && PLATFORM_BINARY.exists()) {
             binary = PLATFORM_BINARY;
-            return;
+        } else {
+            binary = null;
         }
-
-        throw new ProfilingException("Cannot find firefox binary in PATH. " +
-                "Make sure firefox is installed. OS appears to be: " + Platform.getCurrent());
     }
 
     /**
-     * Returns a new instance of FirefoxBinary.
+     * Returns the absolute path of an Firefox executable.
+     * @return An absolute path, or an empty string if there is no Firefox.
      */
-    public FirefoxBinary getBinary() {
-        return new FirefoxBinary(binary.getAbsolutePath());
+    public String getBinaryLocation() {
+        return (binary != null) ? binary.getAbsolutePath() : "";
     }
 
     private static File locateFirefoxBinaryFromPlatform() {
@@ -88,9 +74,6 @@ class FirefoxLocator {
                 findBinary("firefox3", "firefox2", "firefox");
     }
 
-    /**
-     * Retrieve an env var; if no var is set, returns the default
-     */
     private static String getEnvVar(String name, String defaultValue) {
         final String value = System.getenv(name);
         return value != null ? value : defaultValue;

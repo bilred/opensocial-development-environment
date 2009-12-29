@@ -28,7 +28,8 @@ import java.util.Map;
 
 /**
  * Represents the "profiles.ini" file in a Firefox application data folder.
- * Note that it is a simplified version of WebDriver's Firefox driver.
+ * This is a simplified version of
+ * <code>org.openqa.selenium.firefox.internal.ProfilesIni</code>.
  *
  * @author Dolphin Chi-Ngai Wan
  */
@@ -109,7 +110,7 @@ class ProfilesIni {
     /**
      * Returns an in-memory presentation of an existing Firefox profile.
      *
-     * @return An profile instance, or null there is such profile name.
+     * @return A profile instance, or null if there is no such profile name.
      */
     public Profile getProfile(String profileName) {
         Profile profile = profiles.get(profileName);
