@@ -42,10 +42,10 @@ public class BeaconReceiver {
     private Server server;
     private BeaconListener listener;
 
-    public BeaconReceiver(int port) {
+    public BeaconReceiver(int port, String path) {
         server = new Server(port);
         Context context = new Context(server, "/");
-        context.addServlet(new ServletHolder(new FullBeaconServlet()), "/beacon/full");
+        context.addServlet(new ServletHolder(new FullBeaconServlet()), path);
     }
 
     /**

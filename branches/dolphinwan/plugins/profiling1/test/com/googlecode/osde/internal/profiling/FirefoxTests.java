@@ -29,6 +29,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 
 /**
+ * Test cases for profiler.
+ *
  * @author Dolphin Chi-Ngai Wan
  */
 public class FirefoxTests {
@@ -38,6 +40,7 @@ public class FirefoxTests {
     private Map beacon;
     private CountDownLatch beaconReceived;
     private int port;
+    private String beaconPath;
 
     @Before
     public void setUp() throws Exception {
@@ -46,7 +49,8 @@ public class FirefoxTests {
         binary = new FirefoxLocator(null).getBinary();
 
         port = 8900;
-        server = new BeaconReceiver(port);
+        beaconPath = "/beacon/full";
+        server = new BeaconReceiver(port, beaconPath);
         server.setListener(new BeaconListener() {
             public void beaconReceived(Map json) {
                 beacon = json;
@@ -64,12 +68,12 @@ public class FirefoxTests {
     @Test
     public void testLaunchFirefox() throws IOException, InterruptedException {
         // given
-        final String profileName = "abc2";
+        final String profileName = "profile1";
         binary.createProfile(profileName);
 
         ProfilesIni ini = new ProfilesIni();
         Profile profile = ini.getProfile(profileName);
-        profile.installPageSpeed("http://localhost:" + port + "/beacon/full");
+        profile.installPageSpeed("http://localhost:" + port + beaconPath);
 
         binary.launch(profileName, "http://www.google.co.jp");
 
