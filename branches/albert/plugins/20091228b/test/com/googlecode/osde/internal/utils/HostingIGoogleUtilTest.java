@@ -34,13 +34,14 @@ import static org.junit.Assert.*;
 // TODO: Annotate test as large.
 public class HostingIGoogleUtilTest {
 
-    private static final String DUMMY_HOST_FOLDER = "/dummy_host_folder/";
-
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
-    // TODO: Get a better place to store test data.
-    private static final String TEST_DATA_PATH =
-            "test/jp/eisbahn/eclipse/plugins/osde/internal/runtime/production/testdata/";
+    private static final String TEST_USERNAME = "osde.test.001";
+    private static final String TEST_PASSWORD = "osdetest888";
+    private static final String TEST_TARGET_PATH =
+            "test/com/googlecode/osde/internal/runtime/production/testdata/";
+    private static final String GADGET_XML_FILE_RELATIVE_PATH = "gadget.xml";
+    private static final String DUMMY_HOST_FOLDER = "/dummy_host_folder/";
 
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
@@ -52,9 +53,7 @@ public class HostingIGoogleUtilTest {
     public void testAuthenticationAndUploadAndRetrieveFiles()
             throws HostingException {
         // Prepare Authentication.
-        String emailUserName = "osde.test.001";
-        String password = "osdetest888";
-        String sid = IgCredentials.retrieveSid(emailUserName, password, null, null);
+        String sid = IgCredentials.retrieveSid(TEST_USERNAME, TEST_PASSWORD, null, null);
         logger.info("sid: " + sid);
         assertTrue(sid.length() > 50);
         String publicId = retrievePublicId(sid);
@@ -65,7 +64,7 @@ public class HostingIGoogleUtilTest {
 
         // Upload file.
         HostingIGoogleUtil.uploadFiles(
-                sid, publicId, igCredentials, TEST_DATA_PATH, DUMMY_HOST_FOLDER);
+                sid, publicId, igCredentials, TEST_TARGET_PATH, DUMMY_HOST_FOLDER);
 
         // Retrieve directory info.
         String quotaByte = retrieveQuotaByte(sid, publicId);
@@ -76,17 +75,26 @@ public class HostingIGoogleUtilTest {
         String fileList = retrieveFileList(sid, publicId);
         logger.info("fileList:\n" + fileList);
         assertTrue(fileList.length() > 50);
-        String relativeFilePath = "gadget.xml";
-        String hostedFileUrl = formHostedFileUrl(publicId, DUMMY_HOST_FOLDER, relativeFilePath);
+        String hostedFileUrl =
+                formHostedFileUrl(publicId, DUMMY_HOST_FOLDER, GADGET_XML_FILE_RELATIVE_PATH);
         String fileContent = sendHttpRequestToIg(hostedFileUrl, sid);
         logger.info("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith("<?xml version"));
-        String previewUrl = formPreviewLegacyGadgetUrl(hostedFileUrl, false);
-        logger.info("previewUrl: " + previewUrl);
-        assertTrue(previewUrl.endsWith(relativeFilePath));
+
+        // Verify preview legacy gadget.
+        String previewUrlForLegacyGadget = formPreviewLegacyGadgetUrl(hostedFileUrl, false);
+        logger.info("previewUrlForLegacyGadget: " + previewUrlForLegacyGadget);
+        assertTrue(previewUrlForLegacyGadget.endsWith(GADGET_XML_FILE_RELATIVE_PATH));
+
+        // Verify preview OpenSocial gadget.
+        boolean useCanvasView = false;
+        String previewUrlForOpenSocialGadget = HostingIGoogleUtil
+                .formPreviewOpenSocialGadgetUrl(hostedFileUrl, useCanvasView, sid);
+        logger.info("previewUrlForOpenSocialGadget:" + previewUrlForOpenSocialGadget);
+        // TODO: assert sth when server is ready for formPreviewOpenSocialGadgetUrl().
 
         // Delete the gadget file.
-        String fileName = DUMMY_HOST_FOLDER + relativeFilePath;
+        String fileName = DUMMY_HOST_FOLDER + GADGET_XML_FILE_RELATIVE_PATH;
         HostingIGoogleUtil.deleteFile(sid, publicId, fileName, igCredentials);
         // TODO: (p0) Assert something for delete.
     }
@@ -96,7 +104,7 @@ public class HostingIGoogleUtilTest {
      */
     @Test
     public void testFindAllRelativeFilePaths() {
-        List<String> filePaths = findAllRelativeFilePaths(TEST_DATA_PATH);
+        List<String> filePaths = findAllRelativeFilePaths(TEST_TARGET_PATH);
 
         // Verify the 6 testing files are found.
         assertEquals(6, filePaths.size());
