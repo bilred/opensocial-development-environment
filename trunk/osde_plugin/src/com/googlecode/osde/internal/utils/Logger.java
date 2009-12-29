@@ -41,6 +41,12 @@ public class Logger {
         }
     }
 
+    public void fine(String message, Throwable cause) {
+        if (delegate.isLoggable(Level.FINE)) {
+            delegate.log(Level.FINE, message, cause);
+        }
+    }
+
     public void info(String message) {
         delegate.info(message);
     }
