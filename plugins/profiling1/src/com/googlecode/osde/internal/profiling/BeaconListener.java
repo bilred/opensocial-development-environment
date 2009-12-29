@@ -21,7 +21,9 @@ package com.googlecode.osde.internal.profiling;
 import java.util.Map;
 
 /**
- * Anything interested to receive a Page Speed beacon.
+ * Anything interested to receive a Page Speed beacon. See
+ * <a href="http://code.google.com/p/page-speed/wiki/BeaconDocs">Page
+ * Speed Beacon documentation.</a>
  *
  * @author Dolphin Chi-Ngai Wan
  */
@@ -29,7 +31,7 @@ public interface BeaconListener {
     /**
      * Called when a Page Speed beacon is fired from the Page Speed plugin.
      *
-     * @param json The beacon in JSON format. See Page Speed doc.
+     * @param json The beacon in JSON format.
      */
     void beaconReceived(Map json);
 }

@@ -40,9 +40,8 @@ import static org.apache.commons.io.IOUtils.copy;
 
 
 /**
- * A Firefox user profile.
- * <p/>
- * Note that it is a much simplified version of WebDriver's Firefox driver.
+ * A Firefox user profile. This is a simplified version of
+ * <code>org.openqa.selenium.firefox.FirefoxProfile</code>.
  *
  * @author Dolphin Chi-Ngai Wan
  */
@@ -71,7 +70,15 @@ class Profile {
         saveUserPrefs(beaconUrl);
     }
 
+    /**
+     * Installs a Firefox extension into this user profile.
+     *
+     * @param classpath The classpath of extension XPI file.
+     * @param id The extension id.
+     */
     private void addExtension(String classpath, String id) throws IOException {
+        // Firefox looks up extensions in 
+        // <profiledir>/<extensions>/<extension-id>.
         File extensionDirectory = new File(extensionsDir, id);
         if (extensionDirectory.exists() && extensionDirectory.isDirectory()) {
             // we assume the extension is already installed and will not do it
@@ -204,7 +211,8 @@ class Profile {
      * @return The newly-created folder with the unzipped content.
      */
     private static File unzip(InputStream resource, File output) throws IOException {
-        ZipInputStream zipStream = new ZipInputStream(new BufferedInputStream(resource, 16384));
+        // Allocate a 16K buffer to read the XPI file faster.
+        ZipInputStream zipStream = new ZipInputStream(new BufferedInputStream(resource, 16 * 1024));
         ZipEntry entry = zipStream.getNextEntry();
         while (entry != null) {
             final File target = new File(output, entry.getName());

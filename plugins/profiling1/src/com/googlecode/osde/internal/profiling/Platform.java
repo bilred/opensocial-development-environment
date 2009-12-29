@@ -19,8 +19,8 @@
 package com.googlecode.osde.internal.profiling;
 
 /**
- * Used to extract information such as program locations and line endings.
- * Note that it is a simplified version of WebDriver's common Platform class.
+ * Used to extract program locations. This is a simplified version of
+ * <code>org.openqa.selenium.Platform</code>.
  */
 enum Platform {
     /**
@@ -85,8 +85,8 @@ enum Platform {
                 if (os.isExactMatch(osName, matcher)) {
                     return os;
                 }
-                if (os.isCurrentPlatform(osName, matcher) &&
-                        isBetterMatch(previousMatch, matcher)) {
+                if (os.isCurrentPlatform(osName, matcher)
+                        && isBetterMatch(previousMatch, matcher)) {
                     previousMatch = matcher;
                     mostLikely = os;
                 }

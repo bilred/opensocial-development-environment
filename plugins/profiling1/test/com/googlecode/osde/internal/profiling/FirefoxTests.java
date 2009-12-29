@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Test cases for profiler.
@@ -46,7 +47,12 @@ public class FirefoxTests {
     public void setUp() throws Exception {
         beaconReceived = new CountDownLatch(1);
 
-        binary = new FirefoxLocator(null).getBinary();
+        final FirefoxLocator firefoxLocator = new FirefoxLocator();
+        String location = firefoxLocator.getBinaryLocation();
+        if (location.trim().length() == 0) {
+            fail("Cannot locate a Firefox executable");
+        }
+        binary = new FirefoxBinary(location);
 
         port = 8900;
         beaconPath = "/beacon/full";
