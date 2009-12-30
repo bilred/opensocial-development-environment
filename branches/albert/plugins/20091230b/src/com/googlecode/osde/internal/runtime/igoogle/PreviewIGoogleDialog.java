@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.production;
+package com.googlecode.osde.internal.runtime.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -25,29 +25,34 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
- * The popup dialog asking for users authentication info etc in order
- * for publishing gadget on iGoogle.
+ * The popup dialog asking for users authentication info in order
+ * for previewing gadget on iGoogle.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class PublishIGoogleDialog extends TitleAreaDialog {
-    private static Logger logger = new Logger(PublishIGoogleDialog.class);
+public class PreviewIGoogleDialog extends TitleAreaDialog {
+    private static Logger logger = new Logger(PreviewIGoogleDialog.class);
 
     private String username;
     private String password;
-    private String projectName;
+    private boolean useCanvasView;
+    private boolean useExternalBrowser;
     private Text usernameText;
     private Text passwordText;
-    private Text projectNameText;
+    private Button canvasViewButton;
+    private Button useExternalBrowserCheckbox;
 
-    public PublishIGoogleDialog(Shell shell) {
+    public PreviewIGoogleDialog(Shell shell) {
         super(shell);
     }
 
@@ -56,7 +61,7 @@ public class PublishIGoogleDialog extends TitleAreaDialog {
         logger.fine("createDialogArea");
 
         // Set title and message.
-        setTitle("Publish Gadget on iGoogle");
+        setTitle("Preview Gadget on iGoogle");
         setMessage("Please enter your gmail account info.");
 
         // Prepare composite and panel.
@@ -81,12 +86,28 @@ public class PublishIGoogleDialog extends TitleAreaDialog {
         passwordText.setEchoChar('*');
         passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
-        // Prepare project name.
-        Label projectNameLabel = new Label(panel, SWT.LEFT);
-        projectNameLabel.setText("Project name: ");
-        projectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        projectNameText = new Text(panel, SWT.SINGLE);
-        projectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        // Prepare radio buttons for choosing view type.
+        Label viewTypeLabel = new Label(panel, SWT.LEFT);
+        viewTypeLabel.setText("View type: ");
+        viewTypeLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+        Button homeViewButton = new Button(panel, SWT.RADIO);
+        homeViewButton.setText("Home");
+        homeViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+        homeViewButton.setSelection(true); // default view is home view
+        canvasViewButton = new Button(panel, SWT.RADIO);
+        canvasViewButton.setText("Canvas");
+        canvasViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+
+        // Prepare checkbox of useExternalBrowser.
+        useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
+        useExternalBrowserCheckbox.setText("Use an external Web browser.");
+        useExternalBrowserCheckbox.setLayoutData(
+                new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+        IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+        if (!browserSupport.isInternalWebBrowserAvailable()) {
+            useExternalBrowserCheckbox.setSelection(true);
+            useExternalBrowserCheckbox.setEnabled(false);
+        }
 
         return composite;
     }
@@ -102,11 +123,16 @@ public class PublishIGoogleDialog extends TitleAreaDialog {
         logger.fine("okPressed");
 
         username = usernameText.getText();
+        logger.fine("username: " + username);
         password = passwordText.getText();
-        projectName = projectNameText.getText();
-        logger.fine("projectName: " + projectName);
+        logger.fine("password: " + password);
+        useCanvasView = canvasViewButton.getSelection();
+        useExternalBrowser = useExternalBrowserCheckbox.getSelection();
+        logger.fine("useExternalBrowser: " + useExternalBrowser);
 
+        logger.fine("gonna setReturnCode");
         setReturnCode(OK);
+        logger.fine("gonna close");
         close();
     }
 
@@ -118,7 +144,11 @@ public class PublishIGoogleDialog extends TitleAreaDialog {
         return password;
     }
 
-    String getProjectName() {
-        return projectName;
+    boolean isUseCanvasView() {
+        return useCanvasView;
+    }
+
+    boolean isUseExternalBrowser() {
+        return useExternalBrowser;
     }
 }

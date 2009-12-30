@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.production;
+package com.googlecode.osde.internal.runtime.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 

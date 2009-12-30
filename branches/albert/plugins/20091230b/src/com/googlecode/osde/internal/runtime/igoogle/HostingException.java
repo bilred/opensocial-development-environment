@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.utils;
+package com.googlecode.osde.internal.runtime.igoogle;
 
 /**
  * Exception used when hosting a file in a production container fails.
