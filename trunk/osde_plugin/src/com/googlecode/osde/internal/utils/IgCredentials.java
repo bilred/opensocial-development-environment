@@ -47,9 +47,15 @@ public class IgCredentials {
     private static Logger logger = Logger.getLogger(IgCredentials.class.getName());
 
     static final String HTTP_HEADER_COOKIE = "Cookie";
-    private static final String HTTP_HEADER_SET_COOKIE = "Set-Cookie";
-    private static final String URL_GOOGLE_LOGIN = "https://www.google.com/accounts/ClientLogin";
-    private static final String URL_IG_PREF_EDIT_TOKEN = "http://www.google.com/ig/resetprefs.html";
+    static final String HTTP_HEADER_SET_COOKIE = "Set-Cookie";
+
+    static final String URL_GOOGLE = "http://www.google.com/";
+    static final String URL_HTTPS_GOOGLE = "https://www.google.com/";
+    static final String URL_IG = URL_GOOGLE + "ig";
+
+    private static final String URL_GOOGLE_LOGIN = URL_HTTPS_GOOGLE + "accounts/ClientLogin";
+    private static final String URL_IG_PREF_EDIT_TOKEN = URL_IG + "/resetprefs.html";
+
     private static final int MIN_PREF_LENGTH = 50;
     private static final int EDIT_TOKEN_LENGTH = 16;
     private static final String EDIT_TOKEN_IDENTIFIER = "id=\"et\" value=\"";
@@ -113,9 +119,11 @@ public class IgCredentials {
         // Retrieve response.
         // TODO: Should the caller of this method need to know the responseCode?
         int responseCode = urlConnection.getResponseCode();
+        logger.fine("responseCode: " + responseCode);
         InputStream inputStream = (responseCode == HttpURLConnection.HTTP_OK)
                                   ? urlConnection.getInputStream()
                                   : urlConnection.getErrorStream();;
+        logger.fine("inputStream: " + inputStream);
         try {
             String response = retrieveResponseStreamAsString(inputStream);
             return response;
