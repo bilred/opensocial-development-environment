@@ -18,7 +18,7 @@
  */
 package com.googlecode.osde.internal.runtime.production;
 
-import java.util.logging.Logger;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.jobs.Job;
@@ -39,7 +39,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class PublishIGoogleAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
-    private static Logger logger = Logger.getLogger(PublishIGoogleAction.class.getName());
+    private static Logger logger = new Logger(PublishIGoogleAction.class);
 
     private IFile gadgetXmlIFile;
     private Shell shell;

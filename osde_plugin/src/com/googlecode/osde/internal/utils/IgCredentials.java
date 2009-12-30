@@ -25,7 +25,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -43,8 +42,9 @@ import org.apache.http.protocol.HTTP;
  *
  * @author albert.cheng.ig@gmail.com
  */
+// TODO: move this to production package
 public class IgCredentials {
-    private static Logger logger = Logger.getLogger(IgCredentials.class.getName());
+    private static Logger logger = new Logger(IgCredentials.class);
 
     static final String HTTP_HEADER_COOKIE = "Cookie";
     static final String HTTP_HEADER_SET_COOKIE = "Set-Cookie";
@@ -91,6 +91,7 @@ public class IgCredentials {
         urlConnection.setUseCaches(false);
         urlConnection.setRequestMethod("POST");
         urlConnection.setRequestProperty(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded");
+        logger.fine("url: " + url);
 
         // Form the POST params.
         StringBuilder params = new StringBuilder();
@@ -103,8 +104,9 @@ public class IgCredentials {
         if (loginCaptchaAnswer != null) {
             params.append("&logincaptcha=").append(loginCaptchaAnswer);
         }
+        logger.fine("params: " + params);
 
-        // Send POST.
+        // Send POST via output stream.
         OutputStream outputStream = null;
         try {
             outputStream = urlConnection.getOutputStream();
@@ -166,7 +168,7 @@ public class IgCredentials {
                 sid = token.substring(4); // "SID=".length = 4
             } else if (token.startsWith("Error=")) {
                 errorMsg = token.substring(6); // "Error=".length= 6
-                logger.severe("errorMsg: " + errorMsg);
+                logger.error("errorMsg: " + errorMsg);
             }
         }
 
@@ -244,12 +246,12 @@ public class IgCredentials {
             } catch (IOException e) {
                 // The HttpClient's connection will be automatically released
                 // back to the connection manager.
-                logger.severe("Error:\n" + e.getMessage());
+                logger.error("Error:\n" + e.getMessage());
                 throw new HostingException(e);
             } catch (RuntimeException e) { // To catch unchecked exception intentionally.
                 // Abort HttpRequest in order to release HttpClient's connection
                 // back to the connection manager.
-                logger.severe("Error:\n" + e.getMessage());
+                logger.error("Error:\n" + e.getMessage());
                 httpRequest.abort();
                 throw new HostingException(e);
             } finally {

@@ -18,7 +18,7 @@
  */
 package com.googlecode.osde.internal.runtime.production;
 
-import java.util.logging.Logger;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Text;
  * @author albert.cheng.ig@gmail.com
  */
 public class PublishIGoogleDialog extends TitleAreaDialog {
-    private static Logger logger = Logger.getLogger(PublishIGoogleDialog.class.getName());
+    private static Logger logger = new Logger(PublishIGoogleDialog.class);
 
     private String username;
     private String password;
@@ -104,7 +104,7 @@ public class PublishIGoogleDialog extends TitleAreaDialog {
         username = usernameText.getText();
         password = passwordText.getText();
         projectName = projectNameText.getText();
-        logger.info("projectName: " + projectName);
+        logger.fine("projectName: " + projectName);
 
         setReturnCode(OK);
         close();

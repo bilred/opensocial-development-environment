@@ -17,16 +17,16 @@
  * the License.
  */
 package com.googlecode.osde.internal.runtime.production;
+// TODO: rename package production to igoogle
 
 import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.formHostedFileUrl;
 import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.retrievePublicId;
 import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.uploadFiles;
 
-import java.util.logging.Logger;
-
 import com.googlecode.osde.internal.utils.HostingException;
 import com.googlecode.osde.internal.utils.HostingIGoogleUtil;
 import com.googlecode.osde.internal.utils.IgCredentials;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -42,7 +42,7 @@ import org.eclipse.core.runtime.jobs.Job;
 // In other words, we might think about making this class a utility
 // class instead of a parent class.
 public abstract class BaseIGoogleJob extends Job {
-    private static Logger logger = Logger.getLogger(BaseIGoogleJob.class.getName());
+    private static Logger logger = new Logger(BaseIGoogleJob.class);
 
     static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
     static final String OSDE_PUBLISH_DIRECTORY = "/osde/publish/";
