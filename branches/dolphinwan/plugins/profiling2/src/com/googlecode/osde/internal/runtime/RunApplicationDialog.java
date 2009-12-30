@@ -30,6 +30,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -58,6 +59,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	private static final String PREF_COUNTRY = "pref_country";
 	private static final String PREF_LANG = "pref_lang";
 	private static final String PREF_USE_EXTERNAL_BROWSER = "pref_use_external_browser";
+	private static final String PREF_MEASURE_PERFORMANCE = "pref_measure_performance";
 
 	private List<Person> people;
 
@@ -68,6 +70,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	private String country;
 	private String language;
 	private boolean useExternalBrowser;
+	private boolean measurePerformance;
 
 	private Combo viewKind;
 	private Combo owners;
@@ -76,6 +79,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	private Combo countries;
 	private Combo languages;
 	private Button useExternalBrowserCheck;
+	private Button measurePerformanceCheck;
 
 	private IFile gadgetXmlFile;
 
@@ -190,12 +194,37 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			useExternalBrowserCheck.setEnabled(false);
 		}
 		//
+		measurePerformanceCheck = new Button(panel, SWT.CHECK);
+		measurePerformanceCheck.setText("Measure gadget performance (required Firefox)");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 4;
+		measurePerformanceCheck.setLayoutData(layoutData);
+		measurePerformanceCheck.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				boolean enabled = measurePerformanceCheck.getSelection();
+				if (enabled) {
+					useExternalBrowserCheck.setSelection(true);
+					useExternalBrowserCheck.setEnabled(false);
+				} else {
+					useExternalBrowserCheck.setEnabled(true);
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		//
 		setDefaultValues();
 		//
 		return composite;
 	}
 
 	private void setDefaultValues() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		boolean measurePerformance = store.getBoolean(PREF_MEASURE_PERFORMANCE);
+		measurePerformanceCheck.setSelection(measurePerformance);
+		measurePerformanceCheck.notifyListeners(SWT.Selection, null);
+
 		try {
 			OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
 			String prevCountry = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_COUNTRY));
@@ -259,6 +288,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		owner = owners.getItem(owners.getSelectionIndex());
 		width = widths.getText();
 		useExternalBrowser = useExternalBrowserCheck.getSelection();
+		measurePerformance = measurePerformanceCheck.getSelection();
 		country = countries.getText();
 		country = country.substring(country.indexOf('(') + 1, country.length() - 1);
 		language = languages.getText();
@@ -274,6 +304,9 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		} catch (CoreException e) {
 			logger.error("Setting persistent properties failed.", e);
 		}
+
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		store.setValue(PREF_MEASURE_PERFORMANCE, measurePerformanceCheck.getSelection());
 		setReturnCode(OK);
 		close();
 	}
@@ -306,4 +339,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 		return language;
 	}
 
+	public boolean isMeasurePerformance() {
+		return measurePerformance;
+	}
 }

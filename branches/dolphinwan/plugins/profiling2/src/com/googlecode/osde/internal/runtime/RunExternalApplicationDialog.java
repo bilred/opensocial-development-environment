@@ -59,6 +59,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 	private static final String PREF_COUNTRY = "pref_country_for_external";
 	private static final String PREF_LANG = "pref_lang_for_external";
 	private static final String PREF_USE_EXTERNAL_BROWSER = "pref_use_external_browser_for_external";
+	private static final String PREF_MEASURE_PERFORMANCE = "pref_measure_performance_for_external";
 
 	private List<Person> people;
 
@@ -70,6 +71,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 	private String country;
 	private String language;
 	private boolean useExternalBrowser;
+	private boolean measurePerformance;
 
 	private Combo urlCombo;
 	private Combo viewKind;
@@ -79,6 +81,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 	private Combo countries;
 	private Combo languages;
 	private Button useExternalBrowserCheck;
+	private Button measurePerformanceCheck;
 
 	private List<String> urls = new ArrayList<String>();
 
@@ -199,6 +202,26 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 			useExternalBrowserCheck.setEnabled(false);
 		}
 		//
+		measurePerformanceCheck = new Button(panel, SWT.CHECK);
+		measurePerformanceCheck.setText("Measure gadget performance (required Firefox)");
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 4;
+		measurePerformanceCheck.setLayoutData(layoutData);
+		measurePerformanceCheck.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				boolean enabled = measurePerformanceCheck.getSelection();
+				if (enabled) {
+					useExternalBrowserCheck.setSelection(true);
+					useExternalBrowserCheck.setEnabled(false);
+				} else {
+					useExternalBrowserCheck.setEnabled(true);
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		//
 		setDefaultValues();
 		//
 		return composite;
@@ -206,6 +229,10 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 
 	private void setDefaultValues() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		boolean measurePerformance = store.getBoolean(PREF_MEASURE_PERFORMANCE);
+		measurePerformanceCheck.setSelection(measurePerformance);
+		measurePerformanceCheck.notifyListeners(SWT.Selection, null);
+
 		String joinedUrls = store.getString(PREF_URL);
 		if (StringUtils.isNotEmpty(joinedUrls)) {
 			String[] urls = StringUtils.split(joinedUrls, "|");
@@ -261,6 +288,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 		owner = owners.getItem(owners.getSelectionIndex());
 		width = widths.getText();
 		useExternalBrowser = useExternalBrowserCheck.getSelection();
+		measurePerformance = measurePerformanceCheck.getSelection();
 		country = countries.getText();
 		country = country.substring(country.indexOf('(') + 1, country.length() - 1);
 		language = languages.getText();
@@ -278,6 +306,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 		store.setValue(PREF_VIEW, String.valueOf(viewKind.getSelectionIndex()));
 		store.setValue(PREF_WIDTH, String.valueOf(widths.getSelection()));
 		store.setValue(PREF_USE_EXTERNAL_BROWSER, String.valueOf(useExternalBrowserCheck.getSelection()));
+		store.setValue(PREF_MEASURE_PERFORMANCE, measurePerformanceCheck.getSelection());
 		setReturnCode(OK);
 		close();
 	}
@@ -314,4 +343,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 		return url;
 	}
 
+	public boolean isMeasurePerformance() {
+		return measurePerformance;
+	}
 }

@@ -38,22 +38,46 @@ class FirefoxBinary {
         this.executableLocation = executableLocation;
     }
 
-    public void createProfile(String profileName) throws IOException {
+    /**
+     * Creates a Firefox profile. No effect if the profile already exists.
+     */
+    public Profile createProfile(String profileName) throws IOException {
+        ProfilesIni ini = new ProfilesIni();
+        Profile profile = ini.getProfile(profileName);
+        if (profile != null) {
+            return profile;
+        }
+
         ProcessBuilder builder = new ProcessBuilder(
                 executableLocation, "-no-remote", "-CreateProfile", profileName);
         builder.redirectErrorStream(true);
         Process process = builder.start();
 
         new ProcessWatcher(process).watch();
+
+        ini = new ProfilesIni();
+        return ini.getProfile(profileName);
     }
 
-    public void launch(String profileName, String url) throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(
-                executableLocation, "-no-remote", "-P", profileName, url);
+    /**
+     * Launches a Firefox browser window using a given profile.
+     *
+     * @return True if launch is successful, or false if the profile is already
+     *      running.
+     */
+    public boolean launch(Profile profile, String url) throws IOException {
+        if (profile.isRunning()) {
+            return false;
+        }
+
+        ProcessBuilder builder =
+                new ProcessBuilder(executableLocation, "-no-remote", "-P", profile.name, url);
+
         builder.redirectErrorStream(true);
         Process process = builder.start();
 
         new ProcessWatcher(process).watch();
+        return true;
     }
 
 
@@ -66,13 +90,16 @@ class FirefoxBinary {
             this.consoleOutput = new ByteArrayOutputStream();
         }
 
+        /**
+         * This method blocks until the process stops running.
+         */
         void watch() {
             new Thread(this, "ProcessWatcher Thread").start();
 
             try {
                 process.waitFor();
             } catch (InterruptedException e) {
-                logger.fine("Firefox process interrupted", e); 
+                logger.fine("Firefox process interrupted", e);
             }
         }
 
