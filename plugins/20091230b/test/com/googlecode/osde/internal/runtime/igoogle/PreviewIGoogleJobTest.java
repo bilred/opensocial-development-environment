@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.production;
+package com.googlecode.osde.internal.runtime.igoogle;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.eq;
@@ -25,7 +25,6 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertTrue;
 
-import com.googlecode.osde.internal.utils.HostingException;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;

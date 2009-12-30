@@ -185,7 +185,7 @@
             </enablement>
          </action>
          <action
-               class="com.googlecode.osde.internal.runtime.production.PreviewIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.igoogle.PreviewIGoogleAction"
                enablesFor="1"
                icon="icons/action_go.gif"
                id="com.googlecode.osde.runActionPreviewOnIGoogle2"
@@ -200,7 +200,7 @@
             </enablement>
          </action>
          <action
-               class="com.googlecode.osde.internal.runtime.production.PublishIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.igoogle.PublishIGoogleAction"
                enablesFor="1"
                icon="icons/action_go.gif"
                id="com.googlecode.osde.runActionPublishOnIGoogle2"
@@ -216,7 +216,7 @@
          </action>
          <!--
          <action
-               class="com.googlecode.osde.internal.runtime.production.CleanIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.igoogle.CleanIGoogleAction"
                icon="icons/action_go.gif"
                id="com.googlecode.osde.runActionCleanOnIGoogle2"
                label="iGoogle - Clean Preview Files"
@@ -343,7 +343,7 @@
             </enablement>
          </action>
          <action
-               class="com.googlecode.osde.internal.runtime.production.PreviewIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.igoogle.PreviewIGoogleAction"
                enablesFor="1"
                id="com.googlecode.osde.runActionPreviewOnIGoogle1"
                label="iGoogle - Preview Gadget"
@@ -357,7 +357,7 @@
             </enablement>
          </action>
          <action
-               class="com.googlecode.osde.internal.runtime.production.PublishIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.igoogle.PublishIGoogleAction"
                enablesFor="1"
                id="com.googlecode.osde.runActionPublishOnIGoogle1"
                label="iGoogle - Publish Gadget"
@@ -372,7 +372,7 @@
          </action>
          <!--
          <action
-               class="com.googlecode.osde.internal.runtime.production.CleanIGoogleAction"
+               class="com.googlecode.osde.internal.runtime.igoogle.CleanIGoogleAction"
                id="com.googlecode.osde.runActionCleanOnIGoogle1"
                label="iGoogle - Clean Preview Files"
                icon="icons/action_go.gif"

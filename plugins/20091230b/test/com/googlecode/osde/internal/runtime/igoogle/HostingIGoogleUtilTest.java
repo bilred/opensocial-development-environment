@@ -16,21 +16,22 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.utils;
+package com.googlecode.osde.internal.runtime.igoogle;
 
 import java.util.List;
 
-import com.googlecode.osde.internal.utils.IgCredentials;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.junit.Test;
 
-import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.*;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.*;
 import static org.junit.Assert.*;
 
 /**
  * @author albert.cheng.ig@gmail.com
  */
 // TODO: Annotate test as large.
+// TODO: Update corresponding wiki docs.
 public class HostingIGoogleUtilTest {
 
     private static Logger logger = new Logger(HostingIGoogleUtil.class);
