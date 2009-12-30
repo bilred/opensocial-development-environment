@@ -36,6 +36,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 
 import static com.googlecode.osde.internal.utils.IgCredentials.HTTP_HEADER_COOKIE;
+import static com.googlecode.osde.internal.utils.IgCredentials.URL_IG;
 import static com.googlecode.osde.internal.utils.IgCredentials.retrieveHttpResponseAsString;
 
 /**
@@ -54,15 +55,20 @@ public class HostingIGoogleUtil {
     private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
 
     private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
-        HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + HTTP.UTF_8;
-    private static final String URL_IG_GADGETS = "http://www.google.com/ig/gadgets";
+            HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + HTTP.UTF_8;
+
+    private static final String URL_IG_GADGETS = URL_IG + "/gadgets";
     private static final String URL_IG_GADGETS_BYTE_QUOTA = URL_IG_GADGETS + "/bytequota/";
     private static final String URL_IG_GADGETS_BYTES_USED = URL_IG_GADGETS + "/bytesused/";
     private static final String URL_IG_GADGETS_DIRECTORY = URL_IG_GADGETS + "/directory/";
     private static final String URL_IG_GADGETS_FILE = URL_IG_GADGETS + "/file/";
-    private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
-    private static final String URL_IG_SUBMIT_GADGET =
-            "http://www.google.com/ig/submit?prefill_url=";
+    private static final String URL_IG_PREVIEW_OPEN_SOCIAL_GADGET =
+            URL_IG + "/iframeurl?moduleurl=";
+    private static final String URL_IG_SUBMIT_GADGET = URL_IG + "/submit?prefill_url=";
+
+    private static final String URL_GMODULE = "http://hosting.gmodules.com/";
+    private static final String URL_GMODULE_FILE = URL_GMODULE + "ig/gadgets/file/";
+    private static final String URL_PREVIEW_LEGACY_GADGET = URL_GMODULE + "gadgets/ifr?nocache=1";
 
     private HostingIGoogleUtil() {
         // Disable instantiation of this utility class.
@@ -221,6 +227,9 @@ public class HostingIGoogleUtil {
         return URL_GMODULE_FILE + publicId + hostingFolder + filePath;
     }
 
+    /**
+     * Retrieves iGoogle public id by providing SID.
+     */
     public static String retrievePublicId(String sid)
             throws HostingException {
         String response = sendHttpRequestToIg(URL_IG_GADGETS, sid);
@@ -254,10 +263,16 @@ public class HostingIGoogleUtil {
         return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
+    /**
+     * Forms the url for previewing a legacy gadget.
+     *
+     * @return url for previewing
+     */
     public static String formPreviewLegacyGadgetUrl(
             String hostedFileUrl, boolean useCanvasView) {
         StringBuilder sb = new StringBuilder();
-        sb.append("http://www.gmodules.com/gadgets/ifr?&hl=en&gl=us&nocache=1&view=");
+        sb.append(URL_PREVIEW_LEGACY_GADGET);
+        sb.append("&hl=en&gl=us&view=");
         sb.append(useCanvasView ? "canvas" : "home"); // default is home view
 
         // Append hosted file's url.
@@ -269,10 +284,34 @@ public class HostingIGoogleUtil {
         return sb.toString();
     }
 
+    /**
+     * Forms url for previewing an OpenSocial gadget.
+     *
+     * @return url for previewing
+     * @throws HostingException
+     */
+    // TODO (p1): Utilize formPreviewOpenSocialGadgetUrl() when server is ready.
+    public static String formPreviewOpenSocialGadgetUrl(
+            String hostedFileUrl, boolean useCanvasView, String sid)
+            throws HostingException {
+        String requestUrl = URL_IG_PREVIEW_OPEN_SOCIAL_GADGET + hostedFileUrl;
+        logger.fine("requestUrl: " + requestUrl);
+        String response = sendHttpRequestToIg(requestUrl, sid);
+        return response;
+    }
+
+    /**
+     * Forms the url for publishing a gadget.
+     *
+     * @return url for publishing
+     */
     public static String formPublishGadgetUrl(String hostedFileUrl) {
         return URL_IG_SUBMIT_GADGET + hostedFileUrl;
     }
 
+    /**
+     * Deletes the hosted file.
+     */
     public static void deleteFile(String sid, String publicId, String fileName,
             IgCredentials igCredentials)
             throws HostingException {
