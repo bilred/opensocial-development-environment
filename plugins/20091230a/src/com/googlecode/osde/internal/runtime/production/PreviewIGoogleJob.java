@@ -20,10 +20,10 @@ package com.googlecode.osde.internal.runtime.production;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import com.googlecode.osde.internal.utils.HostingException;
 import com.googlecode.osde.internal.utils.HostingIGoogleUtil;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,7 +43,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  */
 public class PreviewIGoogleJob extends BaseIGoogleJob {
-    private static Logger logger = Logger.getLogger(PreviewIGoogleJob.class.getName());
+    private static Logger logger = new Logger(PreviewIGoogleJob.class);
 
     private Shell shell;
     private boolean useCanvasView;
@@ -68,7 +68,7 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
             previewGadgetUrl = HostingIGoogleUtil.formPreviewLegacyGadgetUrl(
                     urlOfHostedGadgetFile, useCanvasView);
         } catch (HostingException e) {
-            logger.warning(e.getMessage());
+            logger.warn(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;
         }
@@ -114,9 +114,9 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
                 }
                 browser.openURL(new URL(previewGadgetUrl));
             } catch (MalformedURLException e) {
-                logger.warning(e.getMessage());
+                logger.warn(e.getMessage());
             } catch (PartInitException e) {
-                logger.warning(e.getMessage());
+                logger.warn(e.getMessage());
             }
         }
     }
