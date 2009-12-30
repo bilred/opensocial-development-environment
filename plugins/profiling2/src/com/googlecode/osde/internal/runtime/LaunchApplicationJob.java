@@ -26,6 +26,7 @@ import java.util.StringTokenizer;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.ConnectionException;
+import com.googlecode.osde.internal.profiling.ProfilingBrowserSupport;
 import com.googlecode.osde.internal.shindig.ApplicationService;
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -62,6 +63,7 @@ public class LaunchApplicationJob extends Job {
 	private Shell shell;
 	private String url;
 	private String appTitle;
+	private final IWorkbenchBrowserSupport browserSupport;
 
 	public LaunchApplicationJob(
 			String name, LaunchApplicationInformation information, Shell shell) {
@@ -78,6 +80,8 @@ public class LaunchApplicationJob extends Job {
 		this.shell = shell;
 		this.url = information.getUrl();
 		this.appTitle = information.getApplicationTitle();
+		this.browserSupport = information.isMeasurePerformance() ?
+				new ProfilingBrowserSupport(shell) : PlatformUI.getWorkbench().getBrowserSupport();
 	}
 
 	@Override
@@ -114,18 +118,17 @@ public class LaunchApplicationJob extends Job {
 			shell.getDisplay().syncExec(new Runnable() {
 				public void run() {
 					try {
-						IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 						IWebBrowser browser;
 						if (!useExternalBrowser) {
 							String title = appTitle + " [" + view + "]";
 							String desc = appTitle + " [" + view + "] viewer=" + viewer + " owner=" + owner;
-							browser = support.createBrowser(
+							browser = browserSupport.createBrowser(
 									IWorkbenchBrowserSupport.LOCATION_BAR
 										| IWorkbenchBrowserSupport.NAVIGATION_BAR
 										| IWorkbenchBrowserSupport.AS_EDITOR,
 									title, title, desc);
 						} else {
-							browser = support.getExternalBrowser();
+							browser = browserSupport.getExternalBrowser();
 						}
 						browser.openURL(new URL(kicker));
 					} catch (MalformedURLException e) {

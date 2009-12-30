@@ -74,9 +74,11 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
 				boolean useExternalBrowser = dialog.isUseExternalBrowser();
 				String country = dialog.getCountry();
 				String language = dialog.getLanguage();
+				boolean measurePerformance = dialog.isMeasurePerformance();
 				LaunchApplicationInformation information = new LaunchApplicationInformation(
 						viewer, owner, view, width, appId, useExternalBrowser,
-						country, language, null, url, appInfo.getModule().getModulePrefs().getTitle());
+						country, language, null, url,
+						appInfo.getModule().getModulePrefs().getTitle(), measurePerformance);
 				Job job = new LaunchApplicationJob("Running application", information, shell);
 				job.schedule();
 				notifyUserPrefsView(information);
