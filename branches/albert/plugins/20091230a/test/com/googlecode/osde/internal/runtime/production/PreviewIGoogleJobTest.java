@@ -18,8 +18,6 @@
  */
 package com.googlecode.osde.internal.runtime.production;
 
-import static com.googlecode.osde.internal.runtime.production.PreviewIGoogleJob.OSDE_PREVIEW_DIRECTORY;
-import static com.googlecode.osde.internal.runtime.production.PreviewIGoogleJob.TARGET_FOLDER_NAME;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -27,9 +25,8 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertTrue;
 
-import java.util.logging.Logger;
-
 import com.googlecode.osde.internal.utils.HostingException;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -43,11 +40,12 @@ import org.junit.Test;
  */
 public class PreviewIGoogleJobTest {
 
-    private static Logger logger = Logger.getLogger(PreviewIGoogleJobTest.class.getName());
+    private static Logger logger = new Logger(PreviewIGoogleJobTest.class);
     private static final String TEST_USERNAME = "osde.test.001";
     private static final String TEST_PASSWORD = "osdetest888";
     private static final String TEST_TARGET_PATH =
             "test/com/googlecode/osde/internal/runtime/production/testdata/";
+    private static final String TEST_HOSTING_FOLDER = "/osde/test/";
     private static final String GADGET_XML_FILE_RELATIVE_PATH = "gadget.xml";
 
     /**
@@ -64,7 +62,8 @@ public class PreviewIGoogleJobTest {
         IPath targetFolderLocation = createMock(IPath.class);
         expect(gadgetXmlIFile.getName()).andReturn(GADGET_XML_FILE_RELATIVE_PATH).anyTimes();
         expect(gadgetXmlIFile.getProject()).andReturn(project).anyTimes();
-        expect(project.getFolder(eq(TARGET_FOLDER_NAME))).andReturn(targetFolder).anyTimes();
+        expect(project.getFolder(eq(BaseIGoogleJob.TARGET_FOLDER_NAME)))
+                .andReturn(targetFolder).anyTimes();
         expect(targetFolder.getLocation()).andReturn(targetFolderLocation).anyTimes();
         expect(targetFolderLocation.toOSString()).andReturn(TEST_TARGET_PATH);
         replay(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
@@ -75,7 +74,7 @@ public class PreviewIGoogleJobTest {
                 TEST_USERNAME, TEST_PASSWORD, gadgetXmlIFile, shell, false, false);
 
         // Test and verify the method call.
-        String urlOfHostedGadgetFile = job.uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, false);
+        String urlOfHostedGadgetFile = job.uploadFilesToIg(TEST_HOSTING_FOLDER, false);
         logger.info("urlOfHostedGadgetFile: " + urlOfHostedGadgetFile);
         assertTrue(urlOfHostedGadgetFile.endsWith("/" + GADGET_XML_FILE_RELATIVE_PATH));
         verify(gadgetXmlIFile, project, targetFolder, targetFolderLocation);

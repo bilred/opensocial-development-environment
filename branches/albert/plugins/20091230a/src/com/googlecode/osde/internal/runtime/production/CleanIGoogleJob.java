@@ -18,10 +18,8 @@
  */
 package com.googlecode.osde.internal.runtime.production;
 
-//TODO: Change it to OSDE's Logger.
-import java.util.logging.Logger;
-
 import com.googlecode.osde.internal.utils.HostingException;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -38,7 +36,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  */
 public class CleanIGoogleJob extends BaseIGoogleJob {
-    private static Logger logger = Logger.getLogger(CleanIGoogleJob.class.getName());
+    private static Logger logger = new Logger(CleanIGoogleJob.class);
 
     private Shell shell;
 
@@ -57,7 +55,7 @@ public class CleanIGoogleJob extends BaseIGoogleJob {
         try {
             cleanFiles(OSDE_PREVIEW_DIRECTORY);
         } catch (HostingException e) {
-            logger.warning(e.getMessage());
+            logger.warn(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;
         }
