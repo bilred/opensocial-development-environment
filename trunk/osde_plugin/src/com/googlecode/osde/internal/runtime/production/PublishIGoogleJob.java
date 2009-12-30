@@ -20,10 +20,10 @@ package com.googlecode.osde.internal.runtime.production;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import com.googlecode.osde.internal.utils.HostingException;
 import com.googlecode.osde.internal.utils.HostingIGoogleUtil;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,7 +43,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  */
 public class PublishIGoogleJob extends BaseIGoogleJob {
-    private static Logger logger = Logger.getLogger(PublishIGoogleJob.class.getName());
+    private static Logger logger = new Logger(PublishIGoogleJob.class);
 
     private Shell shell;
     private String projectName; // contains only chars of A-Z, a-z, or 0-9.
@@ -67,7 +67,7 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
             publishGadgetUrl = HostingIGoogleUtil.formPublishGadgetUrl(urlOfHostedFile);
 
         } catch (HostingException e) {
-            logger.warning(e.getMessage());
+            logger.warn(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;
         }
@@ -94,7 +94,7 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
         }
 
         public void run() {
-            logger.info("publishGadgetUrl: " + publishGadgetUrl);
+            logger.fine("publishGadgetUrl: " + publishGadgetUrl);
             try {
                 IWorkbenchBrowserSupport support =
                         PlatformUI.getWorkbench().getBrowserSupport();
@@ -109,9 +109,9 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
                 URL url = new URL(publishGadgetUrl);
                 browser.openURL(url);
             } catch (MalformedURLException e) {
-                logger.warning(e.getMessage());
+                logger.warn(e.getMessage());
             } catch (PartInitException e) {
-                logger.warning(e.getMessage());
+                logger.warn(e.getMessage());
             }
         }
     }

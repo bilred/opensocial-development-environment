@@ -18,7 +18,7 @@
  */
 package com.googlecode.osde.internal.runtime.production;
 
-import java.util.logging.Logger;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
@@ -37,7 +37,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class CleanIGoogleAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
-    private static Logger logger = Logger.getLogger(CleanIGoogleAction.class.getName());
+    private static Logger logger = new Logger(CleanIGoogleAction.class);
 
     private Shell shell;
 

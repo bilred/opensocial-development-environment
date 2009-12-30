@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -45,14 +44,14 @@ import static com.googlecode.osde.internal.utils.IgCredentials.retrieveHttpRespo
  * (http://www.google.com/ig) gadget container.
  * <p>
  * Samples of usages could be found at
- * {@link HostingIGoogleUtilTest#testAuthenticationAndUploadAndRetrieveFiles()}.
+ * {@link HostingIGoogleUtilTest#testAuthenticationAndUploadAndRetrieveAndDeleteFiles()}.
  *
  * @author albert.cheng.ig@gmail.com
  */
 // TODO: Rename HostingIGoogleUtil to IgHostingUtil and move it to production package.
 public class HostingIGoogleUtil {
 
-    private static Logger logger = Logger.getLogger(HostingIGoogleUtil.class.getName());
+    private static Logger logger = new Logger(HostingIGoogleUtil.class);
 
     private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
             HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + HTTP.UTF_8;
