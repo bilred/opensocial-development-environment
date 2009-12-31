@@ -24,8 +24,17 @@ import com.googlecode.osde.internal.utils.Logger;
 
 import org.junit.Test;
 
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.*;
-import static org.junit.Assert.*;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.findAllRelativeFilePaths;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formHostedFileUrl;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formPreviewLegacyGadgetUrl;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formPreviewOpenSocialGadgetUrl;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrieveFileNameList;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrievePublicId;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrieveQuotaByte;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrieveQuotaByteUsed;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.sendHttpRequestToIg;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author albert.cheng.ig@gmail.com
@@ -48,11 +57,11 @@ public class HostingIGoogleUtilTest {
     private static final int TEST_MIN_QUOTA_BYTE_USED = 1000;
     private static final String URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE =
             "http://opensocial-resources.googlecode.com/"
-            + "svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml";
+                    + "svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml";
 
     /**
      * Test method for {@link HostingIGoogleUtil#uploadFile(
-     * String, String, IgCredentials, String, String, String)} etc.
+     *String, String, IgCredentials, String, String, String)} etc.
      *
      * @throws HostingException
      */

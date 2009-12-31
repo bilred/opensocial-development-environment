@@ -19,24 +19,24 @@ package com.google.gadgets.model;
 
 
 public class Param {
-	
-	protected String value;
-	protected String name;
-	
-	public String getValue() {
-		return value;
-	}
-	
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
+
+    protected String value;
+    protected String name;
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

@@ -29,44 +29,43 @@ import org.xml.sax.SAXException;
 /**
  * A new parser in OSDE must extend this abstract class and provide implementation
  * for initialize() method to define behaviors of the digester. The new parser should also
- * register itself in ParserType enum. Refer to GadgetXMLParser.java as an example. 
- * 
- * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
+ * register itself in ParserType enum. Refer to GadgetXMLParser.java as an example.
  *
+ * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  */
 public abstract class AbstractParser implements IParser {
-	
-	private Digester digester;
-	
-	protected AbstractParser() {
-		digester = new Digester();
-		initialize(digester);
-	}
-	
-	protected abstract void initialize(Digester digester);
 
-	public Object parse(File file) throws ParserException {
-		try {
-			return parse(new FileInputStream(file));
-		} catch (FileNotFoundException e) {
-			throw new ParserException(file.getAbsolutePath() + " not found", e);
-		}
-	}
-	
-	public Object parse(InputStream stream) throws ParserException {
-		try {
-			Object result = digester.parse(stream);
-			if (result == null) {
-				throw new ParserException("Digester returned null as the result of parsing.");
-			}
-			return result;
-		} catch (IOException e) {
-			throw new ParserException("IO error during parsing.", e);
-		} catch (SAXException e) {
-			throw new ParserException("Parsing error", e);
-		} finally {
-			digester.clear();
-		}
-	}
+    private Digester digester;
+
+    protected AbstractParser() {
+        digester = new Digester();
+        initialize(digester);
+    }
+
+    protected abstract void initialize(Digester digester);
+
+    public Object parse(File file) throws ParserException {
+        try {
+            return parse(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new ParserException(file.getAbsolutePath() + " not found", e);
+        }
+    }
+
+    public Object parse(InputStream stream) throws ParserException {
+        try {
+            Object result = digester.parse(stream);
+            if (result == null) {
+                throw new ParserException("Digester returned null as the result of parsing.");
+            }
+            return result;
+        } catch (IOException e) {
+            throw new ParserException("IO error during parsing.", e);
+        } catch (SAXException e) {
+            throw new ParserException("Parsing error", e);
+        } finally {
+            digester.clear();
+        }
+    }
 
 }

@@ -22,43 +22,43 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 public class LanguageTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
-	
-	@Test
-	public void testIsSupported() {
-		assertTrue(Language.isSupported("en"));
-		assertFalse(Language.isSupported("blah"));
-	}
-	
-	@Test
-	public void testGetLangCode() {
-		String langCode = Language.FRENCH.getLangCode();
-		assertTrue("fr".equals(langCode));
-		
-		langCode = Language.CHINESE_TRADITIONAL.getLangCode();
-		assertTrue("zh-TW".equals(langCode));
-	}
-	
-	@Test
-	public void testFromString() {
-		Language lang = Language.fromString("blah");
-		assertNull(lang);
-		
-		lang = Language.fromString("zh-TW");
-		assertNotNull(lang);
-	}
-	
-	@After
-	public void tearDown() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @Test
+    public void testIsSupported() {
+        assertTrue(Language.isSupported("en"));
+        assertFalse(Language.isSupported("blah"));
+    }
+
+    @Test
+    public void testGetLangCode() {
+        String langCode = Language.FRENCH.getLangCode();
+        assertTrue("fr".equals(langCode));
+
+        langCode = Language.CHINESE_TRADITIONAL.getLangCode();
+        assertTrue("zh-TW".equals(langCode));
+    }
+
+    @Test
+    public void testFromString() {
+        Language lang = Language.fromString("blah");
+        assertNull(lang);
+
+        lang = Language.fromString("zh-TW");
+        assertNotNull(lang);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
 
 }

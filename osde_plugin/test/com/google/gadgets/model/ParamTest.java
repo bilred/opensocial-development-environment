@@ -1,34 +1,34 @@
 package com.google.gadgets.model;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 public class ParamTest {
-	
-	private Param param;
 
-	@Before
-	public void setUp() throws Exception {
-		param = new Param();
-		param.setName("blah");
-		param.setValue("blah blah");
-	}
+    private Param param;
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+        param = new Param();
+        param.setName("blah");
+        param.setValue("blah blah");
+    }
 
-	@Test
-	public final void testGetValue() {
-		assertTrue("blah blah".equals(param.getValue()));
-	}
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	@Test
-	public final void testGetName() {
-		assertTrue("blah".equals(param.getName()));
-	}
+    @Test
+    public final void testGetValue() {
+        assertTrue("blah blah".equals(param.getValue()));
+    }
+
+    @Test
+    public final void testGetName() {
+        assertTrue("blah".equals(param.getName()));
+    }
 
 }

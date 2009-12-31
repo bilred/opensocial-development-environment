@@ -19,30 +19,31 @@ package com.google.gadgets.parser;
 
 /**
  * A thread-safe factory for generating parsers.
- * 
+ *
  * Example usage for gadget XML parser clients:
  * <code>IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);</code>
- * 
- * To add a new parser to this factory, make it implement IParser interface and extend 
+ *
+ * To add a new parser to this factory, make it implement IParser interface and extend
  * Apache Digester. And then add it to the following ParserType enum and modify createParser()
  * accordingly.
- * 
- * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  *
+ * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  */
 public class ParserFactory {
 
-	// disable instance construction
-	private ParserFactory() {}
-	
-	public static synchronized IParser createParser(ParserType type) {
-		switch (type) {
-		case GADGET_XML_PARSER:
-			return new GadgetXMLParser();
-		case MESSAGE_BUNDLE_XML_PARSER:
-			return new MessageBundleXMLParser();
-		default:
-			return null;
-		}
-	}
+    // disable instance construction
+
+    private ParserFactory() {
+    }
+
+    public static synchronized IParser createParser(ParserType type) {
+        switch (type) {
+            case GADGET_XML_PARSER:
+                return new GadgetXMLParser();
+            case MESSAGE_BUNDLE_XML_PARSER:
+                return new MessageBundleXMLParser();
+            default:
+                return null;
+        }
+    }
 }
