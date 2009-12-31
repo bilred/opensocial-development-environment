@@ -40,30 +40,30 @@ This version is a next major version, and will be supported !OpenSocial Specific
  * Purpose: Support iGoogle.
  * Release date: 2009-12-18
  * This version covers:
-  * (DONE) (owner=albert) Preview gadgets on at least one container (Issue 39).
-  * (DONE) (owner=albert) Publish gadgets on at least one container (Issue 154).
+  * (owner=albert) Preview gadgets on at least one container (Issue 39).
+  * (owner=albert) Publish gadgets on at least one container (Issue 154).
 
 ==v0.7==
 
 This version covers:
- * (IN PROGRESS) (owner=albert) Manage gadgets on at least one container (Issue 155).
- * (owner=yoichiro) Rename package name to com.googlecode.osde (Issue 158).
+ * (DONE) (owner=albert) Manage/clean gadgets on at least one container (Issue 155).
+ * (DONE) (owner=yoichiro) Rename package name to com.googlecode.osde (Issue 158).
  * (owner=!ChingYiChan) The configuration to change the port number of Jetty (Issue 104).
- * (owner=TBD) The HAS_APP filter (Issue 106).
- * (owner=TBD) New editor for gadget xml files - code highlighting for OS API and templates (Issue 159).
+ * (owner=dolphin) Latency Reduction Tools - Evaluator for web performance (Issue 127).
+ * (owner=dolphin) Latency Reduction Tools - JS Compiler (Issue 180).
 
-Expected release date: 2009-12-20
+Expected release date: 2010-01-03
+
 ==v0.9==
 
 This version covers:
  * (owner=albert) Gadget Checker (Issue 47).
- * (owner=dolphin) Latency Reduction Tools - Evaluator for web performance (Issue 127).
- * (owner=dolphin) Latency Reduction Tools - JS Compiler (Issue 180).
+ * (owner=TBD) The HAS_APP filter (Issue 106).
+ * (owner=TBD) New editor for gadget xml files - code highlighting for OS API and templates (Issue 159).
  * (owner=TBD) New editor for gadget xml files - code completion for OS API and templates (Issue 160).
- * (owner=TBD) Gadget Translation (Issue 46).
  * (owner=TBD) Support Shindig v1.1 (beta 3).
 
-Expected release date: 2010-01-15
+Expected release date: 2010-01-24
 
 ==v1.0==
 
