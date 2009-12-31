@@ -46,7 +46,7 @@ Expected release date: 2010-01-03
  * (owner=TBD) The HAS_APP filter (Issue 106).
  * (owner=TBD) New editor for gadget xml files - code highlighting for OS API and templates (Issue 159).
  * (owner=TBD) New editor for gadget xml files - code completion for OS API and templates (Issue 160).
- * (owner=TBD) Support Shindig v1.1 (beta 3).
+ * (owner=TBD) Support Shindig v1.1 (beta 3) (Issue 161).
 
 Expected release date: 2010-01-24
 
