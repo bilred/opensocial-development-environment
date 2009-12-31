@@ -27,28 +27,29 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 public class ActivityService {
-	
-	private Session session;
 
-	public ActivityService(Session session) {
-		super();
-		this.session = session;
-	}
+    private Session session;
 
-	public List<Activity> getActivities(Person person) {
-		Query query = session.createQuery("select a from ActivityImpl a where a.userId = :userId order by a.postedTime desc");
-		query.setParameter("userId", person.getId());
-		return (List<Activity>)query.list();
-	}
+    public ActivityService(Session session) {
+        super();
+        this.session = session;
+    }
 
-	public void removeAll() {
-		Transaction tx = session.beginTransaction();
-		Query query = session.createQuery("select a from ActivityImpl a");
-		List<ActivityImpl> activities = (List<ActivityImpl>)query.list();
-		for (ActivityImpl activity : activities) {
-			session.delete(activity);
-		}
-		tx.commit();
-	}
-	
+    public List<Activity> getActivities(Person person) {
+        Query query = session.createQuery(
+                "select a from ActivityImpl a where a.userId = :userId order by a.postedTime desc");
+        query.setParameter("userId", person.getId());
+        return (List<Activity>) query.list();
+    }
+
+    public void removeAll() {
+        Transaction tx = session.beginTransaction();
+        Query query = session.createQuery("select a from ActivityImpl a");
+        List<ActivityImpl> activities = (List<ActivityImpl>) query.list();
+        for (ActivityImpl activity : activities) {
+            session.delete(activity);
+        }
+        tx.commit();
+    }
+
 }

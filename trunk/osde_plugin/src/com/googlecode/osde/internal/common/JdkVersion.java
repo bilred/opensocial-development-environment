@@ -23,23 +23,23 @@ package com.googlecode.osde.internal.common;
  */
 public class JdkVersion {
 
-  private static boolean jdk6;
+    private static boolean jdk6;
 
-  static {
-    try {
-      Class.forName("java.util.ArrayDeque");
-      jdk6 = true;
-    } catch (ClassNotFoundException e) {
-      jdk6 = false;
+    static {
+        try {
+            Class.forName("java.util.ArrayDeque");
+            jdk6 = true;
+        } catch (ClassNotFoundException e) {
+            jdk6 = false;
+        }
     }
-  }
 
-  // utility class not instantiable
+    // utility class not instantiable
 
-  private JdkVersion() {
-  }
+    private JdkVersion() {
+    }
 
-  public static boolean isAtLeastJdk6() {
-    return jdk6;
-  }
+    public static boolean isAtLeastJdk6() {
+        return jdk6;
+    }
 }

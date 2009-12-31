@@ -30,71 +30,75 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 public class AppDataService {
-	
-	private Session session;
 
-	public AppDataService(Session session) {
-		super();
-		this.session = session;
-	}
-	
-	public Map<String, String> getApplicationDataMap(Person person, ApplicationImpl application) {
-		Query query = session.createQuery("select a from ApplicationDataMapImpl a where a.person = :person and a.application = :application");
-		query.setCacheMode(CacheMode.GET);
-		query.setParameter("person", person);
-		query.setParameter("application", application);
-		ApplicationDataMapImpl applicationDataMap = (ApplicationDataMapImpl)query.uniqueResult();
-		if (applicationDataMap != null) {
-			Map<String, String> result = new HashMap<String, String>();
-			result.putAll(applicationDataMap.getDataMap());
-			session.evict(applicationDataMap);
-			return result;
-		} else {
-			return null;
-		}
-	}
-	
-	public void removeAll() {
-		Transaction tx = session.beginTransaction();
-		Query query = session.createQuery("select a from ApplicationDataMapImpl a");
-		List<ApplicationDataMapImpl> appDatas = (List<ApplicationDataMapImpl>)query.list();
-		for (ApplicationDataMapImpl appData : appDatas) {
-			session.delete(appData);
-		}
-		tx.commit();
-	}
+    private Session session;
 
-	public void removeApplicationData(Person person, ApplicationImpl application, String key) {
-		Transaction tx = session.beginTransaction();
-		Query query = session.createQuery("select a from ApplicationDataMapImpl a where a.person = :person and a.application = :application");
-		query.setCacheMode(CacheMode.GET);
-		query.setParameter("person", person);
-		query.setParameter("application", application);
-		ApplicationDataMapImpl applicationDataMap = (ApplicationDataMapImpl)query.uniqueResult();
-		if (applicationDataMap != null) {
-			Map<String, String> dataMap = applicationDataMap.getDataMap();
-			dataMap.remove(key);
-			session.update(applicationDataMap);
-		}
-		tx.commit();
-	}
+    public AppDataService(Session session) {
+        super();
+        this.session = session;
+    }
 
-	public void addApplicationData(Person person, ApplicationImpl application, String key, String value) {
-		Transaction tx = session.beginTransaction();
-		Query query = session.createQuery("select a from ApplicationDataMapImpl a where a.person = :person and a.application = :application");
-		query.setCacheMode(CacheMode.GET);
-		query.setParameter("person", person);
-		query.setParameter("application", application);
-		ApplicationDataMapImpl applicationDataMap = (ApplicationDataMapImpl)query.uniqueResult();
-		if (applicationDataMap == null) {
-			applicationDataMap = new ApplicationDataMapImpl();
-			applicationDataMap.setPerson(person);
-			applicationDataMap.setApplication(application);
-		}
-		Map<String, String> dataMap = applicationDataMap.getDataMap();
-		dataMap.put(key, value);
-		session.saveOrUpdate(applicationDataMap);
-		tx.commit();
-	}
+    public Map<String, String> getApplicationDataMap(Person person, ApplicationImpl application) {
+        Query query = session.createQuery(
+                "select a from ApplicationDataMapImpl a where a.person = :person and a.application = :application");
+        query.setCacheMode(CacheMode.GET);
+        query.setParameter("person", person);
+        query.setParameter("application", application);
+        ApplicationDataMapImpl applicationDataMap = (ApplicationDataMapImpl) query.uniqueResult();
+        if (applicationDataMap != null) {
+            Map<String, String> result = new HashMap<String, String>();
+            result.putAll(applicationDataMap.getDataMap());
+            session.evict(applicationDataMap);
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    public void removeAll() {
+        Transaction tx = session.beginTransaction();
+        Query query = session.createQuery("select a from ApplicationDataMapImpl a");
+        List<ApplicationDataMapImpl> appDatas = (List<ApplicationDataMapImpl>) query.list();
+        for (ApplicationDataMapImpl appData : appDatas) {
+            session.delete(appData);
+        }
+        tx.commit();
+    }
+
+    public void removeApplicationData(Person person, ApplicationImpl application, String key) {
+        Transaction tx = session.beginTransaction();
+        Query query = session.createQuery(
+                "select a from ApplicationDataMapImpl a where a.person = :person and a.application = :application");
+        query.setCacheMode(CacheMode.GET);
+        query.setParameter("person", person);
+        query.setParameter("application", application);
+        ApplicationDataMapImpl applicationDataMap = (ApplicationDataMapImpl) query.uniqueResult();
+        if (applicationDataMap != null) {
+            Map<String, String> dataMap = applicationDataMap.getDataMap();
+            dataMap.remove(key);
+            session.update(applicationDataMap);
+        }
+        tx.commit();
+    }
+
+    public void addApplicationData(Person person, ApplicationImpl application, String key,
+            String value) {
+        Transaction tx = session.beginTransaction();
+        Query query = session.createQuery(
+                "select a from ApplicationDataMapImpl a where a.person = :person and a.application = :application");
+        query.setCacheMode(CacheMode.GET);
+        query.setParameter("person", person);
+        query.setParameter("application", application);
+        ApplicationDataMapImpl applicationDataMap = (ApplicationDataMapImpl) query.uniqueResult();
+        if (applicationDataMap == null) {
+            applicationDataMap = new ApplicationDataMapImpl();
+            applicationDataMap.setPerson(person);
+            applicationDataMap.setApplication(application);
+        }
+        Map<String, String> dataMap = applicationDataMap.getDataMap();
+        dataMap.put(key, value);
+        session.saveOrUpdate(applicationDataMap);
+        tx.commit();
+    }
 
 }

@@ -63,7 +63,7 @@ class FirefoxBinary {
      * Launches a Firefox browser window using a given profile.
      *
      * @return True if launch is successful, or false if the profile is already
-     *      running.
+     *         running.
      */
     public boolean launch(Profile profile, String url) throws IOException {
         if (profile.isRunning()) {

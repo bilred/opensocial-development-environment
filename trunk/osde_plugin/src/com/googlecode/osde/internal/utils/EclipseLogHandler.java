@@ -21,10 +21,10 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import com.googlecode.osde.internal.Activator;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
-import com.googlecode.osde.internal.Activator;
 
 /**
  * Redirects all log messages from java.util.logging framework to Eclipse
@@ -32,7 +32,7 @@ import com.googlecode.osde.internal.Activator;
  * the same logging framework (JUL). RCP-independent code, when running outside
  * Eclipse (e.g. unit test), will log to the system console. RCP-dependent code,
  * when running inside Eclipse, will log to the "Error Log" view.
- * 
+ *
  * @author Dolphin Chi-Ngai Wan
  */
 public class EclipseLogHandler extends Handler {

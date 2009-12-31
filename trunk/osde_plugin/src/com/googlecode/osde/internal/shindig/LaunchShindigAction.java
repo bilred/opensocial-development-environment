@@ -27,59 +27,61 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class LaunchShindigAction extends Action implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+public class LaunchShindigAction extends Action
+        implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
-	private Shell shell;
-	private IWorkbenchPart targetPart;
-	
-	/**
-	 * Constructor for Action1.
-	 */
-	public LaunchShindigAction() {
-		super();
-	}
-	
-	public LaunchShindigAction(IWorkbenchPart targetPart) {
-		super();
-		shell = targetPart.getSite().getShell();
-		this.targetPart = targetPart;
-	}
+    private Shell shell;
+    private IWorkbenchPart targetPart;
 
-	/**
-	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		shell = targetPart.getSite().getShell();
-		this.targetPart = targetPart;
-	}
+    /**
+     * Constructor for Action1.
+     */
+    public LaunchShindigAction() {
+        super();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
-	public void run() {
-		run(null);
-	}
+    public LaunchShindigAction(IWorkbenchPart targetPart) {
+        super();
+        shell = targetPart.getSite().getShell();
+        this.targetPart = targetPart;
+    }
 
-	/**
-	 * @see IActionDelegate#run(IAction)
-	 */
-	public void run(IAction action) {
-		ShindigLauncher.launch(shell, targetPart);
-	}
+    /**
+     * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
+     */
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        shell = targetPart.getSite().getShell();
+        this.targetPart = targetPart;
+    }
 
-	/**
-	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+    /* (non-Javadoc)
+      * @see org.eclipse.jface.action.Action#run()
+      */
 
-	public void dispose() {
-	}
+    @Override
+    public void run() {
+        run(null);
+    }
 
-	public void init(IWorkbenchWindow window) {
-		targetPart = window.getActivePage().getActivePart();
-		shell = targetPart.getSite().getShell();
-	}
+    /**
+     * @see IActionDelegate#run(IAction)
+     */
+    public void run(IAction action) {
+        ShindigLauncher.launch(shell, targetPart);
+    }
+
+    /**
+     * @see IActionDelegate#selectionChanged(IAction, ISelection)
+     */
+    public void selectionChanged(IAction action, ISelection selection) {
+    }
+
+    public void dispose() {
+    }
+
+    public void init(IWorkbenchWindow window) {
+        targetPart = window.getActivePage().getActivePart();
+        shell = targetPart.getSite().getShell();
+    }
 
 }

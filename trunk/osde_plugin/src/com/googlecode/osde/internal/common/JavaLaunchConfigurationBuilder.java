@@ -17,20 +17,25 @@
  */
 package com.googlecode.osde.internal.common;
 
-import com.googlecode.osde.internal.Activator;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.debug.core.*;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
-import org.eclipse.jdt.launching.JavaRuntime;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.googlecode.osde.internal.Activator;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
+import org.eclipse.jdt.launching.JavaRuntime;
 
 /**
  * A helper class to simplify the creation of an Eclipse launch configuration
@@ -57,7 +62,8 @@ public final class JavaLaunchConfigurationBuilder {
 
     /**
      * Include an embedded jar file in the java application's classpath.
-     * @param classpath A classpath starting with '/' e.g. /shindig/shindig-1.0.jar. 
+     *
+     * @param classpath A classpath starting with '/' e.g. /shindig/shindig-1.0.jar.
      */
     public JavaLaunchConfigurationBuilder withLibrary(String classpath) {
         if (!classpath.startsWith("/")) {
@@ -69,6 +75,7 @@ public final class JavaLaunchConfigurationBuilder {
 
     /**
      * Append a command-line argument.
+     *
      * @param value The returned value of its <code>toString()</code> method will be used.
      */
     public JavaLaunchConfigurationBuilder withArgument(Object value) {
@@ -78,6 +85,7 @@ public final class JavaLaunchConfigurationBuilder {
 
     /**
      * Specify the main class to run.
+     *
      * @param mainClassName A fully-qualified class name.
      */
     public JavaLaunchConfigurationBuilder withMainClassName(String mainClassName) {
@@ -88,8 +96,9 @@ public final class JavaLaunchConfigurationBuilder {
     /**
      * Builds a new configuration instance. Note that any existing
      * configurations with the same name will be removed first.
+     *
      * @throws CoreException Thrown when Eclipse cannot create a new
-     *     configuration.
+     * configuration.
      * @throws IOException Thrown when specified jar files cannot be found.
      */
     public ILaunchConfiguration build() throws CoreException, IOException {

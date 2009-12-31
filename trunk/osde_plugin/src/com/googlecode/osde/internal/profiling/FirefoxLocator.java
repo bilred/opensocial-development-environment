@@ -41,6 +41,7 @@ public class FirefoxLocator {
 
     /**
      * Returns the absolute path of an Firefox executable.
+     *
      * @return An absolute path, or an empty string if there is no Firefox.
      */
     public String getBinaryLocation() {
@@ -81,6 +82,7 @@ public class FirefoxLocator {
 
     /**
      * Walk a PATH to locate binaries with a specified name.
+     *
      * @return the first binary found matching that name.
      */
     private static File findBinary(String... binaryNames) {
