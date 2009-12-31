@@ -84,7 +84,7 @@
  * Indentation
    * No tabs. Use 4 spaces for indent and 8 spaces for continuation indent.
 
- * JavaDoc
+ * !JavaDoc
    * Required for classes and public methods (except simple getters and setters).
 
  * Code line length should not exceed 100 characters.
