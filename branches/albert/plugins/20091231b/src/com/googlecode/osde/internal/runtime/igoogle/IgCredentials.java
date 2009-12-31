@@ -44,7 +44,7 @@ import com.googlecode.osde.internal.utils.Logger;
  *
  * @author albert.cheng.ig@gmail.com
  */
-// TODO: move this to production package
+// TODO: Include SID and publicid here.
 public class IgCredentials {
     private static Logger logger = new Logger(IgCredentials.class);
 
@@ -58,6 +58,9 @@ public class IgCredentials {
     private static final String URL_GOOGLE_LOGIN = URL_HTTPS_GOOGLE + "accounts/ClientLogin";
     private static final String URL_IG_PREF_EDIT_TOKEN = URL_IG + "/resetprefs.html";
 
+    // TODO: make SID_LENGTH and PUBLIC_ID_LENGTH private.
+    static final int SID_LENGTH = 203;
+    static final int PUBLIC_ID_LENGTH = 21;
     private static final int MIN_PREF_LENGTH = 50;
     private static final int EDIT_TOKEN_LENGTH = 16;
     private static final String EDIT_TOKEN_IDENTIFIER = "id=\"et\" value=\"";

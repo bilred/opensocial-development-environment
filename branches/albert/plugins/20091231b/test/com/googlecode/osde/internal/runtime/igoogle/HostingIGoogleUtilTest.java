@@ -39,9 +39,13 @@ public class HostingIGoogleUtilTest {
     private static final String TEST_USERNAME = "osde.test.001";
     private static final String TEST_PASSWORD = "osdetest888";
     private static final String TEST_TARGET_PATH =
-            "test/com/googlecode/osde/internal/runtime/production/testdata/";
+            "test/com/googlecode/osde/internal/runtime/igoogle/testdata/";
+    private static final String TEST_HOSTING_FOLDER = "/osde/test/";
     private static final String GADGET_XML_FILE_RELATIVE_PATH = "gadget.xml";
-    private static final String DUMMY_HOST_FOLDER = "/dummy_host_folder/";
+    private static final String TEST_GADGET_FILE_START_CONTENT = "<?xml version";
+    private static final int TEST_HOSTED_FILES_COUNT = 6;
+    private static final int MIN_QUOTA_BYTE = 1000000;
+    private static final int TEST_MIN_QUOTA_BYTE_USED = 1000;
     private static final String URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE =
             "http://opensocial-resources.googlecode.com/"
             + "svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml";
@@ -53,41 +57,43 @@ public class HostingIGoogleUtilTest {
      * @throws HostingException
      */
     @Test
-    public void testAuthenticationAndUploadAndRetrieveAndDeleteFiles()
+    public void testLifeCycleForHostedFile()
             throws HostingException {
         // Prepare Authentication.
         String sid = IgCredentials.retrieveSid(TEST_USERNAME, TEST_PASSWORD, null, null);
-        logger.info("sid: " + sid);
-        assertTrue(sid.length() > 50);
+        assertEquals(IgCredentials.SID_LENGTH, sid.length());
         String publicId = retrievePublicId(sid);
-        logger.info("publicId: " + publicId);
-        assertTrue(publicId.length() > 20);
+        assertEquals(IgCredentials.PUBLIC_ID_LENGTH, publicId.length());
         IgCredentials igCredentials = IgCredentials.retrieveIgCredentials(sid);
         assertTrue("Invalid igCredentials: " + igCredentials, igCredentials.validate());
 
+        // Clean all files under TEST_HOSTING_FOLDER.
+        HostingIGoogleUtil.cleanFiles(sid, publicId, igCredentials, TEST_HOSTING_FOLDER);
+        List<String> fileNameList = retrieveFileNameList(sid, publicId, TEST_HOSTING_FOLDER);
+        assertEquals(0, fileNameList.size());
+
         // Upload file.
         HostingIGoogleUtil.uploadFiles(
-                sid, publicId, igCredentials, TEST_TARGET_PATH, DUMMY_HOST_FOLDER);
+                sid, publicId, igCredentials, TEST_TARGET_PATH, TEST_HOSTING_FOLDER);
 
-        // Retrieve directory/file info.
+        // Retrieve quota info.
         String quotaByte = retrieveQuotaByte(sid, publicId);
-        logger.info("quotaByte: " + quotaByte);
+        logger.fine("quotaByte: " + quotaByte);
+        assertTrue(Integer.valueOf(quotaByte) > MIN_QUOTA_BYTE);
         String quotaByteUsed = retrieveQuotaByteUsed(sid, publicId);
-        logger.info("quotaByteUsed: " + quotaByteUsed);
-        assertTrue(Integer.valueOf(quotaByteUsed) > 100); // dummy_gadget.xml size > 100
-        String fileList = retrieveFileList(sid, publicId);
-        logger.info("fileList:\n" + fileList);
-        assertTrue(fileList.length() > 50);
-        String hostedFileUrl =
-                formHostedFileUrl(publicId, DUMMY_HOST_FOLDER, GADGET_XML_FILE_RELATIVE_PATH);
-        String fileContent = sendHttpRequestToIg(hostedFileUrl, sid);
-        logger.info("fileContent:\n" + fileContent);
-        assertTrue(fileContent.startsWith("<?xml version"));
+        logger.fine("quotaByteUsed: " + quotaByteUsed);
+        assertTrue(Integer.valueOf(quotaByteUsed) > TEST_MIN_QUOTA_BYTE_USED);
 
-        // Delete the uploaded gadget file.
-        String fileName = DUMMY_HOST_FOLDER + GADGET_XML_FILE_RELATIVE_PATH;
-        HostingIGoogleUtil.deleteFile(sid, publicId, fileName, igCredentials);
-        // TODO: (p0) Assert something for delete.
+        // Retrieve all files list.
+        fileNameList = retrieveFileNameList(sid, publicId, TEST_HOSTING_FOLDER);
+        assertEquals(TEST_HOSTED_FILES_COUNT, fileNameList.size());
+
+        // Retrieve file content.
+        String hostedFileUrl =
+                formHostedFileUrl(publicId, TEST_HOSTING_FOLDER, GADGET_XML_FILE_RELATIVE_PATH);
+        String fileContent = sendHttpRequestToIg(hostedFileUrl, sid);
+        logger.fine("fileContent:\n" + fileContent);
+        assertTrue(fileContent.startsWith(TEST_GADGET_FILE_START_CONTENT));
     }
 
     /**
@@ -131,8 +137,8 @@ public class HostingIGoogleUtilTest {
     public void testFindAllRelativeFilePaths() {
         List<String> filePaths = findAllRelativeFilePaths(TEST_TARGET_PATH);
 
-        // Verify the 6 testing files are found.
-        assertEquals(6, filePaths.size());
+        // Verify the testing files are found.
+        assertEquals(TEST_HOSTED_FILES_COUNT, filePaths.size());
         for (String filePath : filePaths) {
             logger.info("filePath: " + filePath);
         }
