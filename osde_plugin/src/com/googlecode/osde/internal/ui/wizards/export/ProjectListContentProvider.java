@@ -24,15 +24,15 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 class ProjectListContentProvider implements IStructuredContentProvider {
-	
-	public void dispose() {
-	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
+    public void dispose() {
+    }
 
-	public Object[] getElements(Object inputElement) {
-		return ((List<IProject>)inputElement).toArray();
-	}
-	
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    }
+
+    public Object[] getElements(Object inputElement) {
+        return ((List<IProject>) inputElement).toArray();
+    }
+
 }

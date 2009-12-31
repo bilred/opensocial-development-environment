@@ -25,104 +25,104 @@ import com.google.gadgets.ViewType;
 @SuppressWarnings("serial")
 public class GadgetViewData implements Serializable {
 
-	private ViewName viewName;
-	
-	private ViewType type;
-	
-	private boolean createExternalJavaScript;
-	
-	private boolean createInitFunction;
-	
-	private String href;
-	
-	private boolean createSampleCodeSet;
-	
-	private boolean createPeople;
-	
-	private boolean createActivity;
-	
-	private boolean createAppData;
-	
-	private String filename;
+    private ViewName viewName;
 
-	public String getFilename() {
-		return filename;
-	}
+    private ViewType type;
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+    private boolean createExternalJavaScript;
 
-	public ViewName getViewName() {
-		return viewName;
-	}
+    private boolean createInitFunction;
 
-	public void setViewName(ViewName viewName) {
-		this.viewName = viewName;
-	}
+    private String href;
 
-	public ViewType getType() {
-		return type;
-	}
+    private boolean createSampleCodeSet;
 
-	public void setType(ViewType type) {
-		this.type = type;
-	}
+    private boolean createPeople;
 
-	public boolean isCreateExternalJavaScript() {
-		return createExternalJavaScript;
-	}
+    private boolean createActivity;
 
-	public void setCreateExternalJavaScript(boolean createExternalJavaScript) {
-		this.createExternalJavaScript = createExternalJavaScript;
-	}
+    private boolean createAppData;
 
-	public boolean isCreateInitFunction() {
-		return createInitFunction;
-	}
+    private String filename;
 
-	public void setCreateInitFunction(boolean createInitFunction) {
-		this.createInitFunction = createInitFunction;
-	}
+    public String getFilename() {
+        return filename;
+    }
 
-	public String getHref() {
-		return href;
-	}
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
-	public void setHref(String href) {
-		this.href = href;
-	}
+    public ViewName getViewName() {
+        return viewName;
+    }
 
-	public boolean isCreateSampleCodeSet() {
-		return createSampleCodeSet;
-	}
+    public void setViewName(ViewName viewName) {
+        this.viewName = viewName;
+    }
 
-	public void setCreateSampleCodeSet(boolean createSampleCodeSet) {
-		this.createSampleCodeSet = createSampleCodeSet;
-	}
+    public ViewType getType() {
+        return type;
+    }
 
-	public boolean isCreatePeople() {
-		return createPeople;
-	}
+    public void setType(ViewType type) {
+        this.type = type;
+    }
 
-	public void setCreatePeople(boolean createPeople) {
-		this.createPeople = createPeople;
-	}
+    public boolean isCreateExternalJavaScript() {
+        return createExternalJavaScript;
+    }
 
-	public boolean isCreateActivity() {
-		return createActivity;
-	}
+    public void setCreateExternalJavaScript(boolean createExternalJavaScript) {
+        this.createExternalJavaScript = createExternalJavaScript;
+    }
 
-	public void setCreateActivity(boolean createActivity) {
-		this.createActivity = createActivity;
-	}
+    public boolean isCreateInitFunction() {
+        return createInitFunction;
+    }
 
-	public boolean isCreateAppData() {
-		return createAppData;
-	}
+    public void setCreateInitFunction(boolean createInitFunction) {
+        this.createInitFunction = createInitFunction;
+    }
 
-	public void setCreateAppData(boolean createAppData) {
-		this.createAppData = createAppData;
-	}
-	
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public boolean isCreateSampleCodeSet() {
+        return createSampleCodeSet;
+    }
+
+    public void setCreateSampleCodeSet(boolean createSampleCodeSet) {
+        this.createSampleCodeSet = createSampleCodeSet;
+    }
+
+    public boolean isCreatePeople() {
+        return createPeople;
+    }
+
+    public void setCreatePeople(boolean createPeople) {
+        this.createPeople = createPeople;
+    }
+
+    public boolean isCreateActivity() {
+        return createActivity;
+    }
+
+    public void setCreateActivity(boolean createActivity) {
+        this.createActivity = createActivity;
+    }
+
+    public boolean isCreateAppData() {
+        return createAppData;
+    }
+
+    public void setCreateAppData(boolean createAppData) {
+        this.createAppData = createAppData;
+    }
+
 }

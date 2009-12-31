@@ -34,93 +34,93 @@ import org.eclipse.swt.widgets.Text;
 
 public class AddAppDataDialog extends TitleAreaDialog {
 
-	private Text keyText;
-	private Text valueText;
-	
-	private String key;
-	private String value;
-	
-	private ModifyListener modifyListener = new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
-			validate();
-		}
-	};
+    private Text keyText;
+    private Text valueText;
 
-	public AddAppDataDialog(Shell shell) {
-		super(shell);
-	}
-	
-	private boolean validate() {
-		String id = keyText.getText();
-		if (StringUtils.isEmpty(id)) {
-			setMessage("Please fill the key field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		String displayName = valueText.getText();
-		if (StringUtils.isEmpty(displayName)) {
-			setMessage("Please fill the value field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		setMessage(null);
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
-		return true;
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		setTitle("Add new application data");
-		setMessage("Please input key and value.");
-		Composite composite = (Composite)super.createDialogArea(parent);
-		Composite panel = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		panel.setLayoutData(layoutData);
-		//
-		Label label = new Label(panel, SWT.NONE);
-		label.setText("Key:");
-		keyText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		keyText.setLayoutData(layoutData);
-		keyText.addModifyListener(modifyListener);
-		//
-		label = new Label(panel, SWT.NONE);
-		label.setText("Value:");
-		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-		layoutData.verticalAlignment = 5;
-		label.setLayoutData(layoutData);
-		valueText = new Text(panel, SWT.MULTI | SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_BOTH);
-		layoutData.heightHint = 100;
-		valueText.setLayoutData(layoutData);
-		valueText.addModifyListener(modifyListener);
-		//
-		return composite;
-	}
+    private String key;
+    private String value;
 
-	@Override
-	protected void okPressed() {
-		key = keyText.getText();
-		value = valueText.getText();
-		setReturnCode(OK);
-		close();
-	}
+    private ModifyListener modifyListener = new ModifyListener() {
+        public void modifyText(ModifyEvent e) {
+            validate();
+        }
+    };
 
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		super.createButtonsForButtonBar(parent);
-		getButton(IDialogConstants.OK_ID).setEnabled(false);
-	}
+    public AddAppDataDialog(Shell shell) {
+        super(shell);
+    }
 
-	public String getKey() {
-		return key;
-	}
+    private boolean validate() {
+        String id = keyText.getText();
+        if (StringUtils.isEmpty(id)) {
+            setMessage("Please fill the key field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        String displayName = valueText.getText();
+        if (StringUtils.isEmpty(displayName)) {
+            setMessage("Please fill the value field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        setMessage(null);
+        getButton(IDialogConstants.OK_ID).setEnabled(true);
+        return true;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        setTitle("Add new application data");
+        setMessage("Please input key and value.");
+        Composite composite = (Composite) super.createDialogArea(parent);
+        Composite panel = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        panel.setLayout(layout);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        panel.setLayoutData(layoutData);
+        //
+        Label label = new Label(panel, SWT.NONE);
+        label.setText("Key:");
+        keyText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        keyText.setLayoutData(layoutData);
+        keyText.addModifyListener(modifyListener);
+        //
+        label = new Label(panel, SWT.NONE);
+        label.setText("Value:");
+        layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+        layoutData.verticalAlignment = 5;
+        label.setLayoutData(layoutData);
+        valueText = new Text(panel, SWT.MULTI | SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_BOTH);
+        layoutData.heightHint = 100;
+        valueText.setLayoutData(layoutData);
+        valueText.addModifyListener(modifyListener);
+        //
+        return composite;
+    }
+
+    @Override
+    protected void okPressed() {
+        key = keyText.getText();
+        value = valueText.getText();
+        setReturnCode(OK);
+        close();
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value;
+    }
 
 }

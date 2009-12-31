@@ -25,14 +25,14 @@ import org.eclipse.jface.viewers.Viewer;
 
 public class FriendListContentProvider implements IStructuredContentProvider {
 
-	public Object[] getElements(Object inputElement) {
-		return ((List<RelationshipImpl>)inputElement).toArray();
-	}
+    public Object[] getElements(Object inputElement) {
+        return ((List<RelationshipImpl>) inputElement).toArray();
+    }
 
-	public void dispose() {
-	}
+    public void dispose() {
+    }
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    }
 
 }

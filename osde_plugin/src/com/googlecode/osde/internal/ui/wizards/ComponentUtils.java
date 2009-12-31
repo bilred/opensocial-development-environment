@@ -29,44 +29,44 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ComponentUtils {
 
-	public static Label createLabel(Composite parent, String text) {
-		Label label = new Label(parent, SWT.NONE);
-		label.setText(text);
-		GridData layoutData = new GridData();
-		layoutData.verticalAlignment = SWT.BEGINNING;
-		layoutData.verticalIndent = 7;
-		label.setLayoutData(layoutData);
-		label.setFont(parent.getFont());
-		return label;
-	}
+    public static Label createLabel(Composite parent, String text) {
+        Label label = new Label(parent, SWT.NONE);
+        label.setText(text);
+        GridData layoutData = new GridData();
+        layoutData.verticalAlignment = SWT.BEGINNING;
+        layoutData.verticalIndent = 7;
+        label.setLayoutData(layoutData);
+        label.setFont(parent.getFont());
+        return label;
+    }
 
-	public static Text createText(Composite parent) {
-		Text text = new Text(parent, SWT.BORDER);
-		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		text.setFont(parent.getFont());
-		return text;
-	}
+    public static Text createText(Composite parent) {
+        Text text = new Text(parent, SWT.BORDER);
+        text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        text.setFont(parent.getFont());
+        return text;
+    }
 
-	public static Button createCheckbox(Composite parent, String text) {
-		Button button = new Button(parent, SWT.CHECK);
-		button.setText(text);
-		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		button.setFont(parent.getFont());
-		return button;
-	}
+    public static Button createCheckbox(Composite parent, String text) {
+        Button button = new Button(parent, SWT.CHECK);
+        button.setText(text);
+        button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        button.setFont(parent.getFont());
+        return button;
+    }
 
-	public static Button createRadio(Composite parent, String text) {
-		return createRadio(parent, text, 1);
-	}
+    public static Button createRadio(Composite parent, String text) {
+        return createRadio(parent, text, 1);
+    }
 
-	public static Button createRadio(Composite parent, String text, int span) {
-		Button button = new Button(parent, SWT.RADIO);
-		button.setText(text);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.horizontalSpan = span;
-		button.setLayoutData(layoutData);
-		button.setFont(parent.getFont());
-		return button;
-	}
+    public static Button createRadio(Composite parent, String text, int span) {
+        Button button = new Button(parent, SWT.RADIO);
+        button.setText(text);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        layoutData.horizontalSpan = span;
+        button.setLayoutData(layoutData);
+        button.setFont(parent.getFont());
+        return button;
+    }
 
 }

@@ -27,26 +27,27 @@ import org.eclipse.swt.graphics.Image;
 
 class PersonListLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-	public Image getColumnImage(Object element, int columnIndex) {
-		switch(columnIndex) {
-		case 0:
-			ImageDescriptor descriptor = Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_user.gif");
-			return descriptor.createImage();
-		default:
-			return null;
-		}
-	}
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                ImageDescriptor descriptor = Activator.getDefault().getImageRegistry()
+                        .getDescriptor("icons/icon_user.gif");
+                return descriptor.createImage();
+            default:
+                return null;
+        }
+    }
 
-	public String getColumnText(Object element, int columnIndex) {
-		Person person = (Person)element;
-		switch(columnIndex) {
-		case 1:
-			return person.getId();
+    public String getColumnText(Object element, int columnIndex) {
+        Person person = (Person) element;
+        switch (columnIndex) {
+            case 1:
+                return person.getId();
 //		case 2:
 //			return person.getDisplayName();
-		default:
-			return null;
-		}
-	}
-	
+            default:
+                return null;
+        }
+    }
+
 }

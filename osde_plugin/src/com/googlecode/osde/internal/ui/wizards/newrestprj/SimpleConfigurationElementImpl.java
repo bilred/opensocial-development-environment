@@ -25,63 +25,63 @@ import org.eclipse.core.runtime.InvalidRegistryObjectException;
 
 public class SimpleConfigurationElementImpl implements IConfigurationElement {
 
-	public Object createExecutableExtension(String propertyName) throws CoreException {
-		return null;
-	}
-	
-	public String getAttribute(String name) throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public String getAttributeAsIs(String name) throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public String[] getAttributeNames() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public IConfigurationElement[] getChildren() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public IConfigurationElement[] getChildren(String name) throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public IContributor getContributor() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public IExtension getDeclaringExtension() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public String getName() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public String getNamespace() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public String getNamespaceIdentifier() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public Object getParent() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public String getValue() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public String getValueAsIs() throws InvalidRegistryObjectException {
-		return null;
-	}
-	
-	public boolean isValid() {
-		return false;
-	}
+    public Object createExecutableExtension(String propertyName) throws CoreException {
+        return null;
+    }
+
+    public String getAttribute(String name) throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public String getAttributeAsIs(String name) throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public String[] getAttributeNames() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public IConfigurationElement[] getChildren() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public IConfigurationElement[] getChildren(String name) throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public IContributor getContributor() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public IExtension getDeclaringExtension() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public String getName() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public String getNamespace() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public String getNamespaceIdentifier() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public Object getParent() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public String getValue() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public String getValueAsIs() throws InvalidRegistryObjectException {
+        return null;
+    }
+
+    public boolean isValid() {
+        return false;
+    }
 }

@@ -34,89 +34,89 @@ import org.eclipse.swt.widgets.Text;
 
 public class NewPersonDialog extends TitleAreaDialog {
 
-	private Text idText;
-	private Text displayNameText;
-	
-	private String id;
-	private String displayName;
-	
-	private ModifyListener modifyListener = new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
-			validate();
-		}
-	};
+    private Text idText;
+    private Text displayNameText;
 
-	public NewPersonDialog(Shell shell) {
-		super(shell);
-	}
-	
-	private boolean validate() {
-		String id = idText.getText();
-		if (StringUtils.isEmpty(id)) {
-			setMessage("Please fill the ID field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		String displayName = displayNameText.getText();
-		if (StringUtils.isEmpty(displayName)) {
-			setMessage("Please fill the Display name field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		setMessage(null);
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
-		return true;
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		setTitle("Create new person");
-		setMessage("Please input Person ID and display name.");
-		Composite composite = (Composite)super.createDialogArea(parent);
-		Composite panel = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		panel.setLayoutData(layoutData);
-		//
-		Label label = new Label(panel, SWT.NONE);
-		label.setText("ID:");
-		idText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		idText.setLayoutData(layoutData);
-		idText.addModifyListener(modifyListener);
-		//
-		label = new Label(panel, SWT.NONE);
-		label.setText("Display name:");
-		displayNameText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		displayNameText.setLayoutData(layoutData);
-		displayNameText.addModifyListener(modifyListener);
-		//
-		return composite;
-	}
+    private String id;
+    private String displayName;
 
-	@Override
-	protected void okPressed() {
-		id = idText.getText();
-		displayName = displayNameText.getText();
-		setReturnCode(OK);
-		close();
-	}
+    private ModifyListener modifyListener = new ModifyListener() {
+        public void modifyText(ModifyEvent e) {
+            validate();
+        }
+    };
 
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		super.createButtonsForButtonBar(parent);
-		getButton(IDialogConstants.OK_ID).setEnabled(false);
-	}
+    public NewPersonDialog(Shell shell) {
+        super(shell);
+    }
 
-	public String getId() {
-		return id;
-	}
+    private boolean validate() {
+        String id = idText.getText();
+        if (StringUtils.isEmpty(id)) {
+            setMessage("Please fill the ID field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        String displayName = displayNameText.getText();
+        if (StringUtils.isEmpty(displayName)) {
+            setMessage("Please fill the Display name field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        setMessage(null);
+        getButton(IDialogConstants.OK_ID).setEnabled(true);
+        return true;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        setTitle("Create new person");
+        setMessage("Please input Person ID and display name.");
+        Composite composite = (Composite) super.createDialogArea(parent);
+        Composite panel = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        panel.setLayout(layout);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        panel.setLayoutData(layoutData);
+        //
+        Label label = new Label(panel, SWT.NONE);
+        label.setText("ID:");
+        idText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        idText.setLayoutData(layoutData);
+        idText.addModifyListener(modifyListener);
+        //
+        label = new Label(panel, SWT.NONE);
+        label.setText("Display name:");
+        displayNameText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        displayNameText.setLayoutData(layoutData);
+        displayNameText.addModifyListener(modifyListener);
+        //
+        return composite;
+    }
+
+    @Override
+    protected void okPressed() {
+        id = idText.getText();
+        displayName = displayNameText.getText();
+        setReturnCode(OK);
+        close();
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 
 }
