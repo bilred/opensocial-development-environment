@@ -46,7 +46,7 @@ import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.URL_IG;
  * (http://www.google.com/ig) gadget container.
  * <p>
  * Samples of usages could be found at
- * {@link HostingIGoogleUtilTest#testAuthenticationAndUploadAndRetrieveAndDeleteFiles()}.
+ * {@link HostingIGoogleUtilTest#testLifeCycleForHostedFile()} etc.
  *
  * @author albert.cheng.ig@gmail.com
  */
@@ -207,11 +207,39 @@ public class HostingIGoogleUtil {
         return response;
     }
 
-    static String retrieveFileList(String sid, String publicId)
+    /**
+     * Retrieves list of file names under hosting folder.
+     * Returns empty list if no file is found.
+     *
+     * @throws HostingException
+     */
+    static List<String> retrieveFileNameList(String sid, String publicId, String hostingFolder)
             throws HostingException {
         String url = URL_IG_GADGETS_DIRECTORY + publicId;
-        String response = sendHttpRequestToIg(url, sid);
-        return response;
+        String allFilesString = sendHttpRequestToIg(url, sid);
+        List<String> allFileNameList = new ArrayList<String>();
+
+        // Return empty List when no file is found.
+        if (allFilesString.indexOf("<title>404 Not Found</title>") != -1) {
+            return allFileNameList;
+        }
+
+        // Form List of files.
+        String[] allFilesArray = allFilesString.split("\\n");
+        // Sample of details of each file (namely, each line of returned content):
+        // "39 text/plain; charset=UTF-8 dummy_host_folder/dummy_folder/dummy_file.xml"
+        // So, make sure the hostingFolder should not start with "/".
+        if (hostingFolder.startsWith("/")) {
+            hostingFolder = hostingFolder.substring(1);
+        }
+        for (String file : allFilesArray) {
+            String[] fileInfo = file.split(" ");
+            String fileName = fileInfo[fileInfo.length - 1];
+            if (fileName.startsWith(hostingFolder)) {
+                allFileNameList.add(fileName);
+            }
+        }
+        return allFileNameList;
     }
 
     /**
@@ -291,7 +319,7 @@ public class HostingIGoogleUtil {
      * @return url for previewing
      * @throws HostingException
      */
-    // TODO (p1): Utilize formPreviewOpenSocialGadgetUrl() when server is ready.
+    // TODO: (p1) Utilize formPreviewOpenSocialGadgetUrl() when server is ready.
     public static String formPreviewOpenSocialGadgetUrl(
             String hostedFileUrl, boolean useCanvasView, String sid)
             throws HostingException {
@@ -319,6 +347,11 @@ public class HostingIGoogleUtil {
         // Validate igCredentials.
         if (!igCredentials.validate()) {
             throw new HostingException("Invalid igCredentials: " + igCredentials);
+        }
+
+        // Make sure fileName starts with "/".
+        if (!fileName.startsWith("/")) {
+            fileName = "/" + fileName;
         }
 
         // Prepare HttpPost.
@@ -352,8 +385,17 @@ public class HostingIGoogleUtil {
         }
     }
 
+    /**
+     * Cleans all files as hosted under the given hosting folder in iGoogle.
+     *
+     * @throws HostingException
+     */
     public static void cleanFiles(String sid, String publicId, IgCredentials igCredentials,
-            String hostingFolder) {
-        // TODO: (p0) Implement cleanFiles()
+            String hostingFolder) throws HostingException {
+        List<String> hostedFilesList = retrieveFileNameList(sid, publicId, hostingFolder);
+        logger.fine("file count: " + hostedFilesList.size());
+        for (String file : hostedFilesList) {
+            deleteFile(sid, publicId, file, igCredentials);
+        }
     }
 }
