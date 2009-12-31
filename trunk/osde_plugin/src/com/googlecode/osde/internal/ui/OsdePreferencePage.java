@@ -36,11 +36,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -287,7 +285,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
      * @param dialogTitle The title of file dialog.
      * @param backfillText The text field which accepts the chosen file path.
      * @param extensionFilters Optional list of file extension filters used
-     *     by the file dialog.
+     * by the file dialog.
      * @return A new button instance.
      */
     private Button createFileButton(Composite parent, final String dialogTitle,

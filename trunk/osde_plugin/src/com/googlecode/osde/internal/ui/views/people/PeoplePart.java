@@ -54,149 +54,157 @@ import org.eclipse.ui.forms.widgets.Section;
 
 public class PeoplePart extends SectionPart implements IPartSelectionListener {
 
-	private TableViewer personList;
-	private PersonView personView;
+    private TableViewer personList;
+    private PersonView personView;
 
-	public PeoplePart(Composite parent, IManagedForm managedForm, PersonView personView) {
-		super(parent, managedForm.getToolkit(), ExpandableComposite.TITLE_BAR);
-		initialize(managedForm);
-		createContents(getSection(), managedForm.getToolkit());
-		this.personView = personView;
-	}
+    public PeoplePart(Composite parent, IManagedForm managedForm, PersonView personView) {
+        super(parent, managedForm.getToolkit(), ExpandableComposite.TITLE_BAR);
+        initialize(managedForm);
+        createContents(getSection(), managedForm.getToolkit());
+        this.personView = personView;
+    }
 
-	private void createContents(Section section, FormToolkit toolkit) {
-		section.setText("People ");
-		Composite composite = toolkit.createComposite(section);
-		composite.setLayout(new GridLayout(2, false));
-		// Person list
-		Table table = toolkit.createTable(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		GridData layoutData = new GridData(GridData.FILL_BOTH);
-		table.setLayoutData(layoutData);
-		TableColumn column = new TableColumn(table, SWT.LEFT, 0);
-		column.setText("");
-		column.setWidth(20);
-		column = new TableColumn(table, SWT.LEFT, 1);
-		column.setText("ID");
-		column.setWidth(120);
-		personList = new TableViewer(table);
-		personList.setContentProvider(new PersonListContentProvider());
-		personList.setLabelProvider(new PersonListLabelProvider());
-		final SectionPart part = new SectionPart(section);
-		personList.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				getManagedForm().fireSelectionChanged(part, event.getSelection());
-			}
-		});
-		// Buttons
-		Composite buttonPane = toolkit.createComposite(composite);
-		buttonPane.setLayout(new GridLayout());
-		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-		buttonPane.setLayoutData(layoutData);
-		Button addButton = toolkit.createButton(buttonPane, "New", SWT.PUSH);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.verticalAlignment = GridData.BEGINNING;
-		addButton.setLayoutData(layoutData);
-		addButton.addSelectionListener(new NewButtonSelectionListener());
-		Button deleteButton = toolkit.createButton(buttonPane, "Delete", SWT.PUSH);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.verticalAlignment = GridData.BEGINNING;
-		deleteButton.setLayoutData(layoutData);
-		deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
-		//
-		section.setClient(composite);
-	}
+    private void createContents(Section section, FormToolkit toolkit) {
+        section.setText("People ");
+        Composite composite = toolkit.createComposite(section);
+        composite.setLayout(new GridLayout(2, false));
+        // Person list
+        Table table = toolkit.createTable(composite,
+                SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+        GridData layoutData = new GridData(GridData.FILL_BOTH);
+        table.setLayoutData(layoutData);
+        TableColumn column = new TableColumn(table, SWT.LEFT, 0);
+        column.setText("");
+        column.setWidth(20);
+        column = new TableColumn(table, SWT.LEFT, 1);
+        column.setText("ID");
+        column.setWidth(120);
+        personList = new TableViewer(table);
+        personList.setContentProvider(new PersonListContentProvider());
+        personList.setLabelProvider(new PersonListLabelProvider());
+        final SectionPart part = new SectionPart(section);
+        personList.addSelectionChangedListener(new ISelectionChangedListener() {
+            public void selectionChanged(SelectionChangedEvent event) {
+                getManagedForm().fireSelectionChanged(part, event.getSelection());
+            }
+        });
+        // Buttons
+        Composite buttonPane = toolkit.createComposite(composite);
+        buttonPane.setLayout(new GridLayout());
+        layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+        buttonPane.setLayoutData(layoutData);
+        Button addButton = toolkit.createButton(buttonPane, "New", SWT.PUSH);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        layoutData.verticalAlignment = GridData.BEGINNING;
+        addButton.setLayoutData(layoutData);
+        addButton.addSelectionListener(new NewButtonSelectionListener());
+        Button deleteButton = toolkit.createButton(buttonPane, "Delete", SWT.PUSH);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        layoutData.verticalAlignment = GridData.BEGINNING;
+        deleteButton.setLayoutData(layoutData);
+        deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
+        //
+        section.setClient(composite);
+    }
 
-	public void setPeople(List<Person> people) {
-		personList.setInput(people);
-	}
+    public void setPeople(List<Person> people) {
+        personList.setInput(people);
+    }
 
-	public void selectionChanged(IFormPart part, ISelection selection) {
-		if (part == this) {
-			return;
-		}
-		if (!(selection instanceof IStructuredSelection)) {
-			return;
-		}
-		personList.refresh((Person)((IStructuredSelection)selection).getFirstElement());
-	}
+    public void selectionChanged(IFormPart part, ISelection selection) {
+        if (part == this) {
+            return;
+        }
+        if (!(selection instanceof IStructuredSelection)) {
+            return;
+        }
+        personList.refresh((Person) ((IStructuredSelection) selection).getFirstElement());
+    }
 
-	private class DeleteButtonSelectionListener implements SelectionListener {
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
+    private class DeleteButtonSelectionListener implements SelectionListener {
+        public void widgetDefaultSelected(SelectionEvent e) {
+        }
 
-		public void widgetSelected(SelectionEvent e) {
-			ISelection selection = personList.getSelection();
-			if (!selection.isEmpty()) {
-				IStructuredSelection structured = (IStructuredSelection)selection;
-				final Person person = (Person)structured.getFirstElement();
-				if (MessageDialog.openConfirm(personView.getSite().getShell(),
-						"Deleting person", "Do you want to delete person '" + person.getId() + "'?")) {
-					Job job = new Job("Create new person") {
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
-							monitor.beginTask("Deleting person from Shindig database.", 1);
-							personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
-								public void run() {
-									try {
-										PersonService personService = Activator.getDefault().getPersonService();
-										personService.deletePerson(person);
-										List<Person> input = (List<Person>)personList.getInput();
-										input.remove(person);
-										personList.refresh();
-									} catch(ConnectionException e) {
-										MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
-									}
-								}
-							});
-							monitor.worked(1);
-							monitor.done();
-							return Status.OK_STATUS;
-						}
-					};
-					job.schedule();
-				}
-			}
-		}
-	}
+        public void widgetSelected(SelectionEvent e) {
+            ISelection selection = personList.getSelection();
+            if (!selection.isEmpty()) {
+                IStructuredSelection structured = (IStructuredSelection) selection;
+                final Person person = (Person) structured.getFirstElement();
+                if (MessageDialog.openConfirm(personView.getSite().getShell(),
+                        "Deleting person",
+                        "Do you want to delete person '" + person.getId() + "'?")) {
+                    Job job = new Job("Create new person") {
+                        @Override
+                        protected IStatus run(IProgressMonitor monitor) {
+                            monitor.beginTask("Deleting person from Shindig database.", 1);
+                            personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
+                                public void run() {
+                                    try {
+                                        PersonService personService =
+                                                Activator.getDefault().getPersonService();
+                                        personService.deletePerson(person);
+                                        List<Person> input = (List<Person>) personList.getInput();
+                                        input.remove(person);
+                                        personList.refresh();
+                                    } catch (ConnectionException e) {
+                                        MessageDialog
+                                                .openError(personView.getSite().getShell(), "Error",
+                                                        "Shindig database not started yet.");
+                                    }
+                                }
+                            });
+                            monitor.worked(1);
+                            monitor.done();
+                            return Status.OK_STATUS;
+                        }
+                    };
+                    job.schedule();
+                }
+            }
+        }
+    }
 
-	private class NewButtonSelectionListener implements SelectionListener {
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
+    private class NewButtonSelectionListener implements SelectionListener {
+        public void widgetDefaultSelected(SelectionEvent e) {
+        }
 
-		public void widgetSelected(SelectionEvent e) {
-			if (Activator.getDefault().isRunningShindig()) {
-				NewPersonDialog dialog = new NewPersonDialog(getSection().getShell());
-				if (dialog.open() == Window.OK) {
-					final String id = dialog.getId();
-					final String displayName = dialog.getDisplayName();
-					Job job = new Job("Create new person") {
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
-							monitor.beginTask("Creating new person to Shindig database.", 1);
-							personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
-								public void run() {
-									try {
-										PersonService service = Activator.getDefault().getPersonService();
-										Person person = service.createNewPerson(id, displayName);
-										List<Person> input = (List<Person>)personList.getInput();
-										input.add(person);
-										personList.refresh();
-									} catch(ConnectionException e) {
-										MessageDialog.openError(personView.getSite().getShell(), "Error", "Shindig database not started yet.");
-									}
-								}
-							});
-							monitor.worked(1);
-							monitor.done();
-							return Status.OK_STATUS;
-						}
-					};
-					job.schedule();
-				}
-			}
-		}
-	}
+        public void widgetSelected(SelectionEvent e) {
+            if (Activator.getDefault().isRunningShindig()) {
+                NewPersonDialog dialog = new NewPersonDialog(getSection().getShell());
+                if (dialog.open() == Window.OK) {
+                    final String id = dialog.getId();
+                    final String displayName = dialog.getDisplayName();
+                    Job job = new Job("Create new person") {
+                        @Override
+                        protected IStatus run(IProgressMonitor monitor) {
+                            monitor.beginTask("Creating new person to Shindig database.", 1);
+                            personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
+                                public void run() {
+                                    try {
+                                        PersonService service =
+                                                Activator.getDefault().getPersonService();
+                                        Person person = service.createNewPerson(id, displayName);
+                                        List<Person> input = (List<Person>) personList.getInput();
+                                        input.add(person);
+                                        personList.refresh();
+                                    } catch (ConnectionException e) {
+                                        MessageDialog
+                                                .openError(personView.getSite().getShell(), "Error",
+                                                        "Shindig database not started yet.");
+                                    }
+                                }
+                            });
+                            monitor.worked(1);
+                            monitor.done();
+                            return Status.OK_STATUS;
+                        }
+                    };
+                    job.schedule();
+                }
+            }
+        }
+    }
 
 }

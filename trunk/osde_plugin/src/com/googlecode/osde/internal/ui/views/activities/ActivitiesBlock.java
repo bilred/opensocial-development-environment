@@ -30,49 +30,49 @@ import org.eclipse.ui.forms.MasterDetailsBlock;
 
 public class ActivitiesBlock extends MasterDetailsBlock {
 
-	private ActivitiesPart activitiesPart;
-	private ActivitiesView activitiesView;
-	
-	public ActivitiesBlock(ActivitiesView activitiesView) {
-		super();
-		this.activitiesView = activitiesView;
-	}
+    private ActivitiesPart activitiesPart;
+    private ActivitiesView activitiesView;
 
-	@Override
-	protected void createMasterPart(final IManagedForm managedForm, Composite parent) {
-		activitiesPart = new ActivitiesPart(parent, managedForm, activitiesView);
-		managedForm.addPart(activitiesPart);
-	}
+    public ActivitiesBlock(ActivitiesView activitiesView) {
+        super();
+        this.activitiesView = activitiesView;
+    }
 
-	@Override
-	protected void createToolBarActions(IManagedForm managedForm) {
-	}
+    @Override
+    protected void createMasterPart(final IManagedForm managedForm, Composite parent) {
+        activitiesPart = new ActivitiesPart(parent, managedForm, activitiesView);
+        managedForm.addPart(activitiesPart);
+    }
 
-	@Override
-	protected void registerPages(DetailsPart detailsPart) {
-		final IDetailsPage detailsPage = new ActivityPage(activitiesView);
-		detailsPart.registerPage(Activity.class, detailsPage);
-		detailsPart.setPageProvider(new IDetailsPageProvider() {
+    @Override
+    protected void createToolBarActions(IManagedForm managedForm) {
+    }
 
-			public IDetailsPage getPage(Object key) {
-				if (key.equals(Activity.class)) {
-					return detailsPage;
-				}
-				return null;
-			}
+    @Override
+    protected void registerPages(DetailsPart detailsPart) {
+        final IDetailsPage detailsPage = new ActivityPage(activitiesView);
+        detailsPart.registerPage(Activity.class, detailsPage);
+        detailsPart.setPageProvider(new IDetailsPageProvider() {
 
-			public Object getPageKey(Object object) {
-				if (object instanceof Activity) {
-					return Activity.class;
-				}
-				return object.getClass();
-			}
-			
-		});
-		sashForm.setWeights(new int[]{50, 50});
-	}
+            public IDetailsPage getPage(Object key) {
+                if (key.equals(Activity.class)) {
+                    return detailsPage;
+                }
+                return null;
+            }
 
-	public void setPeople(List<Person> people) {
-		activitiesPart.setPeople(people);
-	}
+            public Object getPageKey(Object object) {
+                if (object instanceof Activity) {
+                    return Activity.class;
+                }
+                return object.getClass();
+            }
+
+        });
+        sashForm.setWeights(new int[] {50, 50});
+    }
+
+    public void setPeople(List<Person> people) {
+        activitiesPart.setPeople(people);
+    }
 }

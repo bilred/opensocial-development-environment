@@ -33,50 +33,52 @@ import org.eclipse.ui.console.IConsoleConstants;
  */
 public class OsdePerspective implements IPerspectiveFactory {
 
-	public void createInitialLayout(IPageLayout factory) {
-		String editorArea = factory.getEditorArea();
-		//
-		IFolderLayout left = factory.createFolder("left", IPageLayout.LEFT, 0.25f, editorArea);
-		left.addView(IPageLayout.ID_RES_NAV);
-		//
-		IFolderLayout bottom = factory.createFolder("bottom", IPageLayout.BOTTOM, 0.70f, editorArea);
-		bottom.addView(PersonView.ID);
-		bottom.addView(ActivitiesView.ID);
-		bottom.addView(AppDataView.ID);
-		bottom.addView(DocumentView.ID);
-		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
-		// Such that plugin user can access the compiler error/warnings easily.
-		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
-		//
-		IFolderLayout leftBottom = factory.createFolder("leftBottom", IPageLayout.BOTTOM, 0.6f, "left");
-		leftBottom.addView(IPageLayout.ID_OUTLINE);
-		leftBottom.addView(UserPrefsView.ID);
-		//
-		factory.addPerspectiveShortcut("org.eclipse.ui.resourcePerspective");
-		//
-		factory.addActionSet("org.eclipse.team.ui.actionSet");
-		factory.addActionSet("org.eclipse.team.cvs.ui.CVSActionSet");
-		factory.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET);
-		//
-		factory.addPerspectiveShortcut("org.eclipse.team.ui.TeamSynchronizingPerspective");
-		factory.addPerspectiveShortcut("org.eclipse.team.cvs.ui.cvsPerspective");
-		factory.addPerspectiveShortcut("org.eclipse.ui.resourcePerspective");
-		//
-		factory.addNewWizardShortcut("org.eclipse.team.cvs.ui.newProjectCheckout");
-		factory.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");
-		factory.addNewWizardShortcut("org.eclipse.ui.wizards.new.file");
-		//
-		factory.addShowViewShortcut(PersonView.ID);
-		factory.addShowViewShortcut(ActivitiesView.ID);
-		factory.addShowViewShortcut(AppDataView.ID);
-		factory.addShowViewShortcut(UserPrefsView.ID);
-		factory.addShowViewShortcut(DocumentView.ID);
-		factory.addShowViewShortcut("org.eclipse.team.ccvs.ui.AnnotateView");
-		factory.addShowViewShortcut("org.eclipse.team.ui.GenericHistoryView");
-		factory.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
-		factory.addShowViewShortcut(IPageLayout.ID_RES_NAV);
-		factory.addShowViewShortcut(IPageLayout.ID_PROBLEM_VIEW);
-		factory.addShowViewShortcut(IPageLayout.ID_OUTLINE);
-	}
+    public void createInitialLayout(IPageLayout factory) {
+        String editorArea = factory.getEditorArea();
+        //
+        IFolderLayout left = factory.createFolder("left", IPageLayout.LEFT, 0.25f, editorArea);
+        left.addView(IPageLayout.ID_RES_NAV);
+        //
+        IFolderLayout bottom =
+                factory.createFolder("bottom", IPageLayout.BOTTOM, 0.70f, editorArea);
+        bottom.addView(PersonView.ID);
+        bottom.addView(ActivitiesView.ID);
+        bottom.addView(AppDataView.ID);
+        bottom.addView(DocumentView.ID);
+        bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
+        // Such that plugin user can access the compiler error/warnings easily.
+        bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
+        //
+        IFolderLayout leftBottom =
+                factory.createFolder("leftBottom", IPageLayout.BOTTOM, 0.6f, "left");
+        leftBottom.addView(IPageLayout.ID_OUTLINE);
+        leftBottom.addView(UserPrefsView.ID);
+        //
+        factory.addPerspectiveShortcut("org.eclipse.ui.resourcePerspective");
+        //
+        factory.addActionSet("org.eclipse.team.ui.actionSet");
+        factory.addActionSet("org.eclipse.team.cvs.ui.CVSActionSet");
+        factory.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET);
+        //
+        factory.addPerspectiveShortcut("org.eclipse.team.ui.TeamSynchronizingPerspective");
+        factory.addPerspectiveShortcut("org.eclipse.team.cvs.ui.cvsPerspective");
+        factory.addPerspectiveShortcut("org.eclipse.ui.resourcePerspective");
+        //
+        factory.addNewWizardShortcut("org.eclipse.team.cvs.ui.newProjectCheckout");
+        factory.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");
+        factory.addNewWizardShortcut("org.eclipse.ui.wizards.new.file");
+        //
+        factory.addShowViewShortcut(PersonView.ID);
+        factory.addShowViewShortcut(ActivitiesView.ID);
+        factory.addShowViewShortcut(AppDataView.ID);
+        factory.addShowViewShortcut(UserPrefsView.ID);
+        factory.addShowViewShortcut(DocumentView.ID);
+        factory.addShowViewShortcut("org.eclipse.team.ccvs.ui.AnnotateView");
+        factory.addShowViewShortcut("org.eclipse.team.ui.GenericHistoryView");
+        factory.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
+        factory.addShowViewShortcut(IPageLayout.ID_RES_NAV);
+        factory.addShowViewShortcut(IPageLayout.ID_PROBLEM_VIEW);
+        factory.addShowViewShortcut(IPageLayout.ID_OUTLINE);
+    }
 
 }

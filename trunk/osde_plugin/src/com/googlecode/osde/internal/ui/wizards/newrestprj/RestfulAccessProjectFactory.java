@@ -57,212 +57,214 @@ import org.eclipse.ui.ide.IDE;
 
 class RestfulAccessProjectFactory implements IRunnableWithProgress {
     private static final Logger logger = new Logger(RestfulAccessProjectFactory.class);
-	private String srcFolderName;
-	private String libFolderName;
-	private IProject newProjectHandle;
-	private String binFolderName;
-	private ApplicationImpl application;
-	private Person person;
-	private IWorkbench workbench;
+    private String srcFolderName;
+    private String libFolderName;
+    private IProject newProjectHandle;
+    private String binFolderName;
+    private ApplicationImpl application;
+    private Person person;
+    private IWorkbench workbench;
 
-	RestfulAccessProjectFactory(String srcFolderName,
-			String libFolderName, IProject newProjectHandle,
-			String binFolderName, ApplicationImpl application,
-			Person person, IWorkbench workbench) {
-		this.srcFolderName = srcFolderName;
-		this.libFolderName = libFolderName;
-		this.newProjectHandle = newProjectHandle;
-		this.binFolderName = binFolderName;
-		this.application = application;
-		this.person = person;
-		this.workbench = workbench;
-	}
+    RestfulAccessProjectFactory(String srcFolderName,
+            String libFolderName, IProject newProjectHandle,
+            String binFolderName, ApplicationImpl application,
+            Person person, IWorkbench workbench) {
+        this.srcFolderName = srcFolderName;
+        this.libFolderName = libFolderName;
+        this.newProjectHandle = newProjectHandle;
+        this.binFolderName = binFolderName;
+        this.application = application;
+        this.person = person;
+        this.workbench = workbench;
+    }
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException {
-		try {
-			newProjectHandle.create(monitor);
-			newProjectHandle.open(monitor);
-			//
-			applyJavaNature(monitor);
-			//
-			IJavaProject javaProject = JavaCore.create(newProjectHandle);
-			Set<IClasspathEntry> entries = new HashSet<IClasspathEntry>();
-			//
-			IPath sourcePath = javaProject.getPath().append(srcFolderName);
-			IFolder sourceDir = createSourceDirectory();
-			//
-			IPath outputPath = createOutputDirectory(javaProject);
-			//
-			IClasspathEntry srcEntry = JavaCore.newSourceEntry(sourcePath, new IPath[] {}, outputPath);
-			entries.add(srcEntry);
-			//
-			IPath libPath = javaProject.getPath().append(libFolderName);
-			IFolder libDir = createLibraryDirectory();
-			//
-			copyLibraries(libDir);
-			//
-			applyClasspath(monitor, javaProject, entries, libPath, libDir);
-			//
-			IFolder examplesDir = createExamplesDirectory(sourceDir);
-			//
-			final IFile sampleFile = createSampleCode(examplesDir);
-			//
-			workbench.getDisplay().syncExec(new Runnable() {
-				public void run() {
-					IWorkbenchWindow dw = workbench.getActiveWorkbenchWindow();
-					try {
-						if (dw != null) {
-							IWorkbenchPage page = dw.getActivePage();
-							if (page != null) {
-								IDE.openEditor(page, sampleFile);
-							}
-						}
-					} catch (PartInitException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			});
-			//
-			monitor.worked(1);
-			monitor.done();
-		} catch(CoreException e) {
-			throw new InvocationTargetException(e);
-		}
-	}
+    public void run(IProgressMonitor monitor) throws InvocationTargetException {
+        try {
+            newProjectHandle.create(monitor);
+            newProjectHandle.open(monitor);
+            //
+            applyJavaNature(monitor);
+            //
+            IJavaProject javaProject = JavaCore.create(newProjectHandle);
+            Set<IClasspathEntry> entries = new HashSet<IClasspathEntry>();
+            //
+            IPath sourcePath = javaProject.getPath().append(srcFolderName);
+            IFolder sourceDir = createSourceDirectory();
+            //
+            IPath outputPath = createOutputDirectory(javaProject);
+            //
+            IClasspathEntry srcEntry =
+                    JavaCore.newSourceEntry(sourcePath, new IPath[] {}, outputPath);
+            entries.add(srcEntry);
+            //
+            IPath libPath = javaProject.getPath().append(libFolderName);
+            IFolder libDir = createLibraryDirectory();
+            //
+            copyLibraries(libDir);
+            //
+            applyClasspath(monitor, javaProject, entries, libPath, libDir);
+            //
+            IFolder examplesDir = createExamplesDirectory(sourceDir);
+            //
+            final IFile sampleFile = createSampleCode(examplesDir);
+            //
+            workbench.getDisplay().syncExec(new Runnable() {
+                public void run() {
+                    IWorkbenchWindow dw = workbench.getActiveWorkbenchWindow();
+                    try {
+                        if (dw != null) {
+                            IWorkbenchPage page = dw.getActivePage();
+                            if (page != null) {
+                                IDE.openEditor(page, sampleFile);
+                            }
+                        }
+                    } catch (PartInitException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            //
+            monitor.worked(1);
+            monitor.done();
+        } catch (CoreException e) {
+            throw new InvocationTargetException(e);
+        }
+    }
 
-	private IFile createSampleCode(IFolder examplesDir) throws CoreException {
-		try {
-			String code = ResourceUtil.loadTextResourceFile("/ocl/Sample.tmpl");
-			code = code.replace("$consumer_key$", application.getConsumerKey());
-			code = code.replace("$consumer_secret$", application.getConsumerSecret());
-			code = code.replace("$viewer_id$", person.getId());
-			IFile file = examplesDir.getFile("Sample.java");
-			ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
-			if (!file.exists()) {
-				file.create(bytes, true, null);
-			}
-			return file;
-		} catch (UnsupportedEncodingException e) {
-			logger.error("Creating the Java file failed.", e);
-			throw new IllegalStateException(e);
-		} catch (IOException e) {
-			logger.error("Creating the Java file failed.", e);
-			throw new IllegalStateException(e);
-		}
-		
-	}
+    private IFile createSampleCode(IFolder examplesDir) throws CoreException {
+        try {
+            String code = ResourceUtil.loadTextResourceFile("/ocl/Sample.tmpl");
+            code = code.replace("$consumer_key$", application.getConsumerKey());
+            code = code.replace("$consumer_secret$", application.getConsumerSecret());
+            code = code.replace("$viewer_id$", person.getId());
+            IFile file = examplesDir.getFile("Sample.java");
+            ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
+            if (!file.exists()) {
+                file.create(bytes, true, null);
+            }
+            return file;
+        } catch (UnsupportedEncodingException e) {
+            logger.error("Creating the Java file failed.", e);
+            throw new IllegalStateException(e);
+        } catch (IOException e) {
+            logger.error("Creating the Java file failed.", e);
+            throw new IllegalStateException(e);
+        }
 
-	private IFolder createExamplesDirectory(IFolder sourceDir)
-			throws CoreException {
-		IFolder exampleDir = sourceDir.getFolder("examples");
-		if (!exampleDir.exists()) {
-			exampleDir.create(false, true, null);
-		}
-		return exampleDir;
-	}
+    }
 
-	private IFolder createSourceDirectory() throws CoreException {
-		IFolder sourceDir = newProjectHandle.getFolder(new Path(srcFolderName));
-		if (!sourceDir.exists()) {
-			sourceDir.create(false, true, null);
-		}
-		return sourceDir;
-	}
+    private IFolder createExamplesDirectory(IFolder sourceDir)
+            throws CoreException {
+        IFolder exampleDir = sourceDir.getFolder("examples");
+        if (!exampleDir.exists()) {
+            exampleDir.create(false, true, null);
+        }
+        return exampleDir;
+    }
 
-	private void applyClasspath(IProgressMonitor monitor,
-			final IJavaProject javaProject, Set<IClasspathEntry> entries,
-			IPath libPath, IFolder libDir) throws JavaModelException {
-		IClasspathContainer libContainer = new ClasspathContainerImpl(libDir, libPath);
-		JavaCore.setClasspathContainer(libPath,
-				new IJavaProject[] { javaProject },
-				new IClasspathContainer[] { libContainer }, null);
-		//
-		IClasspathEntry libEntry = JavaCore.newContainerEntry(libPath, null,
-				new IClasspathAttribute[] {}, false);
-		entries.add(libEntry);
-		//
-		entries.add(JavaRuntime.getDefaultJREContainerEntry());
-		javaProject.setRawClasspath(
-				entries.toArray(new IClasspathEntry[entries.size()]), monitor);
-	}
+    private IFolder createSourceDirectory() throws CoreException {
+        IFolder sourceDir = newProjectHandle.getFolder(new Path(srcFolderName));
+        if (!sourceDir.exists()) {
+            sourceDir.create(false, true, null);
+        }
+        return sourceDir;
+    }
 
-	private IFolder createLibraryDirectory() throws CoreException {
-		IFolder libDir = newProjectHandle.getFolder(new Path(libFolderName));
-		if (!libDir.exists()) {
-			libDir.create(false, true, null);
-		}
-		return libDir;
-	}
+    private void applyClasspath(IProgressMonitor monitor,
+            final IJavaProject javaProject, Set<IClasspathEntry> entries,
+            IPath libPath, IFolder libDir) throws JavaModelException {
+        IClasspathContainer libContainer = new ClasspathContainerImpl(libDir, libPath);
+        JavaCore.setClasspathContainer(libPath,
+                new IJavaProject[] {javaProject},
+                new IClasspathContainer[] {libContainer}, null);
+        //
+        IClasspathEntry libEntry = JavaCore.newContainerEntry(libPath, null,
+                new IClasspathAttribute[] {}, false);
+        entries.add(libEntry);
+        //
+        entries.add(JavaRuntime.getDefaultJREContainerEntry());
+        javaProject.setRawClasspath(
+                entries.toArray(new IClasspathEntry[entries.size()]), monitor);
+    }
 
-	private void copyLibraries(IFolder libDir) throws CoreException {
-		String[] jars = new String[] {
-				"commons-codec-1.3.jar", "core-20081027.jar",
-				"javax.servlet_2.4.0.v200806031604.jar", "opensocial-20081218.jar"};
-		for (String jar : jars) {
-			InputStream in = getClass().getResourceAsStream("/ocl/" + jar);
-			IFile jarFile = libDir.getFile(jar);
-			jarFile.create(in, true, null);
-		}
-	}
+    private IFolder createLibraryDirectory() throws CoreException {
+        IFolder libDir = newProjectHandle.getFolder(new Path(libFolderName));
+        if (!libDir.exists()) {
+            libDir.create(false, true, null);
+        }
+        return libDir;
+    }
 
-	private IPath createOutputDirectory(final IJavaProject javaProject)
-			throws CoreException {
-		IPath outputPath = javaProject.getPath().append(binFolderName);
-		IFolder outputDir = newProjectHandle.getFolder(new Path(binFolderName));
-		if (!outputDir.exists()) {
-			outputDir.create(false, true, null);
-		}
-		return outputPath;
-	}
+    private void copyLibraries(IFolder libDir) throws CoreException {
+        String[] jars = new String[] {
+                "commons-codec-1.3.jar", "core-20081027.jar",
+                "javax.servlet_2.4.0.v200806031604.jar", "opensocial-20081218.jar"};
+        for (String jar : jars) {
+            InputStream in = getClass().getResourceAsStream("/ocl/" + jar);
+            IFile jarFile = libDir.getFile(jar);
+            jarFile.create(in, true, null);
+        }
+    }
 
-	private void applyJavaNature(IProgressMonitor monitor) throws CoreException {
-		IProjectDescription description = newProjectHandle.getDescription();
-		String[] natures = description.getNatureIds();
-		String[] newNatures = new String[natures.length + 1];
-		System.arraycopy(natures, 0, newNatures, 0, natures.length);
-		newNatures[natures.length] = JavaCore.NATURE_ID;
-		description.setNatureIds(newNatures);
-		newProjectHandle.setDescription(description, monitor);
-	} 
-	
-	private class ClasspathContainerImpl implements IClasspathContainer {
-		
-		private IFolder libDir;
-		private IPath libPath;
+    private IPath createOutputDirectory(final IJavaProject javaProject)
+            throws CoreException {
+        IPath outputPath = javaProject.getPath().append(binFolderName);
+        IFolder outputDir = newProjectHandle.getFolder(new Path(binFolderName));
+        if (!outputDir.exists()) {
+            outputDir.create(false, true, null);
+        }
+        return outputPath;
+    }
 
-		public ClasspathContainerImpl(IFolder libDir, IPath libPath) {
-			super();
-			this.libDir = libDir;
-			this.libPath = libPath;
-		}
-		
-		public IClasspathEntry[] getClasspathEntries() {
-			List<IClasspathEntry> ices = new ArrayList<IClasspathEntry>();
-			try {
-				IResource[] rs = libDir.members();
-				for (IResource r : rs) {
-					if (r instanceof IFile) {
-						IFile f = (IFile) r;
-						IClasspathEntry entry = JavaCore.newLibraryEntry(f.getFullPath(), null, null, false);
-						ices.add(entry);
-					}
-				}
-			} catch (CoreException e) {
-				logger.error("Adding the classpath entries failed.", e);
-			}
-			return ices.toArray(new IClasspathEntry[ices.size()]);
-		}
+    private void applyJavaNature(IProgressMonitor monitor) throws CoreException {
+        IProjectDescription description = newProjectHandle.getDescription();
+        String[] natures = description.getNatureIds();
+        String[] newNatures = new String[natures.length + 1];
+        System.arraycopy(natures, 0, newNatures, 0, natures.length);
+        newNatures[natures.length] = JavaCore.NATURE_ID;
+        description.setNatureIds(newNatures);
+        newProjectHandle.setDescription(description, monitor);
+    }
 
-		public String getDescription() {
-			return "OpenSocial Java Client Library";
-		}
+    private class ClasspathContainerImpl implements IClasspathContainer {
 
-		public int getKind() {
-			return IClasspathContainer.K_APPLICATION;
-		}
+        private IFolder libDir;
+        private IPath libPath;
 
-		public IPath getPath() {
-			return libPath;
-		}
-	};
+        public ClasspathContainerImpl(IFolder libDir, IPath libPath) {
+            super();
+            this.libDir = libDir;
+            this.libPath = libPath;
+        }
+
+        public IClasspathEntry[] getClasspathEntries() {
+            List<IClasspathEntry> ices = new ArrayList<IClasspathEntry>();
+            try {
+                IResource[] rs = libDir.members();
+                for (IResource r : rs) {
+                    if (r instanceof IFile) {
+                        IFile f = (IFile) r;
+                        IClasspathEntry entry =
+                                JavaCore.newLibraryEntry(f.getFullPath(), null, null, false);
+                        ices.add(entry);
+                    }
+                }
+            } catch (CoreException e) {
+                logger.error("Adding the classpath entries failed.", e);
+            }
+            return ices.toArray(new IClasspathEntry[ices.size()]);
+        }
+
+        public String getDescription() {
+            return "OpenSocial Java Client Library";
+        }
+
+        public int getKind() {
+            return IClasspathContainer.K_APPLICATION;
+        }
+
+        public IPath getPath() {
+            return libPath;
+        }
+    }
 }

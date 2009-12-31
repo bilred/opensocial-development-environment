@@ -34,90 +34,90 @@ import org.eclipse.swt.widgets.Text;
 
 public class AddSiteDialog extends TitleAreaDialog {
 
-	private Text nameText;
-	private Text urlText;
-	
-	private String name;
-	private String url;
-	
-	private ModifyListener modifyListener = new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
-			validate();
-		}
-	};
+    private Text nameText;
+    private Text urlText;
 
-	public AddSiteDialog(Shell shell) {
-		super(shell);
-	}
-	
-	private boolean validate() {
-		String name = nameText.getText();
-		if (StringUtils.isEmpty(name)) {
-			setMessage("Please fill out the Name field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		String url = urlText.getText();
-		if (StringUtils.isEmpty(url)) {
-			setMessage("Please fill out the URL field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		setMessage(null);
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
-		return true;
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		setTitle("Add a new site");
-		setMessage("Please input name and URL.");
-		Composite composite = (Composite)super.createDialogArea(parent);
-		Composite panel = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		panel.setLayoutData(layoutData);
-		//
-		Label label = new Label(panel, SWT.NONE);
-		label.setText("Name:");
-		nameText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		nameText.setLayoutData(layoutData);
-		nameText.addModifyListener(modifyListener);
-		//
-		label = new Label(panel, SWT.NONE);
-		label.setText("URL:");
-		urlText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		urlText.setLayoutData(layoutData);
-		urlText.setText("http://");
-		urlText.addModifyListener(modifyListener);
-		//
-		return composite;
-	}
+    private String name;
+    private String url;
 
-	@Override
-	protected void okPressed() {
-		name = nameText.getText();
-		url = urlText.getText();
-		setReturnCode(OK);
-		close();
-	}
+    private ModifyListener modifyListener = new ModifyListener() {
+        public void modifyText(ModifyEvent e) {
+            validate();
+        }
+    };
 
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		super.createButtonsForButtonBar(parent);
-		getButton(IDialogConstants.OK_ID).setEnabled(false);
-	}
+    public AddSiteDialog(Shell shell) {
+        super(shell);
+    }
 
-	public String getName() {
-		return name;
-	}
+    private boolean validate() {
+        String name = nameText.getText();
+        if (StringUtils.isEmpty(name)) {
+            setMessage("Please fill out the Name field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        String url = urlText.getText();
+        if (StringUtils.isEmpty(url)) {
+            setMessage("Please fill out the URL field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        setMessage(null);
+        getButton(IDialogConstants.OK_ID).setEnabled(true);
+        return true;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        setTitle("Add a new site");
+        setMessage("Please input name and URL.");
+        Composite composite = (Composite) super.createDialogArea(parent);
+        Composite panel = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        panel.setLayout(layout);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        panel.setLayoutData(layoutData);
+        //
+        Label label = new Label(panel, SWT.NONE);
+        label.setText("Name:");
+        nameText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        nameText.setLayoutData(layoutData);
+        nameText.addModifyListener(modifyListener);
+        //
+        label = new Label(panel, SWT.NONE);
+        label.setText("URL:");
+        urlText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        urlText.setLayoutData(layoutData);
+        urlText.setText("http://");
+        urlText.addModifyListener(modifyListener);
+        //
+        return composite;
+    }
+
+    @Override
+    protected void okPressed() {
+        name = nameText.getText();
+        url = urlText.getText();
+        setReturnCode(OK);
+        close();
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 
 }

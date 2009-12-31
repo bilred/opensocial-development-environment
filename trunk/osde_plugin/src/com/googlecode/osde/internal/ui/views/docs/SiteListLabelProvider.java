@@ -28,26 +28,27 @@ import org.eclipse.swt.graphics.Image;
 
 class SiteListLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-	public Image getColumnImage(Object element, int columnIndex) {
-		switch(columnIndex) {
-		case 0:
-			ImageDescriptor descriptor = Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_world.gif");
-			return descriptor.createImage();
-		default:
-			return null;
-		}
-	}
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                ImageDescriptor descriptor = Activator.getDefault().getImageRegistry()
+                        .getDescriptor("icons/icon_world.gif");
+                return descriptor.createImage();
+            default:
+                return null;
+        }
+    }
 
-	public String getColumnText(Object element, int columnIndex) {
-		Map.Entry<String, String> entry = (Map.Entry<String, String>)element;
-		switch(columnIndex) {
-		case 1:
-			return entry.getKey();
-		case 2:
-			return entry.getValue();
-		default:
-			return null;
-		}
-	}
-	
+    public String getColumnText(Object element, int columnIndex) {
+        Map.Entry<String, String> entry = (Map.Entry<String, String>) element;
+        switch (columnIndex) {
+            case 1:
+                return entry.getKey();
+            case 2:
+                return entry.getValue();
+            default:
+                return null;
+        }
+    }
+
 }

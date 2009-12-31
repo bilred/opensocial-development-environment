@@ -32,33 +32,36 @@ import org.eclipse.swt.graphics.Image;
 public class ActivityListLabelProvider extends LabelProvider implements ITableLabelProvider {
     private static final Logger logger = new Logger(ActivityListLabelProvider.class);
 
-	public Image getColumnImage(Object element, int columnIndex) {
-		switch(columnIndex) {
-		case 0:
-			ImageDescriptor descriptor = Activator.getDefault().getImageRegistry().getDescriptor("icons/comment_yellow.gif");
-			return descriptor.createImage();
-		default:
-			return null;
-		}
-	}
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                ImageDescriptor descriptor = Activator.getDefault().getImageRegistry()
+                        .getDescriptor("icons/comment_yellow.gif");
+                return descriptor.createImage();
+            default:
+                return null;
+        }
+    }
 
-	public String getColumnText(Object element, int columnIndex) {
-		Activity activity = (Activity)element;
-		switch(columnIndex) {
-		case 1:
-			return activity.getTitle();
-		case 2:
-			try {
-				ApplicationService applicationService = Activator.getDefault().getApplicationService();
-				ApplicationImpl application = applicationService.getApplication(activity.getAppId());
-				return application.getTitle();
-			} catch (ConnectionException e) {
-				logger.error("Connecting to Shindig Database failed.", e);
-				return null;
-			}
-		default:
-			return null;
-		}
-	}
-	
+    public String getColumnText(Object element, int columnIndex) {
+        Activity activity = (Activity) element;
+        switch (columnIndex) {
+            case 1:
+                return activity.getTitle();
+            case 2:
+                try {
+                    ApplicationService applicationService =
+                            Activator.getDefault().getApplicationService();
+                    ApplicationImpl application =
+                            applicationService.getApplication(activity.getAppId());
+                    return application.getTitle();
+                } catch (ConnectionException e) {
+                    logger.error("Connecting to Shindig Database failed.", e);
+                    return null;
+                }
+            default:
+                return null;
+        }
+    }
+
 }

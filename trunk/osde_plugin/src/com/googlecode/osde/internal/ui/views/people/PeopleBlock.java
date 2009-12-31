@@ -30,49 +30,49 @@ import org.eclipse.ui.forms.MasterDetailsBlock;
 
 class PeopleBlock extends MasterDetailsBlock {
 
-	private PeoplePart peoplePart;
-	private PersonView personView;
-	
-	public PeopleBlock(PersonView personView) {
-		super();
-		this.personView = personView;
-	}
+    private PeoplePart peoplePart;
+    private PersonView personView;
 
-	@Override
-	protected void createMasterPart(final IManagedForm managedForm, Composite parent) {
-		peoplePart = new PeoplePart(parent, managedForm, personView);
-		managedForm.addPart(peoplePart);
-	}
+    public PeopleBlock(PersonView personView) {
+        super();
+        this.personView = personView;
+    }
 
-	@Override
-	protected void createToolBarActions(IManagedForm managedForm) {
-	}
+    @Override
+    protected void createMasterPart(final IManagedForm managedForm, Composite parent) {
+        peoplePart = new PeoplePart(parent, managedForm, personView);
+        managedForm.addPart(peoplePart);
+    }
 
-	@Override
-	protected void registerPages(DetailsPart detailsPart) {
-		final IDetailsPage detailsPage = new PersonPage(personView);
-		detailsPart.registerPage(Person.class, detailsPage);
-		detailsPart.setPageProvider(new IDetailsPageProvider() {
+    @Override
+    protected void createToolBarActions(IManagedForm managedForm) {
+    }
 
-			public IDetailsPage getPage(Object key) {
-				if (key.equals(Person.class)) {
-					return detailsPage;
-				}
-				return null;
-			}
+    @Override
+    protected void registerPages(DetailsPart detailsPart) {
+        final IDetailsPage detailsPage = new PersonPage(personView);
+        detailsPart.registerPage(Person.class, detailsPage);
+        detailsPart.setPageProvider(new IDetailsPageProvider() {
 
-			public Object getPageKey(Object object) {
-				if (object instanceof Person) {
-					return Person.class;
-				}
-				return object.getClass();
-			}
-			
-		});
-		sashForm.setWeights(new int[]{35, 65});
-	}
+            public IDetailsPage getPage(Object key) {
+                if (key.equals(Person.class)) {
+                    return detailsPage;
+                }
+                return null;
+            }
 
-	public void setPeople(List<Person> people) {
-		peoplePart.setPeople(people);
-	}
+            public Object getPageKey(Object object) {
+                if (object instanceof Person) {
+                    return Person.class;
+                }
+                return object.getClass();
+            }
+
+        });
+        sashForm.setWeights(new int[] {35, 65});
+    }
+
+    public void setPeople(List<Person> people) {
+        peoplePart.setPeople(people);
+    }
 }

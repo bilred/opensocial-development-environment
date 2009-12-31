@@ -35,104 +35,108 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.ManagedForm;
 
 public class PersonView extends AbstractView {
-	
-	public static final String ID = "com.googlecode.osde.internal.views.PersonView";
-	
-	private Action reloadAction;
-	private Action removeAllAction;
-	
-	private PeopleBlock block;
 
-	public PersonView() {
-	}
-	
-	@Override
-	protected void fillContextMenu(IMenuManager manager) {
-		super.fillContextMenu(manager);
-		manager.add(reloadAction);
-		manager.add(removeAllAction);
-	}
+    public static final String ID = "com.googlecode.osde.internal.views.PersonView";
 
-	@Override
-	protected void fillLocalPullDown(IMenuManager manager) {
-		super.fillLocalPullDown(manager);
-		manager.add(reloadAction);
-		manager.add(removeAllAction);
-	}
+    private Action reloadAction;
+    private Action removeAllAction;
 
-	@Override
-	protected void fillLocalToolBar(IToolBarManager manager) {
-		super.fillLocalToolBar(manager);
-		manager.add(reloadAction);
-		manager.add(removeAllAction);
-	}
+    private PeopleBlock block;
 
-	@Override
-	protected void makeActions() {
-		super.makeActions();
-		reloadAction = new Action() {
-			@Override
-			public void run() {
-				loadPeople();
-			}
-		};
-		reloadAction.setText("Reload");
-		reloadAction.setToolTipText("Reload people.");
-		reloadAction.setImageDescriptor(
-				Activator.getDefault().getImageRegistry().getDescriptor("icons/action_refresh.gif"));
-		removeAllAction = new Action() {
-			@Override
-			public void run() {
-				removeAllPeople();
-			}
-		};
-		removeAllAction.setText("Remove all");
-		removeAllAction.setToolTipText("Remove all people.");
-		removeAllAction.setImageDescriptor(
-				Activator.getDefault().getImageRegistry().getDescriptor("icons/16-em-cross.gif"));
-	}
-	
-	protected void createForm(Composite parent) {
-		IManagedForm managedForm = new ManagedForm(parent);
-		block = new PeopleBlock(this);
-		block.createContent(managedForm);
-	}
-	
-	public void setFocus() {
-	}
-	
-	public void loadPeople() {
-		if (Activator.getDefault().isRunningShindig()) {
-			try {
-				PersonService personService = Activator.getDefault().getPersonService();
-				java.util.List<Person> people = personService.getPeople();
-				block.setPeople(people);
-			} catch(ConnectionException e) {
-				MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
-			}
-		} else {
-			ShindigLauncher.launchWithConfirm(getSite().getShell(), this);
-		}
-	}
+    public PersonView() {
+    }
 
-	public void connectedDatabase() {
-		loadPeople();
-	}
+    @Override
+    protected void fillContextMenu(IMenuManager manager) {
+        super.fillContextMenu(manager);
+        manager.add(reloadAction);
+        manager.add(removeAllAction);
+    }
 
-	public void disconnectedDatabase() {
-		block.setPeople(new ArrayList<Person>());
-	}
-	
-	private void removeAllPeople() {
-		try {
-			PersonService personService = Activator.getDefault().getPersonService();
-			if (MessageDialog.openConfirm(getSite().getShell(), "Confirm", "Would you like to delete all people?")) {
-				personService.removeAll();
-				loadPeople();
-			}
-		} catch (ConnectionException e) {
-			MessageDialog.openError(getSite().getShell(), "Error", "Shindig database not started yet.");
-		}
-	}
-	
+    @Override
+    protected void fillLocalPullDown(IMenuManager manager) {
+        super.fillLocalPullDown(manager);
+        manager.add(reloadAction);
+        manager.add(removeAllAction);
+    }
+
+    @Override
+    protected void fillLocalToolBar(IToolBarManager manager) {
+        super.fillLocalToolBar(manager);
+        manager.add(reloadAction);
+        manager.add(removeAllAction);
+    }
+
+    @Override
+    protected void makeActions() {
+        super.makeActions();
+        reloadAction = new Action() {
+            @Override
+            public void run() {
+                loadPeople();
+            }
+        };
+        reloadAction.setText("Reload");
+        reloadAction.setToolTipText("Reload people.");
+        reloadAction.setImageDescriptor(
+                Activator.getDefault().getImageRegistry().getDescriptor(
+                        "icons/action_refresh.gif"));
+        removeAllAction = new Action() {
+            @Override
+            public void run() {
+                removeAllPeople();
+            }
+        };
+        removeAllAction.setText("Remove all");
+        removeAllAction.setToolTipText("Remove all people.");
+        removeAllAction.setImageDescriptor(
+                Activator.getDefault().getImageRegistry().getDescriptor("icons/16-em-cross.gif"));
+    }
+
+    protected void createForm(Composite parent) {
+        IManagedForm managedForm = new ManagedForm(parent);
+        block = new PeopleBlock(this);
+        block.createContent(managedForm);
+    }
+
+    public void setFocus() {
+    }
+
+    public void loadPeople() {
+        if (Activator.getDefault().isRunningShindig()) {
+            try {
+                PersonService personService = Activator.getDefault().getPersonService();
+                java.util.List<Person> people = personService.getPeople();
+                block.setPeople(people);
+            } catch (ConnectionException e) {
+                MessageDialog.openError(getSite().getShell(), "Error",
+                        "Shindig database not started yet.");
+            }
+        } else {
+            ShindigLauncher.launchWithConfirm(getSite().getShell(), this);
+        }
+    }
+
+    public void connectedDatabase() {
+        loadPeople();
+    }
+
+    public void disconnectedDatabase() {
+        block.setPeople(new ArrayList<Person>());
+    }
+
+    private void removeAllPeople() {
+        try {
+            PersonService personService = Activator.getDefault().getPersonService();
+            if (MessageDialog.openConfirm(getSite().getShell(), "Confirm",
+                    "Would you like to delete all people?")) {
+                personService.removeAll();
+                loadPeople();
+            }
+        } catch (ConnectionException e) {
+            MessageDialog
+                    .openError(getSite().getShell(), "Error", "Shindig database not started yet.");
+        }
+    }
+
 }

@@ -27,26 +27,27 @@ import org.eclipse.swt.graphics.Image;
 
 public class FriendListLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-	public Image getColumnImage(Object element, int columnIndex) {
-		switch(columnIndex) {
-		case 0:
-			ImageDescriptor descriptor = Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_user.gif");
-			return descriptor.createImage();
-		default:
-			return null;
-		}
-	}
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                ImageDescriptor descriptor = Activator.getDefault().getImageRegistry()
+                        .getDescriptor("icons/icon_user.gif");
+                return descriptor.createImage();
+            default:
+                return null;
+        }
+    }
 
-	public String getColumnText(Object element, int columnIndex) {
-		RelationshipImpl relation = (RelationshipImpl)element;
-		switch(columnIndex) {
-		case 1:
-			return relation.getTarget().getId();
-		case 2:
-			return relation.getGroupId();
-		default:
-			return null;
-		}
-	}
+    public String getColumnText(Object element, int columnIndex) {
+        RelationshipImpl relation = (RelationshipImpl) element;
+        switch (columnIndex) {
+            case 1:
+                return relation.getTarget().getId();
+            case 2:
+                return relation.getGroupId();
+            default:
+                return null;
+        }
+    }
 
 }
