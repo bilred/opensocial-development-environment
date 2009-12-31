@@ -19,11 +19,14 @@ package com.googlecode.osde.internal;
 
 import java.util.Map;
 
+import com.googlecode.osde.internal.profiling.FirefoxLocator;
+
 /**
  * A JavaBean of the OSDE configuration.
  */
 public class OsdeConfig {
 
+	// Preference node names
 	public static final String DEFAULT_LANGUAGE = "language";
 	public static final String DEFAULT_COUNTRY = "country";
 	public static final String DATABASE_DIR = "database_dir";
@@ -39,6 +42,10 @@ public class OsdeConfig {
 	public static final String WORK_DIRECTORY = "work_directory";
 	public static final String LOGGER_CONFIG_FILE = "logger_config_file";
 	public static final String COMPILE_JAVASCRIPT = "compile_javascript";
+	public static final String FIREFOX_LOCATION = "firefox_location";
+
+	// Default values
+	public static final String DEFAULT_FIREFOX_LOCATION = new FirefoxLocator().getBinaryLocation();
 
 	private String defaultLanguage;
 	private String defaultCountry;
@@ -55,6 +62,7 @@ public class OsdeConfig {
 	private String workDirectory;
 	private String loggerConfigFile;
 	private boolean compileJavaScript;
+	private String firefoxLocation;
 
 	public String getExternalDatabaseName() {
 		return externalDatabaseName;
@@ -159,7 +167,7 @@ public class OsdeConfig {
 	public void setWorkDirectory(String workDirectory) {
 		this.workDirectory = workDirectory;
 	}
-	
+
 	public String getLoggerConfigFile() {
 		return loggerConfigFile;
 	}
@@ -174,5 +182,13 @@ public class OsdeConfig {
 
 	public void setCompileJavaScript(boolean compileJavaScript) {
 		this.compileJavaScript = compileJavaScript;
+	}
+
+	public String getFirefoxLocation() {
+		return firefoxLocation;
+	}
+
+	public void setFirefoxLocation(String firefoxLocation) {
+		this.firefoxLocation = firefoxLocation;
 	}
 }

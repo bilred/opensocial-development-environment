@@ -36,9 +36,11 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -63,8 +65,8 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
     private Text nameText;
     private Text workDirectoryText;
     private Text loggerCfgLocationText;
-    private Button loggerCfgBrowseButton;
     private Button compileJavaScriptCheckbox;
+    private Text firefoxLocation;
 
     public OsdePreferencePage() {
         super();
@@ -90,22 +92,8 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         workDirectoryText = new Text(group, SWT.BORDER);
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         workDirectoryText.setLayoutData(layoutData);
-        Button workDirectoryButton = new Button(group, SWT.PUSH);
-        workDirectoryButton.setText("Browse...");
-        workDirectoryButton.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-
-            public void widgetSelected(SelectionEvent e) {
-                DirectoryDialog dialog = new DirectoryDialog(getShell());
-                dialog.setText("Work directory");
-                dialog.setMessage("Please select the directory to work OSDE.");
-                String dir = dialog.open();
-                if (dir != null) {
-                    workDirectoryText.setText(dir);
-                }
-            }
-        });
+        createFolderButton(group, "Work directory",
+                "Please select the directory to work OSDE.", workDirectoryText);
         //
         group = new Group(composite, SWT.NONE);
         group.setText("Default locale");
@@ -143,22 +131,8 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         jettyDirText = new Text(group, SWT.BORDER);
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         jettyDirText.setLayoutData(layoutData);
-        Button jettyBrowseButton = new Button(group, SWT.PUSH);
-        jettyBrowseButton.setText("Browse...");
-        jettyBrowseButton.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-
-            public void widgetSelected(SelectionEvent e) {
-                DirectoryDialog dialog = new DirectoryDialog(getShell());
-                dialog.setText("Context directory");
-                dialog.setMessage("Please select the directory to store the Jetty context files.");
-                String dir = dialog.open();
-                if (dir != null) {
-                    jettyDirText.setText(dir);
-                }
-            }
-        });
+        createFolderButton(group, "Context directory",
+                "Please select the directory to store the Jetty context files.", jettyDirText);
         //
         Label noticeLabel = new Label(group, SWT.NONE);
         noticeLabel.setText("You need to restart Eclipse when this setting is changed.");
@@ -192,23 +166,10 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         databaseDirText = new Text(internalDatabasePanel, SWT.BORDER);
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         databaseDirText.setLayoutData(layoutData);
-        databaseBrowseButton = new Button(internalDatabasePanel, SWT.PUSH);
-        databaseBrowseButton.setText("Browse...");
-        databaseBrowseButton.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-
-            public void widgetSelected(SelectionEvent e) {
-                DirectoryDialog dialog = new DirectoryDialog(getShell());
-                dialog.setText("Database directory");
-                dialog.setMessage(
-                        "Please select the directory to store the Shindig database files.");
-                String dir = dialog.open();
-                if (dir != null) {
-                    databaseDirText.setText(dir);
-                }
-            }
-        });
+        databaseBrowseButton = createFolderButton(internalDatabasePanel,
+                "Database directory",
+                "Please select the directory to store the Shindig database files.",
+                databaseDirText);
         //
         externalDatabaseRadio = new Button(group, SWT.RADIO);
         externalDatabaseRadio.setText("Use the external database.");
@@ -273,39 +234,32 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         loggerCfgLocationText = new Text(group, SWT.SINGLE | SWT.BORDER);
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         loggerCfgLocationText.setLayoutData(layoutData);
-        //
-        loggerCfgBrowseButton = new Button(group, SWT.PUSH);
-        loggerCfgBrowseButton.setText("Browser...");
-        loggerCfgBrowseButton.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
+        createFileButton(group, "Please select the logger configuration file.",
+                loggerCfgLocationText, "*.properties");
 
-            public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(getShell());
-                dialog.setFilterExtensions(new String[] {"*.properties"});
-                dialog.setText("Log directory");
-                dialog.setText("Please select the logger configuration file.");
-                String logCfgFile = dialog.open();
-                if (logCfgFile != null) {
-                    loggerCfgLocationText.setText(logCfgFile);
-                }
-            }
-        });
-        //
         group = new Group(composite, SWT.NONE);
-        group.setText("Build options");
+        group.setText("Web performance tools");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         group.setLayoutData(layoutData);
-        group.setLayout(new GridLayout());
+        group.setLayout(new GridLayout(3, false));
+
+        new Label(group, SWT.NONE).setText("Firefox location:");
+        firefoxLocation = new Text(group, SWT.SINGLE | SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        firefoxLocation.setLayoutData(layoutData);
+        createFileButton(group, "Please select the Firefox executable to launch profiler.",
+                firefoxLocation);
 
         compileJavaScriptCheckbox = new Button(group, SWT.CHECK);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        layoutData.horizontalSpan = 3;
+        compileJavaScriptCheckbox.setLayoutData(layoutData);
         compileJavaScriptCheckbox.setText("Compile JavaScript files (Requires JDK 6)");
         if (!JdkVersion.isAtLeastJdk6()) {
             compileJavaScriptCheckbox.setEnabled(false);
             compileJavaScriptCheckbox.setSelection(false);
         }
-        //
-        //
+
         createSeparator(composite);
         //
         Activator activator = Activator.getDefault();
@@ -323,6 +277,69 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         initializeValues();
         //
         return composite;
+    }
+
+    /**
+     * Creates a button that, when clicked, opens a file dialog, and commits
+     * commits the absolute path of a chosen file back to a text field.
+     *
+     * @param parent A widget containing this button.
+     * @param dialogTitle The title of file dialog.
+     * @param backfillText The text field which accepts the chosen file path.
+     * @param extensionFilters Optional list of file extension filters used
+     *     by the file dialog.
+     * @return A new button instance.
+     */
+    private Button createFileButton(Composite parent, final String dialogTitle,
+            final Text backfillText, final String... extensionFilters) {
+        Button button = new Button(parent, SWT.PUSH);
+        button.setText("Browse...");
+        button.addSelectionListener(new SelectionListener() {
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+
+            public void widgetSelected(SelectionEvent e) {
+                FileDialog dialog = new FileDialog(getShell());
+                dialog.setFilterExtensions(extensionFilters);
+                dialog.setText(dialogTitle);
+                String logCfgFile = dialog.open();
+                if (logCfgFile != null) {
+                    backfillText.setText(logCfgFile);
+                }
+            }
+        });
+        return button;
+    }
+
+    /**
+     * Creates a button that, when clicked, opens a folder dialog, and commits
+     * the absolute path of the chosen folder back to a text field.
+     *
+     * @param parent The widget containing this button.
+     * @param dialogTitle The title of folder dialog.
+     * @param dialogMessage The prompt message of folder dialog.
+     * @param backfillText The text field which accepts the chosen folder path.
+     * @return A new button instance.
+     */
+    private Button createFolderButton(Composite parent, final String dialogTitle,
+            final String dialogMessage, final Text backfillText) {
+        Button button = new Button(parent, SWT.PUSH);
+        button.setText("Browse...");
+        button.addSelectionListener(new SelectionListener() {
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+
+            public void widgetSelected(SelectionEvent e) {
+                DirectoryDialog dialog = new DirectoryDialog(getShell());
+                dialog.setText(dialogTitle);
+                dialog.setMessage(dialogMessage);
+                String dir = dialog.open();
+                if (dir != null) {
+                    backfillText.setText(dir);
+                }
+            }
+        });
+        return button;
     }
 
     private void createSeparator(Composite parent) {
@@ -365,6 +382,13 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         config.setWorkDirectory(workDirectory);
         config.setLoggerConfigFile(loggerCfgLocationText.getText());
         config.setCompileJavaScript(compileJavaScriptCheckbox.getSelection());
+
+        String firefoxLocationValue = firefoxLocation.getText().trim();
+        if (firefoxLocationValue.length() == 0) {
+            firefoxLocationValue = OsdeConfig.DEFAULT_FIREFOX_LOCATION;
+        }
+        config.setFirefoxLocation(firefoxLocationValue);
+
         Activator.getDefault().storePreferences(config);
     }
 
@@ -416,6 +440,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 
         loggerCfgLocationText.setText(config.getLoggerConfigFile());
         compileJavaScriptCheckbox.setSelection(config.isCompileJavaScript());
+        firefoxLocation.setText(config.getFirefoxLocation());
     }
 
     private class DatabaseRadioSelectionListener implements SelectionListener {

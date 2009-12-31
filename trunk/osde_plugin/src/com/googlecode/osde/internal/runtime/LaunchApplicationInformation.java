@@ -36,11 +36,12 @@ public class LaunchApplicationInformation {
 	private IProject project;
 	private String url;
 	private String applicationTitle;
+	private boolean measurePerformance;
 
 	public LaunchApplicationInformation(String viewer, String owner,
 			String view, String width, String appId,
 			boolean useExternalBrwoser, String country, String language,
-			IProject project, String url, String applicationTitle) {
+			IProject project, String url, String applicationTitle, boolean measurePerformance) {
 		this.viewer = viewer;
 		this.owner = owner;
 		this.view = view;
@@ -52,6 +53,7 @@ public class LaunchApplicationInformation {
 		this.project = project;
 		this.url = url;
 		this.applicationTitle = applicationTitle;
+		this.measurePerformance = measurePerformance;
 	}
 
 	public String getViewer() {
@@ -140,5 +142,9 @@ public class LaunchApplicationInformation {
 
 	public void setApplicationTitle(String applicationTitle) {
 		this.applicationTitle = applicationTitle;
+	}
+
+	public boolean isMeasurePerformance() {
+		return measurePerformance;
 	}
 }
