@@ -213,6 +213,6 @@ public class WizardNewGadgetXmlPage extends WizardPage {
         data.setViews(viewsButton.getSelection());
         data.setGadgetSpecFilename(specFilenameText.getText().trim());
         return data;
-	}
+    }
 
 }

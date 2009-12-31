@@ -31,22 +31,27 @@ import org.eclipse.ui.PartInitException;
  */
 public class UserPrefsViewNotifier {
     private static final Logger logger = new Logger(UserPrefsViewNotifier.class);
-	public static void fire(final LaunchApplicationInformation information, Shell shell, IWorkbenchPart targetPart) {
-		IProject project = information.getProject();
-		final String url = "http://localhost:8080/" + project.getName().replace(" ", "%20") + "/" + information.getUrl().replace(" ", "%20");
-		final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
-		shell.getDisplay().syncExec(new Runnable() {
-			public void run() {
-				try {
-					UserPrefsView userPrefsView;
-					userPrefsView = (UserPrefsView)window.getActivePage().showView(UserPrefsView.ID);
-					userPrefsView.showUserPrefFields(information, url);
-				} catch (PartInitException e) {
-					logger.error("Notifying to UserPrefs view failed.", e);
-					throw new IllegalStateException(e);
-				}
-			}
-		});
-	}
+
+    public static void fire(final LaunchApplicationInformation information, Shell shell,
+            IWorkbenchPart targetPart) {
+        IProject project = information.getProject();
+        final String url =
+                "http://localhost:8080/" + project.getName().replace(" ", "%20") + "/" + information
+                        .getUrl().replace(" ", "%20");
+        final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
+        shell.getDisplay().syncExec(new Runnable() {
+            public void run() {
+                try {
+                    UserPrefsView userPrefsView;
+                    userPrefsView =
+                            (UserPrefsView) window.getActivePage().showView(UserPrefsView.ID);
+                    userPrefsView.showUserPrefFields(information, url);
+                } catch (PartInitException e) {
+                    logger.error("Notifying to UserPrefs view failed.", e);
+                    throw new IllegalStateException(e);
+                }
+            }
+        });
+    }
 
 }

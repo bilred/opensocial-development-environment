@@ -28,6 +28,8 @@ import com.googlecode.osde.internal.ui.wizards.newrestprj.SimpleConfigurationEle
 import com.googlecode.osde.internal.utils.ApplicationInformation;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
+import com.google.gadgets.parser.ParserException;
+
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
 import org.apache.shindig.social.opensocial.model.Person;
@@ -44,94 +46,97 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.google.gadgets.parser.ParserException;
-
 /**
  * Action for creating a Java Project.
  */
 public class CreateJavaProjectAction implements IObjectActionDelegate {
 
-	private IFile file;
-	private Shell shell;
-	private IStructuredSelection currentSelection;
-	private IWorkbenchPart targetPart;
+    private IFile file;
+    private Shell shell;
+    private IStructuredSelection currentSelection;
+    private IWorkbenchPart targetPart;
 
-	public CreateJavaProjectAction() {
-		super();
-	}
+    public CreateJavaProjectAction() {
+        super();
+    }
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		shell = targetPart.getSite().getShell();
-		this.targetPart = targetPart;
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        shell = targetPart.getSite().getShell();
+        this.targetPart = targetPart;
+    }
 
-	public void run(IAction action) {
-		try {
-			ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(file);
-			ApplicationService service = Activator.getDefault().getApplicationService();
-			ApplicationImpl application = service.getApplication(appInfo.getAppId());
-			Person person = findPersonWithFriends();
-			if (person != null) {
-				if (application != null) {
-					NewRestfulAccessProjectResourceWizard wizard = new NewRestfulAccessProjectResourceWizard();
-					wizard.setApplication(application);
-					wizard.setPerson(person);
-					wizard.init(targetPart.getSite().getWorkbenchWindow().getWorkbench(), currentSelection);
-					wizard.setInitializationData(new SimpleConfigurationElementImpl() {
-						@Override
-						public String getAttribute(String name) throws InvalidRegistryObjectException {
-							if (name.equals("finalPerspective") || name.equals("preferredPerspectives")) {
-								return JavaUI.ID_PERSPECTIVE;
-							} else {
-								return null;
-							}
-						}
-					}, null, null);
-					WizardDialog dialog = new WizardDialog(shell, wizard);
-					dialog.open();
-				} else {
-					MessageDialog.openWarning(shell, "Warning", "This application does not run yet.");
-				}
-			} else {
-				MessageDialog.openError(shell, "Error", "There is no person in Shindig database.");
-			}
-		} catch (CoreException e) {
-			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
-		} catch (ConnectionException e) {
-			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
-		} catch (ParserException e) {
-			MessageDialog.openError(shell, "Error", "Invalid syntax. " + e.getMessage());
-		}
-	}
+    public void run(IAction action) {
+        try {
+            ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(file);
+            ApplicationService service = Activator.getDefault().getApplicationService();
+            ApplicationImpl application = service.getApplication(appInfo.getAppId());
+            Person person = findPersonWithFriends();
+            if (person != null) {
+                if (application != null) {
+                    NewRestfulAccessProjectResourceWizard wizard =
+                            new NewRestfulAccessProjectResourceWizard();
+                    wizard.setApplication(application);
+                    wizard.setPerson(person);
+                    wizard.init(targetPart.getSite().getWorkbenchWindow().getWorkbench(),
+                            currentSelection);
+                    wizard.setInitializationData(new SimpleConfigurationElementImpl() {
+                        @Override
+                        public String getAttribute(String name)
+                                throws InvalidRegistryObjectException {
+                            if (name.equals("finalPerspective") || name
+                                    .equals("preferredPerspectives")) {
+                                return JavaUI.ID_PERSPECTIVE;
+                            } else {
+                                return null;
+                            }
+                        }
+                    }, null, null);
+                    WizardDialog dialog = new WizardDialog(shell, wizard);
+                    dialog.open();
+                } else {
+                    MessageDialog
+                            .openWarning(shell, "Warning", "This application does not run yet.");
+                }
+            } else {
+                MessageDialog.openError(shell, "Error", "There is no person in Shindig database.");
+            }
+        } catch (CoreException e) {
+            MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
+        } catch (ConnectionException e) {
+            MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
+        } catch (ParserException e) {
+            MessageDialog.openError(shell, "Error", "Invalid syntax. " + e.getMessage());
+        }
+    }
 
-	private Person findPersonWithFriends() throws ConnectionException {
-		PersonService service = Activator.getDefault().getPersonService();
-		List<Person> people = service.getPeople();
-		if (people.isEmpty()) {
-			return null;
-		} else {
-			for (Person person : people) {
-				List<RelationshipImpl> relationshipList = service.getRelationshipList(person);
-				for (RelationshipImpl relation : relationshipList) {
-					if ("friends".equals(relation.getGroupId())) {
-						return person;
-					}
-				}
-			}
-			return people.get(0);
-		}
-	}
+    private Person findPersonWithFriends() throws ConnectionException {
+        PersonService service = Activator.getDefault().getPersonService();
+        List<Person> people = service.getPeople();
+        if (people.isEmpty()) {
+            return null;
+        } else {
+            for (Person person : people) {
+                List<RelationshipImpl> relationshipList = service.getRelationshipList(person);
+                for (RelationshipImpl relation : relationshipList) {
+                    if ("friends".equals(relation.getGroupId())) {
+                        return person;
+                    }
+                }
+            }
+            return people.get(0);
+        }
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		file = null;
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structured = (IStructuredSelection)selection;
-			currentSelection = structured;
-			Object element = structured.getFirstElement();
-			if (element instanceof IFile) {
-				file = (IFile)element;
-			}
-		}
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+        file = null;
+        if (selection instanceof IStructuredSelection) {
+            IStructuredSelection structured = (IStructuredSelection) selection;
+            currentSelection = structured;
+            Object element = structured.getFirstElement();
+            if (element instanceof IFile) {
+                file = (IFile) element;
+            }
+        }
+    }
 
 }

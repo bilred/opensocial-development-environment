@@ -23,9 +23,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.googlecode.osde.internal.utils.Logger;
+
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -34,11 +36,9 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 
-import com.googlecode.osde.internal.utils.Logger;
-
-import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.retrieveHttpResponseAsString;
 import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.HTTP_HEADER_COOKIE;
 import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.URL_IG;
+import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.retrieveHttpResponseAsString;
 
 /**
  * This iGoogle utility class provides authentication and
@@ -90,7 +90,7 @@ public class HostingIGoogleUtil {
 
         // Prepare HttpPost.
         String url = URL_IG_GADGETS_FILE + publicId + hostingFolder
-            + sourceFileRelativePath + "?et=" + igCredentials.getEditToken();
+                + sourceFileRelativePath + "?et=" + igCredentials.getEditToken();
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
@@ -177,7 +177,7 @@ public class HostingIGoogleUtil {
     private static void findAllRelativeFilePaths(
             String baseFolder, String relativeFolder, List<String> allPaths) {
         // Assert that relativeFolder ends with "/" unless it is empty.
-        assert((relativeFolder.length() == 0)
+        assert ((relativeFolder.length() == 0)
                 || (relativeFolder.charAt(relativeFolder.length() - 1) == '/'));
 
         File currentFolder = new File(baseFolder, relativeFolder);

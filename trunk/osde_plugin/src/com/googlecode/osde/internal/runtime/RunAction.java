@@ -37,58 +37,58 @@ public class RunAction
         extends AbstractRunAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
-	private IFile gadgetXmlFile;
-	private IProject project;
+    private IFile gadgetXmlFile;
+    private IProject project;
 
-	/**
-	 * Constructor for Action1.
-	 */
-	public RunAction() {
-		super();
-	}
+    /**
+     * Constructor for Action1.
+     */
+    public RunAction() {
+        super();
+    }
 
-	/**
-	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		shell = targetPart.getSite().getShell();
-		this.targetPart = targetPart;
-	}
+    /**
+     * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
+     */
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        shell = targetPart.getSite().getShell();
+        this.targetPart = targetPart;
+    }
 
-	/**
-	 * @see IActionDelegate#run(IAction)
-	 */
-	public void run(IAction action) {
-		if (!Activator.getDefault().isRunningShindig()) {
-			boolean result = ShindigLauncher.launchWithConfirm(shell, targetPart);
-			if (result) {
-				shell.getDisplay().timerExec(10000, new Runnable() {
-					public void run() {
-						launch(gadgetXmlFile, project);
-					}
-				});
-				return;
-			}
-		} else {
-			launch(gadgetXmlFile, project);
-		}
-	}
+    /**
+     * @see IActionDelegate#run(IAction)
+     */
+    public void run(IAction action) {
+        if (!Activator.getDefault().isRunningShindig()) {
+            boolean result = ShindigLauncher.launchWithConfirm(shell, targetPart);
+            if (result) {
+                shell.getDisplay().timerExec(10000, new Runnable() {
+                    public void run() {
+                        launch(gadgetXmlFile, project);
+                    }
+                });
+                return;
+            }
+        } else {
+            launch(gadgetXmlFile, project);
+        }
+    }
 
-	/**
-	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structured = (IStructuredSelection)selection;
-			Object element = structured.getFirstElement();
-			if (element instanceof IFile) {
-				gadgetXmlFile = (IFile)element;
-				project = gadgetXmlFile.getProject();
-			}
-		}
-	}
+    /**
+     * @see IActionDelegate#selectionChanged(IAction, ISelection)
+     */
+    public void selectionChanged(IAction action, ISelection selection) {
+        if (selection instanceof IStructuredSelection) {
+            IStructuredSelection structured = (IStructuredSelection) selection;
+            Object element = structured.getFirstElement();
+            if (element instanceof IFile) {
+                gadgetXmlFile = (IFile) element;
+                project = gadgetXmlFile.getProject();
+            }
+        }
+    }
 
-	public void dispose() {
-	}
+    public void dispose() {
+    }
 
 }

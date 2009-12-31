@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Shell;
  * The job to clean preview files as hosted on iGoogle.
  *
  * @author albert.cheng.ig@gmail.com
- *
  */
 public class CleanIGoogleJob extends BaseIGoogleJob {
     private static Logger logger = new Logger(CleanIGoogleJob.class);

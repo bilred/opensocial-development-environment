@@ -26,6 +26,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.googlecode.osde.internal.utils.Logger;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,8 +37,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
-
-import com.googlecode.osde.internal.utils.Logger;
 
 /**
  * Data and corresponding methods used for interacting with iGoogle
@@ -101,8 +101,8 @@ public class IgCredentials {
         // Form the POST params.
         StringBuilder params = new StringBuilder();
         params.append("Email=").append(emailUserName)
-              .append("&Passwd=").append(password)
-              .append("&source=OSDE-01&service=ig&accountType=HOSTED_OR_GOOGLE");
+                .append("&Passwd=").append(password)
+                .append("&source=OSDE-01&service=ig&accountType=HOSTED_OR_GOOGLE");
         if (loginTokenOfCaptcha != null) {
             params.append("&logintoken=").append(loginTokenOfCaptcha);
         }
@@ -128,8 +128,9 @@ public class IgCredentials {
         int responseCode = urlConnection.getResponseCode();
         logger.fine("responseCode: " + responseCode);
         InputStream inputStream = (responseCode == HttpURLConnection.HTTP_OK)
-                                  ? urlConnection.getInputStream()
-                                  : urlConnection.getErrorStream();;
+                ? urlConnection.getInputStream()
+                : urlConnection.getErrorStream();
+        ;
         logger.fine("inputStream: " + inputStream);
         try {
             String response = retrieveResponseStreamAsString(inputStream);
@@ -155,7 +156,7 @@ public class IgCredentials {
         String response = null;
         try {
             response = requestAuthentication(
-                emailUserName, password, loginCaptchaToken, loginCaptchaAnswer);
+                    emailUserName, password, loginCaptchaToken, loginCaptchaAnswer);
             logger.fine("response:\n" + " " + response);
         } catch (IOException e) {
             throw new HostingException(e);
@@ -188,7 +189,7 @@ public class IgCredentials {
      * Retrieves response stream as String.
      *
      * @param inputStream response stream which needs to be closed by
-     *        the caller
+     * the caller
      * @throws IOException
      */
     static String retrieveResponseStreamAsString(InputStream inputStream)
@@ -312,7 +313,7 @@ public class IgCredentials {
 
     private boolean validatePref() {
         return (pref != null)
-            && (pref.length() > MIN_PREF_LENGTH);
+                && (pref.length() > MIN_PREF_LENGTH);
     }
 
     private boolean validateEditToken() {

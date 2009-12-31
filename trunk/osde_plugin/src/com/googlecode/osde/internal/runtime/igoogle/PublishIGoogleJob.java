@@ -38,7 +38,6 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * The job to publish a gadget against iGoogle.
  *
  * @author albert.cheng.ig@gmail.com
- *
  */
 public class PublishIGoogleJob extends BaseIGoogleJob {
     private static Logger logger = new Logger(PublishIGoogleJob.class);
@@ -97,8 +96,8 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
                 IWorkbenchBrowserSupport support =
                         PlatformUI.getWorkbench().getBrowserSupport();
                 int style = IWorkbenchBrowserSupport.LOCATION_BAR
-                          | IWorkbenchBrowserSupport.NAVIGATION_BAR
-                          | IWorkbenchBrowserSupport.AS_EDITOR;
+                        | IWorkbenchBrowserSupport.NAVIGATION_BAR
+                        | IWorkbenchBrowserSupport.AS_EDITOR;
                 IWebBrowser browser = support.createBrowser(style, PUBLISH_IGOOGLE_BROWSER_ID,
                         PUBLISH_IGOOGLE_BROWSER_NAME, PUBLISH_IGOOGLE_TOOLTIP);
                 // TODO: (p1) Provide SID cookie when open the browser so that

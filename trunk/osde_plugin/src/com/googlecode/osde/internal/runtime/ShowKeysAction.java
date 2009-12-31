@@ -23,6 +23,8 @@ import com.googlecode.osde.internal.shindig.ApplicationService;
 import com.googlecode.osde.internal.utils.ApplicationInformation;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
+import com.google.gadgets.parser.ParserException;
+
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -42,96 +44,96 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.google.gadgets.parser.ParserException;
-
 /**
  * Action to show the Consumer key and the secret for accessing APIs
  * with RESTful Protocol.
  */
 public class ShowKeysAction implements IObjectActionDelegate {
 
-	private IFile file;
-	private Shell shell;
+    private IFile file;
+    private Shell shell;
 
-	public ShowKeysAction() {
-		super();
-	}
+    public ShowKeysAction() {
+        super();
+    }
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		shell = targetPart.getSite().getShell();
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        shell = targetPart.getSite().getShell();
+    }
 
-	public void run(IAction action) {
-		try {
-			ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(file);
-			ApplicationService service = Activator.getDefault().getApplicationService();
-			final ApplicationImpl application = service.getApplication(appInfo.getAppId());
-			if (application != null) {
-				ImageDescriptor imageDescriptor =
-					Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_key.gif");
-				MessageDialog dialog = new MessageDialog(
-						shell, "Application information", imageDescriptor.createImage(),
-						"This is keys for accessing from external service.", MessageDialog.INFORMATION,
-						new String[] {"OK"}, 0) {
-							@Override
-							protected Control createCustomArea(Composite parent) {
-								Composite composite = new Composite(parent, SWT.NONE);
-								GridLayout gridLayout = new GridLayout();
-								gridLayout.numColumns = 2;
-								composite.setLayout(gridLayout);
-								GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-								composite.setLayoutData(layoutData);
-								Label label = new Label(composite, SWT.NONE);
-								label.setText("Title:");
-								label = new Label(composite, SWT.NONE);
-								label.setText(application.getTitle());
-								label = new Label(composite, SWT.NONE);
-								label.setText("Path:");
-								label = new Label(composite, SWT.NONE);
-								label.setText(application.getPath());
-								label = new Label(composite, SWT.NONE);
-								label.setText("Consumer Key:");
-								Text text = new Text(composite, SWT.BORDER | SWT.MULTI);
-								text.setText(application.getConsumerKey());
-								text.setEditable(false);
-								text.setSelection(0);
-								layoutData = new GridData(GridData.FILL_HORIZONTAL);
-								layoutData.heightHint = 20;
-								text.setLayoutData(layoutData);
-								label = new Label(composite, SWT.NONE);
-								label.setText("Consumer Secret:");
-								text = new Text(composite, SWT.BORDER | SWT.MULTI);
-								text.setText(application.getConsumerSecret());
-								text.setEditable(false);
-								text.setSelection(0);
-								layoutData = new GridData(GridData.FILL_HORIZONTAL);
-								layoutData.heightHint = 20;
-								text.setLayoutData(layoutData);
-								return parent;
-							}
-				};
-				dialog.open();
-			} else {
-				MessageDialog.openWarning(shell, "Warning", "This application does not run yet.");
-			}
-		} catch (CoreException e) {
-			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
-		} catch (ConnectionException e) {
-			MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
-		} catch (ParserException e) {
-			MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
-		}
-	}
+    public void run(IAction action) {
+        try {
+            ApplicationInformation appInfo = OpenSocialUtil.createApplicationInformation(file);
+            ApplicationService service = Activator.getDefault().getApplicationService();
+            final ApplicationImpl application = service.getApplication(appInfo.getAppId());
+            if (application != null) {
+                ImageDescriptor imageDescriptor =
+                        Activator.getDefault().getImageRegistry()
+                                .getDescriptor("icons/icon_key.gif");
+                MessageDialog dialog = new MessageDialog(
+                        shell, "Application information", imageDescriptor.createImage(),
+                        "This is keys for accessing from external service.",
+                        MessageDialog.INFORMATION,
+                        new String[] {"OK"}, 0) {
+                    @Override
+                    protected Control createCustomArea(Composite parent) {
+                        Composite composite = new Composite(parent, SWT.NONE);
+                        GridLayout gridLayout = new GridLayout();
+                        gridLayout.numColumns = 2;
+                        composite.setLayout(gridLayout);
+                        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+                        composite.setLayoutData(layoutData);
+                        Label label = new Label(composite, SWT.NONE);
+                        label.setText("Title:");
+                        label = new Label(composite, SWT.NONE);
+                        label.setText(application.getTitle());
+                        label = new Label(composite, SWT.NONE);
+                        label.setText("Path:");
+                        label = new Label(composite, SWT.NONE);
+                        label.setText(application.getPath());
+                        label = new Label(composite, SWT.NONE);
+                        label.setText("Consumer Key:");
+                        Text text = new Text(composite, SWT.BORDER | SWT.MULTI);
+                        text.setText(application.getConsumerKey());
+                        text.setEditable(false);
+                        text.setSelection(0);
+                        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+                        layoutData.heightHint = 20;
+                        text.setLayoutData(layoutData);
+                        label = new Label(composite, SWT.NONE);
+                        label.setText("Consumer Secret:");
+                        text = new Text(composite, SWT.BORDER | SWT.MULTI);
+                        text.setText(application.getConsumerSecret());
+                        text.setEditable(false);
+                        text.setSelection(0);
+                        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+                        layoutData.heightHint = 20;
+                        text.setLayoutData(layoutData);
+                        return parent;
+                    }
+                };
+                dialog.open();
+            } else {
+                MessageDialog.openWarning(shell, "Warning", "This application does not run yet.");
+            }
+        } catch (CoreException e) {
+            MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
+        } catch (ConnectionException e) {
+            MessageDialog.openError(shell, "Error", "Shindig database not started yet.");
+        } catch (ParserException e) {
+            MessageDialog.openError(shell, "Error", "Invalid gadget file. " + e.getMessage());
+        }
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		file = null;
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structured = (IStructuredSelection)selection;
-			Object element = structured.getFirstElement();
-			if (element instanceof IFile) {
-				file = (IFile)element;
-			}
-		}
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+        file = null;
+        if (selection instanceof IStructuredSelection) {
+            IStructuredSelection structured = (IStructuredSelection) selection;
+            Object element = structured.getFirstElement();
+            if (element instanceof IFile) {
+                file = (IFile) element;
+            }
+        }
+    }
 
 }

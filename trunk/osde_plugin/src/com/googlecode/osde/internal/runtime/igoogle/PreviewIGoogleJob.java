@@ -38,7 +38,6 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * The job to open a browser and preview a gadget against iGoogle.
  *
  * @author albert.cheng.ig@gmail.com
- *
  */
 public class PreviewIGoogleJob extends BaseIGoogleJob {
     private static Logger logger = new Logger(PreviewIGoogleJob.class);
@@ -105,8 +104,8 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
                     browser = support.getExternalBrowser();
                 } else {
                     int style = IWorkbenchBrowserSupport.LOCATION_BAR
-                              | IWorkbenchBrowserSupport.NAVIGATION_BAR
-                              | IWorkbenchBrowserSupport.AS_EDITOR;
+                            | IWorkbenchBrowserSupport.NAVIGATION_BAR
+                            | IWorkbenchBrowserSupport.AS_EDITOR;
                     browser = support.createBrowser(style, PREVIEW_IGOOGLE_BROWSER_ID,
                             PREVIEW_IGOOGLE_BROWSER_NAME, PREVIEW_IGOOGLE_TOOLTIP);
                 }

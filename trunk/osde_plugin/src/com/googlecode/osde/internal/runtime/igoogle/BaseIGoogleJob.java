@@ -18,15 +18,15 @@
  */
 package com.googlecode.osde.internal.runtime.igoogle;
 
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formHostedFileUrl;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrievePublicId;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.uploadFiles;
-
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.jobs.Job;
+
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formHostedFileUrl;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrievePublicId;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.uploadFiles;
 
 /**
  * The base job for iGoogle usage.
