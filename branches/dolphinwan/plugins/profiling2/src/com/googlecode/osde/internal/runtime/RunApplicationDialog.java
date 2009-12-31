@@ -30,7 +30,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -220,11 +219,6 @@ public class RunApplicationDialog extends TitleAreaDialog {
 	}
 
 	private void setDefaultValues() {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		boolean measurePerformance = store.getBoolean(PREF_MEASURE_PERFORMANCE);
-		measurePerformanceCheck.setSelection(measurePerformance);
-		measurePerformanceCheck.notifyListeners(SWT.Selection, null);
-
 		try {
 			OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
 			String prevCountry = gadgetXmlFile.getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_COUNTRY));
@@ -271,6 +265,12 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			if (StringUtils.isNumeric(prevWidth)) {
 				widths.setSelection(Integer.parseInt(prevWidth));
 			}
+
+			boolean prevMeasurePerformance =
+					Boolean.parseBoolean(gadgetXmlFile.getPersistentProperty(
+							new QualifiedName(Activator.PLUGIN_ID, PREF_MEASURE_PERFORMANCE)));
+			measurePerformanceCheck.setSelection(prevMeasurePerformance);
+			measurePerformanceCheck.notifyListeners(SWT.Selection, null);
 		} catch (CoreException e) {
 			logger.error("Setting the default values to Run Application Dialog failed.", e);
 		}
@@ -301,12 +301,11 @@ public class RunApplicationDialog extends TitleAreaDialog {
 			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_VIEW), String.valueOf(viewKind.getSelectionIndex()));
 			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_WIDTH), String.valueOf(widths.getSelection()));
 			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_USE_EXTERNAL_BROWSER), String.valueOf(useExternalBrowserCheck.getSelection()));
+			gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_MEASURE_PERFORMANCE), String.valueOf(measurePerformanceCheck.getSelection()));
 		} catch (CoreException e) {
 			logger.error("Setting persistent properties failed.", e);
 		}
 
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		store.setValue(PREF_MEASURE_PERFORMANCE, measurePerformanceCheck.getSelection());
 		setReturnCode(OK);
 		close();
 	}
