@@ -32,7 +32,6 @@
 
 ==v0.7==
 
-This version covers:
  * (owner=albert) Manage/clean gadgets on at least one container (Issue 155).
  * (owner=yoichiro) Rename package name to com.googlecode.osde (Issue 158).
  * (owner=!ChingYiChan) The configuration to change the port number of Jetty (Issue 104).
@@ -43,7 +42,6 @@ Expected release date: 2010-01-03
 
 ==v0.9==
 
-This version covers:
  * (owner=albert) Gadget Checker (Issue 47).
  * (owner=TBD) The HAS_APP filter (Issue 106).
  * (owner=TBD) New editor for gadget xml files - code highlighting for OS API and templates (Issue 159).
