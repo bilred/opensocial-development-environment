@@ -93,9 +93,9 @@
 
  * To make following the conventions easier, we provide two Eclipse code style settings files. You can import them as follows:
    # Download these files: [http://opensocial-development-environment.googlecode.com/svn/trunk/dev/osde-eclipse.importorder import order] and [http://opensocial-development-environment.googlecode.com/svn/trunk/dev/osde-eclipse-formatter.xml formatter]
-   # Open Eclipse Preference Dialog, go to Java > Code Style > Organize Imports <br>http://opensocial-development-environment.googlecode.com/svn/wiki/HowToContributeToOsde.attach/a1.jpg
+   # Open Eclipse Preference Dialog, go to Java > Code Style > Organize Imports <br>http://opensocial-development-environment.googlecode.com/svn/wiki/HowToContributeToOsde.attach/a2.jpg
    # Click on the "Import..." button and choose the import order file you just downloaded.
-   # Open Eclipse Preference Dialog, go to Java > Code Style > Formatter <br>http://opensocial-development-environment.googlecode.com/svn/wiki/HowToContributeToOsde.attach/a2.jpg
+   # Open Eclipse Preference Dialog, go to Java > Code Style > Formatter <br>http://opensocial-development-environment.googlecode.com/svn/wiki/HowToContributeToOsde.attach/a1.jpg
    # Click on the "Import..." button and choose the formatter file you just downloaded.
 
 == Code Review/Submit Guidelines ==
