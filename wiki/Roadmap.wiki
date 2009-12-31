@@ -54,4 +54,4 @@ Expected release date: 2010-01-24
 
 Milestone release
 
-Expected release date: 2010-02-15
+Expected release date: 2010-02-11
