@@ -1,10 +1,10 @@
 ==v0.2.x==
 
- * Supports !OpenSocial Specification v0.8.1.
+ * Support !OpenSocial Specification v0.8.1.
 
 ==v0.3.0==
 
- * Purpose: First major version up. Supporting OS 0.9 (integrating Shindig 1.1).
+ * Purpose: Support OS 0.9 (integrating Shindig 1.1).
  * Release date: 2009-09-19 or 20
  * Supported features and fixed issues:
   * Supporting OS 0.9 (Issue #33)
@@ -32,11 +32,11 @@
 
 ==v0.7==
 
- * (owner=albert) Manage/clean gadgets on at least one container (Issue 155).
  * (owner=yoichiro) Rename package name to com.googlecode.osde (Issue 158).
  * (owner=!ChingYiChan) The configuration to change the port number of Jetty (Issue 104).
  * (owner=dolphin) Latency Reduction Tools - Evaluator for web performance (Issue 127).
  * (owner=dolphin) Latency Reduction Tools - JS Compiler (Issue 180).
+ * (owner=albert) Manage/clean gadgets on at least one container (Issue 155).
 
 Expected release date: 2010-01-03
 
