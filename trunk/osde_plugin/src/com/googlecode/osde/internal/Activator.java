@@ -77,10 +77,10 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle.
- *
- * Note that when the plug-in shuts down, AbstractUIPlugin automatically
- * saves any plug-in preferences. So anything specified in the preference
- * page will persist next time you activate this plug-in.
+ * 
+ * Note that when the plug-in shuts down, AbstractUIPlugin automatically saves
+ * any plug-in preferences. So anything specified in the preference page will
+ * persist next time you activate this plug-in.
  */
 public class Activator extends AbstractUIPlugin {
 
@@ -171,7 +171,7 @@ public class Activator extends AbstractUIPlugin {
 
     /**
      * Returns the shared instance
-     *
+     * 
      * @return the shared instance
      */
     public static Activator getDefault() {
@@ -330,11 +330,13 @@ public class Activator extends AbstractUIPlugin {
                             AppDataView appDataView =
                                     (AppDataView) window.getActivePage().showView(AppDataView.ID);
                             appDataView.connectedDatabase();
-                            ActivitiesView activitiesView = (ActivitiesView) window.getActivePage()
-                                    .showView(ActivitiesView.ID);
+                            ActivitiesView activitiesView =
+                                    (ActivitiesView) window.getActivePage().showView(
+                                            ActivitiesView.ID);
                             activitiesView.connectedDatabase();
-                            UserPrefsView userPrefsView = (UserPrefsView) window.getActivePage()
-                                    .showView(UserPrefsView.ID);
+                            UserPrefsView userPrefsView =
+                                    (UserPrefsView) window.getActivePage().showView(
+                                            UserPrefsView.ID);
                             userPrefsView.connectedDatabase();
                         } catch (PartInitException e) {
                             logger.error("Connecting to Shindig Database failed.", e);
@@ -409,10 +411,10 @@ public class Activator extends AbstractUIPlugin {
             config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
             config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
             config.setExternalDatabasePort(store.getString(OsdeConfig.EXTERNAL_DATABASE_PORT));
-            config.setExternalDatabaseUsername(
-                    store.getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
-            config.setExternalDatabasePassword(
-                    store.getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+            config.setExternalDatabaseUsername(store
+                    .getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+            config.setExternalDatabasePassword(store
+                    .getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
             config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
             config.setWorkDirectory(store.getString(OsdeConfig.WORK_DIRECTORY));
             config.setLoggerConfigFile(store.getString(OsdeConfig.LOGGER_CONFIG_FILE));
@@ -437,20 +439,13 @@ public class Activator extends AbstractUIPlugin {
             config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
             config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
             config.setJettyDir(store.getDefaultString(OsdeConfig.JETTY_DIR));
-            config.setUseInternalDatabase(
-                    store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
-            config.setExternalDatabaseType(
-                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
-            config.setExternalDatabaseHost(
-                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
-            config.setExternalDatabasePort(
-                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PORT));
-            config.setExternalDatabaseUsername(
-                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
-            config.setExternalDatabasePassword(
-                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
-            config.setExternalDatabaseName(
-                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
+            config.setUseInternalDatabase(store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
+            config.setExternalDatabaseType(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
+            config.setExternalDatabaseHost(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
+            config.setExternalDatabasePort(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PORT));
+            config.setExternalDatabaseUsername(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+            config.setExternalDatabasePassword(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+            config.setExternalDatabaseName(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
             config.setWorkDirectory(store.getDefaultString(OsdeConfig.WORK_DIRECTORY));
             config.setLoggerConfigFile(store.getDefaultString(OsdeConfig.LOGGER_CONFIG_FILE));
             config.setCompileJavaScript(store.getDefaultBoolean(OsdeConfig.COMPILE_JAVASCRIPT));
@@ -479,10 +474,10 @@ public class Activator extends AbstractUIPlugin {
             store.setValue(OsdeConfig.USE_INTERNAL_DATABASE, config.isUseInternalDatabase());
             store.setValue(OsdeConfig.EXTERNAL_DATABASE_HOST, config.getExternalDatabaseHost());
             store.setValue(OsdeConfig.EXTERNAL_DATABASE_PORT, config.getExternalDatabasePort());
-            store.setValue(OsdeConfig.EXTERNAL_DATABASE_USERNAME,
-                    config.getExternalDatabaseUsername());
-            store.setValue(OsdeConfig.EXTERNAL_DATABASE_PASSWORD,
-                    config.getExternalDatabasePassword());
+            store.setValue(OsdeConfig.EXTERNAL_DATABASE_USERNAME, config
+                    .getExternalDatabaseUsername());
+            store.setValue(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, config
+                    .getExternalDatabasePassword());
             store.setValue(OsdeConfig.EXTERNAL_DATABASE_TYPE, config.getExternalDatabaseType());
             store.setValue(OsdeConfig.EXTERNAL_DATABASE_NAME, config.getExternalDatabaseName());
             store.setValue(OsdeConfig.WORK_DIRECTORY, config.getWorkDirectory());
@@ -514,8 +509,8 @@ public class Activator extends AbstractUIPlugin {
         return new String(encoded, "UTF-8");
     }
 
-    private Map<String, String> decodeSiteMap(String encodeSiteMap)
-            throws IOException, ClassNotFoundException {
+    private Map<String, String> decodeSiteMap(String encodeSiteMap) throws IOException,
+            ClassNotFoundException {
         if (encodeSiteMap != null && encodeSiteMap.length() > 0) {
             byte[] bytes = encodeSiteMap.getBytes("UTF-8");
             byte[] decoded = Base64.decodeBase64(bytes);
@@ -542,4 +537,3 @@ public class Activator extends AbstractUIPlugin {
     }
 
 }
-
