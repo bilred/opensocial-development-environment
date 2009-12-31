@@ -1,5 +1,3 @@
-=Roadmap for OSDE=
-
 ==v0.2.x==
 
  * Supports !OpenSocial Specification v0.8.1.
