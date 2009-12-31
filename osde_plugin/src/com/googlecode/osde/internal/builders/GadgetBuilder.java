@@ -32,6 +32,15 @@ import com.googlecode.osde.internal.jscompiler.JavaScriptCompilerRunner;
 import com.googlecode.osde.internal.utils.Logger;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
+import com.google.gadgets.GadgetXmlSerializer;
+import com.google.gadgets.ViewType;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Module.Content;
+import com.google.gadgets.parser.IParser;
+import com.google.gadgets.parser.ParserException;
+import com.google.gadgets.parser.ParserFactory;
+import com.google.gadgets.parser.ParserType;
+
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -45,15 +54,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-
-import com.google.gadgets.GadgetXmlSerializer;
-import com.google.gadgets.ViewType;
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Module.Content;
-import com.google.gadgets.parser.IParser;
-import com.google.gadgets.parser.ParserException;
-import com.google.gadgets.parser.ParserFactory;
-import com.google.gadgets.parser.ParserType;
 
 /**
  * Gadget builder.
@@ -71,23 +71,23 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
         ignoreFolderPattern = Pattern.compile("(\\.svn$)|(\\.git$)|(\\.hg$)|(\\.cvs$)|(\\.bzr$)");
     }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
-		IProject project = getProject();
-		if (kind == FULL_BUILD) {
-			fullBuild(project, monitor);
-		} else {
+    @SuppressWarnings("unchecked")
+    @Override
+    protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
+        IProject project = getProject();
+        if (kind == FULL_BUILD) {
+            fullBuild(project, monitor);
+        } else {
             // The eclipse platform generates resource delta when we change the
             // contents of the target folder. We should not need to do a full
             // rebuild again for that.
-			IResourceDelta delta = getDelta(project);
+            IResourceDelta delta = getDelta(project);
             if (delta == null || doesNotContainTargetFolder(delta)) {
                 fullBuild(project, monitor);
             }
-		}
-		return new IProject[] {project};
-	}
+        }
+        return new IProject[] {project};
+    }
 
     private boolean doesNotContainTargetFolder(IResourceDelta delta) {
         if (delta == null) {
@@ -96,7 +96,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
 
         boolean containsExcludedFolders = false;
         boolean containsMonitoredFolders = false;
-        for (IResourceDelta affected : delta.getAffectedChildren()){
+        for (IResourceDelta affected : delta.getAffectedChildren()) {
             if (affected.getResource().equals(getTargetFolder())) {
                 containsExcludedFolders = true;
             } else {
@@ -107,64 +107,67 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
         return !containsExcludedFolders || containsMonitoredFolders;
     }
 
-    private void fullBuild(final IProject project, final IProgressMonitor monitor) throws CoreException {
-		final boolean enableJavaScriptCompiler =
-				Activator.getDefault().getOsdeConfiguration().isCompileJavaScript();
+    private void fullBuild(final IProject project, final IProgressMonitor monitor)
+            throws CoreException {
+        final boolean enableJavaScriptCompiler =
+                Activator.getDefault().getOsdeConfiguration().isCompileJavaScript();
 
         final IFolder targetDirectory = getTargetFolder();
         if (targetDirectory.exists()) {
-			targetDirectory.delete(false, monitor);
-		}
-		targetDirectory.create(false, true, monitor);
-		targetDirectory.setDerived(true);
+            targetDirectory.delete(false, monitor);
+        }
+        targetDirectory.create(false, true, monitor);
+        targetDirectory.setDerived(true);
 
         final JavaScriptCompilerRunner runner = new JavaScriptCompilerRunner();
 
         project.accept(new IResourceVisitor() {
-			public boolean visit(IResource resource) throws CoreException {
+            public boolean visit(IResource resource) throws CoreException {
                 if (resource.isDerived()) {
                     return false;
                 }
 
-				int type = resource.getType();
-				switch(type) {
-				case IResource.FILE:
-					IFile orgFile = (IFile)resource;
-					if (!orgFile.getName().equals(".project")) {
-						IPath parent = orgFile.getParent().getProjectRelativePath();
-						IFolder destFolder = project.getFolder(targetDirectory.getProjectRelativePath() + "/" + parent);
-						IFile destFile = destFolder.getFile(orgFile.getName());
+                int type = resource.getType();
+                switch (type) {
+                    case IResource.FILE:
+                        IFile orgFile = (IFile) resource;
+                        if (!orgFile.getName().equals(".project")) {
+                            IPath parent = orgFile.getParent().getProjectRelativePath();
+                            IFolder destFolder = project.getFolder(
+                                    targetDirectory.getProjectRelativePath() + "/" + parent);
+                            IFile destFile = destFolder.getFile(orgFile.getName());
 
-                        try {
-                            if (OpenSocialUtil.isGadgetSpecXML(orgFile)) {
-                                compileGadgetSpec(orgFile, destFile, project, monitor);
-                            } else if (enableJavaScriptCompiler && isJavaScript(orgFile)) {
-                                compileJavaScript(orgFile, destFile, runner);
-                            } else {
-                                orgFile.copy(destFile.getFullPath(),
-                                        IResource.FORCE | IResource.DERIVED, monitor);
+                            try {
+                                if (OpenSocialUtil.isGadgetSpecXML(orgFile)) {
+                                    compileGadgetSpec(orgFile, destFile, project, monitor);
+                                } else if (enableJavaScriptCompiler && isJavaScript(orgFile)) {
+                                    compileJavaScript(orgFile, destFile, runner);
+                                } else {
+                                    orgFile.copy(destFile.getFullPath(),
+                                            IResource.FORCE | IResource.DERIVED, monitor);
+                                }
+                            } catch (IOException e) {
+                                logger.warn("Failed to copy a file to the target folder.", e);
+                            } catch (ParserException e) {
+                                logger.warn("Failed to build the gadget spec XML file.", e);
                             }
-                        } catch (IOException e) {
-                            logger.warn("Failed to copy a file to the target folder.", e);
-                        } catch (ParserException e) {
-                            logger.warn("Failed to build the gadget spec XML file.", e);
                         }
-                    }
-					return false;
-				case IResource.FOLDER:
-						IFolder orgFolder = (IFolder)resource;
-						if (shouldCopyFolder(orgFolder)) {
-							IFolder newFolder = targetDirectory.getFolder(orgFolder.getProjectRelativePath());
-							newFolder.create(false, true, monitor);
-							newFolder.setDerived(true);
-							return true;
-						} else {
-							return false;
-						}
-				default:
-					return true;
-				}
-			}
+                        return false;
+                    case IResource.FOLDER:
+                        IFolder orgFolder = (IFolder) resource;
+                        if (shouldCopyFolder(orgFolder)) {
+                            IFolder newFolder =
+                                    targetDirectory.getFolder(orgFolder.getProjectRelativePath());
+                            newFolder.create(false, true, monitor);
+                            newFolder.setDerived(true);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    default:
+                        return true;
+                }
+            }
         }, IResource.DEPTH_INFINITE, IContainer.EXCLUDE_DERIVED);
 
         // Compile all JavaScript files.

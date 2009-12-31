@@ -30,48 +30,48 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class OsdeProjectNature implements IProjectNature {
 
-	public static final String ID = "com.googlecode.osde.osdeNature";
+    public static final String ID = "com.googlecode.osde.osdeNature";
 
-	private IProject project;
+    private IProject project;
 
-	public void configure() throws CoreException {
-		IProjectDescription description = project.getDescription();
-		ICommand[] commands = description.getBuildSpec();
-		for (int i = 0; i < commands.length; i++) {
-			if (commands[i].getBuilderName().equals(GadgetBuilder.ID)) {
-				return;
-			}
-		}
-		ICommand command = description.newCommand();
-		command.setBuilderName(GadgetBuilder.ID);
-		ICommand[] newCommands = new ICommand[commands.length + 1];
-		System.arraycopy(commands, 0, newCommands, 0, commands.length);
-		newCommands[commands.length] = command;
-		description.setBuildSpec(newCommands);
-		project.setDescription(description, null);
-	}
+    public void configure() throws CoreException {
+        IProjectDescription description = project.getDescription();
+        ICommand[] commands = description.getBuildSpec();
+        for (int i = 0; i < commands.length; i++) {
+            if (commands[i].getBuilderName().equals(GadgetBuilder.ID)) {
+                return;
+            }
+        }
+        ICommand command = description.newCommand();
+        command.setBuilderName(GadgetBuilder.ID);
+        ICommand[] newCommands = new ICommand[commands.length + 1];
+        System.arraycopy(commands, 0, newCommands, 0, commands.length);
+        newCommands[commands.length] = command;
+        description.setBuildSpec(newCommands);
+        project.setDescription(description, null);
+    }
 
-	public void deconfigure() throws CoreException {
-		IProjectDescription description = project.getDescription();
-		ICommand[] commands = description.getBuildSpec();
-		for (int i = 0; i < commands.length; i++) {
-			if (commands[i].getBuilderName().equals(GadgetBuilder.ID)) {
-				ICommand[] newCommands = new ICommand[commands.length - 1];
-				System.arraycopy(commands, 0, newCommands, 0, i);
-				System.arraycopy(commands, i + 1, newCommands, i, commands.length - i - 1);
-				description.setBuildSpec(newCommands);
-				project.setDescription(description, null);
-				return;
-			}
-		}
-	}
+    public void deconfigure() throws CoreException {
+        IProjectDescription description = project.getDescription();
+        ICommand[] commands = description.getBuildSpec();
+        for (int i = 0; i < commands.length; i++) {
+            if (commands[i].getBuilderName().equals(GadgetBuilder.ID)) {
+                ICommand[] newCommands = new ICommand[commands.length - 1];
+                System.arraycopy(commands, 0, newCommands, 0, i);
+                System.arraycopy(commands, i + 1, newCommands, i, commands.length - i - 1);
+                description.setBuildSpec(newCommands);
+                project.setDescription(description, null);
+                return;
+            }
+        }
+    }
 
-	public IProject getProject() {
-		return project;
-	}
+    public IProject getProject() {
+        return project;
+    }
 
-	public void setProject(IProject project) {
-		this.project = project;
-	}
+    public void setProject(IProject project) {
+        this.project = project;
+    }
 
 }

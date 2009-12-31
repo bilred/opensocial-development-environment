@@ -25,19 +25,21 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * This class has common methods for operating a resource file.
+ *
  * @author Yoichiro Tanaka
  */
 public class ResourceUtil {
-    
+
     /**
      * Hide this constructor.
      */
     private ResourceUtil() {
     }
-    
+
     /**
      * Retrieve the content in the resource file which you specify.
      * This method will use UTF-8 as the resource file encoding.
+     *
      * @param path The resource file path.
      * @return The Content.
      * @throws IOException When some errors occurred.
@@ -48,6 +50,7 @@ public class ResourceUtil {
 
     /**
      * Retrieve the content in the resource file which you specify.
+     *
      * @param path The resource file path.
      * @param encoding File encoding.
      * @return The Content.

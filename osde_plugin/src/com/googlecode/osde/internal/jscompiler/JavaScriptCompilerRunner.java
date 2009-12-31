@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.googlecode.osde.internal.common.AbstractJob;
 import com.googlecode.osde.internal.utils.Logger;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -68,7 +69,7 @@ public class JavaScriptCompilerRunner extends AbstractJob {
         }
 
         // Resource change events will be fired after all compilation is done.
-        ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable(){
+        ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
             public void run(IProgressMonitor iProgressMonitor) throws CoreException {
                 monitor.beginTask(getName(), count);
 

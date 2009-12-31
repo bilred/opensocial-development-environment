@@ -69,14 +69,19 @@ public class ShindigLaunchConfigurationCreator extends AbstractJob {
         systemLibsEntry.setClasspathProperty(IRuntimeClasspathEntry.BOOTSTRAP_CLASSES);
 
         IRuntimeClasspathEntry jettyEntry = createRuntimeClasspathEntry("/libs/jetty-6.1.15.jar");
-        IRuntimeClasspathEntry jettyUtilEntry = createRuntimeClasspathEntry("/libs/jetty-util-6.1.15.jar");
-        IRuntimeClasspathEntry servletApiEntry = createRuntimeClasspathEntry("/libs/servlet-api-2.5-6.1.14.jar");
-        IRuntimeClasspathEntry juelApiEntry = createRuntimeClasspathEntry("/shindig/juel-api-2.1.2.jar");
+        IRuntimeClasspathEntry jettyUtilEntry =
+                createRuntimeClasspathEntry("/libs/jetty-util-6.1.15.jar");
+        IRuntimeClasspathEntry servletApiEntry =
+                createRuntimeClasspathEntry("/libs/servlet-api-2.5-6.1.14.jar");
+        IRuntimeClasspathEntry juelApiEntry =
+                createRuntimeClasspathEntry("/shindig/juel-api-2.1.2.jar");
         IRuntimeClasspathEntry launcherEntry = createRuntimeClasspathEntry("/shindig/launcher.jar");
 
         // hook logger library to make jetty delegate logger to slff4j and log4j
-        IRuntimeClasspathEntry logProviderEntry = createRuntimeClasspathEntry("/shindig/slf4j-api-1.5.10.jar");
-        IRuntimeClasspathEntry logBridgeEntry = createRuntimeClasspathEntry("/shindig/slf4j-log4j12-1.5.10.jar");
+        IRuntimeClasspathEntry logProviderEntry =
+                createRuntimeClasspathEntry("/shindig/slf4j-api-1.5.10.jar");
+        IRuntimeClasspathEntry logBridgeEntry =
+                createRuntimeClasspathEntry("/shindig/slf4j-log4j12-1.5.10.jar");
         IRuntimeClasspathEntry logImplEntry = createRuntimeClasspathEntry("/libs/log4j-1.2.14.jar");
 
         ILaunchConfigurationWorkingCopy wc = type.newInstance(null, "Apache Shindig");
@@ -104,8 +109,9 @@ public class ShindigLaunchConfigurationCreator extends AbstractJob {
                 + "\"");
 
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-                " -Dlog4j.configuration=\""+getLoggerConfigurationFile().toExternalForm()+"\""
-                + " -Djava.util.logging.config.file=\""+getLoggerConfigurationFile().toExternalForm()+"\"");
+                " -Dlog4j.configuration=\"" + getLoggerConfigurationFile().toExternalForm() + "\""
+                        + " -Djava.util.logging.config.file=\""
+                        + getLoggerConfigurationFile().toExternalForm() + "\"");
 
         wc.doSave();
         monitor.worked(1);
@@ -124,19 +130,21 @@ public class ShindigLaunchConfigurationCreator extends AbstractJob {
         return FileLocator.toFileURL(new URL(Activator.getDefault().getBundle().getEntry(path)
                 .toExternalForm()));
     }
-    
+
     private URL getLoggerConfigurationFile() throws MalformedURLException, IOException {
-        File logFile = new File(Activator.getDefault().getOsdeConfiguration().getLoggerConfigFile());
+        File logFile =
+                new File(Activator.getDefault().getOsdeConfiguration().getLoggerConfigFile());
         if (logFile.isFile() && logFile.exists()) {
             logger.info("Found logger configuration file: " + logFile);
             return logFile.toURI().toURL();
         }
-        
+
         logger.warn("Logger configuration file ["
-            + logFile.getAbsolutePath()	+ "] does not exist, use the default configuration file");
-        
+                + logFile.getAbsolutePath()
+                + "] does not exist, use the default configuration file");
+
         URL loggerConfigurationFile = getBundleEntryUrl("/shindig/logging.properties");
         return loggerConfigurationFile;
-     }
+    }
 
 }

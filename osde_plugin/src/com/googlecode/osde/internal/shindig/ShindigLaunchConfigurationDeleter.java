@@ -17,6 +17,8 @@
  */
 package com.googlecode.osde.internal.shindig;
 
+import com.googlecode.osde.internal.common.AbstractJob;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
@@ -24,8 +26,6 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-
-import com.googlecode.osde.internal.common.AbstractJob;
 
 public class ShindigLaunchConfigurationDeleter extends AbstractJob {
 

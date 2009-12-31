@@ -21,50 +21,50 @@ import com.google.gadgets.model.Module;
 
 public class ApplicationInformation {
 
-	private String appId;
-	private Module module;
-	private String path;
-	private String consumerKey;
-	private String consumerSecret;
+    private String appId;
+    private Module module;
+    private String path;
+    private String consumerKey;
+    private String consumerSecret;
 
-	public String getConsumerKey() {
-		return consumerKey;
-	}
+    public String getConsumerKey() {
+        return consumerKey;
+    }
 
-	public void setConsumerKey(String consumerKey) {
-		this.consumerKey = consumerKey;
-	}
+    public void setConsumerKey(String consumerKey) {
+        this.consumerKey = consumerKey;
+    }
 
-	public String getConsumerSecret() {
-		return consumerSecret;
-	}
+    public String getConsumerSecret() {
+        return consumerSecret;
+    }
 
-	public void setConsumerSecret(String consumerSecret) {
-		this.consumerSecret = consumerSecret;
-	}
+    public void setConsumerSecret(String consumerSecret) {
+        this.consumerSecret = consumerSecret;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-	public void setAppId(String appId) {
-		this.appId = appId;
-	}
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
 
-	public void setModule(Module module) {
-		this.module = module;
-	}
-	
-	public String getAppId() {
-		return appId;
-	}
-	
-	public Module getModule() {
-		return module;
-	}
+    public void setModule(Module module) {
+        this.module = module;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public Module getModule() {
+        return module;
+    }
 
 }

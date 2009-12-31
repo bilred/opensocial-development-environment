@@ -24,18 +24,18 @@ import org.eclipse.core.runtime.Status;
 
 public class StatusUtil {
 
-	public static IStatus newStatus(int severity, String message, Throwable exception) {
-		String statusMessage = message;
-		if (message == null || message.trim().length() == 0) {
-			if (exception == null) {
-				throw new IllegalArgumentException();
-			} else if (exception.getMessage() == null) {
-				statusMessage = exception.toString();
-			} else {
-				statusMessage = exception.getMessage();
-			}
-		}
-		return new Status(severity, Activator.PLUGIN_ID, severity, statusMessage, exception);
-	}
+    public static IStatus newStatus(int severity, String message, Throwable exception) {
+        String statusMessage = message;
+        if (message == null || message.trim().length() == 0) {
+            if (exception == null) {
+                throw new IllegalArgumentException();
+            } else if (exception.getMessage() == null) {
+                statusMessage = exception.toString();
+            } else {
+                statusMessage = exception.getMessage();
+            }
+        }
+        return new Status(severity, Activator.PLUGIN_ID, severity, statusMessage, exception);
+    }
 
 }

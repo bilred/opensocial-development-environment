@@ -46,7 +46,7 @@ import com.google.javascript.jscomp.WarningLevel;
  * API for OSDE. This implementation is a simplified version of
  * <code>com.google.javascript.jscomp.AbstractCompilerRunner</code>.
  * Note that all binary dependencies to the compiler are hidden inside this
- * class. 
+ * class.
  *
  * @author Dolphin Chi-Ngai Wan
  */

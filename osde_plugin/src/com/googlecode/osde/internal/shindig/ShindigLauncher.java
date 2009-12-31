@@ -47,136 +47,140 @@ import org.eclipse.ui.IWorkbenchPart;
 public class ShindigLauncher {
     private static final Logger logger = new Logger(ShindigLauncher.class);
 
-	public static boolean launchWithConfirm(Shell shell, final IWorkbenchPart targetPart) {
-		if (MessageDialog.openConfirm(shell, "Confirm", "Shindig not started yet. Would you like to start Shindig?")) {
-			ShindigLauncher.launch(shell, targetPart);
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public static boolean launchWithConfirm(Shell shell, final IWorkbenchPart targetPart) {
+        if (MessageDialog.openConfirm(shell, "Confirm",
+                "Shindig not started yet. Would you like to start Shindig?")) {
+            ShindigLauncher.launch(shell, targetPart);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public static void launch(Shell shell, final IWorkbenchPart targetPart) {
-		Activator.getDefault().setRunningShindig(true);
-		try {
-			ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-			ILaunch[] launches = manager.getLaunches();
-			for (ILaunch launch : launches) {
-				String name = launch.getLaunchConfiguration().getName();
-				if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
-					launch.terminate();
-				}
-			}
-			//
-			OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
-			createConfigFileForHibernate(config);
-			//
-			ILaunchConfigurationType type = manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-			ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
-			int delay = 0;
-			
-			// The following codes launch Database and then launch Shindig
-			// If the user specifies an external database, we won't launch internal database
-			// Launch Database for Shindig to connect to
-			if (config.isUseInternalDatabase()) {
-				for (int i = 0; i < configurations.length; ++i) {
-					if (configurations[i].getName().equals("Shindig Database")) {
-						final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
-						shell.getDisplay().syncExec(new Runnable() {
-							public void run() {
-								try {
-									DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
-								} catch (CoreException e) {
-									logger.error("Launching Shindig Database failed.", e);
-								}
-							}
-						});
-					}
-				}
-				delay = 3000;
-			}
-			shell.getDisplay().timerExec(delay, new Runnable() {
-				public void run() {
-					Activator.getDefault().connect(targetPart.getSite().getWorkbenchWindow());
-				}
-			});
-			
-			// Launch Shindig container
-			for (int i = 0; i < configurations.length; i++) {
-				if (configurations[i].getName().equals("Apache Shindig")) {
-					final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
-					shell.getDisplay().timerExec(3000, new Runnable() {
-						public void run() {
-							try {
-								DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
-							} catch (CoreException e) {
-								logger.error("Launching Apache Shindig failed.", e);
-							}
-						}
-					});
-				}
-			}
-		} catch (CoreException e) {
-			logger.error("Launching Apache Shindig or Shindig Database failed.", e);
-		}
-	}
+    public static void launch(Shell shell, final IWorkbenchPart targetPart) {
+        Activator.getDefault().setRunningShindig(true);
+        try {
+            ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+            ILaunch[] launches = manager.getLaunches();
+            for (ILaunch launch : launches) {
+                String name = launch.getLaunchConfiguration().getName();
+                if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
+                    launch.terminate();
+                }
+            }
+            //
+            OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+            createConfigFileForHibernate(config);
+            //
+            ILaunchConfigurationType type = manager.getLaunchConfigurationType(
+                    IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
+            ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
+            int delay = 0;
 
-	private static void createConfigFileForHibernate(OsdeConfig config) {
-		FileOutputStream fos = null;
-		try {
-			InputStreamReader in = new InputStreamReader(
-					ShindigLauncher.class.getResourceAsStream("/shindig/osde_hibernate.cfg.xml.tmpl"), "UTF-8");
-			StringWriter out = new StringWriter();
-			IOUtils.copy(in, out);
-			String code = out.toString();
-			if (config.isUseInternalDatabase()) {
-				code = code.replace("$driver_class$", "org.h2.Driver");
-				code = code.replace("$url$", "jdbc:h2:tcp://localhost:9092/shindig");
-				code = code.replace("$username$", "sa");
-				code = code.replace("$password$", "");
-				code = code.replace("$dialect$", "H2");
-				String databaseDir = config.getDatabaseDir();
-				File dbFile = new File(databaseDir, "shindig.data.db");
-				code = code.replace("$hbm2ddl$", dbFile.isFile() ? "update" : "create");
-			} else {
-				if (config.getExternalDatabaseType().equals("MySQL")) {
-					code = code.replace("$driver_class$", "com.mysql.jdbc.Driver");
-					String url = "jdbc:mysql://";
-					url += config.getExternalDatabaseHost();
-					String port = config.getExternalDatabasePort();
-					if (StringUtils.isNotEmpty(port)) {
-						url += ":" + port;
-					}
-					url += "/" + config.getExternalDatabaseName();
-					code = code.replace("$url$", url);
-					code = code.replace("$username$", config.getExternalDatabaseUsername());
-					code = code.replace("$password$", config.getExternalDatabasePassword());
-					code = code.replace("$dialect$", "MySQL");
-				} else if (config.getExternalDatabaseType().equals("Oracle")) {
-					code = code.replace("$driver_class$", "oracle.jdbc.driver.OracleDriver");
-					String url = "jdbc:oracle:thin:@";
-					url += config.getExternalDatabaseHost();
-					String port = config.getExternalDatabasePort();
-					if (StringUtils.isNotEmpty(port)) {
-						url += ":" + port;
-					}
-					url += ":" + config.getExternalDatabaseName();
-					code = code.replace("$url$", url);
-					code = code.replace("$username$", config.getExternalDatabaseUsername());
-					code = code.replace("$password$", config.getExternalDatabasePassword());
-					code = code.replace("$dialect$", "Oracle");
-				}
-			}
-			File file = new File(HibernateUtils.configFileDir, HibernateUtils.configFileName);
-			fos = new FileOutputStream(file);
-			ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
-			IOUtils.copy(bytes, fos);
-		} catch(IOException e) {
-			logger.error("Creating the configuration file for H2Database failed.", e);
-			throw new IllegalStateException(e);
-		} finally {
-			IOUtils.closeQuietly(fos);
-		}
-	}
+            // The following codes launch Database and then launch Shindig
+            // If the user specifies an external database, we won't launch internal database
+            // Launch Database for Shindig to connect to
+            if (config.isUseInternalDatabase()) {
+                for (int i = 0; i < configurations.length; ++i) {
+                    if (configurations[i].getName().equals("Shindig Database")) {
+                        final ILaunchConfigurationWorkingCopy wc =
+                                configurations[i].getWorkingCopy();
+                        shell.getDisplay().syncExec(new Runnable() {
+                            public void run() {
+                                try {
+                                    DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
+                                } catch (CoreException e) {
+                                    logger.error("Launching Shindig Database failed.", e);
+                                }
+                            }
+                        });
+                    }
+                }
+                delay = 3000;
+            }
+            shell.getDisplay().timerExec(delay, new Runnable() {
+                public void run() {
+                    Activator.getDefault().connect(targetPart.getSite().getWorkbenchWindow());
+                }
+            });
+
+            // Launch Shindig container
+            for (int i = 0; i < configurations.length; i++) {
+                if (configurations[i].getName().equals("Apache Shindig")) {
+                    final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
+                    shell.getDisplay().timerExec(3000, new Runnable() {
+                        public void run() {
+                            try {
+                                DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
+                            } catch (CoreException e) {
+                                logger.error("Launching Apache Shindig failed.", e);
+                            }
+                        }
+                    });
+                }
+            }
+        } catch (CoreException e) {
+            logger.error("Launching Apache Shindig or Shindig Database failed.", e);
+        }
+    }
+
+    private static void createConfigFileForHibernate(OsdeConfig config) {
+        FileOutputStream fos = null;
+        try {
+            InputStreamReader in = new InputStreamReader(
+                    ShindigLauncher.class.getResourceAsStream(
+                            "/shindig/osde_hibernate.cfg.xml.tmpl"), "UTF-8");
+            StringWriter out = new StringWriter();
+            IOUtils.copy(in, out);
+            String code = out.toString();
+            if (config.isUseInternalDatabase()) {
+                code = code.replace("$driver_class$", "org.h2.Driver");
+                code = code.replace("$url$", "jdbc:h2:tcp://localhost:9092/shindig");
+                code = code.replace("$username$", "sa");
+                code = code.replace("$password$", "");
+                code = code.replace("$dialect$", "H2");
+                String databaseDir = config.getDatabaseDir();
+                File dbFile = new File(databaseDir, "shindig.data.db");
+                code = code.replace("$hbm2ddl$", dbFile.isFile() ? "update" : "create");
+            } else {
+                if (config.getExternalDatabaseType().equals("MySQL")) {
+                    code = code.replace("$driver_class$", "com.mysql.jdbc.Driver");
+                    String url = "jdbc:mysql://";
+                    url += config.getExternalDatabaseHost();
+                    String port = config.getExternalDatabasePort();
+                    if (StringUtils.isNotEmpty(port)) {
+                        url += ":" + port;
+                    }
+                    url += "/" + config.getExternalDatabaseName();
+                    code = code.replace("$url$", url);
+                    code = code.replace("$username$", config.getExternalDatabaseUsername());
+                    code = code.replace("$password$", config.getExternalDatabasePassword());
+                    code = code.replace("$dialect$", "MySQL");
+                } else if (config.getExternalDatabaseType().equals("Oracle")) {
+                    code = code.replace("$driver_class$", "oracle.jdbc.driver.OracleDriver");
+                    String url = "jdbc:oracle:thin:@";
+                    url += config.getExternalDatabaseHost();
+                    String port = config.getExternalDatabasePort();
+                    if (StringUtils.isNotEmpty(port)) {
+                        url += ":" + port;
+                    }
+                    url += ":" + config.getExternalDatabaseName();
+                    code = code.replace("$url$", url);
+                    code = code.replace("$username$", config.getExternalDatabaseUsername());
+                    code = code.replace("$password$", config.getExternalDatabasePassword());
+                    code = code.replace("$dialect$", "Oracle");
+                }
+            }
+            File file = new File(HibernateUtils.configFileDir, HibernateUtils.configFileName);
+            fos = new FileOutputStream(file);
+            ByteArrayInputStream bytes = new ByteArrayInputStream(code.getBytes("UTF-8"));
+            IOUtils.copy(bytes, fos);
+        } catch (IOException e) {
+            logger.error("Creating the configuration file for H2Database failed.", e);
+            throw new IllegalStateException(e);
+        } finally {
+            IOUtils.closeQuietly(fos);
+        }
+    }
 
 }

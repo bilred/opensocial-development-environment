@@ -38,88 +38,91 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class ShutoffShindigAction extends Action implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+public class ShutoffShindigAction extends Action
+        implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
     private static final Logger logger = new Logger(ShutoffShindigAction.class);
-	private Shell shell;
-	private IWorkbenchPart targetPart;
-	
-	/**
-	 * Constructor for Action1.
-	 */
-	public ShutoffShindigAction() {
-		super();
-	}
-	
-	public ShutoffShindigAction(IWorkbenchPart targetPart) {
-		super();
-		shell = targetPart.getSite().getShell();
-		this.targetPart = targetPart;
-	}
+    private Shell shell;
+    private IWorkbenchPart targetPart;
 
-	/**
-	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		shell = targetPart.getSite().getShell();
-		this.targetPart = targetPart;
-	}
+    /**
+     * Constructor for Action1.
+     */
+    public ShutoffShindigAction() {
+        super();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
-	public void run() {
-		run(null);
-	}
+    public ShutoffShindigAction(IWorkbenchPart targetPart) {
+        super();
+        shell = targetPart.getSite().getShell();
+        this.targetPart = targetPart;
+    }
 
-	/**
-	 * @see IActionDelegate#run(IAction)
-	 */
-	public void run(IAction action) {
-		Activator.getDefault().setRunningShindig(false);
-		Job job = new Job("Shutting off Apache Shindig.") {
-			@Override
-			protected IStatus run(final IProgressMonitor monitor) {
-				monitor.beginTask("Shutting off Apache Shindig.", 7);
-				try {
-					ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-					ILaunch[] launches = manager.getLaunches();
-					for (ILaunch launch : launches) {
-						String name = launch.getLaunchConfiguration().getName();
-						if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
-							launch.terminate();
-							monitor.worked(1);
-						}
-					}
-					shell.getDisplay().syncExec(new Runnable() {
-						public void run() {
-							Activator.getDefault().disconnect(targetPart.getSite().getWorkbenchWindow(), monitor);
-						}
-					});
-				} catch (CoreException e) {
-					logger.error("To shutdown Apache Shindig or Shindig Database failed.", e);
-				}
-				monitor.done();
-				return Status.OK_STATUS;
-			}
-		};
-		job.setUser(true);
-		job.schedule();
-	}
+    /**
+     * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
+     */
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        shell = targetPart.getSite().getShell();
+        this.targetPart = targetPart;
+    }
 
-	/**
-	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+    /* (non-Javadoc)
+      * @see org.eclipse.jface.action.Action#run()
+      */
 
-	public void dispose() {
-	}
+    @Override
+    public void run() {
+        run(null);
+    }
 
-	public void init(IWorkbenchWindow window) {
-		targetPart = window.getActivePage().getActivePart();
-		shell = targetPart.getSite().getShell();
-	}
+    /**
+     * @see IActionDelegate#run(IAction)
+     */
+    public void run(IAction action) {
+        Activator.getDefault().setRunningShindig(false);
+        Job job = new Job("Shutting off Apache Shindig.") {
+            @Override
+            protected IStatus run(final IProgressMonitor monitor) {
+                monitor.beginTask("Shutting off Apache Shindig.", 7);
+                try {
+                    ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+                    ILaunch[] launches = manager.getLaunches();
+                    for (ILaunch launch : launches) {
+                        String name = launch.getLaunchConfiguration().getName();
+                        if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
+                            launch.terminate();
+                            monitor.worked(1);
+                        }
+                    }
+                    shell.getDisplay().syncExec(new Runnable() {
+                        public void run() {
+                            Activator.getDefault()
+                                    .disconnect(targetPart.getSite().getWorkbenchWindow(), monitor);
+                        }
+                    });
+                } catch (CoreException e) {
+                    logger.error("To shutdown Apache Shindig or Shindig Database failed.", e);
+                }
+                monitor.done();
+                return Status.OK_STATUS;
+            }
+        };
+        job.setUser(true);
+        job.schedule();
+    }
+
+    /**
+     * @see IActionDelegate#selectionChanged(IAction, ISelection)
+     */
+    public void selectionChanged(IAction action, ISelection selection) {
+    }
+
+    public void dispose() {
+    }
+
+    public void init(IWorkbenchWindow window) {
+        targetPart = window.getActivePage().getActivePart();
+        shell = targetPart.getSite().getShell();
+    }
 
 }
