@@ -288,10 +288,11 @@ public class Translator {
      *         &q=texts[0]&q=texts[1]&langpair=fromLanguage|toLanguage"
      * @throws UnsupportedEncodingException
      */
-    protected void constructQueryURL(StringBuilder builder, Language fromLanguage, Language toLanguage, String... texts) throws UnsupportedEncodingException {
-		for (String text : texts) {
-			encodeAndConstructQueryText(builder, text, "UTF-8");
-		}
-		constructLangPairQuery(builder, fromLanguage, toLanguage);
-	}
+    protected void constructQueryURL(StringBuilder builder, Language fromLanguage,
+            Language toLanguage, String... texts) throws UnsupportedEncodingException {
+        for (String text : texts) {
+            encodeAndConstructQueryText(builder, text, "UTF-8");
+        }
+        constructLangPairQuery(builder, fromLanguage, toLanguage);
+    }
 }

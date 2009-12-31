@@ -30,21 +30,22 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  */
 public class RunAgainAction extends AbstractRunAction implements IWorkbenchWindowActionDelegate {
 
-	public void dispose() {
-	}
+    public void dispose() {
+    }
 
-	public void run(IAction action) {
-		LaunchApplicationInformation information = Activator.getDefault().getLastApplicationInformation();
-		if (information == null) {
-			MessageDialog.openWarning(shell, "Warning", "Any application is not started yet.");
-		} else {
-			Job job = new LaunchApplicationJob("Running application", information, shell);
-			job.schedule();
-			notifyUserPrefsView(information);
-		}
-	}
+    public void run(IAction action) {
+        LaunchApplicationInformation information =
+                Activator.getDefault().getLastApplicationInformation();
+        if (information == null) {
+            MessageDialog.openWarning(shell, "Warning", "Any application is not started yet.");
+        } else {
+            Job job = new LaunchApplicationJob("Running application", information, shell);
+            job.schedule();
+            notifyUserPrefsView(information);
+        }
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+    }
 
 }

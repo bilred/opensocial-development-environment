@@ -35,36 +35,36 @@ import org.eclipse.ui.IEditorPart;
  */
 public class RunFromEditorAction extends AbstractRunAction implements IEditorActionDelegate {
 
-	private IEditorPart targetEditor;
+    private IEditorPart targetEditor;
 
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		this.targetEditor = targetEditor;
-		shell = targetEditor != null ? targetEditor.getSite().getShell() : null;
-		targetPart = targetEditor;
-	}
+    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+        this.targetEditor = targetEditor;
+        shell = targetEditor != null ? targetEditor.getSite().getShell() : null;
+        targetPart = targetEditor;
+    }
 
-	public void run(IAction action) {
-		if (targetEditor instanceof GadgetXmlEditor) {
-			GadgetXmlEditor editor = (GadgetXmlEditor)targetEditor;
-			final IFile gadgetXmlFile = (IFile)editor.getEditorInput().getAdapter(IResource.class);
-			final IProject project = gadgetXmlFile.getProject();
-			if (!Activator.getDefault().isRunningShindig()) {
-				boolean result = ShindigLauncher.launchWithConfirm(shell, targetPart);
-				if (result) {
-					shell.getDisplay().timerExec(10000, new Runnable() {
-						public void run() {
-							launch(gadgetXmlFile, project);
-						}
-					});
-					return;
-				}
-			} else {
-				launch(gadgetXmlFile, project);
-			}
-		}
-	}
+    public void run(IAction action) {
+        if (targetEditor instanceof GadgetXmlEditor) {
+            GadgetXmlEditor editor = (GadgetXmlEditor) targetEditor;
+            final IFile gadgetXmlFile = (IFile) editor.getEditorInput().getAdapter(IResource.class);
+            final IProject project = gadgetXmlFile.getProject();
+            if (!Activator.getDefault().isRunningShindig()) {
+                boolean result = ShindigLauncher.launchWithConfirm(shell, targetPart);
+                if (result) {
+                    shell.getDisplay().timerExec(10000, new Runnable() {
+                        public void run() {
+                            launch(gadgetXmlFile, project);
+                        }
+                    });
+                    return;
+                }
+            } else {
+                launch(gadgetXmlFile, project);
+            }
+        }
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+    }
 
 }
