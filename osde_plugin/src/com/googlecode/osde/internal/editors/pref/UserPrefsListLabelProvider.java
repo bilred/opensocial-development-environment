@@ -25,27 +25,28 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 class UserPrefsListLabelProvider extends LabelProvider implements ITableLabelProvider {
-	
-	public Image getColumnImage(Object element, int columnIndex) {
-		switch(columnIndex) {
-		case 0:
-			ImageDescriptor descriptor = Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_settings.gif");
-			return descriptor.createImage();
-		default:
-			return null;
-		}
-	}
 
-	public String getColumnText(Object element, int columnIndex) {
-		UserPrefModel model = (UserPrefModel)element;
-		switch(columnIndex) {
-		case 1:
-			return model.getName();
-		case 2:
-			return model.getDataType().getDisplayName();
-		default:
-			return null;
-		}
-	}
-	
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                ImageDescriptor descriptor = Activator.getDefault().getImageRegistry()
+                        .getDescriptor("icons/icon_settings.gif");
+                return descriptor.createImage();
+            default:
+                return null;
+        }
+    }
+
+    public String getColumnText(Object element, int columnIndex) {
+        UserPrefModel model = (UserPrefModel) element;
+        switch (columnIndex) {
+            case 1:
+                return model.getName();
+            case 2:
+                return model.getDataType().getDisplayName();
+            default:
+                return null;
+        }
+    }
+
 }

@@ -37,102 +37,102 @@ import org.eclipse.swt.widgets.Text;
 
 public class AddUserPrefDialog extends TitleAreaDialog {
 
-	private Text nameText;
-	private Text displayNameText;
-	private Combo dataTypeCombo;
-	
-	private String name;
-	private String displayName;
-	private DataType dataType;
-	
-	private ModifyListener modifyListener = new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
-			validate();
-		}
-	};
+    private Text nameText;
+    private Text displayNameText;
+    private Combo dataTypeCombo;
 
-	public AddUserPrefDialog(Shell shell) {
-		super(shell);
-	}
-	
-	private boolean validate() {
-		String id = nameText.getText();
-		if (StringUtils.isEmpty(id)) {
-			setMessage("Please fill the name field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		setMessage(null);
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
-		return true;
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		setTitle("Add new UserPref");
-		setMessage("Please input name and select Data type.");
-		Composite composite = (Composite)super.createDialogArea(parent);
-		Composite panel = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		panel.setLayoutData(layoutData);
-		//
-		Label label = new Label(panel, SWT.NONE);
-		label.setText("Name:");
-		nameText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		nameText.setLayoutData(layoutData);
-		nameText.addModifyListener(modifyListener);
-		//
-		label = new Label(panel, SWT.NONE);
-		label.setText("Display name:");
-		displayNameText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		displayNameText.setLayoutData(layoutData);
-		displayNameText.addModifyListener(modifyListener);
-		//
-		label = new Label(panel, SWT.NONE);
-		label.setText("Data type:");
-		dataTypeCombo = new Combo(panel, SWT.READ_ONLY);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		dataTypeCombo.setLayoutData(layoutData);
-		DataType[] values = DataType.values();
-		for (DataType dataType : values) {
-			dataTypeCombo.add(dataType.getDisplayName());
-			dataTypeCombo.setData(dataType.getDisplayName(), dataType);
-		}
-		dataTypeCombo.select(0);
-		//
-		return composite;
-	}
+    private String name;
+    private String displayName;
+    private DataType dataType;
 
-	@Override
-	protected void okPressed() {
-		name = nameText.getText();
-		displayName = displayNameText.getText();
-		dataType = (DataType)dataTypeCombo.getData(dataTypeCombo.getText());
-		setReturnCode(OK);
-		close();
-	}
+    private ModifyListener modifyListener = new ModifyListener() {
+        public void modifyText(ModifyEvent e) {
+            validate();
+        }
+    };
 
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		super.createButtonsForButtonBar(parent);
-		getButton(IDialogConstants.OK_ID).setEnabled(false);
-	}
+    public AddUserPrefDialog(Shell shell) {
+        super(shell);
+    }
 
-	public String getName() {
-		return name;
-	}
+    private boolean validate() {
+        String id = nameText.getText();
+        if (StringUtils.isEmpty(id)) {
+            setMessage("Please fill the name field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        setMessage(null);
+        getButton(IDialogConstants.OK_ID).setEnabled(true);
+        return true;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
-	
-	public DataType getDataType() {
-		return dataType;
-	}
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        setTitle("Add new UserPref");
+        setMessage("Please input name and select Data type.");
+        Composite composite = (Composite) super.createDialogArea(parent);
+        Composite panel = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        panel.setLayout(layout);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        panel.setLayoutData(layoutData);
+        //
+        Label label = new Label(panel, SWT.NONE);
+        label.setText("Name:");
+        nameText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        nameText.setLayoutData(layoutData);
+        nameText.addModifyListener(modifyListener);
+        //
+        label = new Label(panel, SWT.NONE);
+        label.setText("Display name:");
+        displayNameText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        displayNameText.setLayoutData(layoutData);
+        displayNameText.addModifyListener(modifyListener);
+        //
+        label = new Label(panel, SWT.NONE);
+        label.setText("Data type:");
+        dataTypeCombo = new Combo(panel, SWT.READ_ONLY);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        dataTypeCombo.setLayoutData(layoutData);
+        DataType[] values = DataType.values();
+        for (DataType dataType : values) {
+            dataTypeCombo.add(dataType.getDisplayName());
+            dataTypeCombo.setData(dataType.getDisplayName(), dataType);
+        }
+        dataTypeCombo.select(0);
+        //
+        return composite;
+    }
+
+    @Override
+    protected void okPressed() {
+        name = nameText.getText();
+        displayName = displayNameText.getText();
+        dataType = (DataType) dataTypeCombo.getData(dataTypeCombo.getText());
+        setReturnCode(OK);
+        close();
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public DataType getDataType() {
+        return dataType;
+    }
 
 }

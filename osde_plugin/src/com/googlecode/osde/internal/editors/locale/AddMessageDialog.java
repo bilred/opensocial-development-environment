@@ -38,120 +38,120 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class AddMessageDialog extends TitleAreaDialog {
-	
-	private ModifyListener modifyListener = new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
-			validate();
-		}
-	};
 
-	private Text nameText;
-	private Map<LocaleModel, Text> contentTextMap;
-	
-	private String name;
-	private Map<LocaleModel, String> contentMap;
+    private ModifyListener modifyListener = new ModifyListener() {
+        public void modifyText(ModifyEvent e) {
+            validate();
+        }
+    };
 
-	private List<LocaleModel> localeModels;
+    private Text nameText;
+    private Map<LocaleModel, Text> contentTextMap;
 
-	private LocaleModel localeModel;
-	
-	public AddMessageDialog(Shell shell, List<LocaleModel> localeModels, LocaleModel localeModel) {
-		super(shell);
-		this.localeModels = localeModels;
-		this.localeModel = localeModel;
-		contentTextMap = new HashMap<LocaleModel, Text>();
-		contentMap = new HashMap<LocaleModel, String>();
-	}
-	
-	private boolean validate() {
-		String name = nameText.getText();
-		if (StringUtils.isEmpty(name)) {
-			setMessage("Please fill the name field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		setMessage(null);
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
-		return true;
-	}
-	
-	@Override
-	protected Point getInitialSize() {
-		return new Point(500, super.getInitialSize().y);
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		setTitle("Add the localized message");
-		setMessage("Please input the name and content.");
-		Composite composite = (Composite)super.createDialogArea(parent);
-		Composite panel = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_BOTH);
-		panel.setLayoutData(layoutData);
-		//
-		Label label = new Label(panel, SWT.NONE);
-		label.setText("Name:");
-		nameText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		nameText.setLayoutData(layoutData);
-		nameText.addModifyListener(modifyListener);
-		//
-		label = new Label(panel, SWT.NONE);
-		label.setText(getLabelText(localeModel));
-		Text text = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		text.setLayoutData(layoutData);
-		text.addModifyListener(modifyListener);
-		contentTextMap.put(localeModel, text);
-		//
-		for (LocaleModel model : localeModels) {
-			if (!localeModel.equals(model)) {
-				label = new Label(panel, SWT.NONE);
-				label.setText(getLabelText(model));
-				text = new Text(panel, SWT.BORDER);
-				layoutData = new GridData(GridData.FILL_HORIZONTAL);
-				text.setLayoutData(layoutData);
-				text.addModifyListener(modifyListener);
-				contentTextMap.put(model, text);
-			}
-		}
-		//
-		return composite;
-	}
-	
-	private String getLabelText(LocaleModel localeModel) {
-		String country = localeModel.getCountry();
-		country = StringUtils.isEmpty(country) ? "(any)" : country;
-		String lang = localeModel.getLang();
-		lang = StringUtils.isEmpty(lang) ? "(any)" : lang;
-		return lang + "_" + country;
-	}
+    private String name;
+    private Map<LocaleModel, String> contentMap;
 
-	@Override
-	protected void okPressed() {
-		name = nameText.getText();
-		for (Map.Entry<LocaleModel, Text> entry : contentTextMap.entrySet()) {
-			contentMap.put(entry.getKey(), entry.getValue().getText());
-		}
-		setReturnCode(OK);
-		close();
-	}
-	
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		super.createButtonsForButtonBar(parent);
-		getButton(IDialogConstants.OK_ID).setEnabled(false);
-	}
+    private List<LocaleModel> localeModels;
 
-	public String getName() {
-		return name;
-	}
-	
-	public Map<LocaleModel, String> getContentMap() {
-		return contentMap;
-	}
+    private LocaleModel localeModel;
+
+    public AddMessageDialog(Shell shell, List<LocaleModel> localeModels, LocaleModel localeModel) {
+        super(shell);
+        this.localeModels = localeModels;
+        this.localeModel = localeModel;
+        contentTextMap = new HashMap<LocaleModel, Text>();
+        contentMap = new HashMap<LocaleModel, String>();
+    }
+
+    private boolean validate() {
+        String name = nameText.getText();
+        if (StringUtils.isEmpty(name)) {
+            setMessage("Please fill the name field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        setMessage(null);
+        getButton(IDialogConstants.OK_ID).setEnabled(true);
+        return true;
+    }
+
+    @Override
+    protected Point getInitialSize() {
+        return new Point(500, super.getInitialSize().y);
+    }
+
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        setTitle("Add the localized message");
+        setMessage("Please input the name and content.");
+        Composite composite = (Composite) super.createDialogArea(parent);
+        Composite panel = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        panel.setLayout(layout);
+        GridData layoutData = new GridData(GridData.FILL_BOTH);
+        panel.setLayoutData(layoutData);
+        //
+        Label label = new Label(panel, SWT.NONE);
+        label.setText("Name:");
+        nameText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        nameText.setLayoutData(layoutData);
+        nameText.addModifyListener(modifyListener);
+        //
+        label = new Label(panel, SWT.NONE);
+        label.setText(getLabelText(localeModel));
+        Text text = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        text.setLayoutData(layoutData);
+        text.addModifyListener(modifyListener);
+        contentTextMap.put(localeModel, text);
+        //
+        for (LocaleModel model : localeModels) {
+            if (!localeModel.equals(model)) {
+                label = new Label(panel, SWT.NONE);
+                label.setText(getLabelText(model));
+                text = new Text(panel, SWT.BORDER);
+                layoutData = new GridData(GridData.FILL_HORIZONTAL);
+                text.setLayoutData(layoutData);
+                text.addModifyListener(modifyListener);
+                contentTextMap.put(model, text);
+            }
+        }
+        //
+        return composite;
+    }
+
+    private String getLabelText(LocaleModel localeModel) {
+        String country = localeModel.getCountry();
+        country = StringUtils.isEmpty(country) ? "(any)" : country;
+        String lang = localeModel.getLang();
+        lang = StringUtils.isEmpty(lang) ? "(any)" : lang;
+        return lang + "_" + country;
+    }
+
+    @Override
+    protected void okPressed() {
+        name = nameText.getText();
+        for (Map.Entry<LocaleModel, Text> entry : contentTextMap.entrySet()) {
+            contentMap.put(entry.getKey(), entry.getValue().getText());
+        }
+        setReturnCode(OK);
+        close();
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Map<LocaleModel, String> getContentMap() {
+        return contentMap;
+    }
 
 }

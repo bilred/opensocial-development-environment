@@ -21,30 +21,30 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 public class GadgetXmlOutlineContentProvider implements ITreeContentProvider {
-	
-	public Object[] getChildren(Object parentElement) {
-		ElementModel model = (ElementModel)parentElement;
-		return model.getChildren().toArray();
-	}
 
-	public Object getParent(Object element) {
-		ElementModel model = (ElementModel)element;
-		return model.getParent();
-	}
+    public Object[] getChildren(Object parentElement) {
+        ElementModel model = (ElementModel) parentElement;
+        return model.getChildren().toArray();
+    }
 
-	public boolean hasChildren(Object element) {
-		ElementModel model = (ElementModel)element;
-		return !model.getChildren().isEmpty();
-	}
+    public Object getParent(Object element) {
+        ElementModel model = (ElementModel) element;
+        return model.getParent();
+    }
 
-	public Object[] getElements(Object inputElement) {
-		return getChildren(inputElement);
-	}
+    public boolean hasChildren(Object element) {
+        ElementModel model = (ElementModel) element;
+        return !model.getChildren().isEmpty();
+    }
 
-	public void dispose() {
-	}
+    public Object[] getElements(Object inputElement) {
+        return getChildren(inputElement);
+    }
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
-	
+    public void dispose() {
+    }
+
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    }
+
 }

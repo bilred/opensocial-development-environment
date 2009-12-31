@@ -20,48 +20,48 @@ package com.googlecode.osde.internal.editors.locale;
 
 import java.util.List;
 
+import com.google.gadgets.model.Module;
+
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
-import com.google.gadgets.model.Module;
-
 public class LocalePage extends FormPage {
 
-	private Module module;
-	
-	private MessageBundleBlock block;
-	
-	public Module getModule() {
-		return module;
-	}
+    private Module module;
 
-	public LocalePage(FormEditor editor, Module module) {
-		super(editor, null, "Locale");
-		this.module = module;
-		block = new MessageBundleBlock(this);
-	}
+    private MessageBundleBlock block;
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		block.createContent(managedForm);
-	}
+    public Module getModule() {
+        return module;
+    }
 
-	public void updateLocaleModel() {
-		block.updateLocaleModel();
-	}
-	
-	public List<LocaleModel> getLocaleModels() {
-		return block.getLocaleModels();
-	}
+    public LocalePage(FormEditor editor, Module module) {
+        super(editor, null, "Locale");
+        this.module = module;
+        block = new MessageBundleBlock(this);
+    }
 
-	public void updateModel() {
-		block.updateModel();
-	}
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        block.createContent(managedForm);
+    }
 
-	public void changeModel(Module model) {
-		this.module = model;
-		block.changeModel();
-	}
-	
+    public void updateLocaleModel() {
+        block.updateLocaleModel();
+    }
+
+    public List<LocaleModel> getLocaleModels() {
+        return block.getLocaleModels();
+    }
+
+    public void updateModel() {
+        block.updateModel();
+    }
+
+    public void changeModel(Module model) {
+        this.module = model;
+        block.changeModel();
+    }
+
 }

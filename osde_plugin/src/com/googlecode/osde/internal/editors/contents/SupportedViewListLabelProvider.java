@@ -26,34 +26,35 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 class SupportedViewListLabelProvider extends LabelProvider implements ITableLabelProvider {
-	
-	private static final String ANY = "(any)";
 
-	public Image getColumnImage(Object element, int columnIndex) {
-		switch(columnIndex) {
-		case 0:
-			ImageDescriptor descriptor = Activator.getDefault().getImageRegistry().getDescriptor("icons/page_component.gif");
-			return descriptor.createImage();
-		default:
-			return null;
-		}
-	}
+    private static final String ANY = "(any)";
 
-	public String getColumnText(Object element, int columnIndex) {
-		ContentModel model = (ContentModel)element;
-		switch(columnIndex) {
-		case 1:
-			String view = model.getView();
-			if (StringUtils.isEmpty(view)) {
-				return ANY;
-			} else {
-				return view;
-			}
-		case 2:
-			return model.getType().name();
-		default:
-			return null;
-		}
-	}
-	
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                ImageDescriptor descriptor = Activator.getDefault().getImageRegistry()
+                        .getDescriptor("icons/page_component.gif");
+                return descriptor.createImage();
+            default:
+                return null;
+        }
+    }
+
+    public String getColumnText(Object element, int columnIndex) {
+        ContentModel model = (ContentModel) element;
+        switch (columnIndex) {
+            case 1:
+                String view = model.getView();
+                if (StringUtils.isEmpty(view)) {
+                    return ANY;
+                } else {
+                    return view;
+                }
+            case 2:
+                return model.getType().name();
+            default:
+                return null;
+        }
+    }
+
 }

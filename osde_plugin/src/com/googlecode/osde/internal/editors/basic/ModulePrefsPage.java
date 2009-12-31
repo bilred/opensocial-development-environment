@@ -18,62 +18,62 @@
 package com.googlecode.osde.internal.editors.basic;
 
 
+import com.google.gadgets.model.Module;
+
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
-import com.google.gadgets.model.Module;
-
 public class ModulePrefsPage extends FormPage {
-	
-	private Module module;
-	private ApplicationInformationPart applicationInformationPart;
-	private FeaturesPart featuresPart;
-	private IconPart iconPart;
-	private ContentRewritePart contentRewritePart;
-	
-	public Module getModule() {
-		return module;
-	}
 
-	public ModulePrefsPage(FormEditor editor, Module module) {
-		super(editor, null, "Basic");
-		this.module = module;
-	}
+    private Module module;
+    private ApplicationInformationPart applicationInformationPart;
+    private FeaturesPart featuresPart;
+    private IconPart iconPart;
+    private ContentRewritePart contentRewritePart;
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		applicationInformationPart = new ApplicationInformationPart(this);
-		managedForm.addPart(applicationInformationPart);
-		featuresPart = new FeaturesPart(this);
-		managedForm.addPart(featuresPart);
-		iconPart = new IconPart(this);
-		managedForm.addPart(iconPart);
-		contentRewritePart = new ContentRewritePart(this);
-		managedForm.addPart(contentRewritePart);
-	}
+    public Module getModule() {
+        return module;
+    }
 
-	public void updateModel() {
-		if (applicationInformationPart != null) {
-			applicationInformationPart.setValuesToModule();
-		}
-		if (featuresPart != null) {
-			featuresPart.setValuesToModule();
-		}
-		if (contentRewritePart != null) {
-			contentRewritePart.setValuesToModule();
-		}
-		if (iconPart != null) {
-			iconPart.setValuesToModule();
-		}
-	}
+    public ModulePrefsPage(FormEditor editor, Module module) {
+        super(editor, null, "Basic");
+        this.module = module;
+    }
 
-	public void changeModel(Module model) {
-		this.module = model;
-		applicationInformationPart.changeModel();
-		featuresPart.changeModel();
-		contentRewritePart.changeModel();
-		iconPart.changeModel();
-	}
-	
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        applicationInformationPart = new ApplicationInformationPart(this);
+        managedForm.addPart(applicationInformationPart);
+        featuresPart = new FeaturesPart(this);
+        managedForm.addPart(featuresPart);
+        iconPart = new IconPart(this);
+        managedForm.addPart(iconPart);
+        contentRewritePart = new ContentRewritePart(this);
+        managedForm.addPart(contentRewritePart);
+    }
+
+    public void updateModel() {
+        if (applicationInformationPart != null) {
+            applicationInformationPart.setValuesToModule();
+        }
+        if (featuresPart != null) {
+            featuresPart.setValuesToModule();
+        }
+        if (contentRewritePart != null) {
+            contentRewritePart.setValuesToModule();
+        }
+        if (iconPart != null) {
+            iconPart.setValuesToModule();
+        }
+    }
+
+    public void changeModel(Module model) {
+        this.module = model;
+        applicationInformationPart.changeModel();
+        featuresPart.changeModel();
+        contentRewritePart.changeModel();
+        iconPart.changeModel();
+    }
+
 }
