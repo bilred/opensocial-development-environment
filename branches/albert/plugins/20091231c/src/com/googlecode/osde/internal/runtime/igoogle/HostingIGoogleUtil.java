@@ -67,9 +67,9 @@ public class HostingIGoogleUtil {
             URL_IG + "/iframeurl?moduleurl=";
     private static final String URL_IG_SUBMIT_GADGET = URL_IG + "/submit?prefill_url=";
 
-    private static final String URL_GMODULE = "http://hosting.gmodules.com/";
-    private static final String URL_GMODULE_FILE = URL_GMODULE + "ig/gadgets/file/";
-    private static final String URL_PREVIEW_LEGACY_GADGET = URL_GMODULE + "gadgets/ifr?nocache=1";
+    private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
+    private static final String URL_PREVIEW_LEGACY_GADGET =
+            "http://www.gmodules.com/gadgets/ifr?nocache=1";
 
     private HostingIGoogleUtil() {
         // Disable instantiation of this utility class.

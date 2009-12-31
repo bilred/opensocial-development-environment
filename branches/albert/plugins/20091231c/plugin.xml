@@ -214,7 +214,6 @@
                </objectState>
             </enablement>
          </action>
-         <!--
          <action
                class="com.googlecode.osde.internal.runtime.igoogle.CleanIGoogleAction"
                icon="icons/action_go.gif"
@@ -223,7 +222,6 @@
                menubarPath="opensocialMenu/opensocialGroup4"
                tooltip="iGoogle - Clean Preview Files">
          </action>
-         -->
          <action
                class="com.googlecode.osde.internal.shindig.CreateSampleDataAction"
                icon="icons/icon_download.gif"
@@ -370,7 +368,6 @@
                </objectState>
             </enablement>
          </action>
-         <!--
          <action
                class="com.googlecode.osde.internal.runtime.igoogle.CleanIGoogleAction"
                id="com.googlecode.osde.runActionCleanOnIGoogle1"
@@ -378,7 +375,6 @@
                icon="icons/action_go.gif"
                menubarPath="com.googlecode.osde.menu2/group4">
          </action>
-         -->
       </objectContribution>
    </extension>
 
