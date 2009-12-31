@@ -34,89 +34,89 @@ import org.eclipse.swt.widgets.Text;
 
 public class AddEnumValueDialog extends TitleAreaDialog {
 
-	private Text valueText;
-	private Text displayValueText;
-	
-	private String value;
-	private String displayValue;
-	
-	private ModifyListener modifyListener = new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
-			validate();
-		}
-	};
+    private Text valueText;
+    private Text displayValueText;
 
-	public AddEnumValueDialog(Shell shell) {
-		super(shell);
-	}
-	
-	private boolean validate() {
-		String value = valueText.getText();
-		if (StringUtils.isEmpty(value)) {
-			setMessage("Please fill the value field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		String displayValue = valueText.getText();
-		if (StringUtils.isEmpty(displayValue)) {
-			setMessage("Please fill the Display value field.", IMessageProvider.ERROR);
-			getButton(IDialogConstants.OK_ID).setEnabled(false);
-			return false;
-		}
-		setMessage(null);
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
-		return true;
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		setTitle("Add new Enum value");
-		setMessage("Please input value and display value.");
-		Composite composite = (Composite)super.createDialogArea(parent);
-		Composite panel = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		panel.setLayoutData(layoutData);
-		//
-		Label label = new Label(panel, SWT.NONE);
-		label.setText("Value:");
-		valueText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		valueText.setLayoutData(layoutData);
-		valueText.addModifyListener(modifyListener);
-		//
-		label = new Label(panel, SWT.NONE);
-		label.setText("Display value:");
-		displayValueText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		displayValueText.setLayoutData(layoutData);
-		displayValueText.addModifyListener(modifyListener);
-		//
-		return composite;
-	}
+    private String value;
+    private String displayValue;
 
-	@Override
-	protected void okPressed() {
-		value = valueText.getText();
-		displayValue = displayValueText.getText();
-		setReturnCode(OK);
-		close();
-	}
+    private ModifyListener modifyListener = new ModifyListener() {
+        public void modifyText(ModifyEvent e) {
+            validate();
+        }
+    };
 
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		super.createButtonsForButtonBar(parent);
-		getButton(IDialogConstants.OK_ID).setEnabled(false);
-	}
+    public AddEnumValueDialog(Shell shell) {
+        super(shell);
+    }
 
-	public String getValue() {
-		return value;
-	}
+    private boolean validate() {
+        String value = valueText.getText();
+        if (StringUtils.isEmpty(value)) {
+            setMessage("Please fill the value field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        String displayValue = valueText.getText();
+        if (StringUtils.isEmpty(displayValue)) {
+            setMessage("Please fill the Display value field.", IMessageProvider.ERROR);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            return false;
+        }
+        setMessage(null);
+        getButton(IDialogConstants.OK_ID).setEnabled(true);
+        return true;
+    }
 
-	public String getDisplayValue() {
-		return displayValue;
-	}
-	
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        setTitle("Add new Enum value");
+        setMessage("Please input value and display value.");
+        Composite composite = (Composite) super.createDialogArea(parent);
+        Composite panel = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        panel.setLayout(layout);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        panel.setLayoutData(layoutData);
+        //
+        Label label = new Label(panel, SWT.NONE);
+        label.setText("Value:");
+        valueText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        valueText.setLayoutData(layoutData);
+        valueText.addModifyListener(modifyListener);
+        //
+        label = new Label(panel, SWT.NONE);
+        label.setText("Display value:");
+        displayValueText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        displayValueText.setLayoutData(layoutData);
+        displayValueText.addModifyListener(modifyListener);
+        //
+        return composite;
+    }
+
+    @Override
+    protected void okPressed() {
+        value = valueText.getText();
+        displayValue = displayValueText.getText();
+        setReturnCode(OK);
+        close();
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getDisplayValue() {
+        return displayValue;
+    }
+
 }

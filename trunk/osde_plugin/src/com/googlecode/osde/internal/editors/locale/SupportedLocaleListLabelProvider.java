@@ -26,39 +26,40 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 class SupportedLocaleListLabelProvider extends LabelProvider implements ITableLabelProvider {
-	
-	private static final String ANY = "(any)";
 
-	public Image getColumnImage(Object element, int columnIndex) {
-		switch(columnIndex) {
-		case 0:
-			ImageDescriptor descriptor = Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_world.gif");
-			return descriptor.createImage();
-		default:
-			return null;
-		}
-	}
+    private static final String ANY = "(any)";
 
-	public String getColumnText(Object element, int columnIndex) {
-		LocaleModel model = (LocaleModel)element;
-		switch(columnIndex) {
-		case 1:
-			String country = model.getCountry();
-			if (StringUtils.isEmpty(country)) {
-				return ANY;
-			} else {
-				return country;
-			}
-		case 2:
-			String language = model.getLang();
-			if (StringUtils.isEmpty(language)) {
-				return ANY;
-			} else {
-				return language;
-			}
-		default:
-			return null;
-		}
-	}
-	
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                ImageDescriptor descriptor = Activator.getDefault().getImageRegistry()
+                        .getDescriptor("icons/icon_world.gif");
+                return descriptor.createImage();
+            default:
+                return null;
+        }
+    }
+
+    public String getColumnText(Object element, int columnIndex) {
+        LocaleModel model = (LocaleModel) element;
+        switch (columnIndex) {
+            case 1:
+                String country = model.getCountry();
+                if (StringUtils.isEmpty(country)) {
+                    return ANY;
+                } else {
+                    return country;
+                }
+            case 2:
+                String language = model.getLang();
+                if (StringUtils.isEmpty(language)) {
+                    return ANY;
+                } else {
+                    return language;
+                }
+            default:
+                return null;
+        }
+    }
+
 }

@@ -20,48 +20,48 @@ package com.googlecode.osde.internal.editors.contents;
 
 import java.util.List;
 
+import com.google.gadgets.model.Module;
+
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
-import com.google.gadgets.model.Module;
-
 public class ContentsPage extends FormPage {
 
-	private Module module;
-	
-	private ContentsBlock block;
-	
-	public Module getModule() {
-		return module;
-	}
+    private Module module;
 
-	public ContentsPage(FormEditor editor, Module module) {
-		super(editor, null, "Contents");
-		this.module = module;
-		block = new ContentsBlock(this);
-	}
+    private ContentsBlock block;
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		block.createContent(managedForm);
-	}
+    public Module getModule() {
+        return module;
+    }
 
-	public void updateContentsModel() {
-		block.updateContentModel();
-	}
-	
-	public List<ContentModel> getContentModels() {
-		return block.getContentModels();
-	}
+    public ContentsPage(FormEditor editor, Module module) {
+        super(editor, null, "Contents");
+        this.module = module;
+        block = new ContentsBlock(this);
+    }
 
-	public void updateModel() {
-		block.updateModel();
-	}
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        block.createContent(managedForm);
+    }
 
-	public void changeModel(Module model) {
-		this.module = model;
-		block.changeModel();
-	}
-	
+    public void updateContentsModel() {
+        block.updateContentModel();
+    }
+
+    public List<ContentModel> getContentModels() {
+        return block.getContentModels();
+    }
+
+    public void updateModel() {
+        block.updateModel();
+    }
+
+    public void changeModel(Module model) {
+        this.module = model;
+        block.changeModel();
+    }
+
 }

@@ -20,45 +20,45 @@ package com.googlecode.osde.internal.editors.contents;
 import com.google.gadgets.ViewType;
 
 public class ContentModel {
-	
-	private String view;
-	
-	private ViewType type;
-	
-	private String href;
-	
-	private String body;
 
-	public String getView() {
-		return view;
-	}
+    private String view;
 
-	public void setView(String view) {
-		this.view = view;
-	}
+    private ViewType type;
 
-	public ViewType getType() {
-		return type;
-	}
+    private String href;
 
-	public void setType(ViewType type) {
-		this.type = type;
-	}
+    private String body;
 
-	public String getHref() {
-		return href;
-	}
+    public String getView() {
+        return view;
+    }
 
-	public void setHref(String href) {
-		this.href = href;
-	}
+    public void setView(String view) {
+        this.view = view;
+    }
 
-	public String getBody() {
-		return body;
-	}
+    public ViewType getType() {
+        return type;
+    }
 
-	public void setBody(String body) {
-		this.body = body;
-	}
+    public void setType(ViewType type) {
+        this.type = type;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
 }

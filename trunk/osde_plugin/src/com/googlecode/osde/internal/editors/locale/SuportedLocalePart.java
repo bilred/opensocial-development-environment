@@ -25,6 +25,12 @@ import java.util.Map;
 
 import com.googlecode.osde.internal.utils.Logger;
 
+import com.google.gadgets.model.MessageBundle;
+import com.google.gadgets.model.MessageBundle.Msg;
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Module.ModulePrefs;
+import com.google.gadgets.model.Module.ModulePrefs.Locale;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.eclipse.core.resources.IFile;
@@ -57,14 +63,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.model.MessageBundle;
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Module.ModulePrefs;
-import com.google.gadgets.model.Module.ModulePrefs.Locale;
-import com.google.gadgets.model.MessageBundle.Msg;
-
 public class SuportedLocalePart extends SectionPart implements IPartSelectionListener {
-    
+
     private static final Logger logger = new Logger(SuportedLocalePart.class);
 
     private LocalePage page;
@@ -84,7 +84,8 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
         Composite composite = toolkit.createComposite(section);
         composite.setLayout(new GridLayout(2, false));
         // Supported locales list
-        Table table = toolkit.createTable(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+        Table table = toolkit.createTable(composite,
+                SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         GridData layoutData = new GridData(GridData.FILL_BOTH);
@@ -142,7 +143,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
     }
 
     private IProject getProject() {
-        IFile file = (IFile)page.getEditorInput().getAdapter(IResource.class);
+        IFile file = (IFile) page.getEditorInput().getAdapter(IResource.class);
         return file.getProject();
     }
 
@@ -153,7 +154,8 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
         if (!(selection instanceof IStructuredSelection)) {
             return;
         }
-        supportedLocaleList.refresh((LocaleModel)((IStructuredSelection)selection).getFirstElement());
+        supportedLocaleList
+                .refresh((LocaleModel) ((IStructuredSelection) selection).getFirstElement());
     }
 
     private Module getModule() {
@@ -203,10 +205,12 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
                         msgBundle.addMessage(new Msg(entry.getKey(), entry.getValue()));
                     }
 
-                    ByteArrayInputStream in = new ByteArrayInputStream(msgBundle.toString().getBytes("UTF-8"));
+                    ByteArrayInputStream in =
+                            new ByteArrayInputStream(msgBundle.toString().getBytes("UTF-8"));
                     bundleFile.create(in, true, new NullProgressMonitor());
 
-                    locale.setMessages("http://localhost:8080/" + project.getName() + "/" + fileName);
+                    locale.setMessages(
+                            "http://localhost:8080/" + project.getName() + "/" + fileName);
                     locale.setMessageBundle(msgBundle);
                 } catch (CoreException e) {
                     logger.warn("Creating the message bundle file failed.", e);
@@ -223,19 +227,19 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
             project.accept(new IResourceVisitor() {
                 public boolean visit(IResource resource) throws CoreException {
                     int type = resource.getType();
-                    switch(type) {
-                    case IResource.PROJECT:
-                        return true;
-                    case IResource.FILE:
-                        String name = resource.getName();
-                        if (name.startsWith("messages_") && name.endsWith(".xml")) {
-                            resource.delete(true, new NullProgressMonitor());
-                        }
-                        return false;
-                    case IResource.FOLDER:
-                        return false;
-                    default:
-                        return false;
+                    switch (type) {
+                        case IResource.PROJECT:
+                            return true;
+                        case IResource.FILE:
+                            String name = resource.getName();
+                            if (name.startsWith("messages_") && name.endsWith(".xml")) {
+                                resource.delete(true, new NullProgressMonitor());
+                            }
+                            return false;
+                        case IResource.FOLDER:
+                            return false;
+                        default:
+                            return false;
                     }
                 }
             });
@@ -292,14 +296,15 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
         public void widgetSelected(SelectionEvent e) {
             ISelection selection = supportedLocaleList.getSelection();
             if (!selection.isEmpty()) {
-                IStructuredSelection structured = (IStructuredSelection)selection;
-                final LocaleModel model = (LocaleModel)structured.getFirstElement();
+                IStructuredSelection structured = (IStructuredSelection) selection;
+                final LocaleModel model = (LocaleModel) structured.getFirstElement();
                 String country = model.getCountry();
                 country = StringUtils.isEmpty(country) ? "(any)" : country;
                 String lang = model.getLang();
                 lang = StringUtils.isEmpty(lang) ? "(any)" : lang;
                 if (MessageDialog.openConfirm(page.getSite().getShell(),
-                        "Deleting locale", "Do you want to delete locale '" + lang + "_" + country + "'?")) {
+                        "Deleting locale",
+                        "Do you want to delete locale '" + lang + "_" + country + "'?")) {
                     List<LocaleModel> models = getLocaleModels();
                     models.remove(model);
                     supportedLocaleList.refresh();

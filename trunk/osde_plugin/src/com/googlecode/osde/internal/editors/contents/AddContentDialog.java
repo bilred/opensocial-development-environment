@@ -17,6 +17,8 @@
  */
 package com.googlecode.osde.internal.editors.contents;
 
+import com.google.gadgets.ViewType;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -29,71 +31,69 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.google.gadgets.ViewType;
-
 public class AddContentDialog extends TitleAreaDialog {
-	
-	private Combo typeCombo;
-	private Text viewText;
-	
-	private ViewType type;
-	private String view;
-	
-	public AddContentDialog(Shell shell) {
-		super(shell);
-	}
-	
-	@Override
-	protected Point getInitialSize() {
-		return new Point(450, 300);
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		setTitle("Add the supported content");
-		setMessage("Please input the information about content.");
-		Composite composite = (Composite)super.createDialogArea(parent);
-		Composite panel = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		panel.setLayoutData(layoutData);
-		//
-		Label label = new Label(panel, SWT.NONE);
-		label.setText("Type:");
-		typeCombo = new Combo(panel, SWT.READ_ONLY);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		typeCombo.setLayoutData(layoutData);
-		for (int i = 0; i < ViewType.values().length; i++) {
-			typeCombo.add(ViewType.values()[i].name());
-		}
-		typeCombo.select(0);
-		//
-		label = new Label(panel, SWT.NONE);
-		label.setText("View:");
-		viewText = new Text(panel, SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		viewText.setLayoutData(layoutData);
-		viewText.setToolTipText("For example: 'canvas,profile', 'preview'.");
-		//
-		return composite;
-	}
 
-	@Override
-	protected void okPressed() {
-		view = viewText.getText();
-		type = ViewType.parse(typeCombo.getText());
-		setReturnCode(OK);
-		close();
-	}
+    private Combo typeCombo;
+    private Text viewText;
 
-	public String getView() {
-		return view;
-	}
+    private ViewType type;
+    private String view;
 
-	public ViewType getType() {
-		return type;
-	}
-	
+    public AddContentDialog(Shell shell) {
+        super(shell);
+    }
+
+    @Override
+    protected Point getInitialSize() {
+        return new Point(450, 300);
+    }
+
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        setTitle("Add the supported content");
+        setMessage("Please input the information about content.");
+        Composite composite = (Composite) super.createDialogArea(parent);
+        Composite panel = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        panel.setLayout(layout);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        panel.setLayoutData(layoutData);
+        //
+        Label label = new Label(panel, SWT.NONE);
+        label.setText("Type:");
+        typeCombo = new Combo(panel, SWT.READ_ONLY);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        typeCombo.setLayoutData(layoutData);
+        for (int i = 0; i < ViewType.values().length; i++) {
+            typeCombo.add(ViewType.values()[i].name());
+        }
+        typeCombo.select(0);
+        //
+        label = new Label(panel, SWT.NONE);
+        label.setText("View:");
+        viewText = new Text(panel, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        viewText.setLayoutData(layoutData);
+        viewText.setToolTipText("For example: 'canvas,profile', 'preview'.");
+        //
+        return composite;
+    }
+
+    @Override
+    protected void okPressed() {
+        view = viewText.getText();
+        type = ViewType.parse(typeCombo.getText());
+        setReturnCode(OK);
+        close();
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public ViewType getType() {
+        return type;
+    }
+
 }

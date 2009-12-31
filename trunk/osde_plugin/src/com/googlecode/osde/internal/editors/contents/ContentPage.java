@@ -17,9 +17,7 @@
  */
 package com.googlecode.osde.internal.editors.contents;
 
-import static com.googlecode.osde.internal.editors.ComponentUtils.createLabel;
-import static com.googlecode.osde.internal.editors.ComponentUtils.createRadio;
-import static com.googlecode.osde.internal.editors.ComponentUtils.createText;
+import com.google.gadgets.ViewType;
 
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;
@@ -46,174 +44,180 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.ViewType;
+import static com.googlecode.osde.internal.editors.ComponentUtils.createLabel;
+import static com.googlecode.osde.internal.editors.ComponentUtils.createRadio;
+import static com.googlecode.osde.internal.editors.ComponentUtils.createText;
 
 public class ContentPage implements IDetailsPage {
 
-	private IManagedForm managedForm;
+    private IManagedForm managedForm;
 
-	private ContentsPage page;
-	private ContentModel model;
+    private ContentsPage page;
+    private ContentModel model;
 
-	private Listener modifyListener = new Listener() {
-		public void handleEvent(Event event) {
-			if (!initializing) {
-				makeDirty();
-			}
-		}
-	};
+    private Listener modifyListener = new Listener() {
+        public void handleEvent(Event event) {
+            if (!initializing) {
+                makeDirty();
+            }
+        }
+    };
 
-	private Button htmlButton;
+    private Button htmlButton;
 
-	private Button urlButton;
+    private Button urlButton;
 
-	private Text hrefText;
+    private Text hrefText;
 
-	private SourceViewer editor;
+    private SourceViewer editor;
 
-	private boolean initializing = true;
+    private boolean initializing = true;
 
-	private SelectionListener selectionListener = new SelectionListener() {
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-		public void widgetSelected(SelectionEvent e) {
-			changeComponentEnabled();
-		}
-	};
+    private SelectionListener selectionListener = new SelectionListener() {
+        public void widgetDefaultSelected(SelectionEvent e) {
+        }
 
-	public ContentPage(ContentsPage page) {
-		super();
-		this.page = page;
-	}
+        public void widgetSelected(SelectionEvent e) {
+            changeComponentEnabled();
+        }
+    };
 
-	public void createContents(Composite parent) {
-		GridLayout layout = new GridLayout(1, false);
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		parent.setLayout(layout);
-		FormToolkit toolkit = managedForm.getToolkit();
-		//
-		Section contentSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		contentSection.setText("Content");
-		GridData layoutData = new GridData(GridData.FILL_BOTH);
-		contentSection.setLayoutData(layoutData);
-		Composite contentPane = toolkit.createComposite(contentSection);
-		contentPane.setLayout(new GridLayout(2, false));
-		contentSection.setClient(contentPane);
-		//
-		htmlButton = createRadio(contentPane, toolkit, "Use the HTML type for this view.", 2, modifyListener);
-		htmlButton.addSelectionListener(selectionListener);
-		//
-		editor = new SourceViewer(contentPane, null, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		layoutData = new GridData(GridData.FILL_BOTH);
-		layoutData.horizontalSpan = 2;
-		layoutData.heightHint = 250;
-		editor.getTextWidget().setLayoutData(layoutData);
-		Document document = new Document();
-		IDocumentPartitioner partitioner = new FastPartitioner(
-				new HtmlContentPartitionScanner(),
-				new String[] {
-					HtmlContentPartitionScanner.TOKEN_SCRIPT,
-					HtmlContentPartitionScanner.TOKEN_HTML_COMMENT,
-					HtmlContentPartitionScanner.TOKEN_TAG});
-		document.setDocumentPartitioner(partitioner);
-		partitioner.connect(document);
-		editor.setDocument(document);
-		editor.configure(new HtmlContentConfiguration());
-		document.addDocumentListener(new IDocumentListener() {
-			public void documentAboutToBeChanged(DocumentEvent event) {
-			}
-			public void documentChanged(DocumentEvent event) {
-				if (!initializing) {
-					makeDirty();
-				}
-			}
-		});
-		//
-		urlButton = createRadio(contentPane, toolkit, "Use the URL type for this view.", 2, modifyListener);
-		urlButton.addSelectionListener(selectionListener);
-		//
-		createLabel(contentPane, toolkit, "Location URL:");
-		hrefText = createText(contentPane, toolkit, modifyListener);
-	}
+    public ContentPage(ContentsPage page) {
+        super();
+        this.page = page;
+    }
 
-	public void initialize(IManagedForm managedForm) {
-		this.managedForm = managedForm;
-	}
+    public void createContents(Composite parent) {
+        GridLayout layout = new GridLayout(1, false);
+        layout.marginWidth = 0;
+        layout.marginHeight = 0;
+        parent.setLayout(layout);
+        FormToolkit toolkit = managedForm.getToolkit();
+        //
+        Section contentSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+        contentSection.setText("Content");
+        GridData layoutData = new GridData(GridData.FILL_BOTH);
+        contentSection.setLayoutData(layoutData);
+        Composite contentPane = toolkit.createComposite(contentSection);
+        contentPane.setLayout(new GridLayout(2, false));
+        contentSection.setClient(contentPane);
+        //
+        htmlButton = createRadio(contentPane, toolkit, "Use the HTML type for this view.", 2,
+                modifyListener);
+        htmlButton.addSelectionListener(selectionListener);
+        //
+        editor = new SourceViewer(contentPane, null, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_BOTH);
+        layoutData.horizontalSpan = 2;
+        layoutData.heightHint = 250;
+        editor.getTextWidget().setLayoutData(layoutData);
+        Document document = new Document();
+        IDocumentPartitioner partitioner = new FastPartitioner(
+                new HtmlContentPartitionScanner(),
+                new String[] {
+                        HtmlContentPartitionScanner.TOKEN_SCRIPT,
+                        HtmlContentPartitionScanner.TOKEN_HTML_COMMENT,
+                        HtmlContentPartitionScanner.TOKEN_TAG});
+        document.setDocumentPartitioner(partitioner);
+        partitioner.connect(document);
+        editor.setDocument(document);
+        editor.configure(new HtmlContentConfiguration());
+        document.addDocumentListener(new IDocumentListener() {
+            public void documentAboutToBeChanged(DocumentEvent event) {
+            }
 
-	public void selectionChanged(IFormPart part, ISelection selection) {
-		initializing = true;
-		model = (ContentModel)((IStructuredSelection)selection).getFirstElement();
-		displayInitialValue();
-		changeComponentEnabled();
-		initializing = false;
-	}
+            public void documentChanged(DocumentEvent event) {
+                if (!initializing) {
+                    makeDirty();
+                }
+            }
+        });
+        //
+        urlButton = createRadio(contentPane, toolkit, "Use the URL type for this view.", 2,
+                modifyListener);
+        urlButton.addSelectionListener(selectionListener);
+        //
+        createLabel(contentPane, toolkit, "Location URL:");
+        hrefText = createText(contentPane, toolkit, modifyListener);
+    }
 
-	private void displayInitialValue() {
-		hrefText.setText("http://");
-		ViewType type = model.getType();
-		if (ViewType.html.equals(type)) {
-			htmlButton.setSelection(true);
-			urlButton.setSelection(false);
-			String body = model.getBody();
-			editor.getDocument().set((body == null) ? "" : body);
-		} else if (ViewType.url.equals(type)) {
-			urlButton.setSelection(true);
-			htmlButton.setSelection(false);
-			String href = model.getHref();
-			hrefText.setText((href == null) ? "" : href);
-		} else {
-			// illegal
-			throw new IllegalStateException("Unknown type.");
-		}
-	}
+    public void initialize(IManagedForm managedForm) {
+        this.managedForm = managedForm;
+    }
 
-	private void makeDirty() {
-		setValuesToModel();
-		page.updateContentsModel();
-	}
+    public void selectionChanged(IFormPart part, ISelection selection) {
+        initializing = true;
+        model = (ContentModel) ((IStructuredSelection) selection).getFirstElement();
+        displayInitialValue();
+        changeComponentEnabled();
+        initializing = false;
+    }
 
-	private void changeComponentEnabled() {
-		boolean htmlButtonSelected = htmlButton.getSelection();
-		boolean urlButtonSelected = urlButton.getSelection();
-		editor.getTextWidget().setEnabled(htmlButtonSelected);
-		hrefText.setEnabled(urlButtonSelected);
-	}
+    private void displayInitialValue() {
+        hrefText.setText("http://");
+        ViewType type = model.getType();
+        if (ViewType.html.equals(type)) {
+            htmlButton.setSelection(true);
+            urlButton.setSelection(false);
+            String body = model.getBody();
+            editor.getDocument().set((body == null) ? "" : body);
+        } else if (ViewType.url.equals(type)) {
+            urlButton.setSelection(true);
+            htmlButton.setSelection(false);
+            String href = model.getHref();
+            hrefText.setText((href == null) ? "" : href);
+        } else {
+            // illegal
+            throw new IllegalStateException("Unknown type.");
+        }
+    }
 
-	private void setValuesToModel() {
-		if (htmlButton.getSelection()) {
-			model.setType(ViewType.html);
-			model.setBody(editor.getDocument().get());
-			model.setHref(null);
-		} else if (urlButton.getSelection()) {
-			model.setType(ViewType.url);
-			model.setBody(null);
-			model.setHref(hrefText.getText());
-		}
-	}
+    private void makeDirty() {
+        setValuesToModel();
+        page.updateContentsModel();
+    }
 
-	public void commit(boolean onSave) {
-	}
+    private void changeComponentEnabled() {
+        boolean htmlButtonSelected = htmlButton.getSelection();
+        boolean urlButtonSelected = urlButton.getSelection();
+        editor.getTextWidget().setEnabled(htmlButtonSelected);
+        hrefText.setEnabled(urlButtonSelected);
+    }
 
-	public void dispose() {
-	}
+    private void setValuesToModel() {
+        if (htmlButton.getSelection()) {
+            model.setType(ViewType.html);
+            model.setBody(editor.getDocument().get());
+            model.setHref(null);
+        } else if (urlButton.getSelection()) {
+            model.setType(ViewType.url);
+            model.setBody(null);
+            model.setHref(hrefText.getText());
+        }
+    }
 
-	public boolean isDirty() {
-		return false;
-	}
+    public void commit(boolean onSave) {
+    }
 
-	public boolean isStale() {
-		return false;
-	}
+    public void dispose() {
+    }
 
-	public void refresh() {
-	}
+    public boolean isDirty() {
+        return false;
+    }
 
-	public void setFocus() {
-	}
+    public boolean isStale() {
+        return false;
+    }
 
-	public boolean setFormInput(Object input) {
-		return false;
-	}
+    public void refresh() {
+    }
+
+    public void setFocus() {
+    }
+
+    public boolean setFormInput(Object input) {
+        return false;
+    }
 
 }

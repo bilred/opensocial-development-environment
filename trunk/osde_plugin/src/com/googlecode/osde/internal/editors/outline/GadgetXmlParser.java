@@ -20,11 +20,9 @@ package com.googlecode.osde.internal.editors.outline;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Stack;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -34,52 +32,54 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class GadgetXmlParser {
 
-	private class HandlerImpl extends DefaultHandler {
-		
-		private ElementModel root;
-		private Stack<ElementModel> parentStack = new Stack<ElementModel>();
-		private Locator locator;
+    private class HandlerImpl extends DefaultHandler {
 
-		@Override
-		public void setDocumentLocator(Locator locator) {
-			this.locator = locator;
-		}
+        private ElementModel root;
+        private Stack<ElementModel> parentStack = new Stack<ElementModel>();
+        private Locator locator;
 
-		@Override
-		public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
-			ElementModel model = new ElementModel();
-			model.setName(name);
-			model.setLineNumber(locator.getLineNumber());
-			for (int i = 0; i < attributes.getLength(); i++) {
-				model.putAttribute(attributes.getQName(i), attributes.getValue(i));
-			}
-			if (root == null) {
-				root = model;
-				parentStack.push(model);
-			} else {
-				ElementModel parent = parentStack.peek();
-				parent.addChild(model);
-				parentStack.push(model);
-			}
-		}
-		
-		@Override
-		public void endElement(String uri, String localName, String name) throws SAXException {
-			parentStack.pop();
-		}
+        @Override
+        public void setDocumentLocator(Locator locator) {
+            this.locator = locator;
+        }
 
-		public ElementModel getResult() {
-			return root;
-		}
-	}
+        @Override
+        public void startElement(String uri, String localName, String name, Attributes attributes)
+                throws SAXException {
+            ElementModel model = new ElementModel();
+            model.setName(name);
+            model.setLineNumber(locator.getLineNumber());
+            for (int i = 0; i < attributes.getLength(); i++) {
+                model.putAttribute(attributes.getQName(i), attributes.getValue(i));
+            }
+            if (root == null) {
+                root = model;
+                parentStack.push(model);
+            } else {
+                ElementModel parent = parentStack.peek();
+                parent.addChild(model);
+                parentStack.push(model);
+            }
+        }
 
-	public ElementModel parse(String source) throws ParserConfigurationException, SAXException, IOException {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		SAXParser parser = factory.newSAXParser();
-		StringReader reader = new StringReader(source);
-		HandlerImpl handler = new HandlerImpl();
-		parser.parse(new InputSource(reader), handler);
-		return handler.getResult();
-	}
-	
+        @Override
+        public void endElement(String uri, String localName, String name) throws SAXException {
+            parentStack.pop();
+        }
+
+        public ElementModel getResult() {
+            return root;
+        }
+    }
+
+    public ElementModel parse(String source)
+            throws ParserConfigurationException, SAXException, IOException {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser parser = factory.newSAXParser();
+        StringReader reader = new StringReader(source);
+        HandlerImpl handler = new HandlerImpl();
+        parser.parse(new InputSource(reader), handler);
+        return handler.getResult();
+    }
+
 }

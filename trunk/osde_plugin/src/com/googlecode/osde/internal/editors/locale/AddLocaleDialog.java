@@ -32,95 +32,95 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class AddLocaleDialog extends TitleAreaDialog {
-	
-	private Combo countryCombo;
-	private Combo languageCombo;
-	private Button internalButton;
-	
-	private String country;
-	private String language;
-	private boolean internal;
-	
-	public AddLocaleDialog(Shell shell) {
-		super(shell);
-	}
-	
-	@Override
-	protected Point getInitialSize() {
-		return new Point(450, 300);
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		setTitle("Add the supported locale");
-		setMessage("Please select the country and language.");
-		Composite composite = (Composite)super.createDialogArea(parent);
-		Composite panel = new Composite(composite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		panel.setLayout(layout);
-		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		panel.setLayoutData(layoutData);
-		//
-		Label label = new Label(panel, SWT.NONE);
-		label.setText("Country:");
-		countryCombo = new Combo(panel, SWT.READ_ONLY);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		countryCombo.setLayoutData(layoutData);
-		for (int i = 0; i < OpenSocialUtil.COUNTRIES.length; i++) {
-			countryCombo.add(OpenSocialUtil.COUNTRIES[i]);
-		}
-		countryCombo.select(0);
-		//
-		label = new Label(panel, SWT.NONE);
-		label.setText("Language:");
-		languageCombo = new Combo(panel, SWT.READ_ONLY);
-		layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		languageCombo.setLayoutData(layoutData);
-		for (int i = 0; i < OpenSocialUtil.LANGUAGES.length; i++) {
-			languageCombo.add(OpenSocialUtil.LANGUAGES[i]);
-		}
-		languageCombo.select(0);
-		//
-		internalButton = new Button(panel, SWT.CHECK);
-		internalButton.setText("Define a message bundle in Gadget XML file.");
-		layoutData = new GridData();
-		layoutData.horizontalSpan = 2;
-		internalButton.setLayoutData(layoutData);
-		internalButton.setSelection(true);
-		//
-		return composite;
-	}
 
-	@Override
-	protected void okPressed() {
-		country = countryCombo.getText();
-		if (country.equals(OpenSocialUtil.ANY)) {
-			country = "ALL";
-		} else {
-			country = country.substring(country.indexOf('(') + 1, country.length() - 1);
-		}
-		language = languageCombo.getText();
-		if (language.equals(OpenSocialUtil.ANY)) {
-			language = "ALL";
-		} else {
-			language = language.substring(language.indexOf('(') + 1, language.length() - 1);
-		}
-		internal = internalButton.getSelection();
-		setReturnCode(OK);
-		close();
-	}
+    private Combo countryCombo;
+    private Combo languageCombo;
+    private Button internalButton;
 
-	public String getCountry() {
-		return country;
-	}
+    private String country;
+    private String language;
+    private boolean internal;
 
-	public String getLanguage() {
-		return language;
-	}
-	
-	public boolean isInternal() {
-		return internal;
-	}
-	
+    public AddLocaleDialog(Shell shell) {
+        super(shell);
+    }
+
+    @Override
+    protected Point getInitialSize() {
+        return new Point(450, 300);
+    }
+
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        setTitle("Add the supported locale");
+        setMessage("Please select the country and language.");
+        Composite composite = (Composite) super.createDialogArea(parent);
+        Composite panel = new Composite(composite, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        panel.setLayout(layout);
+        GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        panel.setLayoutData(layoutData);
+        //
+        Label label = new Label(panel, SWT.NONE);
+        label.setText("Country:");
+        countryCombo = new Combo(panel, SWT.READ_ONLY);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        countryCombo.setLayoutData(layoutData);
+        for (int i = 0; i < OpenSocialUtil.COUNTRIES.length; i++) {
+            countryCombo.add(OpenSocialUtil.COUNTRIES[i]);
+        }
+        countryCombo.select(0);
+        //
+        label = new Label(panel, SWT.NONE);
+        label.setText("Language:");
+        languageCombo = new Combo(panel, SWT.READ_ONLY);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        languageCombo.setLayoutData(layoutData);
+        for (int i = 0; i < OpenSocialUtil.LANGUAGES.length; i++) {
+            languageCombo.add(OpenSocialUtil.LANGUAGES[i]);
+        }
+        languageCombo.select(0);
+        //
+        internalButton = new Button(panel, SWT.CHECK);
+        internalButton.setText("Define a message bundle in Gadget XML file.");
+        layoutData = new GridData();
+        layoutData.horizontalSpan = 2;
+        internalButton.setLayoutData(layoutData);
+        internalButton.setSelection(true);
+        //
+        return composite;
+    }
+
+    @Override
+    protected void okPressed() {
+        country = countryCombo.getText();
+        if (country.equals(OpenSocialUtil.ANY)) {
+            country = "ALL";
+        } else {
+            country = country.substring(country.indexOf('(') + 1, country.length() - 1);
+        }
+        language = languageCombo.getText();
+        if (language.equals(OpenSocialUtil.ANY)) {
+            language = "ALL";
+        } else {
+            language = language.substring(language.indexOf('(') + 1, language.length() - 1);
+        }
+        internal = internalButton.getSelection();
+        setReturnCode(OK);
+        close();
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public boolean isInternal() {
+        return internal;
+    }
+
 }

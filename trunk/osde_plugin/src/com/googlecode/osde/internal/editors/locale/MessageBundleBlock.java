@@ -27,68 +27,68 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
 
 public class MessageBundleBlock extends MasterDetailsBlock {
-	
-	private SuportedLocalePart messageBundlesPart;
-	
-	private LocalePage page;
-	
-	public MessageBundleBlock(LocalePage page) {
-		super();
-		this.page = page;
-	}
 
-	@Override
-	protected void createMasterPart(IManagedForm managedForm, Composite parent) {
-		messageBundlesPart = new SuportedLocalePart(parent, managedForm, page);
-		managedForm.addPart(messageBundlesPart);
-	}
+    private SuportedLocalePart messageBundlesPart;
 
-	@Override
-	protected void createToolBarActions(IManagedForm managedForm) {
-	}
+    private LocalePage page;
 
-	@Override
-	protected void registerPages(DetailsPart detailsPart) {
-		final IDetailsPage detailsPage = new MessageBundlePage(page);
-		detailsPart.registerPage(LocaleModel.class, detailsPage);
-		detailsPart.setPageProvider(new IDetailsPageProvider() {
+    public MessageBundleBlock(LocalePage page) {
+        super();
+        this.page = page;
+    }
 
-			public IDetailsPage getPage(Object key) {
-				if (key.equals(LocaleModel.class)) {
-					return detailsPage;
-				}
-				return null;
-			}
+    @Override
+    protected void createMasterPart(IManagedForm managedForm, Composite parent) {
+        messageBundlesPart = new SuportedLocalePart(parent, managedForm, page);
+        managedForm.addPart(messageBundlesPart);
+    }
 
-			public Object getPageKey(Object object) {
-				if (object instanceof LocaleModel) {
-					return LocaleModel.class;
-				}
-				return object.getClass();
-			}
-			
-		});
-		sashForm.setWeights(new int[]{45, 55});
-	}
+    @Override
+    protected void createToolBarActions(IManagedForm managedForm) {
+    }
 
-	public void updateLocaleModel() {
-		messageBundlesPart.markDirty();
-	}
-	
-	public List<LocaleModel> getLocaleModels() {
-		return messageBundlesPart.getLocaleModels();
-	}
+    @Override
+    protected void registerPages(DetailsPart detailsPart) {
+        final IDetailsPage detailsPage = new MessageBundlePage(page);
+        detailsPart.registerPage(LocaleModel.class, detailsPage);
+        detailsPart.setPageProvider(new IDetailsPageProvider() {
 
-	public void updateModel() {
-		if (messageBundlesPart != null) {
-			messageBundlesPart.setValuesToModule();
-		}
-	}
+            public IDetailsPage getPage(Object key) {
+                if (key.equals(LocaleModel.class)) {
+                    return detailsPage;
+                }
+                return null;
+            }
 
-	public void changeModel() {
-		if (messageBundlesPart != null) {
-			messageBundlesPart.changeModel();
-		}
-	}
+            public Object getPageKey(Object object) {
+                if (object instanceof LocaleModel) {
+                    return LocaleModel.class;
+                }
+                return object.getClass();
+            }
+
+        });
+        sashForm.setWeights(new int[] {45, 55});
+    }
+
+    public void updateLocaleModel() {
+        messageBundlesPart.markDirty();
+    }
+
+    public List<LocaleModel> getLocaleModels() {
+        return messageBundlesPart.getLocaleModels();
+    }
+
+    public void updateModel() {
+        if (messageBundlesPart != null) {
+            messageBundlesPart.setValuesToModule();
+        }
+    }
+
+    public void changeModel() {
+        if (messageBundlesPart != null) {
+            messageBundlesPart.changeModel();
+        }
+    }
 
 }

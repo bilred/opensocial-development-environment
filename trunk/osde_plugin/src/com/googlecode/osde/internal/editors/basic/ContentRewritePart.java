@@ -17,12 +17,14 @@
  */
 package com.googlecode.osde.internal.editors.basic;
 
-import static com.googlecode.osde.internal.editors.ComponentUtils.createLabel;
-import static com.googlecode.osde.internal.editors.ComponentUtils.createText;
-
 import java.util.List;
 
 import com.googlecode.osde.internal.utils.Gadgets;
+
+import com.google.gadgets.model.Module;
+import com.google.gadgets.model.Module.ModulePrefs;
+import com.google.gadgets.model.Module.ModulePrefs.Optional;
+import com.google.gadgets.model.Param;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
@@ -43,207 +45,207 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Param;
-import com.google.gadgets.model.Module.ModulePrefs;
-import com.google.gadgets.model.Module.ModulePrefs.Optional;
+import static com.googlecode.osde.internal.editors.ComponentUtils.createLabel;
+import static com.googlecode.osde.internal.editors.ComponentUtils.createText;
 
 public class ContentRewritePart extends AbstractFormPart {
 
-	private ModulePrefsPage page;
+    private ModulePrefsPage page;
 
-	private boolean initializing;
+    private boolean initializing;
 
-	private SelectionListener selectionListener = new SelectionListener() {
-		public void widgetDefaultSelected(SelectionEvent e) {
-		}
-		public void widgetSelected(SelectionEvent e) {
-			setEnabledControls(useButton.getSelection());
-			if (!initializing) {
-				markDirty();
-			}
-		}
-	};
+    private SelectionListener selectionListener = new SelectionListener() {
+        public void widgetDefaultSelected(SelectionEvent e) {
+        }
 
-	private Listener modifyListener = new Listener() {
-		public void handleEvent(Event event) {
-			if (!initializing) {
-				markDirty();
-			}
-		}
-	};
+        public void widgetSelected(SelectionEvent e) {
+            setEnabledControls(useButton.getSelection());
+            if (!initializing) {
+                markDirty();
+            }
+        }
+    };
 
-	private Button useButton;
+    private Listener modifyListener = new Listener() {
+        public void handleEvent(Event event) {
+            if (!initializing) {
+                markDirty();
+            }
+        }
+    };
 
-	private Text includeUrlsText;
+    private Button useButton;
 
-	private Text excludeUrlsText;
+    private Text includeUrlsText;
 
-	private Text includeTagsText;
+    private Text excludeUrlsText;
 
-	private Spinner expiresSpinner;
+    private Text includeTagsText;
 
-	public ContentRewritePart(ModulePrefsPage page) {
-		this.page = page;
-	}
+    private Spinner expiresSpinner;
 
-	private Module getModule() {
-		return page.getModule();
-	}
+    public ContentRewritePart(ModulePrefsPage page) {
+        this.page = page;
+    }
 
-	@Override
-	public void initialize(IManagedForm form) {
-		initializing = true;
-		super.initialize(form);
-		createControls(form);
-		displayInitialValue();
-		setEnabledControls(useButton.getSelection());
-		initializing = false;
-	}
+    private Module getModule() {
+        return page.getModule();
+    }
 
-	private void setEnabledControls(boolean enabled) {
-		includeUrlsText.setEnabled(enabled);
-		excludeUrlsText.setEnabled(enabled);
-		includeTagsText.setEnabled(enabled);
-		expiresSpinner.setEnabled(enabled);
-	}
+    @Override
+    public void initialize(IManagedForm form) {
+        initializing = true;
+        super.initialize(form);
+        createControls(form);
+        displayInitialValue();
+        setEnabledControls(useButton.getSelection());
+        initializing = false;
+    }
 
-	private void displayInitialValue() {
-		useButton.setSelection(false);
-		includeUrlsText.setText("");
-		excludeUrlsText.setText("");
-		includeTagsText.setText("");
-		expiresSpinner.setSelection(86400);
-		Module module = getModule();
-		if (module != null) {
-			ModulePrefs modulePrefs = module.getModulePrefs();
-			List<Optional> optionals = modulePrefs.getOptionals();
-			for (Optional optional : optionals) {
-				String feature = optional.getFeature();
-				if (feature.equals("content-rewrite")) {
-					useButton.setSelection(true);
-					List<Param> params = optional.getParam();
-					for (Param param : params) {
-						if (param.getName().equals("include-urls")) {
-							includeUrlsText.setText(Gadgets.trim(param.getValue()));
-						}
-						if (param.getName().equals("exclude-urls")) {
-							excludeUrlsText.setText(Gadgets.trim(param.getValue()));
-						}
-						if (param.getName().equals("include-tags")) {
-							includeTagsText.setText(Gadgets.trim(param.getValue()));
-						}
-						if (param.getName().equals("expires")) {
-							Integer expiresValue = Gadgets.toInteger(param.getValue());
-							if (expiresValue != null) {
-								expiresSpinner.setSelection(expiresValue);
-							} else {
-								expiresSpinner.setSelection(86400);
-							}
-						}
-					}
-					return;
-				}
-			}
-		}
-	}
+    private void setEnabledControls(boolean enabled) {
+        includeUrlsText.setEnabled(enabled);
+        excludeUrlsText.setEnabled(enabled);
+        includeTagsText.setEnabled(enabled);
+        expiresSpinner.setEnabled(enabled);
+    }
 
-	private void createControls(IManagedForm managedForm) {
-		ScrolledForm form = managedForm.getForm();
-		FormToolkit toolkit = managedForm.getToolkit();
-		//
-		Section section = toolkit.createSection(form.getBody(),
-		        ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
-		section.setText("Content rewrite");
-		section.setDescription("Content-rewrite feature allows you to control the cache configuration.");
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		//
-		Composite sectionPanel = toolkit.createComposite(section);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 4;
-		sectionPanel.setLayout(layout);
-		section.setClient(sectionPanel);
-		sectionPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		//
-		useButton = createCheckbox(sectionPanel, "Use content-rewrite", toolkit);
-		GridData layoutData = new GridData();
-		layoutData.horizontalSpan = 4;
-		useButton.setLayoutData(layoutData);
-		createLabel(sectionPanel, toolkit, "Include URLs:");
-		includeUrlsText = createText(sectionPanel, toolkit, modifyListener);
-		createLabel(sectionPanel, toolkit, "Exclude URLs:");
-		excludeUrlsText = createText(sectionPanel, toolkit, modifyListener);
-		createLabel(sectionPanel, toolkit, "Include Tags:");
-		includeTagsText = createText(sectionPanel, toolkit, modifyListener);
-		createLabel(sectionPanel, toolkit, "Expires:");
-		expiresSpinner = new Spinner(sectionPanel, SWT.NONE);
-		expiresSpinner.setIncrement(100);
-		expiresSpinner.setMinimum(0);
-		expiresSpinner.setMaximum(604800);
-		expiresSpinner.setSelection(86400);
-		expiresSpinner.addListener(SWT.Modify, modifyListener);
-	}
+    private void displayInitialValue() {
+        useButton.setSelection(false);
+        includeUrlsText.setText("");
+        excludeUrlsText.setText("");
+        includeTagsText.setText("");
+        expiresSpinner.setSelection(86400);
+        Module module = getModule();
+        if (module != null) {
+            ModulePrefs modulePrefs = module.getModulePrefs();
+            List<Optional> optionals = modulePrefs.getOptionals();
+            for (Optional optional : optionals) {
+                String feature = optional.getFeature();
+                if (feature.equals("content-rewrite")) {
+                    useButton.setSelection(true);
+                    List<Param> params = optional.getParam();
+                    for (Param param : params) {
+                        if (param.getName().equals("include-urls")) {
+                            includeUrlsText.setText(Gadgets.trim(param.getValue()));
+                        }
+                        if (param.getName().equals("exclude-urls")) {
+                            excludeUrlsText.setText(Gadgets.trim(param.getValue()));
+                        }
+                        if (param.getName().equals("include-tags")) {
+                            includeTagsText.setText(Gadgets.trim(param.getValue()));
+                        }
+                        if (param.getName().equals("expires")) {
+                            Integer expiresValue = Gadgets.toInteger(param.getValue());
+                            if (expiresValue != null) {
+                                expiresSpinner.setSelection(expiresValue);
+                            } else {
+                                expiresSpinner.setSelection(86400);
+                            }
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+    }
 
-	private Button createCheckbox(Composite parent, String text, FormToolkit toolkit) {
-		Button button = toolkit.createButton(parent, text, SWT.CHECK);
-		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		button.setFont(parent.getFont());
-		button.addSelectionListener(selectionListener);
-		return button;
-	}
+    private void createControls(IManagedForm managedForm) {
+        ScrolledForm form = managedForm.getForm();
+        FormToolkit toolkit = managedForm.getToolkit();
+        //
+        Section section = toolkit.createSection(form.getBody(),
+                ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE);
+        section.setText("Content rewrite");
+        section.setDescription(
+                "Content-rewrite feature allows you to control the cache configuration.");
+        section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        //
+        Composite sectionPanel = toolkit.createComposite(section);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 4;
+        sectionPanel.setLayout(layout);
+        section.setClient(sectionPanel);
+        sectionPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        //
+        useButton = createCheckbox(sectionPanel, "Use content-rewrite", toolkit);
+        GridData layoutData = new GridData();
+        layoutData.horizontalSpan = 4;
+        useButton.setLayoutData(layoutData);
+        createLabel(sectionPanel, toolkit, "Include URLs:");
+        includeUrlsText = createText(sectionPanel, toolkit, modifyListener);
+        createLabel(sectionPanel, toolkit, "Exclude URLs:");
+        excludeUrlsText = createText(sectionPanel, toolkit, modifyListener);
+        createLabel(sectionPanel, toolkit, "Include Tags:");
+        includeTagsText = createText(sectionPanel, toolkit, modifyListener);
+        createLabel(sectionPanel, toolkit, "Expires:");
+        expiresSpinner = new Spinner(sectionPanel, SWT.NONE);
+        expiresSpinner.setIncrement(100);
+        expiresSpinner.setMinimum(0);
+        expiresSpinner.setMaximum(604800);
+        expiresSpinner.setSelection(86400);
+        expiresSpinner.addListener(SWT.Modify, modifyListener);
+    }
 
-	public void setValuesToModule() {
-		Module module = getModule();
-		ModulePrefs modulePrefs = module.getModulePrefs();
-		List<Optional> optionals = modulePrefs.getOptionals();
-		Optional contentRewriteNode = getContentRewriteNode(optionals);
-		if (contentRewriteNode != null) {
-			optionals.remove(contentRewriteNode);
-		}
-		if (useButton.getSelection()) {
-			Optional optional = new Optional();
-			optional.setFeature("content-rewrite");
-			List<Param> params = optional.getParam();
-			String includeUrls = includeUrlsText.getText();
-			if (StringUtils.isNotEmpty(includeUrls)) {
-				Param param = new Param();
-				param.setName("include-urls");
-				param.setValue(includeUrls);
-				params.add(param);
-			}
-			String excludeUrls = excludeUrlsText.getText();
-			if (StringUtils.isNotEmpty(excludeUrls)) {
-				Param param = new Param();
-				param.setName("exclude-urls");
-				param.setValue(excludeUrls);
-				params.add(param);
-			}
-			String includeTags = includeTagsText.getText();
-			if (StringUtils.isNotEmpty(includeTags)) {
-				Param param = new Param();
-				param.setName("include-tags");
-				param.setValue(includeTags);
-				params.add(param);
-			}
-			Param param = new Param();
-			param.setName("expires");
-			param.setValue(String.valueOf(expiresSpinner.getSelection()));
-			params.add(param);
-			optionals.add(optional);
-		}
-	}
+    private Button createCheckbox(Composite parent, String text, FormToolkit toolkit) {
+        Button button = toolkit.createButton(parent, text, SWT.CHECK);
+        button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        button.setFont(parent.getFont());
+        button.addSelectionListener(selectionListener);
+        return button;
+    }
 
-	private Optional getContentRewriteNode(List<Optional> optionals) {
-		for (Optional optional : optionals) {
-			if (optional.getFeature().equals("content-rewrite")) {
-				return optional;
-			}
-		}
-		return null;
-	}
+    public void setValuesToModule() {
+        Module module = getModule();
+        ModulePrefs modulePrefs = module.getModulePrefs();
+        List<Optional> optionals = modulePrefs.getOptionals();
+        Optional contentRewriteNode = getContentRewriteNode(optionals);
+        if (contentRewriteNode != null) {
+            optionals.remove(contentRewriteNode);
+        }
+        if (useButton.getSelection()) {
+            Optional optional = new Optional();
+            optional.setFeature("content-rewrite");
+            List<Param> params = optional.getParam();
+            String includeUrls = includeUrlsText.getText();
+            if (StringUtils.isNotEmpty(includeUrls)) {
+                Param param = new Param();
+                param.setName("include-urls");
+                param.setValue(includeUrls);
+                params.add(param);
+            }
+            String excludeUrls = excludeUrlsText.getText();
+            if (StringUtils.isNotEmpty(excludeUrls)) {
+                Param param = new Param();
+                param.setName("exclude-urls");
+                param.setValue(excludeUrls);
+                params.add(param);
+            }
+            String includeTags = includeTagsText.getText();
+            if (StringUtils.isNotEmpty(includeTags)) {
+                Param param = new Param();
+                param.setName("include-tags");
+                param.setValue(includeTags);
+                params.add(param);
+            }
+            Param param = new Param();
+            param.setName("expires");
+            param.setValue(String.valueOf(expiresSpinner.getSelection()));
+            params.add(param);
+            optionals.add(optional);
+        }
+    }
 
-	public void changeModel() {
-		displayInitialValue();
-	}
+    private Optional getContentRewriteNode(List<Optional> optionals) {
+        for (Optional optional : optionals) {
+            if (optional.getFeature().equals("content-rewrite")) {
+                return optional;
+            }
+        }
+        return null;
+    }
+
+    public void changeModel() {
+        displayInitialValue();
+    }
 
 }

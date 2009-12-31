@@ -17,44 +17,44 @@
  */
 package com.googlecode.osde.internal.editors.pref;
 
+import com.google.gadgets.model.Module;
+
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
-import com.google.gadgets.model.Module;
-
 public class UserPrefsPage extends FormPage {
 
-	private Module module;
-	
-	private UserPrefsBlock block;
-	
-	public Module getModule() {
-		return module;
-	}
+    private Module module;
 
-	public UserPrefsPage(FormEditor editor, Module module) {
-		super(editor, null, "UserPref");
-		this.module = module;
-		block = new UserPrefsBlock(this);
-	}
+    private UserPrefsBlock block;
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		block.createContent(managedForm);
-	}
+    public Module getModule() {
+        return module;
+    }
 
-	public void updateUserPrefModel() {
-		block.updateUserPrefModel();
-	}
+    public UserPrefsPage(FormEditor editor, Module module) {
+        super(editor, null, "UserPref");
+        this.module = module;
+        block = new UserPrefsBlock(this);
+    }
 
-	public void updateModel() {
-		block.updateModel();
-	}
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        block.createContent(managedForm);
+    }
 
-	public void changeModel(Module model) {
-		this.module = model;
-		block.changeModel();
-	}
-	
+    public void updateUserPrefModel() {
+        block.updateUserPrefModel();
+    }
+
+    public void updateModel() {
+        block.updateModel();
+    }
+
+    public void changeModel(Module model) {
+        this.module = model;
+        block.changeModel();
+    }
+
 }

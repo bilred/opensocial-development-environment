@@ -25,25 +25,26 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 class FreeFeaturesListLabelProvider extends LabelProvider implements ITableLabelProvider {
-	
-	public Image getColumnImage(Object element, int columnIndex) {
-		switch(columnIndex) {
-		case 0:
-			ImageDescriptor descriptor = Activator.getDefault().getImageRegistry().getDescriptor("icons/icon_extension.gif");
-			return descriptor.createImage();
-		default:
-			return null;
-		}
-	}
 
-	public String getColumnText(Object element, int columnIndex) {
-		String model = (String)element;
-		switch(columnIndex) {
-		case 1:
-			return model;
-		default:
-			return null;
-		}
-	}
-	
+    public Image getColumnImage(Object element, int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                ImageDescriptor descriptor = Activator.getDefault().getImageRegistry()
+                        .getDescriptor("icons/icon_extension.gif");
+                return descriptor.createImage();
+            default:
+                return null;
+        }
+    }
+
+    public String getColumnText(Object element, int columnIndex) {
+        String model = (String) element;
+        switch (columnIndex) {
+            case 1:
+                return model;
+            default:
+                return null;
+        }
+    }
+
 }

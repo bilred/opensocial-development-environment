@@ -22,14 +22,14 @@ import java.io.InputStream;
 
 import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.content.IContentDescriber;
-import org.eclipse.core.runtime.content.IContentDescription;
-
 import com.google.gadgets.parser.IParser;
 import com.google.gadgets.parser.ParserException;
 import com.google.gadgets.parser.ParserFactory;
 import com.google.gadgets.parser.ParserType;
+
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.content.IContentDescriber;
+import org.eclipse.core.runtime.content.IContentDescription;
 
 /**
  * Content describer for gadget spec XML files.
@@ -37,19 +37,21 @@ import com.google.gadgets.parser.ParserType;
 public class GadgetXmlDescriber implements IContentDescriber {
     private static final Logger logger = new Logger(GadgetXmlDescriber.class);
 
-	public int describe(InputStream contents, IContentDescription description) throws IOException {
-		IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-		try {
-			parser.parse(contents);
-		} catch (ParserException e) {
-			logger.warn("Parsing failed in gadget xml describer, returning IContentDescriber.INTERMEDIATE", e);
-			return IContentDescriber.INDETERMINATE;
-		}
-		return IContentDescriber.VALID;
-	}
+    public int describe(InputStream contents, IContentDescription description) throws IOException {
+        IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+        try {
+            parser.parse(contents);
+        } catch (ParserException e) {
+            logger.warn(
+                    "Parsing failed in gadget xml describer, returning IContentDescriber.INTERMEDIATE",
+                    e);
+            return IContentDescriber.INDETERMINATE;
+        }
+        return IContentDescriber.VALID;
+    }
 
-	public QualifiedName[] getSupportedOptions() {
-		return new QualifiedName[0];
-	}
+    public QualifiedName[] getSupportedOptions() {
+        return new QualifiedName[0];
+    }
 
 }

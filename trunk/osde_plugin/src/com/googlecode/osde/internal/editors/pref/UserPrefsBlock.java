@@ -25,64 +25,64 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
 
 public class UserPrefsBlock extends MasterDetailsBlock {
-	
-	private UserPrefsPart userPrefsPart;
-	
-	private UserPrefsPage page;
-	
-	public UserPrefsBlock(UserPrefsPage page) {
-		super();
-		this.page = page;
-	}
 
-	@Override
-	protected void createMasterPart(IManagedForm managedForm, Composite parent) {
-		userPrefsPart = new UserPrefsPart(parent, managedForm, page);
-		managedForm.addPart(userPrefsPart);
-	}
+    private UserPrefsPart userPrefsPart;
 
-	@Override
-	protected void createToolBarActions(IManagedForm managedForm) {
-	}
+    private UserPrefsPage page;
 
-	@Override
-	protected void registerPages(DetailsPart detailsPart) {
-		final IDetailsPage detailsPage = new UserPrefPage(page);
-		detailsPart.registerPage(UserPrefModel.class, detailsPage);
-		detailsPart.setPageProvider(new IDetailsPageProvider() {
+    public UserPrefsBlock(UserPrefsPage page) {
+        super();
+        this.page = page;
+    }
 
-			public IDetailsPage getPage(Object key) {
-				if (key.equals(UserPrefModel.class)) {
-					return detailsPage;
-				}
-				return null;
-			}
+    @Override
+    protected void createMasterPart(IManagedForm managedForm, Composite parent) {
+        userPrefsPart = new UserPrefsPart(parent, managedForm, page);
+        managedForm.addPart(userPrefsPart);
+    }
 
-			public Object getPageKey(Object object) {
-				if (object instanceof UserPrefModel) {
-					return UserPrefModel.class;
-				}
-				return object.getClass();
-			}
-			
-		});
-		sashForm.setWeights(new int[]{45, 55});
-	}
+    @Override
+    protected void createToolBarActions(IManagedForm managedForm) {
+    }
 
-	public void updateUserPrefModel() {
-		userPrefsPart.markDirty();
-	}
+    @Override
+    protected void registerPages(DetailsPart detailsPart) {
+        final IDetailsPage detailsPage = new UserPrefPage(page);
+        detailsPart.registerPage(UserPrefModel.class, detailsPage);
+        detailsPart.setPageProvider(new IDetailsPageProvider() {
 
-	public void updateModel() {
-		if (userPrefsPart != null) {
-			userPrefsPart.setValuesToModule();
-		}
-	}
+            public IDetailsPage getPage(Object key) {
+                if (key.equals(UserPrefModel.class)) {
+                    return detailsPage;
+                }
+                return null;
+            }
 
-	public void changeModel() {
-		if (userPrefsPart != null) {
-			userPrefsPart.changeModel();
-		}
-	}
-	
+            public Object getPageKey(Object object) {
+                if (object instanceof UserPrefModel) {
+                    return UserPrefModel.class;
+                }
+                return object.getClass();
+            }
+
+        });
+        sashForm.setWeights(new int[] {45, 55});
+    }
+
+    public void updateUserPrefModel() {
+        userPrefsPart.markDirty();
+    }
+
+    public void updateModel() {
+        if (userPrefsPart != null) {
+            userPrefsPart.setValuesToModule();
+        }
+    }
+
+    public void changeModel() {
+        if (userPrefsPart != null) {
+            userPrefsPart.changeModel();
+        }
+    }
+
 }

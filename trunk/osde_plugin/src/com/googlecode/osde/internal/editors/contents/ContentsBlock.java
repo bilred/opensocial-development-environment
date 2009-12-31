@@ -27,68 +27,68 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.MasterDetailsBlock;
 
 public class ContentsBlock extends MasterDetailsBlock {
-	
-	private SupportedViewsPart supportedViewsPart;
-	
-	private ContentsPage page;
-	
-	public ContentsBlock(ContentsPage page) {
-		super();
-		this.page = page;
-	}
 
-	@Override
-	protected void createMasterPart(IManagedForm managedForm, Composite parent) {
-		supportedViewsPart = new SupportedViewsPart(parent, managedForm, page);
-		managedForm.addPart(supportedViewsPart);
-	}
+    private SupportedViewsPart supportedViewsPart;
 
-	@Override
-	protected void createToolBarActions(IManagedForm managedForm) {
-	}
+    private ContentsPage page;
 
-	@Override
-	protected void registerPages(DetailsPart detailsPart) {
-		final IDetailsPage detailsPage = new ContentPage(page);
-		detailsPart.registerPage(ContentModel.class, detailsPage);
-		detailsPart.setPageProvider(new IDetailsPageProvider() {
+    public ContentsBlock(ContentsPage page) {
+        super();
+        this.page = page;
+    }
 
-			public IDetailsPage getPage(Object key) {
-				if (key.equals(ContentModel.class)) {
-					return detailsPage;
-				}
-				return null;
-			}
+    @Override
+    protected void createMasterPart(IManagedForm managedForm, Composite parent) {
+        supportedViewsPart = new SupportedViewsPart(parent, managedForm, page);
+        managedForm.addPart(supportedViewsPart);
+    }
 
-			public Object getPageKey(Object object) {
-				if (object instanceof ContentModel) {
-					return ContentModel.class;
-				}
-				return object.getClass();
-			}
-			
-		});
-		sashForm.setWeights(new int[]{45, 55});
-	}
+    @Override
+    protected void createToolBarActions(IManagedForm managedForm) {
+    }
 
-	public void updateContentModel() {
-		supportedViewsPart.markDirty();
-	}
-	
-	public List<ContentModel> getContentModels() {
-		return supportedViewsPart.getContentModels();
-	}
-	
-	public void updateModel() {
-		if (supportedViewsPart != null) {
-			supportedViewsPart.setValuesToModule();
-		}
-	}
+    @Override
+    protected void registerPages(DetailsPart detailsPart) {
+        final IDetailsPage detailsPage = new ContentPage(page);
+        detailsPart.registerPage(ContentModel.class, detailsPage);
+        detailsPart.setPageProvider(new IDetailsPageProvider() {
 
-	public void changeModel() {
-		if (supportedViewsPart != null) {
-			supportedViewsPart.changeModel();
-		}
-	}
-	
+            public IDetailsPage getPage(Object key) {
+                if (key.equals(ContentModel.class)) {
+                    return detailsPage;
+                }
+                return null;
+            }
+
+            public Object getPageKey(Object object) {
+                if (object instanceof ContentModel) {
+                    return ContentModel.class;
+                }
+                return object.getClass();
+            }
+
+        });
+        sashForm.setWeights(new int[] {45, 55});
+    }
+
+    public void updateContentModel() {
+        supportedViewsPart.markDirty();
+    }
+
+    public List<ContentModel> getContentModels() {
+        return supportedViewsPart.getContentModels();
+    }
+
+    public void updateModel() {
+        if (supportedViewsPart != null) {
+            supportedViewsPart.setValuesToModule();
+        }
+    }
+
+    public void changeModel() {
+        if (supportedViewsPart != null) {
+            supportedViewsPart.changeModel();
+        }
+    }
+
 }

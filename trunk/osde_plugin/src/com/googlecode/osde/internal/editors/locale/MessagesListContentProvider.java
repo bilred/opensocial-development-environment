@@ -23,16 +23,16 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 class MessagesListContentProvider implements IStructuredContentProvider {
-	
-	public void dispose() {
-	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
+    public void dispose() {
+    }
 
-	public Object[] getElements(Object inputElement) {
-		Map<String, String> messages = (Map<String, String>)inputElement;
-		return messages.entrySet().toArray();
-	}
-	
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    }
+
+    public Object[] getElements(Object inputElement) {
+        Map<String, String> messages = (Map<String, String>) inputElement;
+        return messages.entrySet().toArray();
+    }
+
 }
