@@ -18,27 +18,25 @@
 package com.google.gadgets.parser;
 
 /**
- * 
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
- *
  */
 @SuppressWarnings("serial")
 public class ParserException extends Exception {
-	
-	public ParserException() {
-		super();
-	}
-	
-	public ParserException(String message) {
-		super(message);
-	}
-	
-	public ParserException(String message, Throwable t) {
-		super(message, t);
-	}
-	
-	public ParserException(Throwable t) {
-		super(t.getMessage(), t);
-	}
-	
+
+    public ParserException() {
+        super();
+    }
+
+    public ParserException(String message) {
+        super(message);
+    }
+
+    public ParserException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    public ParserException(Throwable t) {
+        super(t.getMessage(), t);
+    }
+
 }

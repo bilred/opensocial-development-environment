@@ -19,11 +19,11 @@ package com.google.gadgets;
 
 public enum ViewType {
 
-	html,
-	url;
-	
-	public static ViewType parse(String name) {
-		return ViewType.valueOf(name.toLowerCase());
-	}
-	
+    html,
+    url;
+
+    public static ViewType parse(String name) {
+        return ViewType.valueOf(name.toLowerCase());
+    }
+
 }

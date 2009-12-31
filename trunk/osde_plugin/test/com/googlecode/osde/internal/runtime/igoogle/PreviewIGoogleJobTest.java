@@ -18,13 +18,6 @@
  */
 package com.googlecode.osde.internal.runtime.igoogle;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertTrue;
-
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
@@ -33,6 +26,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.Test;
+
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author albert.cheng.ig@gmail.com
@@ -49,6 +49,7 @@ public class PreviewIGoogleJobTest {
 
     /**
      * Test method for {@link BaseIGoogleJob#uploadFilesToIg(String, boolean)}.
+     *
      * @throws HostingException
      */
     @Test

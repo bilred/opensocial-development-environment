@@ -20,61 +20,60 @@ package com.google.gadgets.parser;
 import java.io.File;
 import java.io.FileWriter;
 
-import junit.framework.TestCase;
+import com.google.gadgets.model.Module;
 
+import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.gadgets.model.Module;
-
 public class GadgetXMLParserTest extends TestCase {
 
-	private GadgetXMLParser parser;
-	private FileWriter fout;
-	private File fin;
-	
-	public GadgetXMLParserTest(String testName) {
-		super(testName);
-	}
-	
-	@Before
-	public void setUp() throws Exception {
-		parser = new GadgetXMLParser();
-		fout = new FileWriter("test.txt");
-		fout.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"); 
-		fout.write("<Module>");
-		fout.write("  <ModulePrefs title=\"hello world example\" />"); 
-		fout.write("    <Content type=\"html\">");
-		fout.write("      <![CDATA["); 
-		fout.write("        Hello, world!");
-		fout.write("      ]]>");
-		fout.write("    </Content>"); 
-		fout.write("</Module>");
-		fout.flush();
-		fout.close();
-	}
+    private GadgetXMLParser parser;
+    private FileWriter fout;
+    private File fin;
 
-	@After
-	public void tearDown() throws Exception {
-		File file = new File("test.txt");
-		if (file.exists()) {
-			file.delete();
-		}
-	}
+    public GadgetXMLParserTest(String testName) {
+        super(testName);
+    }
 
-	@Test
-	public final void testInitialize() {
-		assertFalse(parser == null);
-	}
+    @Before
+    public void setUp() throws Exception {
+        parser = new GadgetXMLParser();
+        fout = new FileWriter("test.txt");
+        fout.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        fout.write("<Module>");
+        fout.write("  <ModulePrefs title=\"hello world example\" />");
+        fout.write("    <Content type=\"html\">");
+        fout.write("      <![CDATA[");
+        fout.write("        Hello, world!");
+        fout.write("      ]]>");
+        fout.write("    </Content>");
+        fout.write("</Module>");
+        fout.flush();
+        fout.close();
+    }
 
-	@Test
-	public final void testParse() throws ParserException {
-		fin = new File("test.txt");
-		assertTrue(fin.exists());
-		Module module = null;
-		module = (Module) parser.parse(fin);
-		assertFalse(module == null);
-	}
+    @After
+    public void tearDown() throws Exception {
+        File file = new File("test.txt");
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    @Test
+    public final void testInitialize() {
+        assertFalse(parser == null);
+    }
+
+    @Test
+    public final void testParse() throws ParserException {
+        fin = new File("test.txt");
+        assertTrue(fin.exists());
+        Module module = null;
+        module = (Module) parser.parse(fin);
+        assertFalse(module == null);
+    }
 
 }

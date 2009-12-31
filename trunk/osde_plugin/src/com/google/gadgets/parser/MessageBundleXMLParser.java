@@ -17,36 +17,35 @@
  */
 package com.google.gadgets.parser;
 
+import com.google.gadgets.model.MessageBundle;
+
 import org.apache.commons.digester.CallMethodRule;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.digester.SetPropertiesRule;
 
-import com.google.gadgets.model.MessageBundle;
-
 /**
  * Parser class for parsing message bundle XML file using Apache's Digester
  * Refer to http://code.google.com/intl/zh-TW/apis/gadgets/docs/reference.html
  * for complete information of gadgets XML specifications
- * 
- * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  *
+ * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  */
 public class MessageBundleXMLParser extends AbstractParser {
-	
-	public MessageBundleXMLParser() {
-		super();
-	}
-	
-	protected void initialize(Digester digester) {
-		digester.addRule("messagebundle", new ObjectCreateRule(MessageBundle.class));
-		digester.addRule("messagebundle/msg", new ObjectCreateRule(MessageBundle.Msg.class));
-		String[] propertyNames = new String[]{"name", "desc"};
-		String[] attributeNames = new String[]{"name", "desc"};
-		digester.addRule("messagebundle/msg", new SetPropertiesRule(propertyNames, attributeNames));
-		digester.addRule("messagebundle/msg", new CallMethodRule("setContent", 0));
-		digester.addRule("messagebundle/msg", new SetNextRule("addMessage"));
-	}
-	
+
+    public MessageBundleXMLParser() {
+        super();
+    }
+
+    protected void initialize(Digester digester) {
+        digester.addRule("messagebundle", new ObjectCreateRule(MessageBundle.class));
+        digester.addRule("messagebundle/msg", new ObjectCreateRule(MessageBundle.Msg.class));
+        String[] propertyNames = new String[] {"name", "desc"};
+        String[] attributeNames = new String[] {"name", "desc"};
+        digester.addRule("messagebundle/msg", new SetPropertiesRule(propertyNames, attributeNames));
+        digester.addRule("messagebundle/msg", new CallMethodRule("setContent", 0));
+        digester.addRule("messagebundle/msg", new SetNextRule("addMessage"));
+    }
+
 }

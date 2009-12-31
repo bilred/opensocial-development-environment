@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.List;
 
 import junit.framework.Assert;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
@@ -36,63 +35,63 @@ import org.junit.Test;
 
 public class PersonTest {
 
-	private Session session;
-	private File dbDir = new File("./dbDir" + System.currentTimeMillis());
-	private Server dbServer;
+    private Session session;
+    private File dbDir = new File("./dbDir" + System.currentTimeMillis());
+    private Server dbServer;
 
-	@Before
-	public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
 
-		dbDir.mkdirs();
-		dbServer = Server.createTcpServer(
-			new String[]{"-tcp", "-tcpAllowOthers",
-				"-baseDir", dbDir.getAbsolutePath()}).start();
+        dbDir.mkdirs();
+        dbServer = Server.createTcpServer(
+                new String[] {"-tcp", "-tcpAllowOthers",
+                        "-baseDir", dbDir.getAbsolutePath()}).start();
 
-		HibernateUtils.initialize("hibernate_for_test.cfg.xml");
-		session = HibernateUtils.currentSession();
-		deleteAll();
-	}
+        HibernateUtils.initialize("hibernate_for_test.cfg.xml");
+        session = HibernateUtils.currentSession();
+        deleteAll();
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		HibernateUtils.closeSession();
-		dbServer.stop();
-		FileUtils.deleteDirectory(dbDir);
-	}
+    @After
+    public void tearDown() throws Exception {
+        HibernateUtils.closeSession();
+        dbServer.stop();
+        FileUtils.deleteDirectory(dbDir);
+    }
 
-	private void deleteAll() throws Exception {
-		Transaction tx = session.beginTransaction();
-		Query query = session.createQuery("delete from PersonImpl p");
-		query.executeUpdate();
-		tx.commit();
-	}
+    private void deleteAll() throws Exception {
+        Transaction tx = session.beginTransaction();
+        Query query = session.createQuery("delete from PersonImpl p");
+        query.executeUpdate();
+        tx.commit();
+    }
 
-	@Test
-	public void testCreatePerson() throws Exception {
-		Transaction tx = session.beginTransaction();
-		Person person = new PersonImpl();
-		person.setId("john.doe");
-		person.setAboutMe("aboutMe1");
-		person.setAge(33);
-		session.save(person);
-		tx.commit();
-		session.clear();
-		//
-		tx = session.beginTransaction();
-		Query query = session.getNamedQuery(PersonImpl.FINDBY_PERSONID);
-		query.setParameter(PersonImpl.PARAM_PERSONID, "john.doe");
-		query.setFirstResult(0);
-		query.setMaxResults(1);
-		List<?> plist = query.list();
-		person = null;
-		if (plist != null && plist.size() > 0) {
-			person = (Person)plist.get(0);
-		}
+    @Test
+    public void testCreatePerson() throws Exception {
+        Transaction tx = session.beginTransaction();
+        Person person = new PersonImpl();
+        person.setId("john.doe");
+        person.setAboutMe("aboutMe1");
+        person.setAge(33);
+        session.save(person);
+        tx.commit();
+        session.clear();
+        //
+        tx = session.beginTransaction();
+        Query query = session.getNamedQuery(PersonImpl.FINDBY_PERSONID);
+        query.setParameter(PersonImpl.PARAM_PERSONID, "john.doe");
+        query.setFirstResult(0);
+        query.setMaxResults(1);
+        List<?> plist = query.list();
+        person = null;
+        if (plist != null && plist.size() > 0) {
+            person = (Person) plist.get(0);
+        }
 
-		Assert.assertEquals("id", "john.doe", person.getId());
-		Assert.assertEquals("aboutMe", "aboutMe1", person.getAboutMe());
-		Assert.assertEquals("Age", new Integer(33), person.getAge());
-		tx.commit();
-	}
+        Assert.assertEquals("id", "john.doe", person.getId());
+        Assert.assertEquals("aboutMe", "aboutMe1", person.getAboutMe());
+        Assert.assertEquals("Age", new Integer(33), person.getAge());
+        tx.commit();
+    }
 
 }

@@ -22,15 +22,15 @@ import java.io.InputStream;
 
 /**
  * A dummy interface for parsers
- * 
+ *
  * All parsers should implement AbstractParser instead of this interface
  * This interface is intended for implementing a uniform interface
  * to generate parsers for clients
- * 
- * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  *
+ * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  */
 public interface IParser {
-	public Object parse(InputStream in) throws ParserException;
-	public Object parse(File fin) throws ParserException;
+    public Object parse(InputStream in) throws ParserException;
+
+    public Object parse(File fin) throws ParserException;
 }
