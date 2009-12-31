@@ -22,7 +22,7 @@
   * 'Building workspace' has encountered a problem - Eclipse couldn't refresh the "target" directory (Issue #156)
   * 'Building workspace' has encountered a problem. Errors occured during the build. (Issue #157)
 
-==v0.5 (CURRENT RELEASE)==
+==v0.5.0 (CURRENT RELEASE)==
 
  * Purpose: Support iGoogle.
  * Release date: 2009-12-18
@@ -30,7 +30,7 @@
   * (owner=albert) Preview gadgets on at least one container (Issue 39).
   * (owner=albert) Publish gadgets on at least one container (Issue 154).
 
-==v0.7==
+==v0.7.0==
 
  * (owner=yoichiro) Rename package name to com.googlecode.osde (Issue 158).
  * (owner=!ChingYiChan) The configuration to change the port number of Jetty (Issue 104).
@@ -40,7 +40,7 @@
 
 Expected release date: 2010-01-03
 
-==v0.9==
+==v0.9.0==
 
  * (owner=albert) Gadget Checker (Issue 47).
  * (owner=TBD) The HAS_APP filter (Issue 106).
@@ -50,7 +50,7 @@ Expected release date: 2010-01-03
 
 Expected release date: 2010-01-22
 
-==v1.0==
+==v1.0.0==
 
 Milestone release
 
