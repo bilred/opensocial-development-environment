@@ -46,13 +46,17 @@ import static org.apache.commons.io.IOUtils.copy;
  * @author Dolphin Chi-Ngai Wan
  */
 class Profile {
-    private File extensionsDir;
-    private File userPreferenceFile;
+    private final File extensionsDir;
+    private final File userPreferenceFile;
+    private final File profileDir;
+    final String name;
 
     /**
      * Constructs a firefox profile from an existing, physical profile folder.
      */
-    Profile(File profileDir) {
+    Profile(File profileDir, String name) {
+        this.name = name;
+        this.profileDir = profileDir;
         this.extensionsDir = new File(profileDir, "extensions");
         this.userPreferenceFile = new File(profileDir, "user.js");
 
@@ -61,6 +65,16 @@ class Profile {
                     MessageFormat.format("Profile directory does not exist: {0}",
                             profileDir.getAbsolutePath()));
         }
+    }
+
+    /**
+     * Returns true if there is an Firefox instance running with this profile.
+     */
+    boolean isRunning() {
+        File macAndLinuxLockFile = new File(profileDir, ".parentlock");
+        File windowsLockFile = new File(profileDir, "parent.lock");
+
+        return macAndLinuxLockFile.exists() || windowsLockFile.exists();
     }
 
     void installPageSpeed(String beaconUrl) throws IOException {
@@ -173,11 +187,8 @@ class Profile {
         prefs.put("startup.homepage_welcome_url", "\"about:blank\"");
 
         prefs.put("extensions.firebug.allPagesActivation", "\"on\"");
-        prefs.put("extensions.PageSpeed.beacon.full_results.url", "\"" + beaconUrl + "\"");
-        prefs.put("extensions.PageSpeed.beacon.full_results.enabled", "true");
-        prefs.put("extensions.PageSpeed.beacon.full_results.autorun", "true");
+        prefs.put("extensions.firebug.defaultPanelName", "\"pagespeed\"");
         prefs.put("extensions.PageSpeed.autorun", "true");
-        prefs.put("extensions.PageSpeed.quit_after_scoring", "true");
 
         writeNewPrefs(prefs);
     }

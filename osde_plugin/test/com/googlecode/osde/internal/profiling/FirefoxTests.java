@@ -75,13 +75,10 @@ public class FirefoxTests {
     public void testLaunchFirefox() throws IOException, InterruptedException {
         // given
         final String profileName = "profile1";
-        binary.createProfile(profileName);
-
-        ProfilesIni ini = new ProfilesIni();
-        Profile profile = ini.getProfile(profileName);
+        Profile profile = binary.createProfile(profileName);
         profile.installPageSpeed("http://localhost:" + port + beaconPath);
 
-        binary.launch(profileName, "http://www.google.co.jp");
+        binary.launch(profile, "http://www.google.co.jp");
 
         beaconReceived.await();
 

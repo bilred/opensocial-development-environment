@@ -12,10 +12,6 @@ import org.osgi.service.prefs.Preferences;
  */
 public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 
-	public OsdePreferenceInitializer() {
-		super();
-	}
-
 	@Override
 	public void initializeDefaultPreferences() {
 		String tmpdir = Activator.getDefault().getWorkDirectory().getAbsolutePath();
@@ -43,6 +39,7 @@ public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 		node.put(OsdeConfig.WORK_DIRECTORY, file.getAbsolutePath());
 		node.put(OsdeConfig.LOGGER_CONFIG_FILE, "");
 		node.putBoolean(OsdeConfig.COMPILE_JAVASCRIPT, false);
+		node.put(OsdeConfig.FIREFOX_LOCATION, OsdeConfig.DEFAULT_FIREFOX_LOCATION);
 	}
 
 }
