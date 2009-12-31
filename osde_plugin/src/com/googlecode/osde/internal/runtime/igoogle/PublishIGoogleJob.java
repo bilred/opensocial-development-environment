@@ -16,13 +16,11 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.production;
+package com.googlecode.osde.internal.runtime.igoogle;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.googlecode.osde.internal.utils.HostingException;
-import com.googlecode.osde.internal.utils.HostingIGoogleUtil;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;

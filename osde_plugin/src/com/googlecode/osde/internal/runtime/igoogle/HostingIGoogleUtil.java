@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.utils;
+package com.googlecode.osde.internal.runtime.igoogle;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +34,11 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 
-import static com.googlecode.osde.internal.utils.IgCredentials.HTTP_HEADER_COOKIE;
-import static com.googlecode.osde.internal.utils.IgCredentials.URL_IG;
-import static com.googlecode.osde.internal.utils.IgCredentials.retrieveHttpResponseAsString;
+import com.googlecode.osde.internal.utils.Logger;
+
+import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.retrieveHttpResponseAsString;
+import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.HTTP_HEADER_COOKIE;
+import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.URL_IG;
 
 /**
  * This iGoogle utility class provides authentication and
