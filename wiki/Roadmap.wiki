@@ -48,7 +48,7 @@ Expected release date: 2010-01-03
  * (owner=TBD) New editor for gadget xml files - code completion for OS API and templates (Issue 160).
  * (owner=TBD) Support Shindig v1.1 (beta 3) (Issue 161).
 
-Expected release date: 2010-01-24
+Expected release date: 2010-01-22
 
 ==v1.0==
 
