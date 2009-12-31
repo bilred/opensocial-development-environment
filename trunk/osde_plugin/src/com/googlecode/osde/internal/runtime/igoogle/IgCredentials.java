@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.utils;
+package com.googlecode.osde.internal.runtime.igoogle;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,6 +35,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
+
+import com.googlecode.osde.internal.utils.Logger;
 
 /**
  * Data and corresponding methods used for interacting with iGoogle

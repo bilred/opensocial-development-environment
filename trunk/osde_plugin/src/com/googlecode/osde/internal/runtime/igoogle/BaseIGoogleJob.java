@@ -16,16 +16,12 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.production;
-// TODO: rename package production to igoogle
+package com.googlecode.osde.internal.runtime.igoogle;
 
-import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.formHostedFileUrl;
-import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.retrievePublicId;
-import static com.googlecode.osde.internal.utils.HostingIGoogleUtil.uploadFiles;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formHostedFileUrl;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrievePublicId;
+import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.uploadFiles;
 
-import com.googlecode.osde.internal.utils.HostingException;
-import com.googlecode.osde.internal.utils.HostingIGoogleUtil;
-import com.googlecode.osde.internal.utils.IgCredentials;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
