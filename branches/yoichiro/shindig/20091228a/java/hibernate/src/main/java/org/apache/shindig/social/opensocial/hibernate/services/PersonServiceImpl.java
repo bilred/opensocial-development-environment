@@ -46,7 +46,7 @@ public class PersonServiceImpl extends AbstractServiceImpl implements PersonServ
 			Set<String> fields, SecurityToken token) throws ProtocolException {
 		Set<String> ids = new TreeSet<String>();
 		for (UserId userId : userIds) {
-			ids.addAll(getIdSet(userId, groupId, token));
+			ids.addAll(getIdSet(userId, groupId, collectionOptions, token));
 		}
 		List<Person> people;
 		int startIndex;
