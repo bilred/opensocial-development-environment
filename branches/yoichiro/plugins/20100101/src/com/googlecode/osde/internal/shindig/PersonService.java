@@ -19,6 +19,8 @@ package com.googlecode.osde.internal.shindig;
 
 import java.util.List;
 
+import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
+import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationMemberImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
 import org.apache.shindig.social.opensocial.model.Person;
@@ -67,6 +69,13 @@ public class PersonService {
         for (RelationshipImpl relation : relations) {
             session.delete(relation);
         }
+        query = session.createQuery(
+            "select a from ApplicationMemberImpl a where a.person = :person");
+        query.setParameter("person", person);
+        List<ApplicationMemberImpl> applicationMembers = (List<ApplicationMemberImpl>)query.list();
+        for (ApplicationMemberImpl applicationMember : applicationMembers) {
+            session.delete(applicationMember);
+        }
         session.delete(person);
         tx.commit();
     }
@@ -103,6 +112,28 @@ public class PersonService {
         for (Person person : people) {
             deletePerson(person);
         }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Person> getPeople(ApplicationImpl application) {
+        Query query = session.createQuery("select p from PersonImpl p");
+        List<Person> people = (List<Person>)query.list();
+        for (Person person : people) {
+            person.setHasApp(false);
+        }
+        query = session.createQuery(
+                "select a.person from ApplicationMemberImpl a where a.application = :application");
+        query.setParameter("application", application);
+        List<Person> hasMembers = (List<Person>)query.list();
+        for (Person hasMember : hasMembers) {
+            for (Person person : people) {
+                if (person.getId().equals(hasMember.getId())) {
+                    person.setHasApp(true);
+                    break;
+                }
+            }
+        }
+        return people;
     }
 
 }

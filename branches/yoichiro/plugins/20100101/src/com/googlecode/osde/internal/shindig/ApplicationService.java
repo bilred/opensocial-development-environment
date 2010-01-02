@@ -25,7 +25,10 @@ import com.googlecode.osde.internal.utils.ApplicationInformation;
 import com.google.gadgets.model.Module;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
+import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationMemberImpl;
+import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
+import org.apache.shindig.social.opensocial.model.Person;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -102,4 +105,43 @@ public class ApplicationService {
         tx.commit();
     }
 
+    public void removeAll() {
+        List<ApplicationImpl> applications = getApplications();
+        for (ApplicationImpl application : applications) {
+            deleteApplication(application);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void deleteApplication(ApplicationImpl application) {
+        Transaction tx = session.beginTransaction();
+        Query query = session.createQuery(
+                "select a from ApplicationMemberImpl a where a.application = :application");
+        query.setParameter("application", application);
+        List<ApplicationMemberImpl> applicationMembers = (List<ApplicationMemberImpl>)query.list();
+        for (ApplicationMemberImpl applicationMember : applicationMembers) {
+            session.delete(applicationMember);
+        }
+        session.delete(application);
+        tx.commit();
+    }
+
+    public void updateHasApp(ApplicationImpl application, Person person, boolean hasApp) {
+        Transaction tx = session.beginTransaction();
+        if (hasApp) {
+            ApplicationMemberImpl applicationMember = new ApplicationMemberImpl();
+            applicationMember.setPerson(person);
+            applicationMember.setApplication(application);
+            session.save(applicationMember);
+        } else {
+            Query query = session.createQuery(
+                    "from ApplicationMemberImpl a where a.person = :person and a.application = :application");
+            query.setParameter("person", person);
+            query.setParameter("application", application);
+            ApplicationMemberImpl applicationMember = (ApplicationMemberImpl)query.uniqueResult();
+            session.delete(applicationMember);
+        }
+        tx.commit();
+    }
+    
 }
