@@ -41,6 +41,7 @@ import com.googlecode.osde.internal.shindig.ShindigLaunchConfigurationCreator;
 import com.googlecode.osde.internal.shindig.ShindigLaunchConfigurationDeleter;
 import com.googlecode.osde.internal.ui.views.activities.ActivitiesView;
 import com.googlecode.osde.internal.ui.views.appdata.AppDataView;
+import com.googlecode.osde.internal.ui.views.apps.ApplicationView;
 import com.googlecode.osde.internal.ui.views.people.PersonView;
 import com.googlecode.osde.internal.ui.views.userprefs.UserPrefsView;
 import com.googlecode.osde.internal.utils.EclipseLogHandler;
@@ -63,6 +64,8 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -277,20 +280,29 @@ public class Activator extends AbstractUIPlugin {
             public void run() {
                 try {
                     PersonView personView =
-                            (PersonView) window.getActivePage().showView(PersonView.ID);
+                            (PersonView) window.getActivePage().showView(
+                                    PersonView.ID, null, IWorkbenchPage.VIEW_CREATE);
                     personView.disconnectedDatabase();
                     monitor.worked(1);
                     AppDataView appDataView =
-                            (AppDataView) window.getActivePage().showView(AppDataView.ID);
+                            (AppDataView) window.getActivePage().showView(
+                                    AppDataView.ID, null, IWorkbenchPage.VIEW_CREATE);
                     appDataView.disconnectedDatabase();
                     monitor.worked(1);
                     ActivitiesView activitiesView =
-                            (ActivitiesView) window.getActivePage().showView(ActivitiesView.ID);
+                            (ActivitiesView) window.getActivePage().showView(
+                                    ActivitiesView.ID, null, IWorkbenchPage.VIEW_CREATE);
                     activitiesView.disconnectedDatabase();
                     monitor.worked(1);
                     UserPrefsView userPrefsView =
-                            (UserPrefsView) window.getActivePage().showView(UserPrefsView.ID);
+                            (UserPrefsView) window.getActivePage().showView(
+                                    UserPrefsView.ID, null, IWorkbenchPage.VIEW_CREATE);
                     userPrefsView.disconnectedDatabase();
+                    monitor.worked(1);
+                    ApplicationView applicationView =
+                            (ApplicationView) window.getActivePage().showView(
+                                    ApplicationView.ID, null, IWorkbenchPage.VIEW_CREATE);
+                    applicationView.disconnectedDatabase();
                     monitor.worked(1);
                 } catch (PartInitException e) {
                     logger.warn("Disconnecting Shindig Database failed.", e);
@@ -325,19 +337,25 @@ public class Activator extends AbstractUIPlugin {
                     public void run() {
                         try {
                             PersonView personView =
-                                    (PersonView) window.getActivePage().showView(PersonView.ID);
+                                    (PersonView) window.getActivePage().showView(
+                                            PersonView.ID, null, IWorkbenchPage.VIEW_CREATE);
                             personView.connectedDatabase();
                             AppDataView appDataView =
-                                    (AppDataView) window.getActivePage().showView(AppDataView.ID);
+                                    (AppDataView) window.getActivePage().showView(
+                                            AppDataView.ID, null, IWorkbenchPage.VIEW_CREATE);
                             appDataView.connectedDatabase();
                             ActivitiesView activitiesView =
                                     (ActivitiesView) window.getActivePage().showView(
-                                            ActivitiesView.ID);
+                                            ActivitiesView.ID, null, IWorkbenchPage.VIEW_CREATE);
                             activitiesView.connectedDatabase();
                             UserPrefsView userPrefsView =
                                     (UserPrefsView) window.getActivePage().showView(
-                                            UserPrefsView.ID);
+                                            UserPrefsView.ID, null, IWorkbenchPage.VIEW_CREATE);
                             userPrefsView.connectedDatabase();
+                            ApplicationView applicationView =
+                                (ApplicationView) window.getActivePage().showView(
+                                        ApplicationView.ID, null, IWorkbenchPage.VIEW_CREATE);
+                            applicationView.connectedDatabase();
                         } catch (PartInitException e) {
                             logger.error("Connecting to Shindig Database failed.", e);
                         } catch (JDBCException e) {

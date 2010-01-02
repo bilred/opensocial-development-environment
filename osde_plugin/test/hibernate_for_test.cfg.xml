@@ -38,6 +38,7 @@
         <mapping class="org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl" />
         <mapping class="org.apache.shindig.social.opensocial.hibernate.entities.ApplicationDataMapImpl" />
         <mapping class="org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl" />
+        <mapping class="org.apache.shindig.social.opensocial.hibernate.entities.ApplicationMemberImpl" />
     </session-factory>
 
 </hibernate-configuration>
