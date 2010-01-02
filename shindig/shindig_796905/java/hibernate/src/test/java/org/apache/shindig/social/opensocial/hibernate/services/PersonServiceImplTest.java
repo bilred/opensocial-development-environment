@@ -28,11 +28,14 @@ import java.util.concurrent.Future;
 
 import org.apache.shindig.auth.BasicSecurityToken;
 import org.apache.shindig.auth.SecurityToken;
+import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
+import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationMemberImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.apache.shindig.social.opensocial.spi.CollectionOptions;
 import org.apache.shindig.social.opensocial.spi.GroupId;
+import org.apache.shindig.social.opensocial.spi.PersonService;
 import org.apache.shindig.protocol.RestfulCollection;
 import org.apache.shindig.social.opensocial.spi.UserId;
 import org.hibernate.Transaction;
@@ -71,7 +74,7 @@ public class PersonServiceImplTest extends AbstractServiceTest {
 		assertEquals("person.id", "id1", actual.getId());
 		assertEquals("person.aboutMe", "aboutMe1", actual.getAboutMe());
 	}
-
+	
 	@Test
 	public void testIsViewerOwner() throws Exception {
 		Transaction tx = session.beginTransaction();
@@ -211,4 +214,69 @@ public class PersonServiceImplTest extends AbstractServiceTest {
 		assertEquals("people[1].id", "id3", people.get(1).getId());
 	}
 	
+	@Test
+	public void testGetPeopleHasApp() throws Exception {
+		Transaction tx = session.beginTransaction();
+		PersonImpl person1 = new PersonImpl();
+		person1.setId("id1");
+		session.save(person1);
+		PersonImpl person2 = new PersonImpl();
+		person2.setId("id2");
+		session.save(person2);
+		PersonImpl person3 = new PersonImpl();
+		person3.setId("id3");
+		session.save(person3);
+		RelationshipImpl relation1 = new RelationshipImpl();
+		relation1.setGroupId("friends");
+		relation1.setPerson(person1);
+		relation1.setTarget(person2);
+		session.save(relation1);
+		RelationshipImpl relation2 = new RelationshipImpl();
+		relation2.setGroupId("business");
+		relation2.setPerson(person1);
+		relation2.setTarget(person3);
+		session.save(relation2);
+		RelationshipImpl relation3 = new RelationshipImpl();
+		relation3.setGroupId("friends");
+		relation3.setPerson(person2);
+		relation3.setTarget(person1);
+		session.save(relation3);
+		tx.commit();
+		session.clear();
+		//
+		SecurityToken token = new BasicSecurityToken("id1", null, "id1", null, null, null, null, null);
+		UserId user1 = new UserId(UserId.Type.userId, "id1");
+		Set<UserId> userIdSet = new HashSet<UserId>();
+		userIdSet.add(user1);
+		GroupId group = new GroupId(GroupId.Type.all, null);
+		CollectionOptions collectionOptions = new CollectionOptions();
+		collectionOptions.setFirst(0);
+		collectionOptions.setMax(20);
+		Future<RestfulCollection<Person>> result = target.getPeople(userIdSet, group, collectionOptions, null, token);
+		RestfulCollection<Person> actual = result.get();
+		List<Person> people = actual.getEntry();
+		assertEquals("people.size", 2, people.size());
+		assertEquals("totalResults", 2, actual.getTotalResults());
+		assertEquals("people[0].id", "id2", people.get(0).getId());
+		assertEquals("people[1].id", "id3", people.get(1).getId());
+		//
+		tx = session.beginTransaction();
+		person3 = (PersonImpl)session.merge(person3);
+		ApplicationImpl application = new ApplicationImpl();
+		application.setId("id1");
+		ApplicationMemberImpl applicationMember = new ApplicationMemberImpl();
+		applicationMember.setPerson(person3);
+		applicationMember.setApplication(application);
+		session.save(applicationMember);
+		tx.commit();
+		//
+		collectionOptions.setFilter(PersonService.HAS_APP_FILTER);
+		result = target.getPeople(userIdSet, group, collectionOptions, null, token);
+		actual = result.get();
+		people = actual.getEntry();
+		assertEquals("people.size", 1, people.size());
+		assertEquals("totalResults", 1, actual.getTotalResults());
+		assertEquals("people[0].id", "id3", people.get(0).getId());
+	}
+
 }
