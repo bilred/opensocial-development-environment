@@ -37,13 +37,13 @@
  * (owner=dolphin) Latency Reduction Tools - Evaluator for web performance (Issue 127).
  * (owner=dolphin) Latency Reduction Tools - JS Compiler (Issue 180).
  * (owner=albert) Manage/clean gadgets on at least one container (Issue 155).
+ * (owner=yoichiro) The HAS_APP filter (Issue 106).
 
 Expected release date: 2010-01-03
 
 ==v0.9.0==
 
  * (owner=albert) Gadget Checker (Issue 47).
- * (owner=TBD) The HAS_APP filter (Issue 106).
  * (owner=TBD) New editor for gadget xml files - code highlighting for OS API and templates (Issue 159).
  * (owner=TBD) New editor for gadget xml files - code completion for OS API and templates (Issue 160).
  * (owner=TBD) Support Shindig v1.1 (beta 3) (Issue 161).
