@@ -1,5 +1,12 @@
 = Change log =
 
+=== January 3, 2010 ===
+  Version 0.7.0 Candidate 1 has been released.
+
+ * Supported the HasApp filter and provided Application view to show the information and managing an application's member.
+ * Provided a way to evaluate the web preformance of a gadget.
+ * Deleted a monitoring view for Shindig.
+
 === December 18, 2009 ===
   Version 0.5.0 stable has been released.
 
