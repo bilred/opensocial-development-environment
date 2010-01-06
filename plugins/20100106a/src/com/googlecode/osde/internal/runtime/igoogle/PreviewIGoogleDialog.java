@@ -127,6 +127,7 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
         password = passwordText.getText();
         logger.fine("password: " + password);
         useCanvasView = canvasViewButton.getSelection();
+        logger.fine("useCanvasView: " + useCanvasView);
         useExternalBrowser = useExternalBrowserCheckbox.getSelection();
         logger.fine("useExternalBrowser: " + useExternalBrowser);
 
