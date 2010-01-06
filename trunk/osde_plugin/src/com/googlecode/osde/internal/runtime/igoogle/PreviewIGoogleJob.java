@@ -50,6 +50,7 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
             Shell shell, boolean useCanvasView, boolean useExternalBrowser) {
         super("iGoogle - Preview Gadget", username, password, gadgetXmlIFile);
         this.shell = shell;
+        this.useCanvasView = useCanvasView;
         this.useExternalBrowser = useExternalBrowser;
     }
 
