@@ -37,6 +37,9 @@ shindig.osde = {};
 	var userPrefsMatches = /[?&]userPrefs=((?:[^#&]+|&amp;)+)/.exec(parentUrl);
 	var userPrefs = (userPrefsMatches) ? gadgets.json.parse(decodeURIComponent(userPrefsMatches[1])) : {};
 
+	var useStMatches = /[?&]use_st=((?:[^#&]+|&amp;)+)/.exec(parentUrl);
+	var useSt = (useStMatches) ? gadgets.json.parse(decodeURIComponent(useStMatches[1])) : {};
+
 	function generateSecureToken() {
 		var fields = [ownerId, viewerId, appId, "osde", gadgetUrl, "0", "default"];
 		for (var i = 0; i < fields.length; i++) {
@@ -101,10 +104,12 @@ shindig.osde = {};
 			gadget = gadgets.container.createGadget({
 				"specUrl" : metadata.gadgets[i].url,
 				"title" : metadata.gadgets[i].title,
-			    "viewParams" : viewParams});
+				"viewParams" : viewParams});
 			gadget.setUserPrefs(up);
 			gadget.setServerBase("../../");
-			gadget.secureToken = escape(generateSecureToken());
+			if (useSt != "0") {
+				gadget.secureToken = escape(generateSecureToken());
+			}
 			gadgets.container.addGadget(gadget);
 		}
 		gadgets.container.layoutManager.setGadgetChromeIds(["gadget-chrome"]);
