@@ -64,6 +64,7 @@ public class LaunchApplicationJob extends Job {
     private String url;
     private String appTitle;
     private final IWorkbenchBrowserSupport browserSupport;
+    private boolean notUseSecurityToken;
 
     public LaunchApplicationJob(
             String name, LaunchApplicationInformation information, Shell shell) {
@@ -82,6 +83,7 @@ public class LaunchApplicationJob extends Job {
         this.appTitle = information.getApplicationTitle();
         this.browserSupport = information.isMeasurePerformance() ?
                 new ProfilingBrowserSupport(shell) : PlatformUI.getWorkbench().getBrowserSupport();
+        this.notUseSecurityToken = information.isNotUseSecurityToken();
     }
 
     @Override
@@ -91,30 +93,35 @@ public class LaunchApplicationJob extends Job {
             String upJson = createJsonFromUserPrefs();
             monitor.worked(1);
             final String kicker;
+            String forSt = "";
+            if (!notUseSecurityToken) {
+                forSt = "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
+                      + "&ownerId=" + URLEncoder.encode(owner, "UTF-8");
+            }
             if (project != null) {
                 kicker =
                         "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:8080/"
                                 + project.getName().replace(" ", "%20") + "/"
                                 + url.replace(" ", "%20")
                                 + "&view=" + view
-                                + "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
-                                + "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
                                 + "&width=" + URLEncoder.encode(width, "UTF-8")
                                 + "&appId=" + URLEncoder.encode(appId, "UTF-8")
                                 + "&country=" + URLEncoder.encode(country, "UTF-8")
                                 + "&language=" + URLEncoder.encode(language, "UTF-8")
-                                + "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8");
+                                + "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8")
+                                + "&use_st=" + (notUseSecurityToken ? "0" : "1")
+                                + forSt;
             } else {
                 kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url="
                         + url.replace(" ", "%20")
                         + "&view=" + view
-                        + "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
-                        + "&ownerId=" + URLEncoder.encode(owner, "UTF-8")
                         + "&width=" + URLEncoder.encode(width, "UTF-8")
                         + "&appId=" + URLEncoder.encode(appId, "UTF-8")
                         + "&country=" + URLEncoder.encode(country, "UTF-8")
                         + "&language=" + URLEncoder.encode(language, "UTF-8")
-                        + "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8");
+                        + "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8")
+                        + "&use_st=" + (notUseSecurityToken ? "0" : "1")
+                        + forSt;
             }
             monitor.worked(1);
             shell.getDisplay().syncExec(new Runnable() {
@@ -123,8 +130,12 @@ public class LaunchApplicationJob extends Job {
                         IWebBrowser browser;
                         if (!useExternalBrowser) {
                             String title = appTitle + " [" + view + "]";
-                            String desc = appTitle + " [" + view + "] viewer=" + viewer + " owner="
-                                    + owner;
+                            String desc;
+                            if (notUseSecurityToken) {
+                                desc = appTitle + " [" + view + "] viewer=" + viewer + " owner=" + owner;
+                            } else {
+                                desc = appTitle + " [" + view + "]";
+                            }
                             browser = browserSupport.createBrowser(
                                     IWorkbenchBrowserSupport.LOCATION_BAR
                                             | IWorkbenchBrowserSupport.NAVIGATION_BAR

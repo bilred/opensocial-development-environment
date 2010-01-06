@@ -37,11 +37,13 @@ public class LaunchApplicationInformation {
     private String url;
     private String applicationTitle;
     private boolean measurePerformance;
+    private boolean notUseSecurityToken;
 
     public LaunchApplicationInformation(String viewer, String owner,
             String view, String width, String appId,
             boolean useExternalBrwoser, String country, String language,
-            IProject project, String url, String applicationTitle, boolean measurePerformance) {
+            IProject project, String url, String applicationTitle,
+            boolean measurePerformance, boolean notUseSecurityToken) {
         this.viewer = viewer;
         this.owner = owner;
         this.view = view;
@@ -54,6 +56,7 @@ public class LaunchApplicationInformation {
         this.url = url;
         this.applicationTitle = applicationTitle;
         this.measurePerformance = measurePerformance;
+        this.notUseSecurityToken = notUseSecurityToken;
     }
 
     public String getViewer() {
@@ -147,4 +150,9 @@ public class LaunchApplicationInformation {
     public boolean isMeasurePerformance() {
         return measurePerformance;
     }
+
+    public boolean isNotUseSecurityToken() {
+        return notUseSecurityToken;
+    }
+
 }

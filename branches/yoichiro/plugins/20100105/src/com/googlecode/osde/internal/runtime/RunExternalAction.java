@@ -76,10 +76,12 @@ public class RunExternalAction implements IWorkbenchWindowActionDelegate {
                 String country = dialog.getCountry();
                 String language = dialog.getLanguage();
                 boolean measurePerformance = dialog.isMeasurePerformance();
+                boolean notUseSecurityToken = dialog.isNotUseSecurityToken();
                 LaunchApplicationInformation information = new LaunchApplicationInformation(
                         viewer, owner, view, width, appId, useExternalBrowser,
                         country, language, null, url,
-                        appInfo.getModule().getModulePrefs().getTitle(), measurePerformance);
+                        appInfo.getModule().getModulePrefs().getTitle(),
+                        measurePerformance, notUseSecurityToken);
                 Job job = new LaunchApplicationJob("Running application", information, shell);
                 job.schedule();
                 notifyUserPrefsView(information);
