@@ -50,6 +50,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  * Dialog for running application locally.
  */
 public class RunApplicationDialog extends TitleAreaDialog {
+
     private static final Logger logger = new Logger(RunApplicationDialog.class);
     private static final String PREF_VIEW = "pref_view";
     private static final String PREF_OWNER = "pref_owner";
@@ -57,6 +58,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
     private static final String PREF_WIDTH = "pref_width";
     private static final String PREF_COUNTRY = "pref_country";
     private static final String PREF_LANG = "pref_lang";
+    private static final String PREF_NOT_USE_SECURITY_TOKEN = "pref_not_use_security_token";
     private static final String PREF_USE_EXTERNAL_BROWSER = "pref_use_external_browser";
     private static final String PREF_MEASURE_PERFORMANCE = "pref_measure_performance";
 
@@ -68,6 +70,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
     private String width;
     private String country;
     private String language;
+    private boolean notUseSecurityToken;
     private boolean useExternalBrowser;
     private boolean measurePerformance;
 
@@ -77,6 +80,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
     private Spinner widths;
     private Combo countries;
     private Combo languages;
+    private Button notUseSecurityTokenCheck;
     private Button useExternalBrowserCheck;
     private Button measurePerformanceCheck;
 
@@ -182,6 +186,12 @@ public class RunApplicationDialog extends TitleAreaDialog {
         layoutData.horizontalSpan = 4;
         separator.setLayoutData(layoutData);
         //
+        notUseSecurityTokenCheck = new Button(panel, SWT.CHECK);
+        notUseSecurityTokenCheck.setText("Not use Security token.");
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        layoutData.horizontalSpan = 4;
+        notUseSecurityTokenCheck.setLayoutData(layoutData);
+        //
         useExternalBrowserCheck = new Button(panel, SWT.CHECK);
         useExternalBrowserCheck.setText("Use an external Web browser.");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -281,6 +291,12 @@ public class RunApplicationDialog extends TitleAreaDialog {
                             new QualifiedName(Activator.PLUGIN_ID, PREF_MEASURE_PERFORMANCE)));
             measurePerformanceCheck.setSelection(prevMeasurePerformance);
             measurePerformanceCheck.notifyListeners(SWT.Selection, null);
+
+            String prevNotUseSecurityToken = gadgetXmlFile.getPersistentProperty(
+                    new QualifiedName(Activator.PLUGIN_ID, PREF_NOT_USE_SECURITY_TOKEN));
+            if (StringUtils.isNotEmpty(prevNotUseSecurityToken)) {
+                notUseSecurityTokenCheck.setSelection(Boolean.parseBoolean(prevNotUseSecurityToken));
+            }
         } catch (CoreException e) {
             logger.error("Setting the default values to Run Application Dialog failed.", e);
         }
@@ -293,9 +309,22 @@ public class RunApplicationDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
+        setErrorMessage("");
+        
+        notUseSecurityToken = notUseSecurityTokenCheck.getSelection();
+        
+        int viewerIndex = viewers.getSelectionIndex();
+        int ownerIndex = owners.getSelectionIndex();
+        if (!notUseSecurityToken && ((viewerIndex == -1) || (ownerIndex == -1))) {
+            setErrorMessage("Owner or Viewer not selected.");
+            return;
+        }
+        
         view = viewKind.getItem(viewKind.getSelectionIndex()).toLowerCase();
-        viewer = viewers.getItem(viewers.getSelectionIndex());
-        owner = owners.getItem(owners.getSelectionIndex());
+        if (viewerIndex != -1)
+            viewer = viewers.getItem(viewerIndex);
+        if (ownerIndex != -1)
+            owner = owners.getItem(ownerIndex);
         width = widths.getText();
         useExternalBrowser = useExternalBrowserCheck.getSelection();
         measurePerformance = measurePerformanceCheck.getSelection();
@@ -310,9 +339,9 @@ public class RunApplicationDialog extends TitleAreaDialog {
             gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_LANG),
                     String.valueOf(languages.getSelectionIndex()));
             gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_OWNER),
-                    String.valueOf(owners.getSelectionIndex()));
+                    String.valueOf(ownerIndex));
             gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_VIEWER),
-                    String.valueOf(viewers.getSelectionIndex()));
+                    String.valueOf(viewerIndex));
             gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_VIEW),
                     String.valueOf(viewKind.getSelectionIndex()));
             gadgetXmlFile.setPersistentProperty(new QualifiedName(Activator.PLUGIN_ID, PREF_WIDTH),
@@ -323,6 +352,9 @@ public class RunApplicationDialog extends TitleAreaDialog {
             gadgetXmlFile.setPersistentProperty(
                     new QualifiedName(Activator.PLUGIN_ID, PREF_MEASURE_PERFORMANCE),
                     String.valueOf(measurePerformanceCheck.getSelection()));
+            gadgetXmlFile.setPersistentProperty(
+                    new QualifiedName(Activator.PLUGIN_ID, PREF_NOT_USE_SECURITY_TOKEN),
+                    String.valueOf(notUseSecurityTokenCheck.getSelection()));
         } catch (CoreException e) {
             logger.error("Setting persistent properties failed.", e);
         }
@@ -362,4 +394,9 @@ public class RunApplicationDialog extends TitleAreaDialog {
     public boolean isMeasurePerformance() {
         return measurePerformance;
     }
+
+    public boolean isNotUseSecurityToken() {
+        return notUseSecurityToken;
+    }
+
 }

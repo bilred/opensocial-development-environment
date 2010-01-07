@@ -242,14 +242,15 @@ public class UserPrefsView extends AbstractView {
                     removeAllFields();
                     monitor.worked(1);
                     List<UserPrefModel> userPrefModels =
-                            MetaDataFetcher.fetch(information.getView(), information.getViewer(),
-                                    information.getOwner(), information.getAppId(),
+                            MetaDataFetcher.fetch(information.getView(), information.getAppId(),
                                     information.getCountry(), information.getLanguage(), url);
                     monitor.worked(1);
                     setupFields(userPrefModels, information);
                     monitor.worked(1);
-                    retrieveUserPrefValues(information.getAppId(), information.getViewer(),
-                            convertMap(userPrefModels));
+                    if (!information.isNotUseSecurityToken()) {
+                        retrieveUserPrefValues(information.getAppId(), information.getViewer(),
+                                convertMap(userPrefModels));
+                    }
                     monitor.worked(1);
                     UserPrefsView.this.information = information;
                 } catch (final Exception e) {

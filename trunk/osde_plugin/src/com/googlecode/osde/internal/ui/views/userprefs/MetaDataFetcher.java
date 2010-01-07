@@ -41,8 +41,7 @@ public class MetaDataFetcher {
                     + "\"container\":\"default\"},\"gadgets\":[{\"url\":\"$url$\",\"moduleId\":1}]}";
 
     public static List<UserPrefModel> fetch(
-            String view, String viewer, String owner, String appId,
-            String country, String language, String url) throws Exception {
+            String view, String appId, String country, String language, String url) throws Exception {
         HttpClient client = new HttpClient(new MultiThreadedHttpConnectionManager());
         client.getHttpConnectionManager().getParams().setConnectionTimeout(3000);
         client.getHostConfiguration().setHost("localhost", 8080, "http");
