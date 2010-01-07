@@ -124,5 +124,18 @@ public class Gadgets {
         cal.set(year, month, date, hour, minute, second);
         return cal.getTime();
     }
+    
+    public static String escapeAttributeValue(String source) {
+        if (source != null) {
+            source = source.replace("&", "&amp;");
+            source = source.replace("<", "&lt;");
+            source = source.replace(">", "&gt;");
+            source = source.replace("\"", "&quot;");
+            source = source.replace("'", "&apos;");
+            return source;
+        } else {
+            return null;
+        }
+    }
 
 }
