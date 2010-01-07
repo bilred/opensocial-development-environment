@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.EnumMap;
 import java.util.Set;
 
+import com.googlecode.osde.internal.utils.Gadgets;
 import com.googlecode.osde.internal.utils.ResourceUtil;
 
 import com.google.gadgets.ViewName;
@@ -172,7 +173,7 @@ public class GadgetXmlFileGenerator {
                 } else if (viewData.getType().equals(ViewType.url)) {
                     content +=
                             "  <Content type=\"url\" view=\"" + viewName.toString() + "\" href=\""
-                                    + viewData.getHref() + "\" />\n";
+                                    + Gadgets.escapeAttributeValue(viewData.getHref()) + "\" />\n";
                 }
             }
             content += "</Module>";
