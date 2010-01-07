@@ -24,6 +24,8 @@ import java.util.List;
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
+import org.eclipse.core.runtime.QualifiedName;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -61,6 +63,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
     private static final String PREF_USE_EXTERNAL_BROWSER =
             "pref_use_external_browser_for_external";
     private static final String PREF_MEASURE_PERFORMANCE = "pref_measure_performance_for_external";
+    private static final String PREF_NOT_USE_SECURITY_TOKEN = "pref_not_use_security_token";
 
     private List<Person> people;
 
@@ -71,6 +74,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
     private String width;
     private String country;
     private String language;
+    private boolean notUseSecurityToken;
     private boolean useExternalBrowser;
     private boolean measurePerformance;
 
@@ -81,6 +85,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
     private Spinner widths;
     private Combo countries;
     private Combo languages;
+    private Button notUseSecurityTokenCheck;
     private Button useExternalBrowserCheck;
     private Button measurePerformanceCheck;
 
@@ -192,6 +197,12 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         layoutData.horizontalSpan = 4;
         separator.setLayoutData(layoutData);
         //
+        notUseSecurityTokenCheck = new Button(panel, SWT.CHECK);
+        notUseSecurityTokenCheck.setText("Not use Security token.");
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        layoutData.horizontalSpan = 4;
+        notUseSecurityTokenCheck.setLayoutData(layoutData);
+        //
         useExternalBrowserCheck = new Button(panel, SWT.CHECK);
         useExternalBrowserCheck.setText("Use an external Web browser.");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -275,6 +286,10 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         if (StringUtils.isNotEmpty(prevWidth) && StringUtils.isNumeric(prevWidth)) {
             widths.setSelection(Integer.parseInt(prevWidth));
         }
+        String prevNotUseSecurityToken = store.getString(PREF_NOT_USE_SECURITY_TOKEN);
+        if (StringUtils.isNotEmpty(prevNotUseSecurityToken)) {
+            notUseSecurityTokenCheck.setSelection(Boolean.parseBoolean(prevNotUseSecurityToken));
+        }
     }
 
     @Override
@@ -284,10 +299,21 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
+        notUseSecurityToken = notUseSecurityTokenCheck.getSelection();
+        
+        int viewerIndex = viewers.getSelectionIndex();
+        int ownerIndex = owners.getSelectionIndex();
+        if (!notUseSecurityToken && ((viewerIndex == -1) || (ownerIndex == -1))) {
+            setErrorMessage("Owner or Viewer not selected.");
+            return;
+        }
+
         url = urlCombo.getText();
         view = viewKind.getItem(viewKind.getSelectionIndex()).toLowerCase();
-        viewer = viewers.getItem(viewers.getSelectionIndex());
-        owner = owners.getItem(owners.getSelectionIndex());
+        if (viewerIndex != -1)
+            viewer = viewers.getItem(viewerIndex);
+        if (ownerIndex != -1)
+            owner = owners.getItem(ownerIndex);
         width = widths.getText();
         useExternalBrowser = useExternalBrowserCheck.getSelection();
         measurePerformance = measurePerformanceCheck.getSelection();
@@ -310,6 +336,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         store.setValue(PREF_USE_EXTERNAL_BROWSER,
                 String.valueOf(useExternalBrowserCheck.getSelection()));
         store.setValue(PREF_MEASURE_PERFORMANCE, measurePerformanceCheck.getSelection());
+        store.setValue(PREF_NOT_USE_SECURITY_TOKEN, notUseSecurityTokenCheck.getSelection());
         setReturnCode(OK);
         close();
     }
@@ -349,4 +376,9 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
     public boolean isMeasurePerformance() {
         return measurePerformance;
     }
+    
+    public boolean isNotUseSecurityToken() {
+        return notUseSecurityToken;
+    }
+
 }
