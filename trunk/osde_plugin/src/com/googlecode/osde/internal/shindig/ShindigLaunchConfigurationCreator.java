@@ -139,7 +139,7 @@ public class ShindigLaunchConfigurationCreator extends AbstractJob {
             return logFile.toURI().toURL();
         }
 
-        logger.warn("Logger configuration file ["
+        logger.info("Logger configuration file ["
                 + logFile.getAbsolutePath()
                 + "] does not exist, use the default configuration file");
 
