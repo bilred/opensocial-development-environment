@@ -20,7 +20,9 @@ package com.googlecode.osde.internal.common;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.googlecode.osde.internal.Activator;
 
@@ -55,8 +57,9 @@ public final class JavaLaunchConfigurationBuilder {
     private final List<String> libraries = new ArrayList<String>();
     private final List<String> programArguments = new ArrayList<String>();
     private String mainClassName;
+    private final Map<String, String> vmArguments = new LinkedHashMap<String, String>();
 
-    public JavaLaunchConfigurationBuilder(String configurationName) throws IOException {
+    public JavaLaunchConfigurationBuilder(String configurationName) {
         this.configurationName = configurationName;
     }
 
@@ -84,12 +87,32 @@ public final class JavaLaunchConfigurationBuilder {
     }
 
     /**
+     * Append a command-line argument and doubled-quotes it.
+     *
+     * @param value The returned value of its <code>toString()</code> method will be used.
+     */
+    public JavaLaunchConfigurationBuilder withArgumentQuoted(Object value) {
+        return withArgument("\"" + String.valueOf(value) + "\"");
+    }
+
+    /**
      * Specify the main class to run.
      *
      * @param mainClassName A fully-qualified class name.
      */
     public JavaLaunchConfigurationBuilder withMainClassName(String mainClassName) {
         this.mainClassName = mainClassName;
+        return this;
+    }
+
+    /**
+     * Adds a VM argument ("-D") into the command line.
+     *
+     * @param name An VM argument name.
+     * @param value An VM argument value.
+     */
+    public JavaLaunchConfigurationBuilder withVmArgument(String name, String value) {
+        this.vmArguments.put(name, value);
         return this;
     }
 
@@ -112,6 +135,23 @@ public final class JavaLaunchConfigurationBuilder {
         return wc.doSave();
     }
 
+    /**
+     * Search and remove any existing Java launch configuration with the
+     * given name passed via constructor.
+     */
+    public JavaLaunchConfigurationBuilder removeExistingConfiguration() throws CoreException {
+        ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+        ILaunchConfigurationType type = manager
+                .getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
+        ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
+        for (ILaunchConfiguration configuration : configurations) {
+            if (configuration.getName().equals(configurationName)) {
+                configuration.delete();
+            }
+        }
+        return this;
+    }
+
     private ILaunchConfigurationWorkingCopy createConfiguration(ILaunchConfigurationType type,
             List<String> classpath)
             throws CoreException {
@@ -123,12 +163,26 @@ public final class JavaLaunchConfigurationBuilder {
             argumentsAsString.append(argument);
         }
 
+        StringBuilder vmArgumentsAsString = new StringBuilder();
+        for (Map.Entry<String, String> entry : vmArguments.entrySet()) {
+            vmArgumentsAsString.append(" -D").append(entry.getKey())
+                    .append("=\"").append(entry.getValue()).append("\"");
+        }
+
         ILaunchConfigurationWorkingCopy wc = type.newInstance(null, configurationName);
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classpath);
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
         wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, mainClassName);
-        wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-                argumentsAsString.toString());
+
+        if (argumentsAsString.length() > 0) {
+            wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+                    argumentsAsString.toString());
+        }
+
+        if (vmArgumentsAsString.length() > 0) {
+            wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+                    vmArgumentsAsString.toString());
+        }
         return wc;
     }
 
