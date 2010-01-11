@@ -24,7 +24,6 @@ import java.io.IOException;
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.common.AbstractJob;
 import com.googlecode.osde.internal.common.JavaLaunchConfigurationBuilder;
-import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -33,8 +32,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class ShindigLaunchConfiguration {
     private static final String CONFIGURATION_NAME = "Apache Shindig";
-
-    private static final Logger logger = new Logger(ShindigLaunchConfiguration.class);
 
     public void create() {
         new AbstractJob("Create the Apache Shindig launch configuration") {
@@ -61,6 +58,19 @@ public class ShindigLaunchConfiguration {
                         .removeExistingConfiguration()
                         .build();
             }
+
+            private String getLoggerConfigurationFile() throws IOException {
+                File logFile = new File(Activator.getDefault()
+                        .getOsdeConfiguration().getLoggerConfigFile());
+                if (logFile.isFile() && logFile.exists()) {
+                    logger.info("Found logger configuration file: " + logFile);
+                    return logFile.toURI().toURL().toExternalForm();
+                }
+
+                // returns the default pre-bundled logging configuration file.
+                return Activator.getResourceUrl("/shindig/logging.properties");
+            }
+
         }.schedule();
     }
 
@@ -74,15 +84,4 @@ public class ShindigLaunchConfiguration {
         }.schedule();
     }
 
-    private String getLoggerConfigurationFile() throws IOException {
-        File logFile =
-                new File(Activator.getDefault().getOsdeConfiguration().getLoggerConfigFile());
-        if (logFile.isFile() && logFile.exists()) {
-            logger.info("Found logger configuration file: " + logFile);
-            return logFile.toURI().toURL().toExternalForm();
-        }
-
-        // returns the default pre-bundled logging configuration file.
-        return Activator.getResourceUrl("/shindig/logging.properties");
-    }
 }
