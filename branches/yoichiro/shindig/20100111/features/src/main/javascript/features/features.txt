@@ -18,7 +18,6 @@
 #
 # List each feature you want to support here
 
-features/analytics/feature.xml
 features/auth-refresh/feature.xml
 features/caja/feature.xml
 features/content-rewrite/feature.xml
