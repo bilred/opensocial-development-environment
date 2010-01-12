@@ -16,8 +16,11 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
+import com.googlecode.osde.internal.igoogle.IgBaseJob;
+import com.googlecode.osde.internal.igoogle.HostingException;
+import com.googlecode.osde.internal.igoogle.IgPreviewJob;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
@@ -37,18 +40,18 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author albert.cheng.ig@gmail.com
  */
-public class PreviewIGoogleJobTest {
+public class IgPreviewJobTest {
 
-    private static Logger logger = new Logger(PreviewIGoogleJobTest.class);
+    private static Logger logger = new Logger(IgPreviewJobTest.class);
     private static final String TEST_USERNAME = "osde.test.001";
     private static final String TEST_PASSWORD = "osdetest888";
     private static final String TEST_TARGET_PATH =
-            "test/com/googlecode/osde/internal/runtime/production/testdata/";
+            "test/com/googlecode/osde/internal/igoogle/testdata/";
     private static final String TEST_HOSTING_FOLDER = "/osde/test/";
     private static final String GADGET_XML_FILE_RELATIVE_PATH = "gadget.xml";
 
     /**
-     * Test method for {@link BaseIGoogleJob#uploadFilesToIg(String, boolean)}.
+     * Test method for {@link IgBaseJob#uploadFilesToIg(String, boolean)}.
      *
      * @throws HostingException
      */
@@ -62,7 +65,7 @@ public class PreviewIGoogleJobTest {
         IPath targetFolderLocation = createMock(IPath.class);
         expect(gadgetXmlIFile.getName()).andReturn(GADGET_XML_FILE_RELATIVE_PATH).anyTimes();
         expect(gadgetXmlIFile.getProject()).andReturn(project).anyTimes();
-        expect(project.getFolder(eq(BaseIGoogleJob.TARGET_FOLDER_NAME)))
+        expect(project.getFolder(eq(IgBaseJob.TARGET_FOLDER_NAME)))
                 .andReturn(targetFolder).anyTimes();
         expect(targetFolder.getLocation()).andReturn(targetFolderLocation).anyTimes();
         expect(targetFolderLocation.toOSString()).andReturn(TEST_TARGET_PATH);
@@ -70,7 +73,7 @@ public class PreviewIGoogleJobTest {
 
         // Prepare job.
         Shell shell = new Shell();
-        PreviewIGoogleJob job = new PreviewIGoogleJob(
+        IgPreviewJob job = new IgPreviewJob(
                 TEST_USERNAME, TEST_PASSWORD, gadgetXmlIFile, shell, false, false);
 
         // Test and verify the method call.

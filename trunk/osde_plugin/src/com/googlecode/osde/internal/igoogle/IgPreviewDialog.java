@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -40,8 +40,8 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class PreviewIGoogleDialog extends TitleAreaDialog {
-    private static Logger logger = new Logger(PreviewIGoogleDialog.class);
+public class IgPreviewDialog extends TitleAreaDialog {
+    private static Logger logger = new Logger(IgPreviewDialog.class);
 
     private String username;
     private String password;
@@ -52,7 +52,7 @@ public class PreviewIGoogleDialog extends TitleAreaDialog {
     private Button canvasViewButton;
     private Button useExternalBrowserCheckbox;
 
-    public PreviewIGoogleDialog(Shell shell) {
+    public IgPreviewDialog(Shell shell) {
         super(shell);
     }
 

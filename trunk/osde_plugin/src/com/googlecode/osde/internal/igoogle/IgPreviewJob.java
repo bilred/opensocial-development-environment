@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,14 +39,14 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class PreviewIGoogleJob extends BaseIGoogleJob {
-    private static Logger logger = new Logger(PreviewIGoogleJob.class);
+public class IgPreviewJob extends IgBaseJob {
+    private static Logger logger = new Logger(IgPreviewJob.class);
 
     private Shell shell;
     private boolean useCanvasView;
     private boolean useExternalBrowser;
 
-    public PreviewIGoogleJob(String username, String password, IFile gadgetXmlIFile,
+    public IgPreviewJob(String username, String password, IFile gadgetXmlIFile,
             Shell shell, boolean useCanvasView, boolean useExternalBrowser) {
         super("iGoogle - Preview Gadget", username, password, gadgetXmlIFile);
         this.shell = shell;
@@ -63,7 +63,7 @@ public class PreviewIGoogleJob extends BaseIGoogleJob {
         try {
             String urlOfHostedGadgetFile =
                     uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
-            previewGadgetUrl = HostingIGoogleUtil.formPreviewLegacyGadgetUrl(
+            previewGadgetUrl = IgHostingUtil.formPreviewLegacyGadgetUrl(
                     urlOfHostedGadgetFile, useCanvasView);
         } catch (HostingException e) {
             logger.warn(e.getMessage());
