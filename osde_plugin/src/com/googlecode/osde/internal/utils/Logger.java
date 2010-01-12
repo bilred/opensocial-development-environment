@@ -32,7 +32,11 @@ public class Logger {
     private final java.util.logging.Logger delegate;
 
     public Logger(Class<?> owner) {
-        delegate = java.util.logging.Logger.getLogger(owner.getCanonicalName());
+        // anonymous classes has a null canonical name, we fall back to
+        // getName() instead.
+        String name = (owner.getCanonicalName() != null) ? 
+                owner.getCanonicalName() : owner.getName();
+        delegate = java.util.logging.Logger.getLogger(name);
     }
 
     public void fine(String message) {
