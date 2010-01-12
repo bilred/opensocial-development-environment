@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,13 +39,13 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class PublishIGoogleJob extends BaseIGoogleJob {
-    private static Logger logger = new Logger(PublishIGoogleJob.class);
+public class IgPublishJob extends IgBaseJob {
+    private static Logger logger = new Logger(IgPublishJob.class);
 
     private Shell shell;
     private String projectName; // contains only chars of A-Z, a-z, or 0-9.
 
-    public PublishIGoogleJob(Shell shell, String username, String password, String projectName,
+    public IgPublishJob(Shell shell, String username, String password, String projectName,
             IFile gadgetXmlIFile) {
         super("iGoogle - Publish Gadget", username, password, gadgetXmlIFile);
         this.shell = shell;
@@ -61,7 +61,7 @@ public class PublishIGoogleJob extends BaseIGoogleJob {
         try {
             String urlOfHostedFile =
                     uploadFilesToIg(OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
-            publishGadgetUrl = HostingIGoogleUtil.formPublishGadgetUrl(urlOfHostedFile);
+            publishGadgetUrl = IgHostingUtil.formPublishGadgetUrl(urlOfHostedFile);
 
         } catch (HostingException e) {
             logger.warn(e.getMessage());

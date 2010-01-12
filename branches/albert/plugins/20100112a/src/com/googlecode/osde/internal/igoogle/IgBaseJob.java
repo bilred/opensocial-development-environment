@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -24,9 +24,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.jobs.Job;
 
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formHostedFileUrl;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrievePublicId;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.uploadFiles;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.formHostedFileUrl;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrievePublicId;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.uploadFiles;
 
 /**
  * The base job for iGoogle usage.
@@ -37,8 +37,8 @@ import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.up
 // and thus some variable(s) and constructor(s) might be unnecessary.
 // In other words, we might think about making this class a utility
 // class instead of a parent class.
-public abstract class BaseIGoogleJob extends Job {
-    private static Logger logger = new Logger(BaseIGoogleJob.class);
+public abstract class IgBaseJob extends Job {
+    private static Logger logger = new Logger(IgBaseJob.class);
 
     static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
     static final String OSDE_PUBLISH_DIRECTORY = "/osde/publish/";
@@ -65,14 +65,14 @@ public abstract class BaseIGoogleJob extends Job {
     private String password;
     private IFile gadgetXmlIFile;
 
-    public BaseIGoogleJob(String jobName, String username, String password, IFile gadgetXmlIFile) {
+    public IgBaseJob(String jobName, String username, String password, IFile gadgetXmlIFile) {
         super(jobName);
         this.username = username;
         this.password = password;
         this.gadgetXmlIFile = gadgetXmlIFile;
     }
 
-    public BaseIGoogleJob(String jobName, String username, String password) {
+    public IgBaseJob(String jobName, String username, String password) {
         this(jobName, username, password, null);
     }
 
@@ -114,6 +114,6 @@ public abstract class BaseIGoogleJob extends Job {
         IgCredentials igCredentials = IgCredentials.retrieveIgCredentials(sid);
 
         // Clean files.
-        HostingIGoogleUtil.cleanFiles(sid, publicId, igCredentials, hostingFolder);
+        IgHostingUtil.cleanFiles(sid, publicId, igCredentials, hostingFolder);
     }
 }

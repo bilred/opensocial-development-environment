@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -37,9 +37,9 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class PublishIGoogleAction
+public class IgPublishAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
-    private static Logger logger = new Logger(PublishIGoogleAction.class);
+    private static Logger logger = new Logger(IgPublishAction.class);
 
     private IFile gadgetXmlIFile;
     private Shell shell;
@@ -68,7 +68,7 @@ public class PublishIGoogleAction
 
     public void run(IAction action) {
         logger.fine("in run");
-        PublishIGoogleDialog dialog = new PublishIGoogleDialog(shell);
+        IgPublishDialog dialog = new IgPublishDialog(shell);
         logger.fine("dialog: " + dialog);
         int openResult = dialog.open();
         logger.fine("openResult: " + openResult);
@@ -77,7 +77,7 @@ public class PublishIGoogleAction
             String username = dialog.getUsername();
             String password = dialog.getPassword();
             String projectName = dialog.getProjectName();
-            Job job = new PublishIGoogleJob(shell, username, password, projectName, gadgetXmlIFile);
+            Job job = new IgPublishJob(shell, username, password, projectName, gadgetXmlIFile);
             logger.fine("job: " + job);
             job.schedule();
         }

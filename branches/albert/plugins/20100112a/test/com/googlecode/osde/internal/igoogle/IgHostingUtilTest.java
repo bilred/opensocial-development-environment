@@ -16,23 +16,26 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import java.util.List;
 
+import com.googlecode.osde.internal.igoogle.HostingException;
+import com.googlecode.osde.internal.igoogle.IgHostingUtil;
+import com.googlecode.osde.internal.igoogle.IgCredentials;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.junit.Test;
 
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.findAllRelativeFilePaths;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formHostedFileUrl;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formPreviewLegacyGadgetUrl;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.formPreviewOpenSocialGadgetUrl;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrieveFileNameList;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrievePublicId;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrieveQuotaByte;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.retrieveQuotaByteUsed;
-import static com.googlecode.osde.internal.runtime.igoogle.HostingIGoogleUtil.sendHttpRequestToIg;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.findAllRelativeFilePaths;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.formHostedFileUrl;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.formPreviewLegacyGadgetUrl;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.formPreviewOpenSocialGadgetUrl;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrieveFileNameList;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrievePublicId;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrieveQuotaByte;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrieveQuotaByteUsed;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.sendHttpRequestToIg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -41,14 +44,14 @@ import static org.junit.Assert.assertTrue;
  */
 // TODO: Annotate test as large.
 // TODO: Update corresponding wiki docs.
-public class HostingIGoogleUtilTest {
+public class IgHostingUtilTest {
 
-    private static Logger logger = new Logger(HostingIGoogleUtil.class);
+    private static Logger logger = new Logger(IgHostingUtil.class);
 
     private static final String TEST_USERNAME = "osde.test.001";
     private static final String TEST_PASSWORD = "osdetest888";
     private static final String TEST_TARGET_PATH =
-            "test/com/googlecode/osde/internal/runtime/igoogle/testdata/";
+            "test/com/googlecode/osde/internal/igoogle/testdata/";
     private static final String TEST_HOSTING_FOLDER = "/osde/test/";
     private static final String GADGET_XML_FILE_RELATIVE_PATH = "gadget.xml";
     private static final String TEST_GADGET_FILE_START_CONTENT = "<?xml version";
@@ -60,7 +63,7 @@ public class HostingIGoogleUtilTest {
                     + "svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml";
 
     /**
-     * Test method for {@link HostingIGoogleUtil#uploadFile(
+     * Test method for {@link IgHostingUtil#uploadFile(
      *String, String, IgCredentials, String, String, String)} etc.
      *
      * @throws HostingException
@@ -77,12 +80,12 @@ public class HostingIGoogleUtilTest {
         assertTrue("Invalid igCredentials: " + igCredentials, igCredentials.validate());
 
         // Clean all files under TEST_HOSTING_FOLDER.
-        HostingIGoogleUtil.cleanFiles(sid, publicId, igCredentials, TEST_HOSTING_FOLDER);
+        IgHostingUtil.cleanFiles(sid, publicId, igCredentials, TEST_HOSTING_FOLDER);
         List<String> fileNameList = retrieveFileNameList(sid, publicId, TEST_HOSTING_FOLDER);
         assertEquals(0, fileNameList.size());
 
         // Upload file.
-        HostingIGoogleUtil.uploadFiles(
+        IgHostingUtil.uploadFiles(
                 sid, publicId, igCredentials, TEST_TARGET_PATH, TEST_HOSTING_FOLDER);
 
         // Retrieve quota info.
@@ -106,8 +109,8 @@ public class HostingIGoogleUtilTest {
     }
 
     /**
-     * Test method for {@link HostingIGoogleUtil#formPreviewLegacyGadgetUrl(String, boolean)}
-     * and {@link HostingIGoogleUtil#formPreviewOpenSocialGadgetUrl(String, boolean, String)}.
+     * Test method for {@link IgHostingUtil#formPreviewLegacyGadgetUrl(String, boolean)}
+     * and {@link IgHostingUtil#formPreviewOpenSocialGadgetUrl(String, boolean, String)}.
      *
      * @throws HostingException
      */
@@ -140,7 +143,7 @@ public class HostingIGoogleUtilTest {
     }
 
     /**
-     * Test method for {@link HostingIGoogleUtil#findAllRelativeFilePaths(String)}.
+     * Test method for {@link IgHostingUtil#findAllRelativeFilePaths(String)}.
      */
     @Test
     public void testFindAllRelativeFilePaths() {

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -37,8 +37,8 @@ import org.eclipse.swt.widgets.Text;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class PublishIGoogleDialog extends TitleAreaDialog {
-    private static Logger logger = new Logger(PublishIGoogleDialog.class);
+public class IgPublishDialog extends TitleAreaDialog {
+    private static Logger logger = new Logger(IgPublishDialog.class);
 
     private String username;
     private String password;
@@ -47,7 +47,7 @@ public class PublishIGoogleDialog extends TitleAreaDialog {
     private Text passwordText;
     private Text projectNameText;
 
-    public PublishIGoogleDialog(Shell shell) {
+    public IgPublishDialog(Shell shell) {
         super(shell);
     }
 
