@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class ShindigLaunchConfiguration {
     private static final String CONFIGURATION_NAME = "Apache Shindig";
+    private static final String PREBUNDLED_LOGGING_CONFIG_FILE = "/shindig/logging.properties";
 
     public void create() {
         new AbstractJob("Create the Apache Shindig launch configuration") {
@@ -68,7 +69,7 @@ public class ShindigLaunchConfiguration {
                 }
 
                 // returns the default pre-bundled logging configuration file.
-                return Activator.getResourceUrl("/shindig/logging.properties");
+                return Activator.getResourceUrl(PREBUNDLED_LOGGING_CONFIG_FILE);
             }
 
         }.schedule();

@@ -555,7 +555,7 @@ public class Activator extends AbstractUIPlugin {
     /**
      * Returns a URI locating a resource bundled within this plugin.
      *
-     * @param path A plugin-absolute classpath preceded with "/".
+     * @param path a plugin-absolute classpath preceded with "/"
      */
     public static String getResourceUrl(String path) throws IOException {
         return FileLocator.toFileURL(new URL(getDefault().getBundle().getEntry(path)
