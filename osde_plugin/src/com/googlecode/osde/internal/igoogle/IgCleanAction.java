@@ -16,87 +16,56 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
- * The Action for processing preview a gadget against iGoogle server.
+ * The Action for cleaning preview files as hosted on iGoogle server.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class PreviewIGoogleAction
+public class IgCleanAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
-    private static Logger logger = new Logger(PreviewIGoogleAction.class);
+    private static Logger logger = new Logger(IgCleanAction.class);
 
-    private IFile gadgetXmlIFile;
     private Shell shell;
 
-    /**
-     * {@inheritDoc}
-     */
     public void init(IWorkbenchWindow window) {
         logger.fine("in init");
         IWorkbenchPart targetPart = window.getActivePage().getActivePart();
         shell = targetPart.getSite().getShell();
     }
 
-    /**
-     * @see IActionDelegate#selectionChanged(IAction, ISelection)
-     */
     public void selectionChanged(IAction action, ISelection selection) {
         logger.fine("in selectionChanged");
-        if (selection instanceof IStructuredSelection) {
-            IStructuredSelection structured = (IStructuredSelection) selection;
-            Object element = structured.getFirstElement();
-            if (element instanceof IFile) {
-                gadgetXmlIFile = (IFile) element;
-            }
-        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         logger.fine("in setActivePart");
         shell = targetPart.getSite().getShell();
     }
 
-    /**
-     * @see IActionDelegate#run(IAction)
-     */
     public void run(IAction action) {
         logger.fine("in run");
-        PreviewIGoogleDialog dialog = new PreviewIGoogleDialog(shell);
-        logger.fine("dialog: " + dialog);
+        IgCleanDialog dialog = new IgCleanDialog(shell);
         int openResult = dialog.open();
-        logger.fine("openResult: " + openResult);
         if (openResult == Window.OK) {
-            logger.fine("OK pressed");
             String username = dialog.getUsername();
             String password = dialog.getPassword();
-            boolean useCanvasView = dialog.isUseCanvasView();
-            boolean useExternalBrowser = dialog.isUseExternalBrowser();
-            Job job = new PreviewIGoogleJob(username, password, gadgetXmlIFile, shell,
-                    useCanvasView, useExternalBrowser);
-            logger.fine("job: " + job);
+            Job job = new IgCleanJob(shell, username, password);
             job.schedule();
         }
-        logger.fine("leaving run");
     }
 
     public void dispose() {
