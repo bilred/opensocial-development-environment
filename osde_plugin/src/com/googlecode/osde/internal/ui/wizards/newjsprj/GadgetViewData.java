@@ -19,8 +19,8 @@ package com.googlecode.osde.internal.ui.wizards.newjsprj;
 
 import java.io.Serializable;
 
-import com.google.gadgets.ViewName;
-import com.google.gadgets.ViewType;
+import com.googlecode.osde.internal.gadgets.ViewName;
+import com.googlecode.osde.internal.gadgets.ViewType;
 
 @SuppressWarnings("serial")
 public class GadgetViewData implements Serializable {

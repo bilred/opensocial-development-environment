@@ -26,9 +26,9 @@ import java.util.List;
 
 import com.googlecode.osde.internal.utils.Gadgets;
 
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Module.ModulePrefs;
-import com.google.gadgets.model.Module.ModulePrefs.Icon;
+import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs;
+import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs.Icon;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;

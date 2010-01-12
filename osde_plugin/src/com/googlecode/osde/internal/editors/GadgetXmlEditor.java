@@ -29,12 +29,12 @@ import com.googlecode.osde.internal.editors.outline.GadgetXmlOutlinePage;
 import com.googlecode.osde.internal.editors.pref.UserPrefsPage;
 import com.googlecode.osde.internal.utils.Logger;
 
-import com.google.gadgets.GadgetXmlSerializer;
-import com.google.gadgets.model.Module;
-import com.google.gadgets.parser.IParser;
-import com.google.gadgets.parser.ParserException;
-import com.google.gadgets.parser.ParserFactory;
-import com.google.gadgets.parser.ParserType;
+import com.googlecode.osde.internal.gadgets.GadgetXmlSerializer;
+import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.parser.IParser;
+import com.googlecode.osde.internal.gadgets.parser.ParserException;
+import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
+import com.googlecode.osde.internal.gadgets.parser.ParserType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;

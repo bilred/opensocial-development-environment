@@ -29,7 +29,7 @@ import com.googlecode.osde.internal.utils.ApplicationInformation;
 import com.googlecode.osde.internal.utils.Logger;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
-import com.google.gadgets.parser.ParserException;
+import com.googlecode.osde.internal.gadgets.parser.ParserException;
 
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.core.runtime.CoreException;

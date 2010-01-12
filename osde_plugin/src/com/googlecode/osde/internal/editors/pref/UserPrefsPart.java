@@ -23,9 +23,9 @@ import java.util.Map;
 
 import com.googlecode.osde.internal.editors.pref.UserPrefModel.DataType;
 
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Module.UserPref;
-import com.google.gadgets.model.Module.UserPref.EnumValue;
+import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module.UserPref;
+import com.googlecode.osde.internal.gadgets.model.Module.UserPref.EnumValue;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;

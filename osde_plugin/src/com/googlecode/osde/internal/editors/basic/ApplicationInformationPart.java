@@ -17,8 +17,8 @@
  */
 package com.googlecode.osde.internal.editors.basic;
 
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Module.ModulePrefs;
+import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

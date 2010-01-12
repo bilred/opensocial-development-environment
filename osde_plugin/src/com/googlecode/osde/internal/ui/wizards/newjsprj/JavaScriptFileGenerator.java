@@ -25,7 +25,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gadgets.ViewName;
+import com.googlecode.osde.internal.gadgets.ViewName;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;

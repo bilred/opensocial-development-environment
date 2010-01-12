@@ -23,7 +23,7 @@ import com.googlecode.osde.internal.shindig.ApplicationService;
 import com.googlecode.osde.internal.utils.ApplicationInformation;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
-import com.google.gadgets.parser.ParserException;
+import com.googlecode.osde.internal.gadgets.parser.ParserException;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.eclipse.core.resources.IFile;

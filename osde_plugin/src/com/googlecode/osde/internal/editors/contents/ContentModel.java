@@ -17,7 +17,7 @@
  */
 package com.googlecode.osde.internal.editors.contents;
 
-import com.google.gadgets.ViewType;
+import com.googlecode.osde.internal.gadgets.ViewType;
 
 public class ContentModel {
 
