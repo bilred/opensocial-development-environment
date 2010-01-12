@@ -25,10 +25,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.google.gadgets.FeatureName;
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Module.ModulePrefs;
-import com.google.gadgets.model.Module.ModulePrefs.Require;
+import com.googlecode.osde.internal.gadgets.FeatureName;
+import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs;
+import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs.Require;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IInputValidator;

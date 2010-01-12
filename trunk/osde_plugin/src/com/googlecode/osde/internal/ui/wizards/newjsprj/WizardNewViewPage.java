@@ -20,8 +20,8 @@ package com.googlecode.osde.internal.ui.wizards.newjsprj;
 import java.util.EnumMap;
 import java.util.Set;
 
-import com.google.gadgets.ViewName;
-import com.google.gadgets.ViewType;
+import com.googlecode.osde.internal.gadgets.ViewName;
+import com.googlecode.osde.internal.gadgets.ViewType;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;

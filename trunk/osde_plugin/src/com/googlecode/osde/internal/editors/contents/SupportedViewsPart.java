@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.gadgets.ViewType;
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Module.Content;
+import com.googlecode.osde.internal.gadgets.ViewType;
+import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module.Content;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;

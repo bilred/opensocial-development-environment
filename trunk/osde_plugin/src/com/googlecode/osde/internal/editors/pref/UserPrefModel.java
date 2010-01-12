@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gadgets.model.Module.UserPref;
-import com.google.gadgets.model.Module.UserPref.EnumValue;
+import com.googlecode.osde.internal.gadgets.model.Module.UserPref;
+import com.googlecode.osde.internal.gadgets.model.Module.UserPref.EnumValue;
 
 public class UserPrefModel {
 
