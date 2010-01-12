@@ -22,10 +22,10 @@ import java.io.InputStream;
 
 import com.googlecode.osde.internal.utils.Logger;
 
-import com.google.gadgets.parser.IParser;
-import com.google.gadgets.parser.ParserException;
-import com.google.gadgets.parser.ParserFactory;
-import com.google.gadgets.parser.ParserType;
+import com.googlecode.osde.internal.gadgets.parser.IParser;
+import com.googlecode.osde.internal.gadgets.parser.ParserException;
+import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
+import com.googlecode.osde.internal.gadgets.parser.ParserType;
 
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescriber;

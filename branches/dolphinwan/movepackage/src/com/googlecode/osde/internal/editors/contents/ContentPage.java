@@ -17,7 +17,7 @@
  */
 package com.googlecode.osde.internal.editors.contents;
 
-import com.google.gadgets.ViewType;
+import com.googlecode.osde.internal.gadgets.ViewType;
 
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.DocumentEvent;

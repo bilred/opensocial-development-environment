@@ -32,14 +32,14 @@ import com.googlecode.osde.internal.utils.Logger;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 import com.googlecode.osde.internal.utils.StatusUtil;
 
-import com.google.gadgets.GadgetXmlSerializer;
-import com.google.gadgets.ViewType;
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Module.Content;
-import com.google.gadgets.parser.IParser;
-import com.google.gadgets.parser.ParserException;
-import com.google.gadgets.parser.ParserFactory;
-import com.google.gadgets.parser.ParserType;
+import com.googlecode.osde.internal.gadgets.GadgetXmlSerializer;
+import com.googlecode.osde.internal.gadgets.ViewType;
+import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module.Content;
+import com.googlecode.osde.internal.gadgets.parser.IParser;
+import com.googlecode.osde.internal.gadgets.parser.ParserException;
+import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
+import com.googlecode.osde.internal.gadgets.parser.ParserType;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
