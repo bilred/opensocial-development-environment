@@ -34,11 +34,9 @@ import com.googlecode.osde.internal.runtime.LaunchApplicationInformation;
 import com.googlecode.osde.internal.shindig.ActivityService;
 import com.googlecode.osde.internal.shindig.AppDataService;
 import com.googlecode.osde.internal.shindig.ApplicationService;
-import com.googlecode.osde.internal.shindig.DatabaseLaunchConfigurationCreator;
-import com.googlecode.osde.internal.shindig.DatabaseLaunchConfigurationDeleter;
+import com.googlecode.osde.internal.shindig.DatabaseLaunchConfiguration;
 import com.googlecode.osde.internal.shindig.PersonService;
-import com.googlecode.osde.internal.shindig.ShindigLaunchConfigurationCreator;
-import com.googlecode.osde.internal.shindig.ShindigLaunchConfigurationDeleter;
+import com.googlecode.osde.internal.shindig.ShindigLaunchConfiguration;
 import com.googlecode.osde.internal.ui.views.activities.ActivitiesView;
 import com.googlecode.osde.internal.ui.views.appdata.AppDataView;
 import com.googlecode.osde.internal.ui.views.apps.ApplicationView;
@@ -49,6 +47,7 @@ import com.googlecode.osde.internal.utils.Logger;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -64,7 +63,6 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -128,8 +126,8 @@ public class Activator extends AbstractUIPlugin {
 
         java.util.logging.Logger.getLogger(PLUGIN_ID).addHandler(logHandler);
 
-        new ShindigLaunchConfigurationCreator().schedule();
-        new DatabaseLaunchConfigurationCreator().schedule();
+        new ShindigLaunchConfiguration().create();
+        new DatabaseLaunchConfiguration().create();
         registerIcon();
     }
 
@@ -157,8 +155,8 @@ public class Activator extends AbstractUIPlugin {
                 launch.terminate();
             }
         }
-        new ShindigLaunchConfigurationDeleter().schedule();
-        new DatabaseLaunchConfigurationDeleter().schedule();
+        new ShindigLaunchConfiguration().delete();
+        new DatabaseLaunchConfiguration().delete();
         File tmpDir = new File(getOsdeConfiguration().getJettyDir());
         File[] files = tmpDir.listFiles();
         for (File file : files) {
@@ -554,4 +552,13 @@ public class Activator extends AbstractUIPlugin {
         return new File(workDirectory);
     }
 
+    /**
+     * Returns a URI locating a resource bundled within this plugin.
+     *
+     * @param path a plugin-absolute classpath preceded with "/"
+     */
+    public static String getResourceUrl(String path) throws IOException {
+        return FileLocator.toFileURL(new URL(getDefault().getBundle().getEntry(path)
+                .toExternalForm())).toExternalForm();
+    }
 }
