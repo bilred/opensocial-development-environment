@@ -21,10 +21,10 @@ import java.util.List;
 
 import com.googlecode.osde.internal.utils.Gadgets;
 
-import com.google.gadgets.model.Module;
-import com.google.gadgets.model.Module.ModulePrefs;
-import com.google.gadgets.model.Module.ModulePrefs.Optional;
-import com.google.gadgets.model.Param;
+import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs;
+import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs.Optional;
+import com.googlecode.osde.internal.gadgets.model.Param;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;

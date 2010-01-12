@@ -28,7 +28,7 @@ import com.googlecode.osde.internal.OsdeProjectNature;
 import com.googlecode.osde.internal.editors.GadgetXmlEditor;
 import com.googlecode.osde.internal.utils.StatusUtil;
 
-import com.google.gadgets.ViewName;
+import com.googlecode.osde.internal.gadgets.ViewName;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;

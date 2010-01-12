@@ -27,8 +27,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import com.googlecode.osde.internal.utils.Logger;
 
-import com.google.gadgets.model.MessageBundle.Msg;
-import com.google.gadgets.model.Module.ModulePrefs.Locale;
+import com.googlecode.osde.internal.gadgets.model.MessageBundle.Msg;
+import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;

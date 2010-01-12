@@ -27,8 +27,8 @@ import java.util.Set;
 import com.googlecode.osde.internal.utils.Gadgets;
 import com.googlecode.osde.internal.utils.ResourceUtil;
 
-import com.google.gadgets.ViewName;
-import com.google.gadgets.ViewType;
+import com.googlecode.osde.internal.gadgets.ViewName;
+import com.googlecode.osde.internal.gadgets.ViewType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;

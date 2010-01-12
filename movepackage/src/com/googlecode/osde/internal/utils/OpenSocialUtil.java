@@ -25,11 +25,11 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.google.gadgets.model.Module;
-import com.google.gadgets.parser.IParser;
-import com.google.gadgets.parser.ParserException;
-import com.google.gadgets.parser.ParserFactory;
-import com.google.gadgets.parser.ParserType;
+import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.parser.IParser;
+import com.googlecode.osde.internal.gadgets.parser.ParserException;
+import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
+import com.googlecode.osde.internal.gadgets.parser.ParserType;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;

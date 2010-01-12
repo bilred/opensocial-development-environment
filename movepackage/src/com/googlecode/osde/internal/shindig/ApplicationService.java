@@ -22,11 +22,10 @@ import java.util.Map;
 
 import com.googlecode.osde.internal.utils.ApplicationInformation;
 
-import com.google.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationMemberImpl;
-import org.apache.shindig.social.opensocial.hibernate.entities.PersonImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.hibernate.Query;

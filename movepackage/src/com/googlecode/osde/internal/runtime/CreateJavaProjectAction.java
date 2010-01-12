@@ -28,7 +28,7 @@ import com.googlecode.osde.internal.ui.wizards.newrestprj.SimpleConfigurationEle
 import com.googlecode.osde.internal.utils.ApplicationInformation;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
-import com.google.gadgets.parser.ParserException;
+import com.googlecode.osde.internal.gadgets.parser.ParserException;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.RelationshipImpl;

@@ -18,7 +18,7 @@
 package com.googlecode.osde.internal.editors.basic;
 
 
-import com.google.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module;
 
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;

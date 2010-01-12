@@ -31,7 +31,7 @@ import com.googlecode.osde.internal.utils.ApplicationInformation;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 import com.googlecode.osde.internal.utils.ResourceUtil;
 
-import com.google.gadgets.parser.ParserException;
+import com.googlecode.osde.internal.gadgets.parser.ParserException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.shindig.social.opensocial.model.Person;

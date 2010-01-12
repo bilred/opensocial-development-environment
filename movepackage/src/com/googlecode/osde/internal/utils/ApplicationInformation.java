@@ -17,7 +17,7 @@
  */
 package com.googlecode.osde.internal.utils;
 
-import com.google.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module;
 
 public class ApplicationInformation {
 
