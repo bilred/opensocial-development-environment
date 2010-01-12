@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class DatabaseLaunchConfiguration {
     private static final String CONFIGURATION_NAME = "Shindig Database";
+    private static final String H2_DATABASE_LIBRARY = "/libs/h2-1.1.117.jar";
 
     public void create() {
         new AbstractJob("Create the database launch configuration") {
@@ -41,7 +42,7 @@ public class DatabaseLaunchConfiguration {
             protected void runImpl(IProgressMonitor monitor) throws Exception {
                 JavaLaunchConfigurationBuilder builder =
                         new JavaLaunchConfigurationBuilder(CONFIGURATION_NAME)
-                                .withLibrary("/libs/h2-1.1.117.jar")
+                                .withLibrary(H2_DATABASE_LIBRARY)
                                 .withMainClassName("org.h2.tools.Server")
                                 .withArgument("-tcp")
                                 .withArgument("-tcpAllowOthers");

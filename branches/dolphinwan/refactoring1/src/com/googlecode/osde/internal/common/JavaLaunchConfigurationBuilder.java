@@ -64,9 +64,9 @@ public final class JavaLaunchConfigurationBuilder {
     }
 
     /**
-     * Include an embedded jar file in the java application's classpath.
+     * Includes an embedded jar file in the java application's classpath.
      *
-     * @param classpath A classpath starting with '/' e.g. /shindig/shindig-1.0.jar.
+     * @param classpath a classpath starting with '/' e.g. /a/shindig-1.0.jar
      */
     public JavaLaunchConfigurationBuilder withLibrary(String classpath) {
         if (!classpath.startsWith("/")) {
@@ -77,9 +77,7 @@ public final class JavaLaunchConfigurationBuilder {
     }
 
     /**
-     * Append a command-line argument.
-     *
-     * @param value The returned value of its <code>toString()</code> method will be used.
+     * Appends a command-line argument with its toString() value.
      */
     public JavaLaunchConfigurationBuilder withArgument(Object value) {
         programArguments.add(String.valueOf(value));
@@ -87,18 +85,16 @@ public final class JavaLaunchConfigurationBuilder {
     }
 
     /**
-     * Append a command-line argument and doubled-quotes it.
-     *
-     * @param value The returned value of its <code>toString()</code> method will be used.
+     * Appends a command-line argument and doubled-quotes its toString() value.
      */
     public JavaLaunchConfigurationBuilder withArgumentQuoted(Object value) {
         return withArgument("\"" + String.valueOf(value) + "\"");
     }
 
     /**
-     * Specify the main class to run.
+     * Specifies the main class to run.
      *
-     * @param mainClassName A fully-qualified class name.
+     * @param mainClassName a fully-qualified class name
      */
     public JavaLaunchConfigurationBuilder withMainClassName(String mainClassName) {
         this.mainClassName = mainClassName;
@@ -106,10 +102,10 @@ public final class JavaLaunchConfigurationBuilder {
     }
 
     /**
-     * Adds a VM argument ("-D") into the command line.
+     * Adds a VM argument into the command line.
      *
-     * @param name An VM argument name.
-     * @param value An VM argument value.
+     * @param name a VM argument name
+     * @param value a VM argument value
      */
     public JavaLaunchConfigurationBuilder withVmArgument(String name, String value) {
         this.vmArguments.put(name, value);
@@ -120,9 +116,8 @@ public final class JavaLaunchConfigurationBuilder {
      * Builds a new configuration instance. Note that any existing
      * configurations with the same name will be removed first.
      *
-     * @throws CoreException Thrown when Eclipse cannot create a new
-     * configuration.
-     * @throws IOException Thrown when specified jar files cannot be found.
+     * @throws CoreException if Eclipse cannot create a new configuration
+     * @throws IOException if specified jar files cannot be found
      */
     public ILaunchConfiguration build() throws CoreException, IOException {
         ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
@@ -136,7 +131,7 @@ public final class JavaLaunchConfigurationBuilder {
     }
 
     /**
-     * Search and remove any existing Java launch configuration with the
+     * Searches and removes any existing Java launch configuration with the
      * given name passed via constructor.
      */
     public JavaLaunchConfigurationBuilder removeExistingConfiguration() throws CoreException {
@@ -219,5 +214,4 @@ public final class JavaLaunchConfigurationBuilder {
         return FileLocator.toFileURL(new URL(Activator.getDefault().getBundle().getEntry(path)
                 .toExternalForm()));
     }
-
 }
