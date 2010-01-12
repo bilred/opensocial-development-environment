@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -33,12 +33,12 @@ import org.eclipse.swt.widgets.Shell;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class CleanIGoogleJob extends BaseIGoogleJob {
-    private static Logger logger = new Logger(CleanIGoogleJob.class);
+public class IgCleanJob extends IgBaseJob {
+    private static Logger logger = new Logger(IgCleanJob.class);
 
     private Shell shell;
 
-    public CleanIGoogleJob(Shell shell, String username, String password) {
+    public IgCleanJob(Shell shell, String username, String password) {
         super("iGoogle - Clean Host Files", username, password);
         this.shell = shell;
     }

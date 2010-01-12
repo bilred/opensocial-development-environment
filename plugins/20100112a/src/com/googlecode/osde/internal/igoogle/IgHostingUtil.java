@@ -16,13 +16,14 @@
  * specific language governing permissions and limitations under
  * the License.
  */
-package com.googlecode.osde.internal.runtime.igoogle;
+package com.googlecode.osde.internal.igoogle;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.googlecode.osde.internal.igoogle.IgHostingUtilTest;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.apache.http.HttpResponse;
@@ -36,9 +37,9 @@ import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 
-import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.HTTP_HEADER_COOKIE;
-import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.URL_IG;
-import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.retrieveHttpResponseAsString;
+import static com.googlecode.osde.internal.igoogle.IgCredentials.HTTP_HEADER_COOKIE;
+import static com.googlecode.osde.internal.igoogle.IgCredentials.URL_IG;
+import static com.googlecode.osde.internal.igoogle.IgCredentials.retrieveHttpResponseAsString;
 
 /**
  * This iGoogle utility class provides authentication and
@@ -46,14 +47,14 @@ import static com.googlecode.osde.internal.runtime.igoogle.IgCredentials.retriev
  * (http://www.google.com/ig) gadget container.
  * <p>
  * Samples of usages could be found at
- * {@link HostingIGoogleUtilTest#testLifeCycleForHostedFile()} etc.
+ * {@link IgHostingUtilTest#testLifeCycleForHostedFile()} etc.
  *
  * @author albert.cheng.ig@gmail.com
  */
 // TODO: Rename HostingIGoogleUtil to IgHostingUtil and move it to production package.
-public class HostingIGoogleUtil {
+public class IgHostingUtil {
 
-    private static Logger logger = new Logger(HostingIGoogleUtil.class);
+    private static Logger logger = new Logger(IgHostingUtil.class);
 
     private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
             HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + HTTP.UTF_8;
@@ -71,7 +72,7 @@ public class HostingIGoogleUtil {
     private static final String URL_PREVIEW_LEGACY_GADGET =
             "http://www.gmodules.com/gadgets/ifr?nocache=1";
 
-    private HostingIGoogleUtil() {
+    private IgHostingUtil() {
         // Disable instantiation of this utility class.
     }
 
