@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
@@ -39,15 +40,22 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgPublishJob extends IgBaseJob {
+public class IgPublishJob extends Job {
     private static Logger logger = new Logger(IgPublishJob.class);
+    private static final String OSDE_PUBLISH_DIRECTORY = "/osde/publish/";
 
+    private String username;
+    private String password;
+    private IFile gadgetXmlIFile;
     private Shell shell;
     private String projectName; // contains only chars of A-Z, a-z, or 0-9.
 
     public IgPublishJob(Shell shell, String username, String password, String projectName,
             IFile gadgetXmlIFile) {
-        super("iGoogle - Publish Gadget", username, password, gadgetXmlIFile);
+        super("iGoogle - Publish Gadget");
+        this.username = username;
+        this.password = password;
+        this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
         this.projectName = projectName;
     }
@@ -59,11 +67,12 @@ public class IgPublishJob extends IgBaseJob {
 
         final String publishGadgetUrl;
         try {
-            String urlOfHostedFile =
-                    uploadFilesToIg(OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
+            IgCredentials igCredentials = new IgCredentials(username, password);
+            String urlOfHostedFile = IgHostingUtil.uploadFiles(igCredentials,
+                    gadgetXmlIFile, OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
             publishGadgetUrl = IgHostingUtil.formPublishGadgetUrl(urlOfHostedFile);
 
-        } catch (HostingException e) {
+        } catch (IgException e) {
             logger.warn(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;

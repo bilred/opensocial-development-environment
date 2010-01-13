@@ -103,6 +103,8 @@ public class IgPublishDialog extends TitleAreaDialog {
 
         username = usernameText.getText();
         password = passwordText.getText();
+
+        // TODO: Need a validator for projectName.
         projectName = projectNameText.getText();
         logger.fine("projectName: " + projectName);
 
