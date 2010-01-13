@@ -23,6 +23,7 @@ import com.googlecode.osde.internal.utils.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -33,14 +34,18 @@ import org.eclipse.swt.widgets.Shell;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgCleanJob extends IgBaseJob {
+public class IgCleanJob extends Job {
     private static Logger logger = new Logger(IgCleanJob.class);
 
     private Shell shell;
+    private String username;
+    private String password;
 
     public IgCleanJob(Shell shell, String username, String password) {
-        super("iGoogle - Clean Host Files", username, password);
+        super("iGoogle - Clean Host Files");
         this.shell = shell;
+        this.username = username;
+        this.password = password;
     }
 
     @Override
@@ -50,9 +55,10 @@ public class IgCleanJob extends IgBaseJob {
         monitor.worked(1);
 
         // Clean all preview files as hosted on iGoogle.
+        // TODO: (p1) the files to be cleaned need not be for preview only
         try {
-            cleanFiles(OSDE_PREVIEW_DIRECTORY);
-        } catch (HostingException e) {
+            IgHostingUtil.cleanFiles(username, password, IgPreviewJob.OSDE_PREVIEW_DIRECTORY);
+        } catch (IgException e) {
             logger.warn(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;

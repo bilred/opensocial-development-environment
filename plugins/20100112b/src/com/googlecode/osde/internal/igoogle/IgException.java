@@ -19,27 +19,27 @@
 package com.googlecode.osde.internal.igoogle;
 
 /**
- * Exception used when hosting a file in a production container fails.
+ * Exception used when interacting with iGoogle container fails.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class HostingException extends Exception {
+public class IgException extends Exception {
 
-    private static final long serialVersionUID = -2228528582709169307L;
+    private static final long serialVersionUID = 2926969221222295046L;
 
-    public HostingException() {
+    public IgException() {
         super();
     }
 
-    public HostingException(String message) {
+    public IgException(String message) {
         super(message);
     }
 
-    public HostingException(Throwable cause) {
+    public IgException(Throwable cause) {
         super(cause);
     }
 
-    public HostingException(String message, Throwable cause) {
+    public IgException(String message, Throwable cause) {
         super(message, cause);
     }
 }

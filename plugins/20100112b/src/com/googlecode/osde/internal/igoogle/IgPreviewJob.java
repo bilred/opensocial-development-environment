@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
@@ -39,33 +40,40 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgPreviewJob extends IgBaseJob {
+public class IgPreviewJob extends Job {
     private static Logger logger = new Logger(IgPreviewJob.class);
+    static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
 
+    private String username;
+    private String password;
+    private IFile gadgetXmlIFile;
     private Shell shell;
     private boolean useCanvasView;
     private boolean useExternalBrowser;
 
     public IgPreviewJob(String username, String password, IFile gadgetXmlIFile,
             Shell shell, boolean useCanvasView, boolean useExternalBrowser) {
-        super("iGoogle - Preview Gadget", username, password, gadgetXmlIFile);
+        super("iGoogle - Preview Gadget");
+        this.username = username;
+        this.password = password;
+        this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
         this.useCanvasView = useCanvasView;
         this.useExternalBrowser = useExternalBrowser;
     }
 
-    @Override
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
         monitor.beginTask("Running PreviewIGoogleJob", 3);
 
         final String previewGadgetUrl;
         try {
-            String urlOfHostedGadgetFile =
-                    uploadFilesToIg(OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
+            IgCredentials igCredentials = new IgCredentials(username, password);
+            String urlOfHostedGadgetFile = IgHostingUtil.uploadFiles(
+                    igCredentials, gadgetXmlIFile, OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
             previewGadgetUrl = IgHostingUtil.formPreviewLegacyGadgetUrl(
                     urlOfHostedGadgetFile, useCanvasView);
-        } catch (HostingException e) {
+        } catch (IgException e) {
             logger.warn(e.getMessage());
             monitor.setCanceled(true);
             return Status.CANCEL_STATUS;

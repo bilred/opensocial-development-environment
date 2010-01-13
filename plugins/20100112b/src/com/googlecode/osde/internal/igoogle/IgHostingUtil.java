@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.googlecode.osde.internal.builders.GadgetBuilder;
 import com.googlecode.osde.internal.igoogle.IgHostingUtilTest;
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -36,22 +37,18 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
-
-import static com.googlecode.osde.internal.igoogle.IgCredentials.HTTP_HEADER_COOKIE;
-import static com.googlecode.osde.internal.igoogle.IgCredentials.URL_IG;
-import static com.googlecode.osde.internal.igoogle.IgCredentials.retrieveHttpResponseAsString;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 
 /**
- * This iGoogle utility class provides authentication and
- * gadget-hosting related methods to interact with iGoogle
- * (http://www.google.com/ig) gadget container.
+ * This iGoogle utility class provides hosting-related methods to
+ * interact with iGoogle (http://www.google.com/ig) gadget container.
  * <p>
  * Samples of usages could be found at
  * {@link IgHostingUtilTest#testLifeCycleForHostedFile()} etc.
  *
  * @author albert.cheng.ig@gmail.com
  */
-// TODO: Rename HostingIGoogleUtil to IgHostingUtil and move it to production package.
 public class IgHostingUtil {
 
     private static Logger logger = new Logger(IgHostingUtil.class);
@@ -59,14 +56,17 @@ public class IgHostingUtil {
     private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
             HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + HTTP.UTF_8;
 
-    private static final String URL_IG_GADGETS = URL_IG + "/gadgets";
-    private static final String URL_IG_GADGETS_BYTE_QUOTA = URL_IG_GADGETS + "/bytequota/";
-    private static final String URL_IG_GADGETS_BYTES_USED = URL_IG_GADGETS + "/bytesused/";
-    private static final String URL_IG_GADGETS_DIRECTORY = URL_IG_GADGETS + "/directory/";
-    private static final String URL_IG_GADGETS_FILE = URL_IG_GADGETS + "/file/";
+    private static final String URL_IG_GADGETS_BYTE_QUOTA =
+            IgHttpUtil.URL_IG_GADGETS + "/bytequota/";
+    private static final String URL_IG_GADGETS_BYTES_USED =
+            IgHttpUtil.URL_IG_GADGETS + "/bytesused/";
+    private static final String URL_IG_GADGETS_DIRECTORY =
+            IgHttpUtil.URL_IG_GADGETS + "/directory/";
+    private static final String URL_IG_GADGETS_FILE = IgHttpUtil.URL_IG_GADGETS + "/file/";
     private static final String URL_IG_PREVIEW_OPEN_SOCIAL_GADGET =
-            URL_IG + "/iframeurl?moduleurl=";
-    private static final String URL_IG_SUBMIT_GADGET = URL_IG + "/submit?prefill_url=";
+            IgHttpUtil.URL_HTTP_IG + "/iframeurl?moduleurl=";
+    private static final String URL_IG_SUBMIT_GADGET =
+            IgHttpUtil.URL_HTTP_IG + "/submit?prefill_url=";
 
     private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
     private static final String URL_PREVIEW_LEGACY_GADGET =
@@ -77,20 +77,41 @@ public class IgHostingUtil {
     }
 
     /**
+     * Uploads files to iGoogle and returns the url for the hosted gadget file.
+     *
+     * @return the url for the hosted gadget file
+     * @throws IgException
+     */
+    static String uploadFiles(IgCredentials igCredentials, IFile gadgetXmlIFile,
+            String hostingFolder, boolean useCanvasView)
+            throws IgException {
+        // TODO: Support save SID etc in session.
+        // TODO: Support captcha.
+        logger.fine("in PreviewIGoogleJob.uploadFilesToIg");
+
+        IProject project = gadgetXmlIFile.getProject();
+        String uploadFromPath =
+                project.getFolder(GadgetBuilder.TARGET_FOLDER_NAME).getLocation().toOSString();
+
+        // Upload files.
+        IgHostingUtil.uploadFiles(igCredentials, uploadFromPath, hostingFolder);
+
+        // Form hosted gadget file url.
+        String urlOfHostedGadgetFile = IgHostingUtil.formHostedFileUrl(igCredentials.getPublicId(),
+                hostingFolder, gadgetXmlIFile.getName());
+        return urlOfHostedGadgetFile;
+    }
+
+    /**
      * Uploads a file to iGoogle.
      *
-     * @throws HostingException
+     * @throws IgException
      */
-    public static void uploadFile(String sid, String publicId, IgCredentials igCredentials,
+    public static void uploadFile(IgCredentials igCredentials,
             String sourceFileRootPath, String sourceFileRelativePath, String hostingFolder)
-            throws HostingException {
-        // Validate igCredentials.
-        if (!igCredentials.validate()) {
-            throw new HostingException("Invalid igCredentials: " + igCredentials);
-        }
-
+            throws IgException {
         // Prepare HttpPost.
-        String url = URL_IG_GADGETS_FILE + publicId + hostingFolder
+        String url = URL_IG_GADGETS_FILE + igCredentials.getPublicId() + hostingFolder
                 + sourceFileRelativePath + "?et=" + igCredentials.getEditToken();
         logger.fine("url: " + url);
         HttpPost httpPost = new HttpPost(url);
@@ -104,8 +125,8 @@ public class IgHostingUtil {
         httpPost.setEntity(fileEntity);
 
         // Add cookie headers. Cookie PREF must be placed before SID.
-        httpPost.addHeader(HTTP_HEADER_COOKIE, "PREF=" + igCredentials.getPref());
-        httpPost.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
+        httpPost.addHeader(IgHttpUtil.HTTP_HEADER_COOKIE, "PREF=" + igCredentials.getPref());
+        httpPost.addHeader(IgHttpUtil.HTTP_HEADER_COOKIE, "SID=" + igCredentials.getSid());
 
         // Execute request.
         HttpClient httpClient = new DefaultHttpClient();
@@ -113,15 +134,16 @@ public class IgHostingUtil {
         try {
             httpResponse = httpClient.execute(httpPost);
         } catch (ClientProtocolException e) {
-            throw new HostingException(e);
+            throw new IgException(e);
         } catch (IOException e) {
-            throw new HostingException(e);
+            throw new IgException(e);
         }
         StatusLine statusLine = httpResponse.getStatusLine();
         logger.fine("statusLine: " + statusLine);
         if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
-            String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
-            throw new HostingException("Failed file-upload with status line: "
+            String response =
+                    IgHttpUtil.retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
+            throw new IgException("Failed file-upload with status line: "
                     + statusLine.toString() + "\nand response:\n" + response);
         }
     }
@@ -153,14 +175,14 @@ public class IgHostingUtil {
     /**
      * Uploads a list of files to iGoogle.
      *
-     * @throws HostingException
+     * @throws IgException
      */
-    public static void uploadFiles(String sid, String publicId, IgCredentials igCredentials,
+    public static void uploadFiles(IgCredentials igCredentials,
             String sourceFileRootPath, String hostingFolder)
-            throws HostingException {
+            throws IgException {
         List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
-            uploadFile(sid, publicId, igCredentials, sourceFileRootPath, relativePath,
+            uploadFile(igCredentials, sourceFileRootPath, relativePath,
                     hostingFolder);
         }
     }
@@ -195,16 +217,16 @@ public class IgHostingUtil {
     }
 
     static String retrieveQuotaByte(String sid, String publicId)
-            throws HostingException {
+            throws IgException {
         String url = URL_IG_GADGETS_BYTE_QUOTA + publicId;
-        String response = sendHttpRequestToIg(url, sid);
+        String response = retrieveHttpResponseAsString(url, sid);
         return response;
     }
 
     static String retrieveQuotaByteUsed(String sid, String publicId)
-            throws HostingException {
+            throws IgException {
         String url = URL_IG_GADGETS_BYTES_USED + publicId;
-        String response = sendHttpRequestToIg(url, sid);
+        String response = retrieveHttpResponseAsString(url, sid);
         return response;
     }
 
@@ -212,12 +234,12 @@ public class IgHostingUtil {
      * Retrieves list of file names under hosting folder.
      * Returns empty list if no file is found.
      *
-     * @throws HostingException
+     * @throws IgException
      */
     static List<String> retrieveFileNameList(String sid, String publicId, String hostingFolder)
-            throws HostingException {
+            throws IgException {
         String url = URL_IG_GADGETS_DIRECTORY + publicId;
-        String allFilesString = sendHttpRequestToIg(url, sid);
+        String allFilesString = retrieveHttpResponseAsString(url, sid);
         List<String> allFileNameList = new ArrayList<String>();
 
         // Return empty List when no file is found.
@@ -244,6 +266,18 @@ public class IgHostingUtil {
     }
 
     /**
+     * Returns the url for the hosted directory given hosting folder
+     * and public id.
+     *
+     * @param publicId iGoogle public id
+     * @param hostingFolder hosting folder
+     * @return the url for the hosted directory
+     */
+    public static String formHostedDirectoryUrl(String publicId, String hostingFolder) {
+        return URL_GMODULE_FILE + publicId + hostingFolder;
+    }
+
+    /**
      * Returns the url for the hosted file given hosting folder,
      * file path, and public id.
      *
@@ -254,30 +288,22 @@ public class IgHostingUtil {
      */
     public static String formHostedFileUrl(
             String publicId, String hostingFolder, String filePath) {
-        return URL_GMODULE_FILE + publicId + hostingFolder + filePath;
+        return formHostedDirectoryUrl(publicId, hostingFolder) + filePath;
     }
 
     /**
-     * Retrieves iGoogle public id by providing SID.
-     */
-    public static String retrievePublicId(String sid)
-            throws HostingException {
-        String response = sendHttpRequestToIg(URL_IG_GADGETS, sid);
-        return response;
-    }
-
-    /**
-     * Sends HTTP request to iGoogle server.
+     * Sends HTTP request to iGoogle server and retrieves response
+     * content as String.
      *
      * @return response as String
-     * @throws HostingException
+     * @throws IgException
      */
-    static String sendHttpRequestToIg(String url, String sid)
-            throws HostingException {
+    static String retrieveHttpResponseAsString(String url, String sid)
+            throws IgException {
         // Prepare HttpGet.
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
-        httpGet.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
+        httpGet.addHeader(IgHttpUtil.HTTP_HEADER_COOKIE, "SID=" + sid);
 
         // Retrieve HttpResponse.
         HttpClient httpClient = new DefaultHttpClient();
@@ -285,12 +311,12 @@ public class IgHostingUtil {
         try {
             httpResponse = httpClient.execute(httpGet);
         } catch (ClientProtocolException e) {
-            throw new HostingException(e);
+            throw new IgException(e);
         } catch (IOException e) {
-            throw new HostingException(e);
+            throw new IgException(e);
         }
         logger.fine("status line: " + httpResponse.getStatusLine());
-        return retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
+        return IgHttpUtil.retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
     /**
@@ -298,8 +324,7 @@ public class IgHostingUtil {
      *
      * @return url for previewing
      */
-    public static String formPreviewLegacyGadgetUrl(
-            String hostedFileUrl, boolean useCanvasView) {
+    public static String formPreviewLegacyGadgetUrl(String hostedFileUrl, boolean useCanvasView) {
         StringBuilder sb = new StringBuilder();
         sb.append(URL_PREVIEW_LEGACY_GADGET);
         sb.append("&hl=en&gl=us&view=");
@@ -318,15 +343,15 @@ public class IgHostingUtil {
      * Forms url for previewing an OpenSocial gadget.
      *
      * @return url for previewing
-     * @throws HostingException
+     * @throws IgException
      */
     // TODO: (p1) Utilize formPreviewOpenSocialGadgetUrl() when server is ready.
     public static String formPreviewOpenSocialGadgetUrl(
             String hostedFileUrl, boolean useCanvasView, String sid)
-            throws HostingException {
+            throws IgException {
         String requestUrl = URL_IG_PREVIEW_OPEN_SOCIAL_GADGET + hostedFileUrl;
         logger.fine("requestUrl: " + requestUrl);
-        String response = sendHttpRequestToIg(requestUrl, sid);
+        String response = retrieveHttpResponseAsString(requestUrl, sid);
         return response;
     }
 
@@ -342,29 +367,23 @@ public class IgHostingUtil {
     /**
      * Deletes the hosted file.
      */
-    public static void deleteFile(String sid, String publicId, String fileName,
-            IgCredentials igCredentials)
-            throws HostingException {
-        // Validate igCredentials.
-        if (!igCredentials.validate()) {
-            throw new HostingException("Invalid igCredentials: " + igCredentials);
-        }
-
+    public static void deleteFile(String fileName, IgCredentials igCredentials)
+            throws IgException {
         // Make sure fileName starts with "/".
         if (!fileName.startsWith("/")) {
             fileName = "/" + fileName;
         }
 
         // Prepare HttpPost.
-        String url = URL_IG_GADGETS_FILE + publicId + fileName
+        String url = URL_IG_GADGETS_FILE + igCredentials.getPublicId() + fileName
                 + "?synd=gde&action=delete&et=" + igCredentials.getEditToken();
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader(HTTP.CONTENT_TYPE, "application/xml; charset=UTF-8");
         // Do not set Content-Length header.
 
         // Add cookie headers. Cookie PREF must be placed before SID.
-        httpPost.addHeader(HTTP_HEADER_COOKIE, "PREF=" + igCredentials.getPref());
-        httpPost.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
+        httpPost.addHeader(IgHttpUtil.HTTP_HEADER_COOKIE, "PREF=" + igCredentials.getPref());
+        httpPost.addHeader(IgHttpUtil.HTTP_HEADER_COOKIE, "SID=" + igCredentials.getSid());
 
         // Execute request.
         HttpClient httpClient = new DefaultHttpClient();
@@ -372,16 +391,17 @@ public class IgHostingUtil {
         try {
             httpResponse = httpClient.execute(httpPost);
         } catch (ClientProtocolException e) {
-            throw new HostingException(e);
+            throw new IgException(e);
         } catch (IOException e) {
-            throw new HostingException(e);
+            throw new IgException(e);
         }
         StatusLine statusLine = httpResponse.getStatusLine();
 
         // Verify result status.
         if (HttpStatus.SC_NO_CONTENT != statusLine.getStatusCode()) {
-            String response = retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
-            throw new HostingException("Failed delete file with status line: "
+            String response =
+                    IgHttpUtil.retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
+            throw new IgException("Failed delete file with status line: "
                     + statusLine.toString() + "\nand response:\n" + response);
         }
     }
@@ -389,14 +409,24 @@ public class IgHostingUtil {
     /**
      * Cleans all files as hosted under the given hosting folder in iGoogle.
      *
-     * @throws HostingException
+     * @throws IgException
      */
-    public static void cleanFiles(String sid, String publicId, IgCredentials igCredentials,
-            String hostingFolder) throws HostingException {
-        List<String> hostedFilesList = retrieveFileNameList(sid, publicId, hostingFolder);
+    public static void cleanFiles(IgCredentials igCredentials, String hostingFolder)
+            throws IgException {
+        List<String> hostedFilesList =retrieveFileNameList(
+                igCredentials.getSid(), igCredentials.getPublicId(), hostingFolder);
         logger.fine("file count: " + hostedFilesList.size());
         for (String file : hostedFilesList) {
-            deleteFile(sid, publicId, file, igCredentials);
+            deleteFile(file, igCredentials);
         }
     }
+
+    static void cleanFiles(String username, String password, String hostingFolder)
+            throws IgException {
+        IgCredentials igCredentials = new IgCredentials(username, password);
+
+        // Clean files.
+        IgHostingUtil.cleanFiles(igCredentials, hostingFolder);
+    }
+
 }

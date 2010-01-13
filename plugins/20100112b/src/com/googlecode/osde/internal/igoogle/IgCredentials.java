@@ -18,10 +18,8 @@
  */
 package com.googlecode.osde.internal.igoogle;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,12 +27,10 @@ import java.net.URL;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 
@@ -44,33 +40,106 @@ import org.apache.http.protocol.HTTP;
  *
  * @author albert.cheng.ig@gmail.com
  */
-// TODO: Include SID and publicid here.
 public class IgCredentials {
     private static Logger logger = new Logger(IgCredentials.class);
 
-    static final String HTTP_HEADER_COOKIE = "Cookie";
-    static final String HTTP_HEADER_SET_COOKIE = "Set-Cookie";
+    private static final String URL_GOOGLE_LOGIN =
+            IgHttpUtil.URL_HTTPS_GOOGLE + "accounts/ClientLogin";
+    private static final String URL_IG_PREF_EDIT_TOKEN =
+            IgHttpUtil.URL_HTTP_IG + "/resetprefs.html";
 
-    static final String URL_GOOGLE = "http://www.google.com/";
-    static final String URL_HTTPS_GOOGLE = "https://www.google.com/";
-    static final String URL_IG = URL_GOOGLE + "ig";
-
-    private static final String URL_GOOGLE_LOGIN = URL_HTTPS_GOOGLE + "accounts/ClientLogin";
-    private static final String URL_IG_PREF_EDIT_TOKEN = URL_IG + "/resetprefs.html";
-
-    // TODO: make SID_LENGTH and PUBLIC_ID_LENGTH private.
-    static final int SID_LENGTH = 203;
-    static final int PUBLIC_ID_LENGTH = 21;
-    private static final int MIN_PREF_LENGTH = 50;
+    private static final int SID_LENGTH = 203;
+    private static final int PUBLIC_ID_LENGTH = 21;
+    private static final int PREF_LENGTH = 66;
     private static final int EDIT_TOKEN_LENGTH = 16;
     private static final String EDIT_TOKEN_IDENTIFIER = "id=\"et\" value=\"";
 
+    private String sid;
+    private String publicId;
     private String pref;
     private String editToken;
 
-    IgCredentials(String pref, String editToken) {
-        this.pref = pref;
-        this.editToken = editToken;
+    IgCredentials(String username, String password) throws IgException {
+        retrieveIgCredentials(username, password);
+    }
+
+    private void retrieveIgCredentials(String username, String password) throws IgException {
+        // Retrieve sid.
+        // TODO: Support captcha.
+        sid = retrieveSid(username, password, null, null);
+        validateSid();
+
+        // Retrieve publidId.
+        publicId = retrievePublicId(sid);
+        validatePublicId();
+
+        // Prepare HttpGet for retrieving pref and editToken.
+        HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
+        httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
+        httpGet.addHeader(IgHttpUtil.HTTP_HEADER_COOKIE, "SID=" + sid);
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpResponse httpResponse;
+        try {
+            httpResponse = httpClient.execute(httpGet);
+        } catch (ClientProtocolException e) {
+            throw new IgException(e);
+        } catch (IOException e) {
+            throw new IgException(e);
+        }
+        logger.fine("status line: " + httpResponse.getStatusLine());
+
+        // Retrieve pref from headers.
+        retrievePref(httpResponse);
+        validatePref();
+
+        // Retrieve editToken from response content.
+        retrieveEditToken(httpClient, httpGet, httpResponse);
+        validateEditToken();
+    }
+
+    /**
+     * Retrieves the authentication SID token.
+     *
+     * @return the SID
+     * @throws IgException
+     */
+    public static String retrieveSid(String emailUserName, String password,
+            String loginCaptchaToken, String loginCaptchaAnswer)
+            throws IgException {
+        // TODO: Can we get sid and Ig...Token all together?
+
+        String response = null;
+        try {
+            response = requestAuthentication(
+                    emailUserName, password, loginCaptchaToken, loginCaptchaAnswer);
+            logger.fine("response:\n" + " " + response);
+        } catch (IOException e) {
+            throw new IgException(e);
+        }
+
+        // Parse the output
+        response.trim();
+        String[] tokens = response.split("\n");
+
+        // TODO: Refactor the following block of code to be more flexible.
+        String sid = null;
+        String errorMsg = null;
+        for (String token : tokens) {
+            if (token.startsWith("SID=")) {
+                sid = token.substring(4); // "SID=".length = 4
+            } else if (token.startsWith("Error=")) {
+                errorMsg = token.substring(6); // "Error=".length= 6
+                logger.error("errorMsg: " + errorMsg);
+                // TODO: Handle errors such as errorMsg="CaptchaRequired".
+                throw new IgException("Failed authentication with Error= " + errorMsg);
+            }
+        }
+
+        if (sid == null) {
+            throw new IgException("Null sid");
+        }
+
+        return sid;
     }
 
     /**
@@ -109,7 +178,6 @@ public class IgCredentials {
         if (loginCaptchaAnswer != null) {
             params.append("&logincaptcha=").append(loginCaptchaAnswer);
         }
-        logger.fine("params: " + params);
 
         // Send POST via output stream.
         OutputStream outputStream = null;
@@ -133,7 +201,7 @@ public class IgCredentials {
         ;
         logger.fine("inputStream: " + inputStream);
         try {
-            String response = retrieveResponseStreamAsString(inputStream);
+            String response = IgHttpUtil.retrieveResponseStreamAsString(inputStream);
             return response;
         } finally {
             if (inputStream != null) {
@@ -143,159 +211,47 @@ public class IgCredentials {
     }
 
     /**
-     * Retrieves the authentication SID token.
-     *
-     * @return the SID
-     * @throws HostingException
+     * Retrieves iGoogle public id by providing SID.
      */
-    public static String retrieveSid(String emailUserName, String password,
-            String loginCaptchaToken, String loginCaptchaAnswer)
-            throws HostingException {
-        // TODO: Can we get sid and Ig...Token all together?
-
-        String response = null;
-        try {
-            response = requestAuthentication(
-                    emailUserName, password, loginCaptchaToken, loginCaptchaAnswer);
-            logger.fine("response:\n" + " " + response);
-        } catch (IOException e) {
-            throw new HostingException(e);
-        }
-
-        // Parse the output
-        response.trim();
-        String[] tokens = response.split("\n");
-
-        // TODO: Refactor the following block of code to be more flexible.
-        String sid = null;
-        String errorMsg = null;
-        for (String token : tokens) {
-            if (token.startsWith("SID=")) {
-                sid = token.substring(4); // "SID=".length = 4
-            } else if (token.startsWith("Error=")) {
-                errorMsg = token.substring(6); // "Error=".length= 6
-                logger.error("errorMsg: " + errorMsg);
-            }
-        }
-
-        if (sid == null) {
-            // TODO: Handle errors such as errorMsg="CaptchaRequired".
-        }
-
-        return sid;
+    public static String retrievePublicId(String sid)
+            throws IgException {
+        String response =
+                IgHostingUtil.retrieveHttpResponseAsString(IgHttpUtil.URL_IG_GADGETS, sid);
+        return response;
     }
 
-    /**
-     * Retrieves response stream as String.
-     *
-     * @param inputStream response stream which needs to be closed by
-     * the caller
-     * @throws IOException
-     */
-    static String retrieveResponseStreamAsString(InputStream inputStream)
-            throws IOException {
-        StringBuilder sb = new StringBuilder();
-        InputStreamReader isr = new InputStreamReader(inputStream);
-        BufferedReader br = new BufferedReader(isr);
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line).append('\n');
-        }
-        return sb.substring(0, sb.length() - 1); // ignore the last '\n'
-    }
-
-    /**
-     * Retrieves iGoogle credentials.
-     */
-    public static IgCredentials retrieveIgCredentials(String sid)
-            throws HostingException {
-        HttpGet httpGet = new HttpGet(URL_IG_PREF_EDIT_TOKEN);
-        httpGet.setHeader(HTTP.CONTENT_TYPE, HTTP.PLAIN_TEXT_TYPE);
-        httpGet.addHeader(HTTP_HEADER_COOKIE, "SID=" + sid);
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpResponse httpResponse;
-        try {
-            httpResponse = httpClient.execute(httpGet);
-        } catch (ClientProtocolException e) {
-            throw new HostingException(e);
-        } catch (IOException e) {
-            throw new HostingException(e);
-        }
-        logger.fine("status line: " + httpResponse.getStatusLine());
-
-        String pref = null;
-        for (Header header : httpResponse.getHeaders(HTTP_HEADER_SET_COOKIE)) {
+    private void retrievePref(HttpResponse httpResponse) {
+        for (Header header : httpResponse.getHeaders(IgHttpUtil.HTTP_HEADER_SET_COOKIE)) {
             String headerValue = header.getValue();
             if (headerValue.startsWith("PREF=ID=")) {
                 // pref starts with "ID=" and ends before ";"
                 pref = headerValue.substring(5, headerValue.indexOf(";"));
-                logger.fine("Pref: " + pref);
                 break;
             }
         }
-
-        String responseString = retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
-        String editToken = IgCredentials.retrieveEditTokenFromPageContent(responseString);
-        return new IgCredentials(pref, editToken);
     }
 
-    static String retrieveHttpResponseAsString(
-            HttpClient httpClient, HttpRequestBase httpRequest, HttpResponse httpResponse)
-            throws HostingException {
-        HttpEntity entity = httpResponse.getEntity();
-        String response = null;
-        if (entity != null) {
-            InputStream inputStream = null;
-            try {
-                inputStream = entity.getContent();
-                response = IgCredentials.retrieveResponseStreamAsString(inputStream);
-            } catch (IOException e) {
-                // The HttpClient's connection will be automatically released
-                // back to the connection manager.
-                logger.error("Error:\n" + e.getMessage());
-                throw new HostingException(e);
-            } catch (RuntimeException e) { // To catch unchecked exception intentionally.
-                // Abort HttpRequest in order to release HttpClient's connection
-                // back to the connection manager.
-                logger.error("Error:\n" + e.getMessage());
-                httpRequest.abort();
-                throw new HostingException(e);
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        throw new HostingException(e);
-                    }
-                }
-            }
-            httpClient.getConnectionManager().shutdown();
-        }
-        logger.fine("response: '" + response + "'");
-        return response;
-    }
-
-    static String retrieveEditTokenFromPageContent(String pageContent) throws HostingException {
+    private void retrieveEditToken(
+            HttpClient httpClient, HttpGet httpGet, HttpResponse httpResponse)
+            throws IgException {
+        String pageContent =
+                IgHttpUtil.retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
         int startIndexOfEditTokenIdentifier = pageContent.indexOf(EDIT_TOKEN_IDENTIFIER);
-
         if (startIndexOfEditTokenIdentifier == -1) {
-            return null;
+            throw new IgException("Invalid editToken with pageContent:\n" + pageContent);
         }
-
         int startIndexOfEditTokenValue =
                 startIndexOfEditTokenIdentifier + EDIT_TOKEN_IDENTIFIER.length();
-        String editToken = pageContent.substring(startIndexOfEditTokenValue,
+        editToken = pageContent.substring(startIndexOfEditTokenValue,
                 startIndexOfEditTokenValue + EDIT_TOKEN_LENGTH);
-        if (!validateEditToken(editToken)) {
-            throw new HostingException("Invalid editToken: '" + editToken + "'\n"
-                    + "with pageContent:\n" + pageContent);
-        }
-        return editToken;
     }
 
-    private static boolean validateEditToken(String editToken) {
-        return (editToken != null)
-                && (editToken.length() == EDIT_TOKEN_LENGTH);
+    String getSid() {
+        return sid;
+    }
+
+    String getPublicId() {
+        return publicId;
     }
 
     String getPref() {
@@ -306,21 +262,32 @@ public class IgCredentials {
         return editToken;
     }
 
-    boolean validate() {
-        return validatePref()
-                && validateEditToken();
+    private boolean validateSid() {
+        return (sid != null)
+                && (sid.length() == SID_LENGTH);
+    }
+
+    private boolean validatePublicId() {
+        return (publicId != null)
+                && (publicId.length() == PUBLIC_ID_LENGTH);
     }
 
     private boolean validatePref() {
         return (pref != null)
-                && (pref.length() > MIN_PREF_LENGTH);
+                && (pref.length() == PREF_LENGTH);
     }
 
     private boolean validateEditToken() {
-        return validateEditToken(editToken);
+        return (editToken != null)
+                && (editToken.length() == EDIT_TOKEN_LENGTH);
     }
 
     public String toString() {
-        return "pref: " + pref + ", editToken: " + editToken;
+        return new StringBuilder()
+                .append("sid: ").append(sid)
+                .append("\npublicId: ").append(publicId)
+                .append("\npref: ").append(pref)
+                .append("\neditToken: ").append(editToken)
+                .append("\n").toString();
     }
 }

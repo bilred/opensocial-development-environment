@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.ConnectionException;
+import com.googlecode.osde.internal.builders.GadgetBuilder;
 import com.googlecode.osde.internal.shindig.ApplicationService;
 import com.googlecode.osde.internal.shindig.PersonService;
 import com.googlecode.osde.internal.utils.ApplicationInformation;
@@ -142,7 +143,7 @@ public abstract class AbstractRunAction {
                 // Generate a context file
                 String code = ResourceUtil.loadTextResourceFile("/shindig/context.tmpl");
                 code = code.replace("$project_name$", project.getName());
-                IPath location = project.getFolder("target").getLocation();
+                IPath location = project.getFolder(GadgetBuilder.TARGET_FOLDER_NAME).getLocation();
                 code = code.replace("$context_dir$", location.toOSString());
                 code = code.replace("$descriptor$", webDefaultFile.getAbsolutePath());
                 File contextFile =
