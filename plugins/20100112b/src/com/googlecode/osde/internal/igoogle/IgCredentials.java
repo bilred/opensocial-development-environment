@@ -26,6 +26,7 @@ import java.net.URL;
 
 import com.googlecode.osde.internal.utils.Logger;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -54,16 +55,12 @@ public class IgCredentials {
     private static final int EDIT_TOKEN_LENGTH = 16;
     private static final String EDIT_TOKEN_IDENTIFIER = "id=\"et\" value=\"";
 
-    private String sid;
-    private String publicId;
-    private String pref;
-    private String editToken;
+    private final String sid;
+    private final String publicId;
+    private final String pref;
+    private final String editToken;
 
     IgCredentials(String username, String password) throws IgException {
-        retrieveIgCredentials(username, password);
-    }
-
-    private void retrieveIgCredentials(String username, String password) throws IgException {
         // Retrieve sid.
         // TODO: Support captcha.
         sid = retrieveSid(username, password, null, null);
@@ -89,11 +86,11 @@ public class IgCredentials {
         logger.fine("status line: " + httpResponse.getStatusLine());
 
         // Retrieve pref from headers.
-        retrievePref(httpResponse);
+        pref = retrievePref(httpResponse);
         validatePref();
 
         // Retrieve editToken from response content.
-        retrieveEditToken(httpClient, httpGet, httpResponse);
+        editToken = retrieveEditToken(httpClient, httpGet, httpResponse);
         validateEditToken();
     }
 
@@ -136,7 +133,7 @@ public class IgCredentials {
         }
 
         if (sid == null) {
-            throw new IgException("Null sid");
+            throw new IgException("No SID returned from the iGoogle server");
         }
 
         return sid;
@@ -201,7 +198,8 @@ public class IgCredentials {
         ;
         logger.fine("inputStream: " + inputStream);
         try {
-            String response = IgHttpUtil.retrieveResponseStreamAsString(inputStream);
+            // TODO: is there any constant for "UTF-8"?
+            String response = IOUtils.toString(inputStream, "UTF-8");
             return response;
         } finally {
             if (inputStream != null) {
@@ -220,7 +218,8 @@ public class IgCredentials {
         return response;
     }
 
-    private void retrievePref(HttpResponse httpResponse) {
+    private static String retrievePref(HttpResponse httpResponse) {
+        String pref = null;
         for (Header header : httpResponse.getHeaders(IgHttpUtil.HTTP_HEADER_SET_COOKIE)) {
             String headerValue = header.getValue();
             if (headerValue.startsWith("PREF=ID=")) {
@@ -229,9 +228,10 @@ public class IgCredentials {
                 break;
             }
         }
+        return pref;
     }
 
-    private void retrieveEditToken(
+    private static String retrieveEditToken(
             HttpClient httpClient, HttpGet httpGet, HttpResponse httpResponse)
             throws IgException {
         String pageContent =
@@ -242,8 +242,9 @@ public class IgCredentials {
         }
         int startIndexOfEditTokenValue =
                 startIndexOfEditTokenIdentifier + EDIT_TOKEN_IDENTIFIER.length();
-        editToken = pageContent.substring(startIndexOfEditTokenValue,
+        String editToken = pageContent.substring(startIndexOfEditTokenValue,
                 startIndexOfEditTokenValue + EDIT_TOKEN_LENGTH);
+        return editToken;
     }
 
     String getSid() {
