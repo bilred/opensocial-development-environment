@@ -1,5 +1,5 @@
 #summary Code Coverage in OSDE
-#labels OSDE,Test,Phase-QA,Plug-in,Phase-Implementation,OpenSocial
+#labels OSDE,Test,Phase-QA,Plug-in,Phase-Implementation,OpenSocial,Deprecated
 
 = Introduction =
 

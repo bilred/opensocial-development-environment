@@ -1,5 +1,5 @@
+#labels Deprecated
 #summary how to change the logger settings ?
-
 = How does logger work =
 
 OSDE provides an embedded Shindig container, which in turn runs in our embedded Jetty server. They are both open source projects and their development teams choose different logging frameworks. Jetty creates its own logger factory and can switch to SLF4J. Shindig uses Log4J and its related projects use java.util.logging. In order to provide an easy way to configure logger settings, we use the SLF4J over Log4J and java.util.logging and merge the log4j.properties and logging.properties (used to java.util.logging) in the same file.

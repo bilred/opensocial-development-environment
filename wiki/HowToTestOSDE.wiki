@@ -1,6 +1,5 @@
 #summary Testing Scenario in OSDE
-#labels OSDE,Phase-Implementation,Phase-QA,EclipsePlug-in,OpenSocial
-
+#labels OSDE,Phase-Implementation,Phase-QA,EclipsePlug-in,OpenSocial,Deprecated
 = Introduction =
 
 This page describes how test files are organized in OSDE. The contents in this page is a general description on how to checkout, run tests, and request code review. If you are a developer and would like to actually write testing codes in OSDE. You should read this page first. And then refer to [http://code.google.com/p/opensocial-development-environment/wiki/OSDETestSpecs OSDE Test Specs] for more details and guidelines.

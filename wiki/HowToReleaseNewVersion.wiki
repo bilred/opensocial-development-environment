@@ -1,3 +1,4 @@
+#labels Deprecated
 =How to release a new version of OSDE=
 
 This page describes a way for releasing a new version of OSDE.

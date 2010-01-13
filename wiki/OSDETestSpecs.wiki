@@ -1,3 +1,4 @@
+#labels Deprecated
 #summary This page is created for issue 60 to define some test specs.
 
 [#OSDE_0.2.8]
