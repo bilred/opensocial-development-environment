@@ -51,7 +51,6 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author albert.cheng.ig@gmail.com
  */
-// TODO: (p1) Update corresponding wiki docs.
 public class IgHostingUtilTest {
 
     private static Logger logger = new Logger(IgHostingUtil.class);
