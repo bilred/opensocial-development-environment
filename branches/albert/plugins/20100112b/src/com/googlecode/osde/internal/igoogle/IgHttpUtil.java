@@ -1,10 +1,9 @@
 package com.googlecode.osde.internal.igoogle;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -29,25 +28,6 @@ public class IgHttpUtil {
     static final String URL_IG_GADGETS = URL_HTTP_IG + "/gadgets";
 
     /**
-     * Retrieves HTTP response stream as String.
-     *
-     * @param inputStream HTTP response stream which needs to be closed by
-     * the caller
-     * @throws IOException
-     */
-    static String retrieveResponseStreamAsString(InputStream inputStream)
-            throws IOException {
-        StringBuilder sb = new StringBuilder();
-        InputStreamReader isr = new InputStreamReader(inputStream);
-        BufferedReader br = new BufferedReader(isr);
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line).append('\n');
-        }
-        return sb.substring(0, sb.length() - 1); // ignore the last '\n'
-    }
-
-    /**
      * Retrieves HTTP response as String.
      *
      * @throws IgException
@@ -61,7 +41,8 @@ public class IgHttpUtil {
             InputStream inputStream = null;
             try {
                 inputStream = entity.getContent();
-                response = IgHttpUtil.retrieveResponseStreamAsString(inputStream);
+                // TODO: is there any constant for "UTF-8"?
+                response = IOUtils.toString(inputStream, "UTF-8");
             } catch (IOException e) {
                 // The HttpClient's connection will be automatically released
                 // back to the connection manager.
@@ -74,13 +55,7 @@ public class IgHttpUtil {
                 httpRequest.abort();
                 throw new IgException(e);
             } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        throw new IgException(e);
-                    }
-                }
+                IOUtils.closeQuietly(inputStream);
             }
             httpClient.getConnectionManager().shutdown();
         }
