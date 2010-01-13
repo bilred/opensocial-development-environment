@@ -185,6 +185,14 @@
             </enablement>
          </action>
          <action
+               class="com.googlecode.osde.internal.igoogle.IgHostAction"
+               icon="icons/action_go.gif"
+               id="com.googlecode.osde.runActionHostOnIGoogle2"
+               label="iGoogle - Host Gadget"
+               menubarPath="opensocialMenu/opensocialGroup4"
+               tooltip="iGoogle - Host Gadget">
+         </action>
+         <action
                class="com.googlecode.osde.internal.igoogle.IgPreviewAction"
                enablesFor="1"
                icon="icons/action_go.gif"
@@ -339,6 +347,13 @@
 	               value="com.googlecode.osde.gadgetSpecXML">
 	           </objectState>
             </enablement>
+         </action>
+         <action
+               class="com.googlecode.osde.internal.igoogle.IgHostAction"
+               id="com.googlecode.osde.runActionHostOnIGoogle1"
+               label="iGoogle - Host Preview Files"
+               icon="icons/action_go.gif"
+               menubarPath="com.googlecode.osde.menu2/group4">
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPreviewAction"
