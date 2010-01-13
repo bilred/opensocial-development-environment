@@ -60,9 +60,14 @@ import org.eclipse.core.runtime.Path;
  */
 public class GadgetBuilder extends IncrementalProjectBuilder {
 
+    private static final Logger logger = new Logger(GadgetBuilder.class);
     public static final String ID = "com.googlecode.osde.gadgetBuilder";
 
-    private static final Logger logger = new Logger(GadgetBuilder.class);
+    /**
+     * This constant stands for the folder name of "target".
+     * This folder stores all the gadget-related files for deployment purpose.
+     */
+    public static final String TARGET_FOLDER_NAME = "target";
 
     private Pattern ignoreFolderPattern;
 
@@ -175,7 +180,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
     }
 
     private IFolder getTargetFolder() {
-        return getProject().getFolder(new Path("target"));
+        return getProject().getFolder(new Path(TARGET_FOLDER_NAME));
     }
 
     private boolean isJavaScript(IFile orgFile) {

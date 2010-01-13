@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -45,18 +44,12 @@ public class IgPreviewAction
     private IFile gadgetXmlIFile;
     private Shell shell;
 
-    /**
-     * {@inheritDoc}
-     */
     public void init(IWorkbenchWindow window) {
         logger.fine("in init");
         IWorkbenchPart targetPart = window.getActivePage().getActivePart();
         shell = targetPart.getSite().getShell();
     }
 
-    /**
-     * @see IActionDelegate#selectionChanged(IAction, ISelection)
-     */
     public void selectionChanged(IAction action, ISelection selection) {
         logger.fine("in selectionChanged");
         if (selection instanceof IStructuredSelection) {
@@ -68,17 +61,11 @@ public class IgPreviewAction
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         logger.fine("in setActivePart");
         shell = targetPart.getSite().getShell();
     }
 
-    /**
-     * @see IActionDelegate#run(IAction)
-     */
     public void run(IAction action) {
         logger.fine("in run");
         IgPreviewDialog dialog = new IgPreviewDialog(shell);
