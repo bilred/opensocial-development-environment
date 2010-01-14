@@ -71,8 +71,8 @@ public class IgPreviewJob extends Job {
             IgCredentials igCredentials = new IgCredentials(username, password);
             String urlOfHostedGadgetFile = IgHostingUtil.uploadFiles(
                     igCredentials, gadgetXmlIFile, OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
-            previewGadgetUrl = IgHostingUtil.formPreviewLegacyGadgetUrl(
-                    urlOfHostedGadgetFile, useCanvasView);
+            previewGadgetUrl = IgHostingUtil.formPreviewOpenSocialGadgetUrl(
+                    urlOfHostedGadgetFile, useCanvasView, igCredentials.getSid());
         } catch (IgException e) {
             logger.warn(e.getMessage());
             monitor.setCanceled(true);

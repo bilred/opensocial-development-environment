@@ -53,8 +53,8 @@ public class IgHostingUtil {
 
     private static Logger logger = new Logger(IgHostingUtil.class);
 
-    private static final String HTTP_PLAIN_TEXT_TYPE_UTF8 =
-            HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + HTTP.UTF_8;
+    private static final String HTTP_PLAIN_TEXT_TYPE =
+            HTTP.PLAIN_TEXT_TYPE + HTTP.CHARSET_PARAM + IgHttpUtil.ENCODING;
 
     private static final String URL_IG_GADGETS_BYTE_QUOTA =
             IgHttpUtil.URL_IG_GADGETS + "/bytequota/";
@@ -72,6 +72,12 @@ public class IgHostingUtil {
     private static final String URL_PREVIEW_LEGACY_GADGET =
             "http://www.gmodules.com/gadgets/ifr?nocache=1";
 
+    private static final String PREVIEW_URL_IDENTIFIER_FOR_HOME = "hifr:\"";
+    private static final String PREVIEW_URL_IDENTIFIER_FOR_CANVAS = "cifr:\"";
+    private static final String PREVIEW_URL_END_IDENTIFIER = "&is_social=1";
+    private static final int PREVIEW_URL_END_IDENTIFIER_LENGTH =
+            PREVIEW_URL_END_IDENTIFIER.length();
+
     private IgHostingUtil() {
         // Disable instantiation of this utility class.
     }
@@ -85,8 +91,6 @@ public class IgHostingUtil {
     static String uploadFiles(IgCredentials igCredentials, IFile gadgetXmlIFile,
             String hostingFolder, boolean useCanvasView)
             throws IgException {
-        // TODO: Support save SID etc in session.
-        // TODO: Support captcha.
         logger.fine("in PreviewIGoogleJob.uploadFilesToIg");
 
         IProject project = gadgetXmlIFile.getProject();
@@ -117,7 +121,7 @@ public class IgHostingUtil {
         HttpPost httpPost = new HttpPost(url);
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
         String httpContentType = isTextExtensionForGadgetFile(sourceFileRelativePath)
-                ? HTTP_PLAIN_TEXT_TYPE_UTF8
+                ? HTTP_PLAIN_TEXT_TYPE
                 : HTTP.DEFAULT_CONTENT_TYPE;
         httpPost.setHeader(HTTP.CONTENT_TYPE, httpContentType);
         FileEntity fileEntity = new FileEntity(sourceFile, httpContentType);
@@ -182,8 +186,7 @@ public class IgHostingUtil {
             throws IgException {
         List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
-            uploadFile(igCredentials, sourceFileRootPath, relativePath,
-                    hostingFolder);
+            uploadFile(igCredentials, sourceFileRootPath, relativePath, hostingFolder);
         }
     }
 
@@ -345,14 +348,67 @@ public class IgHostingUtil {
      * @return url for previewing
      * @throws IgException
      */
-    // TODO: (p1) Utilize formPreviewOpenSocialGadgetUrl() when server is ready.
     public static String formPreviewOpenSocialGadgetUrl(
             String hostedFileUrl, boolean useCanvasView, String sid)
             throws IgException {
         String requestUrl = URL_IG_PREVIEW_OPEN_SOCIAL_GADGET + hostedFileUrl;
         logger.fine("requestUrl: " + requestUrl);
         String response = retrieveHttpResponseAsString(requestUrl, sid);
-        return response;
+        logger.fine("response:\n" + response);
+
+        // Sample response (all in one line):
+        // throw 1; < don't be evil' >{m:[{url:"http://.../gifts_1_friends.xml",
+        // hifr:"http://8...c.ig.ig.gmodules.com/gadgets/ifr
+        // ?view=home
+        // &url=http://.../gifts_1_friends.xml
+        // &nocache=0
+        // &lang=en&country=us&.lang=en&.country=us
+        // &synd=ig&mid=0&ifpctok=-3701245656769771047
+        // &exp_split_js=1&exp_track_js=1&exp_new_js_flags=1&exp_ids=300213
+        // &parent=http://www.google.com&refresh=3600
+        // &libs=core:core.io:core.iglegacy:auth-refresh#st=c%3Dig%26e%3D...
+        // &gadgetId=...&gadgetOwner=...&gadgetViewer=...
+        // &is_signedin=1
+        // &is_social=1",
+        // cifr:"..."}]}
+
+        // Form preview-url from response.
+        // First, take out unwanted prepending string.
+        String previewUrlIdentifier = useCanvasView ?
+                PREVIEW_URL_IDENTIFIER_FOR_CANVAS :
+                PREVIEW_URL_IDENTIFIER_FOR_HOME;
+        int startIndex = response.indexOf(previewUrlIdentifier) + previewUrlIdentifier.length();
+        String previewUrl = response.substring(startIndex);
+        logger.fine("previewUrl with appending:\n" + previewUrl);
+
+        // TODO: (p1) remove this if-block once the server's bug is fixed
+        // This case is a bug from the igoogle server.
+        // The bug: the returned value for canvas view is sometimes empty.
+        // Here is the workaround.
+        if (!previewUrl.startsWith("http://")) {
+            if (!useCanvasView) {
+                // If this happens, then it is another new bug from the igoogle server.
+                throw new IgException("Error: Invalid preview url with response:\n" + response);
+            }
+            previewUrlIdentifier = PREVIEW_URL_IDENTIFIER_FOR_HOME;
+            startIndex = response.indexOf(previewUrlIdentifier) + previewUrlIdentifier.length();
+            previewUrl = response.substring(startIndex);
+            logger.fine("fixed previewUrl with appending:\n" + previewUrl);
+            previewUrl = previewUrl.replaceFirst("view=home", "view=canvas");
+        }
+
+        // Take out unwanted appending string.
+        int endIndex = previewUrl.indexOf(
+                PREVIEW_URL_END_IDENTIFIER) + PREVIEW_URL_END_IDENTIFIER_LENGTH;
+        previewUrl = previewUrl.substring(0, endIndex);
+        logger.fine("previewUrl without appending:\n" + previewUrl);
+
+        // Always enable nocache.
+        previewUrl = previewUrl.replaceFirst("&nocache=0&", "&nocache=1&");
+
+        // TODO: support lang and country.
+
+        return previewUrl;
     }
 
     /**
@@ -378,7 +434,7 @@ public class IgHostingUtil {
         String url = URL_IG_GADGETS_FILE + igCredentials.getPublicId() + fileName
                 + "?synd=gde&action=delete&et=" + igCredentials.getEditToken();
         HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader(HTTP.CONTENT_TYPE, "application/xml; charset=UTF-8");
+        httpPost.setHeader(HTTP.CONTENT_TYPE, "application/xml; charset=" + IgHttpUtil.ENCODING);
         // Do not set Content-Length header.
 
         // Add cookie headers. Cookie PREF must be placed before SID.
