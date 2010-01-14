@@ -62,6 +62,7 @@ public class IgCredentials {
 
     IgCredentials(String username, String password) throws IgException {
         // Retrieve sid.
+        // TODO: Support save igCredentials in session.
         // TODO: Support captcha.
         sid = retrieveSid(username, password, null, null);
         validateSid();
@@ -118,7 +119,7 @@ public class IgCredentials {
         response.trim();
         String[] tokens = response.split("\n");
 
-        // TODO: Refactor the following block of code to be more flexible.
+        // TODO: Refactor the following code (for retrieving sid) to be more flexible.
         String sid = null;
         String errorMsg = null;
         for (String token : tokens) {
@@ -149,10 +150,10 @@ public class IgCredentials {
      * @return http response as a String
      * @throws IOException
      */
+    // TODO: Refactor requestAuthentication() utilizing HttpPost.
     private static String requestAuthentication(String emailUserName, String password,
             String loginTokenOfCaptcha, String loginCaptchaAnswer)
             throws IOException {
-        // TODO: Refactor this method utilizing HttpPost.
 
         // Prepare connection.
         URL url = new URL(URL_GOOGLE_LOGIN);
@@ -180,7 +181,7 @@ public class IgCredentials {
         OutputStream outputStream = null;
         try {
             outputStream = urlConnection.getOutputStream();
-            outputStream.write(params.toString().getBytes("utf-8"));
+            outputStream.write(params.toString().getBytes(IgHttpUtil.ENCODING));
             outputStream.flush();
         } finally {
             if (outputStream != null) {
@@ -198,8 +199,7 @@ public class IgCredentials {
         ;
         logger.fine("inputStream: " + inputStream);
         try {
-            // TODO: is there any constant for "UTF-8"?
-            String response = IOUtils.toString(inputStream, "UTF-8");
+            String response = IOUtils.toString(inputStream, IgHttpUtil.ENCODING);
             return response;
         } finally {
             if (inputStream != null) {
@@ -215,6 +215,7 @@ public class IgCredentials {
             throws IgException {
         String response =
                 IgHostingUtil.retrieveHttpResponseAsString(IgHttpUtil.URL_IG_GADGETS, sid);
+        logger.fine("response: '" + response + "'");
         return response;
     }
 
@@ -289,6 +290,6 @@ public class IgCredentials {
                 .append("\npublicId: ").append(publicId)
                 .append("\npref: ").append(pref)
                 .append("\neditToken: ").append(editToken)
-                .append("\n").toString();
+                .toString();
     }
 }

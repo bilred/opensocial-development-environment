@@ -8,6 +8,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.protocol.HTTP;
 
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -27,6 +28,8 @@ public class IgHttpUtil {
     static final String URL_HTTP_IG = URL_HTTP_GOOGLE + "ig";
     static final String URL_IG_GADGETS = URL_HTTP_IG + "/gadgets";
 
+    static final String ENCODING = HTTP.UTF_8;
+
     /**
      * Retrieves HTTP response as String.
      *
@@ -41,8 +44,8 @@ public class IgHttpUtil {
             InputStream inputStream = null;
             try {
                 inputStream = entity.getContent();
-                // TODO: is there any constant for "UTF-8"?
-                response = IOUtils.toString(inputStream, "UTF-8");
+                // Calling trim() is necessary in order to remove any appending new line.
+                response = IOUtils.toString(inputStream, ENCODING).trim();
             } catch (IOException e) {
                 // The HttpClient's connection will be automatically released
                 // back to the connection manager.
