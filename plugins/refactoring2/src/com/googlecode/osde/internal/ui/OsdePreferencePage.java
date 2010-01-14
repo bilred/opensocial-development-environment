@@ -22,7 +22,7 @@ import java.io.File;
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.OsdeConfig;
 import com.googlecode.osde.internal.common.JdkVersion;
-import com.googlecode.osde.internal.shindig.DatabaseLaunchConfiguration;
+import com.googlecode.osde.internal.shindig.DatabaseServer;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.jface.preference.PreferencePage;
@@ -353,7 +353,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 
     public boolean performOk() {
         storeValues();
-        new DatabaseLaunchConfiguration().create();
+        new DatabaseServer().createConfiguration();
         return true;
     }
 

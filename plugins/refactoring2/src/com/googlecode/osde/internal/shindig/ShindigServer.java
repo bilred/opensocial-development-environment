@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.common.AbstractJob;
+import com.googlecode.osde.internal.common.ExternalApp;
 import com.googlecode.osde.internal.common.JavaLaunchConfigurationBuilder;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,15 +31,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * @author Dolphin Wan
  */
-public class ShindigLaunchConfiguration {
-    private static final String CONFIGURATION_NAME = "Apache Shindig";
+public class ShindigServer extends ExternalApp {
     private static final String PREBUNDLED_LOGGING_CONFIG_FILE = "/shindig/logging.properties";
 
-    public void create() {
+    public ShindigServer() {
+        super("Apache Shindig");
+    }
+
+    public void createConfiguration() {
         new AbstractJob("Create the Apache Shindig launch configuration") {
             @Override
             protected void runImpl(IProgressMonitor monitor) throws Exception {
-                new JavaLaunchConfigurationBuilder(CONFIGURATION_NAME)
+                new JavaLaunchConfigurationBuilder(configurationName)
                         .withLibrary("/libs/jetty-6.1.15.jar")
                         .withLibrary("/libs/jetty-util-6.1.15.jar")
                         .withLibrary("/libs/servlet-api-2.5-6.1.14.jar")
@@ -75,11 +79,11 @@ public class ShindigLaunchConfiguration {
         }.schedule();
     }
 
-    public void delete() {
+    public void deleteConfiguration() {
         new AbstractJob("Delete the Apache Shindig launch configuration") {
             @Override
             protected void runImpl(IProgressMonitor monitor) throws Exception {
-                new JavaLaunchConfigurationBuilder(CONFIGURATION_NAME)
+                new JavaLaunchConfigurationBuilder(configurationName)
                         .removeExistingConfiguration();
             }
         }.schedule();

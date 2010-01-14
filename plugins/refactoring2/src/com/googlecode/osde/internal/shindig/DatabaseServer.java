@@ -21,6 +21,7 @@ package com.googlecode.osde.internal.shindig;
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.OsdeConfig;
 import com.googlecode.osde.internal.common.AbstractJob;
+import com.googlecode.osde.internal.common.ExternalApp;
 import com.googlecode.osde.internal.common.JavaLaunchConfigurationBuilder;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,16 +33,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
  *
  * @author Dolphin Wan
  */
-public class DatabaseLaunchConfiguration {
-    private static final String CONFIGURATION_NAME = "Shindig Database";
+public class DatabaseServer extends ExternalApp {
     private static final String H2_DATABASE_LIBRARY = "/libs/h2-1.1.117.jar";
 
-    public void create() {
+    public DatabaseServer() {
+        super("Shindig Database");
+    }
+
+    public void createConfiguration() {
         new AbstractJob("Create the database launch configuration") {
             @Override
             protected void runImpl(IProgressMonitor monitor) throws Exception {
                 JavaLaunchConfigurationBuilder builder =
-                        new JavaLaunchConfigurationBuilder(CONFIGURATION_NAME)
+                        new JavaLaunchConfigurationBuilder(configurationName)
                                 .withLibrary(H2_DATABASE_LIBRARY)
                                 .withMainClassName("org.h2.tools.Server")
                                 .withArgument("-tcp")
@@ -63,11 +67,11 @@ public class DatabaseLaunchConfiguration {
         }.schedule();
     }
 
-    public void delete() {
+    public void deleteConfiguration() {
         new AbstractJob("Delete the Apache Shindig launch configuration") {
             @Override
             protected void runImpl(IProgressMonitor monitor) throws Exception {
-                new JavaLaunchConfigurationBuilder(CONFIGURATION_NAME)
+                new JavaLaunchConfigurationBuilder(configurationName)
                         .removeExistingConfiguration();
             }
         }.schedule();
