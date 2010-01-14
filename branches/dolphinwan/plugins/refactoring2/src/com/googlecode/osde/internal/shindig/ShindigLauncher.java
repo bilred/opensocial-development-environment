@@ -26,20 +26,12 @@ import java.io.StringWriter;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.OsdeConfig;
+import com.googlecode.osde.internal.common.ExternalAppException;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.ui.DebugUITools;
-import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
@@ -60,44 +52,32 @@ public class ShindigLauncher {
     public static void launch(Shell shell, final IWorkbenchPart targetPart) {
         Activator.getDefault().setRunningShindig(true);
         try {
-            ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-            ILaunch[] launches = manager.getLaunches();
-            for (ILaunch launch : launches) {
-                String name = launch.getLaunchConfiguration().getName();
-                if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
-                    launch.terminate();
-                }
-            }
-            //
+            final ShindigServer shindig = new ShindigServer();
+            final DatabaseServer database = new DatabaseServer();
+
+            shindig.stop();
+            database.stop();
+
             OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
             createConfigFileForHibernate(config);
-            //
-            ILaunchConfigurationType type = manager.getLaunchConfigurationType(
-                    IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-            ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(type);
             int delay = 0;
 
             // The following codes launch Database and then launch Shindig
             // If the user specifies an external database, we won't launch internal database
             // Launch Database for Shindig to connect to
             if (config.isUseInternalDatabase()) {
-                for (int i = 0; i < configurations.length; ++i) {
-                    if (configurations[i].getName().equals("Shindig Database")) {
-                        final ILaunchConfigurationWorkingCopy wc =
-                                configurations[i].getWorkingCopy();
-                        shell.getDisplay().syncExec(new Runnable() {
-                            public void run() {
-                                try {
-                                    DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
-                                } catch (CoreException e) {
-                                    logger.error("Launching Shindig Database failed.", e);
-                                }
-                            }
-                        });
+                shell.getDisplay().syncExec(new Runnable() {
+                    public void run() {
+                        try {
+                            database.start();
+                        } catch (ExternalAppException e) {
+                            logger.error("Launching Shindig Database failed.", e);
+                        }
                     }
-                }
+                });
                 delay = 3000;
             }
+
             shell.getDisplay().timerExec(delay, new Runnable() {
                 public void run() {
                     Activator.getDefault().connect(targetPart.getSite().getWorkbenchWindow());
@@ -105,21 +85,16 @@ public class ShindigLauncher {
             });
 
             // Launch Shindig container
-            for (int i = 0; i < configurations.length; i++) {
-                if (configurations[i].getName().equals("Apache Shindig")) {
-                    final ILaunchConfigurationWorkingCopy wc = configurations[i].getWorkingCopy();
-                    shell.getDisplay().timerExec(3000, new Runnable() {
-                        public void run() {
-                            try {
-                                DebugUITools.launch(wc.doSave(), ILaunchManager.RUN_MODE);
-                            } catch (CoreException e) {
-                                logger.error("Launching Apache Shindig failed.", e);
-                            }
-                        }
-                    });
+            shell.getDisplay().timerExec(3000, new Runnable() {
+                public void run() {
+                    try {
+                        shindig.start();
+                    } catch (ExternalAppException e) {
+                        logger.error("Launching Apache Shindig failed.", e);
+                    }
                 }
-            }
-        } catch (CoreException e) {
+            });
+        } catch (ExternalAppException e) {
             logger.error("Launching Apache Shindig or Shindig Database failed.", e);
         }
     }
