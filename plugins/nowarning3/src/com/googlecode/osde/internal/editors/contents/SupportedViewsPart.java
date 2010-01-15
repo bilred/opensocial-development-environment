@@ -148,7 +148,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
             return;
         }
         supportedViewList
-                .refresh((ContentModel) ((IStructuredSelection) selection).getFirstElement());
+                .refresh(((IStructuredSelection) selection).getFirstElement());
     }
 
     private Module getModule() {
@@ -157,7 +157,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 
     public void setValuesToModule() {
         Module module = getModule();
-        List<ContentModel> models = (List<ContentModel>) supportedViewList.getInput();
+        List<ContentModel> models = getContentModels();
         List<Content> contents = module.getContent();
         contents.clear();
         for (ContentModel model : models) {
@@ -181,7 +181,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
                 ContentModel model = new ContentModel();
                 model.setView(dialog.getView());
                 model.setType(dialog.getType());
-                List<ContentModel> models = (List<ContentModel>) supportedViewList.getInput();
+                List<ContentModel> models = getContentModels();
                 models.add(model);
                 supportedViewList.refresh();
                 markDirty();
@@ -204,7 +204,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
                 view = StringUtils.isEmpty(view) ? "(any)" : view;
                 if (MessageDialog.openConfirm(page.getSite().getShell(),
                         "Deleting content", "Do you want to delete the content '" + view + "'?")) {
-                    List<ContentModel> models = (List<ContentModel>) supportedViewList.getInput();
+                    List<ContentModel> models = getContentModels();
                     models.remove(model);
                     supportedViewList.refresh();
                     markDirty();
@@ -222,7 +222,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
         public void widgetSelected(SelectionEvent e) {
             ISelection selection = supportedViewList.getSelection();
             if (!selection.isEmpty()) {
-                List<ContentModel> models = (List<ContentModel>) supportedViewList.getInput();
+                List<ContentModel> models = getContentModels();
                 IStructuredSelection structured = (IStructuredSelection) selection;
                 ContentModel model = (ContentModel) structured.getFirstElement();
                 int index = models.indexOf(model);
@@ -244,7 +244,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
         public void widgetSelected(SelectionEvent e) {
             ISelection selection = supportedViewList.getSelection();
             if (!selection.isEmpty()) {
-                List<ContentModel> models = (List<ContentModel>) supportedViewList.getInput();
+                List<ContentModel> models = getContentModels();
                 IStructuredSelection structured = (IStructuredSelection) selection;
                 ContentModel model = (ContentModel) structured.getFirstElement();
                 int index = models.indexOf(model);
@@ -259,6 +259,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
 
     }
 
+    @SuppressWarnings({"unchecked"})
     public List<ContentModel> getContentModels() {
         return (List<ContentModel>) supportedViewList.getInput();
     }
@@ -267,13 +268,13 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
         ISelection selection = supportedViewList.getSelection();
         IStructuredSelection structured = (IStructuredSelection) selection;
         Object selected = structured.getFirstElement();
-        List<ContentModel> models = (List<ContentModel>) supportedViewList.getInput();
+        List<ContentModel> models = getContentModels();
         int selectedIndex = models.indexOf(selected);
         int size = models.size();
         //
         displayInitialValue();
         //
-        models = (List<ContentModel>) supportedViewList.getInput();
+        models = getContentModels();
         if ((selectedIndex != -1) && (size == models.size())) {
             ContentModel model = models.get(selectedIndex);
             supportedViewList.setSelection(new StructuredSelection(model));

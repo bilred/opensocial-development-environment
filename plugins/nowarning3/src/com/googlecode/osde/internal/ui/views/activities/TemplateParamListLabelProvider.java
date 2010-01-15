@@ -29,6 +29,7 @@ public class TemplateParamListLabelProvider extends LabelProvider implements ITa
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public String getColumnText(Object element, int columnIndex) {
         Map.Entry<String, String> entry = (Map.Entry<String, String>) element;
         switch (columnIndex) {

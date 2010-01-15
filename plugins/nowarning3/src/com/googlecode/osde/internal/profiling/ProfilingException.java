@@ -23,6 +23,8 @@ package com.googlecode.osde.internal.profiling;
  */
 public class ProfilingException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public ProfilingException() {
         super();
     }

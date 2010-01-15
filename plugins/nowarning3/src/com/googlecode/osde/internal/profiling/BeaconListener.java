@@ -33,5 +33,5 @@ public interface BeaconListener {
      *
      * @param json The beacon in JSON format.
      */
-    void beaconReceived(Map json);
+    void beaconReceived(Map<String, Object> json);
 }

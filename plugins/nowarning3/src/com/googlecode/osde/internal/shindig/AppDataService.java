@@ -55,6 +55,7 @@ public class AppDataService {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void removeAll() {
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery("select a from ApplicationDataMapImpl a");

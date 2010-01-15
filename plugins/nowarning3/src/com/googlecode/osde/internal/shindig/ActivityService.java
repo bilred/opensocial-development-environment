@@ -35,6 +35,7 @@ public class ActivityService {
         this.session = session;
     }
 
+    @SuppressWarnings("unchecked")
     public List<Activity> getActivities(Person person) {
         Query query = session.createQuery(
                 "select a from ActivityImpl a where a.userId = :userId order by a.postedTime desc");
@@ -42,6 +43,7 @@ public class ActivityService {
         return (List<Activity>) query.list();
     }
 
+    @SuppressWarnings("unchecked")
     public void removeAll() {
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery("select a from ActivityImpl a");

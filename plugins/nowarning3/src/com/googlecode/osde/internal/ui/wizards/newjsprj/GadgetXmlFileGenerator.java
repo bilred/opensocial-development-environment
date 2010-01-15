@@ -20,15 +20,13 @@ package com.googlecode.osde.internal.ui.wizards.newjsprj;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.EnumMap;
 import java.util.Set;
 
-import com.googlecode.osde.internal.utils.Gadgets;
-import com.googlecode.osde.internal.utils.ResourceUtil;
-
 import com.googlecode.osde.internal.gadgets.ViewName;
 import com.googlecode.osde.internal.gadgets.ViewType;
+import com.googlecode.osde.internal.utils.Gadgets;
+import com.googlecode.osde.internal.utils.ResourceUtil;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -53,8 +51,7 @@ public class GadgetXmlFileGenerator {
         this.gadgetViewData = gadgetViewData;
     }
 
-    public IFile generate(IProgressMonitor monitor)
-            throws UnsupportedEncodingException, IOException, CoreException {
+    public IFile generate(IProgressMonitor monitor) throws IOException, CoreException {
         try {
             monitor.beginTask("Generate Gadget XML file.", 100);
             IFile gadgetXmlFile = project.getFile(new Path(gadgetXmlData.getGadgetSpecFilename()));

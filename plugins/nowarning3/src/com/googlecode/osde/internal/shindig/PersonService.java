@@ -59,6 +59,7 @@ public class PersonService {
         return storePerson(person);
     }
 
+    @SuppressWarnings("unchecked")
     public void deletePerson(Person person) {
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery(

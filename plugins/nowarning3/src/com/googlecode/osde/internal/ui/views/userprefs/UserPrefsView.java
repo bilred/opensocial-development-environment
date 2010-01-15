@@ -137,7 +137,7 @@ public class UserPrefsView extends AbstractView {
                             String displayValue = StringUtils.isEmpty(entry.getValue()) ? value
                                     : entry.getValue();
                             ((Combo) control).add(displayValue);
-                            ((Combo) control).setData(displayValue, entry.getKey());
+                            control.setData(displayValue, entry.getKey());
                         }
                         ((Combo) control).select(0);
                     } else if (dataType.equals(DataType.LIST)) {

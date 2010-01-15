@@ -105,12 +105,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
                 } catch (IOException e) {
                     throw new InvocationTargetException(e);
                 } finally {
-                    if (out != null) {
-                        try {
-                            out.close();
-                        } catch (IOException e) {
-                        }
-                    }
+                    IOUtils.closeQuietly(out);
                 }
             }
         };
@@ -168,8 +163,7 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
                                 try {
                                     IParser parser = ParserFactory
                                             .createParser(ParserType.GADGET_XML_PARSER);
-                                    Module module = null;
-                                    module = (Module) parser.parse(orgFile.getContents());
+                                    Module module = (Module) parser.parse(orgFile.getContents());
                                     List<Content> contents = module.getContent();
                                     for (Content content : contents) {
                                         if (ViewType.html.toString().equals(content.getType())) {

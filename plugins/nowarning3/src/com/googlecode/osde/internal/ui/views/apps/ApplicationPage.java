@@ -17,9 +17,12 @@
  */
 package com.googlecode.osde.internal.ui.views.apps;
 
-import static com.googlecode.osde.internal.utils.Gadgets.trim;
-
 import java.util.List;
+
+import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.ConnectionException;
+import com.googlecode.osde.internal.shindig.ApplicationService;
+import com.googlecode.osde.internal.shindig.PersonService;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.model.Person;
@@ -45,12 +48,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
-import com.googlecode.osde.internal.Activator;
-import com.googlecode.osde.internal.ConnectionException;
-import com.googlecode.osde.internal.shindig.ApplicationService;
-import com.googlecode.osde.internal.shindig.PersonService;
-import com.googlecode.osde.internal.ui.views.people.FriendListContentProvider;
-import com.googlecode.osde.internal.ui.views.people.FriendListLabelProvider;
+import static com.googlecode.osde.internal.utils.Gadgets.trim;
 
 public class ApplicationPage implements IDetailsPage {
 
@@ -229,7 +227,7 @@ public class ApplicationPage implements IDetailsPage {
                 for (int i = 0; i < items.length; i++) {
                     String item = items[i];
                     if (item.equals(person.getHasApp().toString())) {
-                        result = new Integer(i);
+                        result = i;
                         break;
                     }
                 }

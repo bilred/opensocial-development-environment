@@ -63,6 +63,7 @@ public class ApplicationService {
         tx.commit();
     }
 
+    @SuppressWarnings("unchecked")
     public List<ApplicationImpl> getApplications() {
         Query query = session.createQuery("select a from ApplicationImpl a order by a.id");
         return (List<ApplicationImpl>) query.list();
@@ -71,10 +72,10 @@ public class ApplicationService {
     public ApplicationImpl getApplication(String appId) {
         Query query = session.createQuery("select a from ApplicationImpl a where a.id = :id");
         query.setParameter("id", appId);
-        ApplicationImpl application = (ApplicationImpl) query.uniqueResult();
-        return application;
+        return (ApplicationImpl) query.uniqueResult();
     }
 
+    @SuppressWarnings("unchecked")
     public List<UserPrefImpl> getUserPrefs(String appId, String viewerId) {
         Query query = session.createQuery(
                 "select u from UserPrefImpl u where u.appId = :appId and u.viewerId = :viewerId");
