@@ -5,8 +5,8 @@
 	<classpathentry exported="true" kind="lib" path="libs/servlet-api-2.5-6.1.14.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-4.0.jar"/>
 	<classpathentry kind="lib" path="libs/httpcore-4.0.1.jar"/>
-	<classpathentry kind="lib" path="libs/json.jar"/>
 	<classpathentry kind="lib" path="libs/junit-addons-1.4.jar"/>
+	<classpathentry kind="lib" path="libs/json_simple-1.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
@@ -32,7 +32,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/jakarta-oro-2.0.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/javassist-3.3.ga.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jboss-archive-browsing-5.0.0alpha-200607201-119.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/json_simple-1.0.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/jta-1.0.1B.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/log4j-1.2.14.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mysql-connector-java-5.1.6.jar"/>

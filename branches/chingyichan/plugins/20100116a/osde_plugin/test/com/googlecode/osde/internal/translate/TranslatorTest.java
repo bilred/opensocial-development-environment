@@ -22,7 +22,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class TranslatorTest {
     }
 
     @Test
-    public void testChineseToEnglishTranslation() throws IOException, JSONException {
+    public void testChineseToEnglishTranslation() throws IOException, Exception {
         String str = translator.translate("雷射", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
         assertTrue("laser".equals(str.toLowerCase()));
 
@@ -61,7 +60,7 @@ public class TranslatorTest {
     }
 
     @Test
-    public void testEnglishToChineseTranlation() throws IOException, JSONException {
+    public void testEnglishToChineseTranlation() throws IOException, Exception {
         String str =
                 translator.translate("Chiaroscuro", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
         assertTrue("明暗對比".equals(str));
@@ -71,7 +70,7 @@ public class TranslatorTest {
     }
 
     @Test
-    public void testOneToManyTranslations() throws IOException, JSONException {
+    public void testOneToManyTranslations() throws IOException, Exception {
         ArrayList<String> results = translator.translate("hello world", Language.ENGLISH,
                 Language.ITALIAN, Language.FRENCH);
         assertEquals(results.size(), 2);
@@ -80,7 +79,7 @@ public class TranslatorTest {
     }
 
     @Test
-    public void testMultipleStringsTranslations() throws IOException, JSONException {
+    public void testMultipleStringsTranslations() throws IOException, Exception {
         ArrayList<String> results =
                 translator.translate(Language.ENGLISH, Language.ITALIAN, "hello world", "goodbye");
         assertEquals(results.size(), 2);
@@ -109,14 +108,14 @@ public class TranslatorTest {
         localTranslator.encodeAndConstructQueryText(builder, text, encoding);
     }
 
-    @Test(expected = JSONException.class)
-    public void testRetrieveJSONResultJSONException() throws JSONException {
+    @Test(expected = Exception.class)
+    public void testRetrieveJSONResultJSONException() throws Exception {
         Translator localTranslator = new Translator();
         localTranslator.retrieveSingleResultFromJSONResponse("wrongly formatted response");
     }
 
-    @Test(expected = JSONException.class)
-    public void testRetrieveJSONResultsException() throws JSONException {
+    @Test(expected = Exception.class)
+    public void testRetrieveJSONResultsException() throws Exception {
         Translator localTranslator = new Translator();
         localTranslator.retrieveMultipleResultsFromJSONResponse("blah blah");
     }
