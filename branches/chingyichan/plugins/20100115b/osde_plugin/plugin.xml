@@ -527,8 +527,7 @@
             <includes>
                <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>
                <contentExtension pattern="com.googlecode.osde.view.navigatorContent"/>
-               <contentExtension pattern="com.googlecode.views.filters.*">
-               </contentExtension>
+               <contentExtension pattern="com.googlecode.views.filters.*" />
             </includes>
       </viewerContentBinding>
    </extension>
@@ -579,6 +578,14 @@
             activeByDefault="false"
             name="Closed Project Filter">
       </commonFilter>
+      
+      <commonFilter
+            class="com.googlecode.osde.internal.ui.views.NonOsdeProjectFilter"
+            id="com.googlecode.views.filters.nonOsdeProject"
+            description="description"
+            activeByDefault="false"
+            name="Non-OSDE Project Filter">
+      </commonFilter>      
       
       <!--
   <extension point="org.eclipse.ui.navigator.navigatorContent">
