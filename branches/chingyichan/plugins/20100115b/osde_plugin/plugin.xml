@@ -483,5 +483,250 @@
       <super type="org.eclipse.core.resources.problemmarker" />
       <persistent value="true" />
    </extension>
+   
+   <extension point="org.eclipse.ui.views">
+      <category
+            id="com.googlecode.osde" name="OSDE">
+      </category>
+      <view
+            allowMultiple="false"
+            category="com.googlecode.osde"
+            class="com.googlecode.osde.internal.ui.views.OsdeExplorerView"
+            icon="icons/opensocial.gif"
+            id="com.googlecode.osde.view"
+            name="OSDE Explorer">
+      </view>
+   </extension>
+<!--
+	<extension point="org.eclipse.ui.navigator.viewer">
+	    <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+	        <includes>
+	            <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.*"/>
+	        </includes>
+	    </viewerContentBinding>
+	</extension>
+
+-->   
+	
+   <extension point="org.eclipse.ui.navigator.viewer">
+      <viewer viewerId="com.googlecode.osde.view">
+         <popupMenu allowsPlatformContributions="true" id="com.googlecode.osde.view#PopupMenu">
+            <insertionPoint name="group.new"/>
+            <insertionPoint name="group.open" separator="true"/>
+            <insertionPoint name="group.openWith"/>
+            <insertionPoint name="group.edit" separator="true"/>
+            <insertionPoint name="group.reorganize" />
+            <insertionPoint name="group.port" separator="true"/>
+            <insertionPoint name="group.build" separator="true"/>
+            <insertionPoint name="group.generate" separator="true"/>
+            <insertionPoint name="group.search" separator="true"/>
+            <insertionPoint name="additions" separator="true"/>
+            <insertionPoint name="group.properties" separator="true"/>
+         </popupMenu>
+      </viewer>
+      <viewerContentBinding viewerId="com.googlecode.osde.view">
+            <includes>
+               <contentExtension pattern="org.eclipse.ui.navigator.resourceContent"/>
+            </includes>
+      </viewerContentBinding>
+   </extension>
+
+   <extension point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            id="OSDE Plugin.navigatorContent1"
+            name="name">
+      </navigatorContent>
+      
+      <!--
+  <extension point="org.eclipse.ui.navigator.navigatorContent">
+
+      <navigatorContent
+            id="org.python.pydev.navigator.pythoncontent"
+            name="Pydev Navigator Content"
+            icon="icons/python_16x16.png"
+            contentProvider="org.python.pydev.navigator.PythonModelProvider"
+            labelProvider="org.python.pydev.navigator.PythonLabelProvider"
+            activeByDefault="true"
+            priority="high">
+         <triggerPoints>
+             <or>
+                <instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
+                <instanceof value="org.eclipse.ui.IWorkingSet"/>
+                <and>
+                   <instanceof value="org.eclipse.core.resources.IProject"/>
+                   <test
+                         forcePluginActivation="true"
+                         property="org.eclipse.core.resources.projectNature"
+                         value="org.python.pydev.pythonNature"/>
+                </and>
+                <instanceof value="org.eclipse.core.resources.IFolder"/>
+                <instanceof value="org.eclipse.core.resources.IStorage"/>
+                <instanceof value="org.eclipse.core.resources.IFile"/>
+                <instanceof value="org.eclipse.core.resources.IResource"/>
+                <instanceof value="org.python.pydev.navigator.elements.IWrappedResource"/>
+                <instanceof value="org.python.pydev.core.structure.TreeNode"/>
+                <instanceof value="org.python.pydev.navigator.elements.PythonNode"/>
+            </or>
+         </triggerPoints>
+         <possibleChildren>
+            <or>
+                <adapt type="org.eclipse.core.resources.IProject" />
+                <adapt type="org.eclipse.ui.IWorkingSet" />
+                <instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
+                <instanceof value="org.eclipse.core.resources.IFolder" />
+                <instanceof value="org.eclipse.core.resources.IStorage"/>
+                <instanceof value="org.eclipse.core.resources.IFile" />
+                <instanceof value="org.eclipse.core.resources.IResource"/>
+                <instanceof value="org.python.pydev.navigator.elements.IWrappedResource"/>
+                <instanceof value="org.python.pydev.core.structure.TreeNode"/>
+                <instanceof value="org.python.pydev.navigator.elements.PythonNode"/>
+            </or>
+         </possibleChildren>
+         <commonSorter
+               class="org.python.pydev.navigator.sorter.PythonModelSorter"
+               id="org.python.pydev.navigator.sorter.pythonmodelsorter"/>
+         <actionProvider
+               class="org.python.pydev.navigator.actions.PythonActionProvider"
+               id="org.python.pydev.navigator.actions.pythonActionProvider"
+               overrides="org.eclipse.ui.navigator.resources.actions.EditActions"/>
+                                                                                                              
+       <actionProvider
+               class="org.python.pydev.navigator.actions.PythonRefactorActionProvider"
+               id="org.python.pydev.navigator.actions.pythonRefactorActionProvider"
+               overrides="org.eclipse.ui.navigator.resources.actions.RefactorActions"/>
+                 <override
+                                policy="InvokeAlwaysRegardlessOfSuppressedExt"
+                                suppressedExtensionId="org.eclipse.ui.navigator.resourceContent"/>
+        <dropAssistant
+              class="org.python.pydev.navigator.actions.copied.PyResourceDropAdapterAssistant"
+              id="org.python.pydev.navigator.actions.PyResourceDropAdapterAssistant">
+           <possibleDropTargets>
+              <or>
+                 <adapt type="org.eclipse.core.resources.IProject"/>
+                 <adapt type="org.eclipse.core.resources.IFolder"/>
+                 <adapt type="org.eclipse.core.resources.IFile"/>
+              </or>
+           </possibleDropTargets>
+        </dropAssistant>
+
+
+      </navigatorContent>
+          <commonWizard menuGroupId="org.python.pydev.ui.wizards" type="new" wizardId="org.python.pydev.ui.wizards.files.PythonPackageWizard">
+             <enablement>
+                <or>
+                   <adapt type="org.eclipse.core.resources.IFolder"/>
+                   <adapt type="org.eclipse.core.resources.IFile"/>
+                   <adapt type="org.eclipse.core.resources.IProject">
+                      <test
+                            property="org.eclipse.core.resources.projectNature"
+                            value="org.python.pydev.pythonNature"/>
+                   </adapt>
+                </or>
+             </enablement>
+          </commonWizard>
+          <commonWizard menuGroupId="org.python.pydev.ui.wizards" type="new" wizardId="org.python.pydev.ui.wizards.files.PythonModuleWizard">
+             <enablement>
+                <or>
+                   <adapt type="org.eclipse.core.resources.IFolder"/>
+                   <adapt type="org.eclipse.core.resources.IFile"/>
+                   <adapt type="org.eclipse.core.resources.IProject">
+                      <test
+                            property="org.eclipse.core.resources.projectNature"
+                            value="org.python.pydev.pythonNature"/>
+                   </adapt>
+                </or>
+             </enablement>
+          </commonWizard>
+
+      <commonFilter activeByDefault="false"
+             name="Pydev: non-Pydev Projects"
+         description="%HideNonPydevProjects.description"
+         id="org.python.pydev.navigator.filters.hideNonPydevProjects"
+         class="org.python.pydev.navigator.filters.PydevProjectsFilter">
+      </commonFilter>
+
+          <commonFilter activeByDefault="true"
+         name="Pydev: .pyc files"
+                  description="Pydev: *.pyc files"
+                  id="org.python.pydev.navigator.filters.hidePycFiles"
+                  class="org.python.pydev.navigator.filters.PycFilter">
+          </commonFilter>
+
+          <commonFilter activeByDefault="true"
+                  name="Pydev: .pyo files"
+                  description="Pydev: *.pyo files"
+                  id="org.python.pydev.navigator.filters.hidePyoFiles"
+                  class="org.python.pydev.navigator.filters.PyoFilter">
+          </commonFilter>
+
+          <commonFilter activeByDefault="true"
+                  name="Pydev: *.py~ files"
+                  description="Pydev: *.py~ files"
+                  id="org.python.pydev.navigator.filters.hidePyTildaFiles"
+                  class="org.python.pydev.navigator.filters.PyTildaFilter">
+          </commonFilter>
+
+      <commonFilter activeByDefault="true"
+              name="Pydev: .* resources"
+              description="Pydev: .*resources"
+              id="org.python.pydev.navigator.filters.startsWithDot"
+                  class="org.python.pydev.navigator.filters.DotStartFilter">
+      </commonFilter>
+
+      <commonFilter activeByDefault="true"
+              name="Pydev: .class resources"
+              description="Pydev: .class resources"
+              id="org.python.pydev.navigator.filters.endsWithClass"
+                  class="org.python.pydev.navigator.filters.ClassFilter">
+      </commonFilter>
+
+
+      <commonFilter activeByDefault="false"
+              name="Pydev: closed projects"
+              description="Pydev: closed projects"
+              id="org.python.pydev.navigator.filters.closedProject"
+                  class="org.python.pydev.navigator.filters.ClosedProjectsFilter">
+      </commonFilter>
+
+      <commonFilter activeByDefault="true"
+              name="Pydev: custom specified filters"
+              description="Pydev: custom specified filters"
+              id="org.python.pydev.navigator.filters.customFilters"
+                  class="org.python.pydev.navigator.filters.CustomFilters">
+      </commonFilter>
+
+
+      <commonFilter activeByDefault="false"
+          name="Pydev: Nodes: All"
+          description="Pydev: Nodes: (hide all)"
+          id="org.python.pydev.navigator.filters.pythonnodefilter"
+          class="org.python.pydev.navigator.filters.PythonNodeFilter">
+      </commonFilter>
+ 
+   <commonFilter activeByDefault="true"
+          name="Pydev: Nodes: Imports"
+          description="Pydev: Nodes: Imports (hide)"
+          id="org.python.pydev.navigator.filters.Imports"
+          class="org.python.pydev.navigator.filters.ImportsFilter">
+      </commonFilter>
+
+      <commonFilter activeByDefault="false"
+          name="Pydev: Nodes: Comments"
+          description="Pydev: Nodes: Comments (hide)"
+          id="org.python.pydev.navigator.filters.Comments"
+          class="org.python.pydev.navigator.filters.CommentsFilter">
+      </commonFilter>
+
+
+      <commonFilter activeByDefault="false"
+          name="Pydev: Interpreter Info"
+          description="Pydev: Interpreter Info (hide)"
+          id="org.python.pydev.navigator.filters.interpreterinfofilter"
+          class="org.python.pydev.navigator.filters.InterpreterInfoFilter">
+      </commonFilter>
+    </extension>
+      
+      -->
+   </extension>
 
 </plugin>
