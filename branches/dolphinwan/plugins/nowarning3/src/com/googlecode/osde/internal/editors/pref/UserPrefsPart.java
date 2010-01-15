@@ -134,7 +134,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
         if (!(selection instanceof IStructuredSelection)) {
             return;
         }
-        userPrefsList.refresh((UserPrefModel) ((IStructuredSelection) selection).getFirstElement());
+        userPrefsList.refresh(((IStructuredSelection) selection).getFirstElement());
     }
 
     private Module getModule() {
@@ -145,7 +145,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
         Module module = getModule();
         List<UserPref> userPrefList = module.getUserPref();
         userPrefList.clear();
-        List<UserPrefModel> models = (List<UserPrefModel>) userPrefsList.getInput();
+        List<UserPrefModel> models = getUserPrefs();
         for (UserPrefModel model : models) {
             UserPref userPref = new UserPref();
             userPref.setName(model.getName());
@@ -176,6 +176,11 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
         }
     }
 
+    @SuppressWarnings({"unchecked"})
+    private List<UserPrefModel> getUserPrefs() {
+        return (List<UserPrefModel>) userPrefsList.getInput();
+    }
+
     private class AddButtonSelectionListener implements SelectionListener {
 
         public void widgetDefaultSelected(SelectionEvent e) {
@@ -188,7 +193,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
                 model.setName(dialog.getName());
                 model.setDisplayName(dialog.getDisplayName());
                 model.setDataType(dialog.getDataType());
-                List<UserPrefModel> models = (List<UserPrefModel>) userPrefsList.getInput();
+                List<UserPrefModel> models = getUserPrefs();
                 if (!contains(models, model)) {
                     models.add(model);
                     userPrefsList.refresh();
@@ -221,7 +226,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
                 String name = model.getName();
                 if (MessageDialog.openConfirm(page.getSite().getShell(),
                         "Deleting UserPref", "Do you want to delete UserPref '" + name + "'?")) {
-                    List<UserPrefModel> models = (List<UserPrefModel>) userPrefsList.getInput();
+                    List<UserPrefModel> models = getUserPrefs();
                     models.remove(model);
                     userPrefsList.refresh();
                     markDirty();

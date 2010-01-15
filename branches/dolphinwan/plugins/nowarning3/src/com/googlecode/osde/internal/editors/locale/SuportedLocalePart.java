@@ -155,7 +155,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
             return;
         }
         supportedLocaleList
-                .refresh((LocaleModel) ((IStructuredSelection) selection).getFirstElement());
+                .refresh(((IStructuredSelection) selection).getFirstElement());
     }
 
     private Module getModule() {

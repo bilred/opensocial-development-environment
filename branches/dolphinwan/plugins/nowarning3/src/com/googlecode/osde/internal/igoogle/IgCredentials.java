@@ -196,7 +196,7 @@ public class IgCredentials {
         InputStream inputStream = (responseCode == HttpURLConnection.HTTP_OK)
                 ? urlConnection.getInputStream()
                 : urlConnection.getErrorStream();
-        ;
+
         logger.fine("inputStream: " + inputStream);
         try {
             String response = IOUtils.toString(inputStream, IgHttpUtil.ENCODING);

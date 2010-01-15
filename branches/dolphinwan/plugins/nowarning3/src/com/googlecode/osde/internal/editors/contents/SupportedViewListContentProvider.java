@@ -30,6 +30,7 @@ class SupportedViewListContentProvider implements IStructuredContentProvider {
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
 
+    @SuppressWarnings("unchecked")
     public Object[] getElements(Object inputElement) {
         return ((List<ContentModel>) inputElement).toArray();
     }

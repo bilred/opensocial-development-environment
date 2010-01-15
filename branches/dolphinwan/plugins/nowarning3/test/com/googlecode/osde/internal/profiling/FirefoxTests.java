@@ -38,7 +38,7 @@ public class FirefoxTests {
 
     private FirefoxBinary binary;
     private BeaconReceiver server;
-    private Map beacon;
+    private Map<String, Object> beacon;
     private CountDownLatch beaconReceived;
     private int port;
     private String beaconPath;
@@ -58,7 +58,7 @@ public class FirefoxTests {
         beaconPath = "/beacon/full";
         server = new BeaconReceiver(port, beaconPath);
         server.setListener(new BeaconListener() {
-            public void beaconReceived(Map json) {
+            public void beaconReceived(Map<String, Object> json) {
                 beacon = json;
                 beaconReceived.countDown();
             }

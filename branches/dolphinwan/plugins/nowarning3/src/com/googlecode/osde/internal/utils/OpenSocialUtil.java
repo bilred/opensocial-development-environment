@@ -44,8 +44,7 @@ public class OpenSocialUtil {
             throws CoreException, ParserException {
         try {
             IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-            Module module = null;
-            module = (Module) parser.parse(file.getContents());
+            Module module = (Module) parser.parse(file.getContents());
 
             String path = file.getFullPath().toPortableString();
             MessageDigest digest = MessageDigest.getInstance("MD5");
@@ -73,8 +72,7 @@ public class OpenSocialUtil {
             throws CoreException, ParserException, IOException {
         try {
             IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-            Module module = null;
-            module = (Module) parser.parse(new URL(url).openStream());
+            Module module = (Module) parser.parse(new URL(url).openStream());
 
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] hash = digest.digest(url.getBytes("UTF-8"));
@@ -126,11 +124,7 @@ public class OpenSocialUtil {
                 manager.findContentTypeFor(fileContent, file.getLocation().toOSString());
         IOUtils.closeQuietly(fileContent);
 
-        if (contentType != null &&
-                contentType.getId().equals(contentTypeId)) {
-            return true;
-        }
-        return false;
+        return (contentType != null) && contentType.getId().equals(contentTypeId);
     }
 
     public static final String ANY = "--- any ---";

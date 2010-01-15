@@ -96,7 +96,7 @@ public class Activator extends AbstractUIPlugin {
     // The shared instance
     private static Activator plugin;
 
-    private Map<RGB, Color> colorMap = new HashMap<RGB, Color>();
+    private final Map<RGB, Color> colorMap = new HashMap<RGB, Color>();
 
     private SessionFactory sessionFactory;
     private PersonService personService;
@@ -108,12 +108,6 @@ public class Activator extends AbstractUIPlugin {
     private LaunchApplicationInformation lastApplicationInformation;
 
     private Handler logHandler;
-
-    /**
-     * The constructor
-     */
-    public Activator() {
-    }
 
     /**
      * This method is called upon plug-in activation
@@ -525,6 +519,7 @@ public class Activator extends AbstractUIPlugin {
         return new String(encoded, "UTF-8");
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, String> decodeSiteMap(String encodeSiteMap) throws IOException,
             ClassNotFoundException {
         if (encodeSiteMap != null && encodeSiteMap.length() > 0) {

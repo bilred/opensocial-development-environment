@@ -510,6 +510,11 @@ public class PersonPage implements IDetailsPage {
         }
     }
 
+    @SuppressWarnings({"unchecked"})
+    private List<RelationshipImpl> getFriends() {
+        return (List<RelationshipImpl>) friendsList.getInput();
+    }
+
     private class ValueChangeListener implements FocusListener, SelectionListener {
         private final SectionPart part;
 
@@ -647,7 +652,7 @@ public class PersonPage implements IDetailsPage {
                                     personService.createRelationship(groupId, person, target);
                             personView.getSite().getShell().getDisplay().syncExec(new Runnable() {
                                 public void run() {
-                                    ((List<RelationshipImpl>) friendsList.getInput()).add(relation);
+                                    getFriends().add(relation);
                                     friendsList.refresh();
                                 }
                             });
@@ -688,9 +693,7 @@ public class PersonPage implements IDetailsPage {
                                         PersonService personService =
                                                 Activator.getDefault().getPersonService();
                                         personService.deleteRelationship(relation);
-                                        List<RelationshipImpl> input =
-                                                (List<RelationshipImpl>) friendsList.getInput();
-                                        input.remove(relation);
+                                        getFriends().remove(relation);
                                         friendsList.refresh();
                                     } catch (ConnectionException e) {
                                         MessageDialog

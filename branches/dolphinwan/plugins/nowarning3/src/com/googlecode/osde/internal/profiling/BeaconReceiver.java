@@ -19,6 +19,7 @@
 package com.googlecode.osde.internal.profiling;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
 import javax.servlet.ServletException;
@@ -71,6 +72,7 @@ public class BeaconReceiver {
     }
 
     private class FullBeaconServlet extends HttpServlet {
+        private static final long serialVersionUID = 1L;
         private static final String TOKEN = "content=";
 
         @Override
@@ -85,11 +87,17 @@ public class BeaconReceiver {
 
             // The beacon is encoded with encodeURIComponent() by Page Speed
             // plugin.
-            Map json = (Map) JSONValue.parse(URLDecoder.decode(jsonAsString, "UTF-8"));
+            Map<String, Object> json = convert(jsonAsString);
 
             if (json != null && listener != null) {
                 listener.beaconReceived(json);
             }
+        }
+
+        @SuppressWarnings({"unchecked"})
+        private Map<String, Object> convert(String jsonAsString)
+                throws UnsupportedEncodingException {
+            return (Map<String, Object>) JSONValue.parse(URLDecoder.decode(jsonAsString, "UTF-8"));
         }
     }
 

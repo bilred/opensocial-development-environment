@@ -25,7 +25,6 @@ import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -127,11 +126,6 @@ public class NewRestfulAccessProjectResourceWizard extends BasicNewProjectResour
         }
         newProject = newProjectHandle;
         return newProject;
-    }
-
-    public void setInitializationData(IConfigurationElement config, String propertyName,
-            Object data) {
-        super.setInitializationData(config, propertyName, data);
     }
 
     public void setApplication(ApplicationImpl application) {

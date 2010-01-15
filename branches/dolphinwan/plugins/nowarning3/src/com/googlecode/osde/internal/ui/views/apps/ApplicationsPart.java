@@ -114,7 +114,7 @@ public class ApplicationsPart extends SectionPart implements IPartSelectionListe
         if (!(selection instanceof IStructuredSelection)) {
             return;
         }
-        applicationList.refresh((ApplicationImpl) ((IStructuredSelection) selection).getFirstElement());
+        applicationList.refresh(((IStructuredSelection) selection).getFirstElement());
     }
 
     private class DeleteButtonSelectionListener implements SelectionListener {

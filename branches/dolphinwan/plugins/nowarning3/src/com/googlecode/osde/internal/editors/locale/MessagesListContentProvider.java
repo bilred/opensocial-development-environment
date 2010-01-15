@@ -30,6 +30,7 @@ class MessagesListContentProvider implements IStructuredContentProvider {
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
 
+    @SuppressWarnings("unchecked")
     public Object[] getElements(Object inputElement) {
         Map<String, String> messages = (Map<String, String>) inputElement;
         return messages.entrySet().toArray();

@@ -30,9 +30,9 @@ public class TemplateParamListContentProvider implements IStructuredContentProvi
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
 
+    @SuppressWarnings("unchecked")
     public Object[] getElements(Object inputElement) {
-        Map<String, String> templateParams = (Map<String, String>) inputElement;
-        return templateParams.entrySet().toArray();
+        return ((Map<String, String>) inputElement).entrySet().toArray();
     }
 
 }

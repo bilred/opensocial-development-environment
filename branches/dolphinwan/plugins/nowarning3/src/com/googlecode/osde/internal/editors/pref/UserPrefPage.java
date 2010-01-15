@@ -182,7 +182,7 @@ public class UserPrefPage implements IDetailsPage {
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.verticalAlignment = GridData.BEGINNING;
         deleteButton.setLayoutData(layoutData);
-        deleteButton.addSelectionListener(new DeleteButtonSelectionListener(enumValuesPart));
+        deleteButton.addSelectionListener(new DeleteButtonSelectionListener());
     }
 
     public void initialize(IManagedForm managedForm) {
@@ -236,6 +236,11 @@ public class UserPrefPage implements IDetailsPage {
 
     public boolean setFormInput(Object input) {
         return false;
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private Map<String, String> getEnumValues() {
+        return (Map<String, String>) enumValuesList.getInput();
     }
 
     private class UpdateFieldsListener implements ModifyListener, SelectionListener {
@@ -293,7 +298,7 @@ public class UserPrefPage implements IDetailsPage {
         public void widgetSelected(SelectionEvent e) {
             AddEnumValueDialog dialog = new AddEnumValueDialog(page.getSite().getShell());
             if (dialog.open() == Window.OK) {
-                Map<String, String> enumValuesMap = (Map<String, String>) enumValuesList.getInput();
+                Map<String, String> enumValuesMap = getEnumValues();
                 enumValuesMap.put(dialog.getValue(), dialog.getDisplayValue());
                 enumValuesList.refresh();
                 managedForm.fireSelectionChanged(sectionPart, new StructuredSelection(model));
@@ -305,15 +310,10 @@ public class UserPrefPage implements IDetailsPage {
 
     private class DeleteButtonSelectionListener implements SelectionListener {
 
-        private SectionPart sectionPart;
-
-        public DeleteButtonSelectionListener(SectionPart sectionPart) {
-            this.sectionPart = sectionPart;
-        }
-
         public void widgetDefaultSelected(SelectionEvent e) {
         }
 
+        @SuppressWarnings({"unchecked"})
         public void widgetSelected(SelectionEvent e) {
             ISelection selection = enumValuesList.getSelection();
             if (!selection.isEmpty()) {
@@ -324,8 +324,7 @@ public class UserPrefPage implements IDetailsPage {
                 if (MessageDialog.openConfirm(page.getSite().getShell(),
                         "Deleting Enum value",
                         "Do you want to delete Enum value '" + value + "'?")) {
-                    Map<String, String> enumValuesMap =
-                            (Map<String, String>) enumValuesList.getInput();
+                    Map<String, String> enumValuesMap = getEnumValues();
                     enumValuesMap.remove(model.getKey());
                     enumValuesList.refresh();
                     makeDirty();

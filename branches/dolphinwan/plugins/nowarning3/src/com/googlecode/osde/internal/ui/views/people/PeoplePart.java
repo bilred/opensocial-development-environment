@@ -120,7 +120,12 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
         if (!(selection instanceof IStructuredSelection)) {
             return;
         }
-        personList.refresh((Person) ((IStructuredSelection) selection).getFirstElement());
+        personList.refresh(((IStructuredSelection) selection).getFirstElement());
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private List<Person> getPersons() {
+        return (List<Person>) personList.getInput();
     }
 
     private class DeleteButtonSelectionListener implements SelectionListener {
@@ -145,8 +150,7 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
                                         PersonService personService =
                                                 Activator.getDefault().getPersonService();
                                         personService.deletePerson(person);
-                                        List<Person> input = (List<Person>) personList.getInput();
-                                        input.remove(person);
+                                        getPersons().remove(person);
                                         personList.refresh();
                                     } catch (ConnectionException e) {
                                         MessageDialog
@@ -186,8 +190,7 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
                                         PersonService service =
                                                 Activator.getDefault().getPersonService();
                                         Person person = service.createNewPerson(id, displayName);
-                                        List<Person> input = (List<Person>) personList.getInput();
-                                        input.add(person);
+                                        getPersons().add(person);
                                         personList.refresh();
                                     } catch (ConnectionException e) {
                                         MessageDialog

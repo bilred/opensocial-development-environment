@@ -167,6 +167,7 @@ public class LaunchApplicationJob extends Job {
         }
     }
 
+    @SuppressWarnings({"unchecked"})
     protected String createJsonFromUserPrefs() throws ConnectionException {
         ApplicationService service = Activator.getDefault().getApplicationService();
         List<UserPrefImpl> userPrefs = service.getUserPrefs(appId, viewer);
@@ -186,7 +187,6 @@ public class LaunchApplicationJob extends Job {
             }
             up.put(userPref.getName(), values);
         }
-        String upJson = up.toString();
-        return upJson;
+        return up.toString();
     }
 }
