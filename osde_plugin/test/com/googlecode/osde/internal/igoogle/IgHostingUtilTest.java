@@ -51,7 +51,6 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author albert.cheng.ig@gmail.com
  */
-// TODO: (p1) Update corresponding wiki docs.
 public class IgHostingUtilTest {
 
     private static Logger logger = new Logger(IgHostingUtil.class);
@@ -78,7 +77,8 @@ public class IgHostingUtilTest {
      * {@link IgHostingUtil#retrieveQuotaByteUsed(String, String)},
      * {@link IgHostingUtil#retrieveFileNameList(String, String, String)},
      * {@link IgHostingUtil#formHostedFileUrl(String, String, String)},
-     * {@link IgHostingUtil#retrieveHttpResponseAsString(String, String)}, etc.
+     * {@link IgHostingUtil#retrieveHttpResponseAsString(String, String)},
+     * etc.
      *
      * @throws IgException
      */
@@ -142,6 +142,7 @@ public class IgHostingUtilTest {
 
         // Test and verify the method call.
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
+        logger.info("igCredentials: " + igCredentials);
         String urlOfHostedGadgetFile = IgHostingUtil.uploadFiles(
                 igCredentials, gadgetXmlIFile, TEST_HOSTING_FOLDER, false);
         logger.info("urlOfHostedGadgetFile: " + urlOfHostedGadgetFile);
@@ -168,11 +169,24 @@ public class IgHostingUtilTest {
         assertTrue(previewUrlForLegacyGadget.endsWith(URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE));
 
         // Verify preview OpenSocial gadget.
-        boolean useCanvasView = false;
+        boolean useCanvasView = true;
         String previewUrlForOpenSocialGadget = formPreviewOpenSocialGadgetUrl(
                 URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE, useCanvasView, igCredentials.getSid());
-        logger.info("previewUrlForOpenSocialGadget:" + previewUrlForOpenSocialGadget);
-        // TODO: Assert sth when server is ready for formPreviewOpenSocialGadgetUrl().
+        logger.info("previewUrlForOpenSocialGadget:\n" + previewUrlForOpenSocialGadget);
+        assertTrue(previewUrlForOpenSocialGadget,
+                previewUrlForOpenSocialGadget.startsWith("http://"));
+        assertTrue(previewUrlForOpenSocialGadget,
+                previewUrlForOpenSocialGadget.indexOf(URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE) != -1);
+        assertTrue(previewUrlForOpenSocialGadget,
+                previewUrlForOpenSocialGadget.indexOf("view=canvas") != -1);
+        assertTrue(previewUrlForOpenSocialGadget,
+                previewUrlForOpenSocialGadget.indexOf("nocache=1") != -1);
+        assertTrue(previewUrlForOpenSocialGadget,
+                previewUrlForOpenSocialGadget.indexOf("gadgetId=") != -1);
+        assertTrue(previewUrlForOpenSocialGadget,
+                previewUrlForOpenSocialGadget.indexOf("gadgetOwner=") != -1);
+        assertTrue(previewUrlForOpenSocialGadget,
+                previewUrlForOpenSocialGadget.indexOf("gadgetViewer=") != -1);
     }
 
     /**
