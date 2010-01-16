@@ -23,16 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.googlecode.osde.internal.editors.pref.UserPrefModel;
-import com.googlecode.osde.internal.editors.pref.UserPrefModel.DataType;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import com.googlecode.osde.internal.editors.pref.UserPrefModel;
+import com.googlecode.osde.internal.editors.pref.UserPrefModel.DataType;
 
 public class MetaDataFetcher {
 
@@ -42,20 +43,19 @@ public class MetaDataFetcher {
 
     public static List<UserPrefModel> fetch(
             String view, String appId, String country, String language, String url) throws Exception {
-        HttpClient client = new HttpClient(new MultiThreadedHttpConnectionManager());
-        client.getHttpConnectionManager().getParams().setConnectionTimeout(3000);
-        client.getHostConfiguration().setHost("localhost", 8080, "http");
-        PostMethod post = new PostMethod("/gadgets/metadata");
+
+        HttpClient client = new DefaultHttpClient();
         String body = METADATA_POST.replace("$country$", country);
         body = body.replace("$language$", language);
         body = body.replace("$view$", view);
         body = body.replace("$url$", url);
-        post.setRequestEntity(new StringRequestEntity(body, "text/json", "UTF-8"));
-        client.executeMethod(post);
+        HttpPost post = new HttpPost("http://localhost:8080/gadgets/metadata");
+        post.setHeader("Content-Type", "text/json");
+        post.setEntity(new StringEntity(body, "UTF-8"));
+        String response = client.execute(post, new BasicResponseHandler());
         //
         JSONParser parser = new JSONParser();
-        JSONObject metadata =
-                (JSONObject) parser.parse(new StringReader(post.getResponseBodyAsString()));
+        JSONObject metadata = (JSONObject) parser.parse(new StringReader(response));
         JSONArray gadgets = (JSONArray) metadata.get("gadgets");
         JSONObject gadget = (JSONObject) gadgets.get(0);
         if (gadget.containsKey("errors")) {
