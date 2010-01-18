@@ -34,9 +34,9 @@ import com.googlecode.osde.internal.runtime.LaunchApplicationInformation;
 import com.googlecode.osde.internal.shindig.ActivityService;
 import com.googlecode.osde.internal.shindig.AppDataService;
 import com.googlecode.osde.internal.shindig.ApplicationService;
-import com.googlecode.osde.internal.shindig.DatabaseLaunchConfiguration;
+import com.googlecode.osde.internal.shindig.DatabaseServer;
 import com.googlecode.osde.internal.shindig.PersonService;
-import com.googlecode.osde.internal.shindig.ShindigLaunchConfiguration;
+import com.googlecode.osde.internal.shindig.ShindigServer;
 import com.googlecode.osde.internal.ui.views.activities.ActivitiesView;
 import com.googlecode.osde.internal.ui.views.appdata.AppDataView;
 import com.googlecode.osde.internal.ui.views.apps.ApplicationView;
@@ -53,9 +53,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -126,8 +123,8 @@ public class Activator extends AbstractUIPlugin {
 
         java.util.logging.Logger.getLogger(PLUGIN_ID).addHandler(logHandler);
 
-        new ShindigLaunchConfiguration().create();
-        new DatabaseLaunchConfiguration().create();
+        new ShindigServer().createConfiguration();
+        new DatabaseServer().createConfiguration();
         registerIcon();
     }
 
@@ -147,16 +144,15 @@ public class Activator extends AbstractUIPlugin {
         appDataService = null;
         activityService = null;
         sessionFactory = null;
-        ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-        ILaunch[] launches = manager.getLaunches();
-        for (ILaunch launch : launches) {
-            String name = launch.getLaunchConfiguration().getName();
-            if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
-                launch.terminate();
-            }
-        }
-        new ShindigLaunchConfiguration().delete();
-        new DatabaseLaunchConfiguration().delete();
+
+        ShindigServer shindig = new ShindigServer();
+        DatabaseServer database = new DatabaseServer();
+
+        shindig.stop();
+        database.stop();
+
+        shindig.deleteConfiguration();
+        database.deleteConfiguration();
         File tmpDir = new File(getOsdeConfiguration().getJettyDir());
         File[] files = tmpDir.listFiles();
         for (File file : files) {
