@@ -51,7 +51,7 @@ public class TranslatorTest {
     }
 
     @Test
-    public void testChineseToEnglishTranslation() throws IOException, Exception {
+    public void testChineseToEnglishTranslation() throws Exception {
         String str = translator.translate("雷射", Language.CHINESE_TRADITIONAL, Language.ENGLISH);
         assertTrue("laser".equals(str.toLowerCase()));
 
@@ -60,7 +60,7 @@ public class TranslatorTest {
     }
 
     @Test
-    public void testEnglishToChineseTranlation() throws IOException, Exception {
+    public void testEnglishToChineseTranlation() throws Exception {
         String str =
                 translator.translate("Chiaroscuro", Language.ENGLISH, Language.CHINESE_TRADITIONAL);
         assertTrue("明暗對比".equals(str));
@@ -70,7 +70,7 @@ public class TranslatorTest {
     }
 
     @Test
-    public void testOneToManyTranslations() throws IOException, Exception {
+    public void testOneToManyTranslations() throws Exception {
         ArrayList<String> results = translator.translate("hello world", Language.ENGLISH,
                 Language.ITALIAN, Language.FRENCH);
         assertEquals(results.size(), 2);
@@ -79,7 +79,7 @@ public class TranslatorTest {
     }
 
     @Test
-    public void testMultipleStringsTranslations() throws IOException, Exception {
+    public void testMultipleStringsTranslations() throws Exception {
         ArrayList<String> results =
                 translator.translate(Language.ENGLISH, Language.ITALIAN, "hello world", "goodbye");
         assertEquals(results.size(), 2);
@@ -123,7 +123,7 @@ public class TranslatorTest {
     @Test(expected = IOException.class)
     public void testGetJSONResponseException() throws IOException {
         Translator localTranslator = new Translator();
-        localTranslator.connection = (new URL("http://localhost")).openConnection();
+        localTranslator.connection = (new URL("http://localhost:12345")).openConnection();
         localTranslator.getJSONResponse();
     }
 
