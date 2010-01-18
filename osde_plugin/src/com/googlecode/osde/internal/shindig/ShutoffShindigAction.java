@@ -18,16 +18,13 @@
 package com.googlecode.osde.internal.shindig;
 
 import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.common.ExternalAppException;
 import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -85,23 +82,19 @@ public class ShutoffShindigAction extends Action
             protected IStatus run(final IProgressMonitor monitor) {
                 monitor.beginTask("Shutting off Apache Shindig.", 7);
                 try {
-                    ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-                    ILaunch[] launches = manager.getLaunches();
-                    for (ILaunch launch : launches) {
-                        String name = launch.getLaunchConfiguration().getName();
-                        if (name.equals("Shindig Database") || name.equals("Apache Shindig")) {
-                            launch.terminate();
-                            monitor.worked(1);
-                        }
-                    }
+                    new ShindigServer().stop();
+                    new DatabaseServer().stop();
+
+                    monitor.worked(1);
+
                     shell.getDisplay().syncExec(new Runnable() {
                         public void run() {
                             Activator.getDefault()
                                     .disconnect(targetPart.getSite().getWorkbenchWindow(), monitor);
                         }
                     });
-                } catch (CoreException e) {
-                    logger.error("To shutdown Apache Shindig or Shindig Database failed.", e);
+                } catch (ExternalAppException e) {
+                    logger.error("Failed to shutdown Apache Shindig or Shindig Database.", e);
                 }
                 monitor.done();
                 return Status.OK_STATUS;
