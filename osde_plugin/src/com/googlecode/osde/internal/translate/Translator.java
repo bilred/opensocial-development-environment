@@ -27,10 +27,9 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  * The Translator class communicates with Google Translate service to do translations.
@@ -67,7 +66,7 @@ public class Translator {
      * @throws JSONException
      */
     public String translate(String text, Language from, Language to)
-            throws IOException, JSONException {
+            throws Exception {
         StringBuilder builder = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
         constructQueryURL(builder, text, from, to);
         openConnection(builder.toString());
@@ -88,7 +87,7 @@ public class Translator {
      * @throws JSONException
      */
     public ArrayList<String> translate(String text, Language fromLanguage, Language... toLanguages)
-            throws IOException, JSONException {
+            throws Exception {
         StringBuilder builder = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
         constructQueryURL(builder, text, fromLanguage, toLanguages);
         openConnection(builder.toString());
@@ -108,7 +107,7 @@ public class Translator {
      * @throws JSONException
      */
     public ArrayList<String> translate(Language fromLanguage, Language toLanguage, String... texts)
-            throws IOException, JSONException {
+            throws Exception {
         StringBuilder builder = new StringBuilder(GOOGLE_TRANSLATE_URL_PREFIX);
         constructQueryURL(builder, fromLanguage, toLanguage, texts);
         openConnection(builder.toString());
@@ -191,14 +190,14 @@ public class Translator {
      * @throws JSONException
      */
     protected String retrieveSingleResultFromJSONResponse(String jsonResponse)
-            throws JSONException {
+            throws Exception {
         try {
-            JSONObject json = new JSONObject(jsonResponse);
-            return json.getJSONObject("responseData").getString("translatedText");
-        } catch (JSONException jse) {
+            JSONObject json = (JSONObject) JSONValue.parse(jsonResponse);
+            return (String) ((JSONObject)json.get("responseData")).get("translatedText");
+        } catch (Exception e) {
             System.err.println(
                     "Can't parse the response from Google Translate service into JSON object");
-            throw jse;
+            throw e;
         }
     }
 
@@ -211,22 +210,21 @@ public class Translator {
      * @throws JSONException
      */
     protected ArrayList<String> retrieveMultipleResultsFromJSONResponse(String jsonResponse)
-            throws JSONException {
-        // parse the response using JSON libraries
-        try {
-            JSONObject json = new JSONObject(jsonResponse);
-            JSONArray responseData = json.getJSONArray("responseData");
-            ArrayList<String> results = new ArrayList<String>();
-            for (int i = 0; i < responseData.length(); ++i) {
-                results.add(responseData.getJSONObject(i).getJSONObject("responseData").getString(
-                        "translatedText"));
+            throws Exception {
+            try {
+                JSONObject json = (JSONObject) JSONValue.parse(jsonResponse);
+                JSONArray responseData = (JSONArray) json.get("responseData");
+                ArrayList<String> results = new ArrayList<String>();
+                for (Object o : responseData) {
+                    JSONObject obj = (JSONObject) o;
+                    results.add((String) ((JSONObject)obj.get("responseData")).get("translatedText"));
+                }
+                return results;
+            } catch (Exception e) {
+                System.err.println(
+                "Can't parse the response from Google Translate service into JSON object");
+                throw e;
             }
-            return results;
-        } catch (JSONException jse) {
-            System.err.println(
-                    "Can't parse the response from Google Translate service into JSON object");
-            throw jse;
-        }
     }
 
     /**
