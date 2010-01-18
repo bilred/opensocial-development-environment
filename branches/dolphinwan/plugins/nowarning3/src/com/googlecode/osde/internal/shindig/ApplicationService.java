@@ -63,25 +63,32 @@ public class ApplicationService {
         tx.commit();
     }
 
-    @SuppressWarnings("unchecked")
     public List<ApplicationImpl> getApplications() {
         Query query = session.createQuery("select a from ApplicationImpl a order by a.id");
-        return (List<ApplicationImpl>) query.list();
+
+        @SuppressWarnings("unchecked")
+        List<ApplicationImpl> result = (List<ApplicationImpl>) query.list();
+        return result;
     }
 
     public ApplicationImpl getApplication(String appId) {
         Query query = session.createQuery("select a from ApplicationImpl a where a.id = :id");
         query.setParameter("id", appId);
-        return (ApplicationImpl) query.uniqueResult();
+
+        @SuppressWarnings("unchecked")
+        ApplicationImpl result = (ApplicationImpl) query.uniqueResult();
+        return result;
     }
 
-    @SuppressWarnings("unchecked")
     public List<UserPrefImpl> getUserPrefs(String appId, String viewerId) {
         Query query = session.createQuery(
                 "select u from UserPrefImpl u where u.appId = :appId and u.viewerId = :viewerId");
         query.setParameter("appId", appId);
         query.setParameter("viewerId", viewerId);
-        return (List<UserPrefImpl>) query.list();
+
+        @SuppressWarnings("unchecked")
+        List<UserPrefImpl> result = (List<UserPrefImpl>) query.list();
+        return result;
     }
 
     public void storeUserPrefs(String appId, String viewerId, Map<String, String> userPrefMap) {

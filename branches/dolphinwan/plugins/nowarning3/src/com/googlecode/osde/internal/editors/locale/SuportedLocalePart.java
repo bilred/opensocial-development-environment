@@ -162,13 +162,12 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
         return page.getModule();
     }
 
-    @SuppressWarnings("unchecked")
     public void setValuesToModule() {
         Module module = getModule();
         ModulePrefs modulePrefs = module.getModulePrefs();
         List<Locale> locales = modulePrefs.getLocales();
         locales.clear();
-        List<LocaleModel> models = (List<LocaleModel>) supportedLocaleList.getInput();
+        List<LocaleModel> models = getLocaleModels();
         IFile file = (IFile) page.getEditorInput().getAdapter(IResource.class);
         IProject project = file.getProject();
         removeAllMessageBundleFiles(project);
@@ -312,12 +311,10 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
                 }
             }
         }
-
     }
 
-
     @SuppressWarnings("unchecked")
-    public List<LocaleModel> getLocaleModels() {
+    List<LocaleModel> getLocaleModels() {
         return (List<LocaleModel>) supportedLocaleList.getInput();
     }
 
