@@ -29,8 +29,8 @@ class EnumValuesListLabelProvider extends LabelProvider implements ITableLabelPr
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public String getColumnText(Object element, int columnIndex) {
+        @SuppressWarnings("unchecked")
         Map.Entry<String, String> entry = (Map.Entry<String, String>) element;
         switch (columnIndex) {
             case 0:

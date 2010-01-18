@@ -519,7 +519,6 @@ public class Activator extends AbstractUIPlugin {
         return new String(encoded, "UTF-8");
     }
 
-    @SuppressWarnings("unchecked")
     private Map<String, String> decodeSiteMap(String encodeSiteMap) throws IOException,
             ClassNotFoundException {
         if (encodeSiteMap != null && encodeSiteMap.length() > 0) {
@@ -527,7 +526,10 @@ public class Activator extends AbstractUIPlugin {
             byte[] decoded = Base64.decodeBase64(bytes);
             ByteArrayInputStream bais = new ByteArrayInputStream(decoded);
             ObjectInputStream in = new ObjectInputStream(bais);
-            return (Map<String, String>) in.readObject();
+
+            @SuppressWarnings("unchecked")
+            Map<String, String> result = (Map<String, String>) in.readObject();
+            return result;
         } else {
             return null;
         }

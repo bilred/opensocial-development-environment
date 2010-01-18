@@ -134,12 +134,13 @@ public class ApplicationsPart extends SectionPart implements IPartSelectionListe
                         protected IStatus run(IProgressMonitor monitor) {
                             monitor.beginTask("Deleting application from Shindig database.", 1);
                             applicationView.getSite().getShell().getDisplay().syncExec(new Runnable() {
-                                @SuppressWarnings("unchecked")
                                 public void run() {
                                     try {
                                         ApplicationService applicationService =
                                                 Activator.getDefault().getApplicationService();
                                         applicationService.deleteApplication(application);
+
+                                        @SuppressWarnings("unchecked")
                                         List<ApplicationImpl> input = (List<ApplicationImpl>) applicationList.getInput();
                                         input.remove(application);
                                         applicationList.refresh();

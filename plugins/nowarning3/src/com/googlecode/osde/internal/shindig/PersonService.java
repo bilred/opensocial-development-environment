@@ -38,11 +38,13 @@ public class PersonService {
         this.session = session;
     }
 
-    @SuppressWarnings("unchecked")
     public List<Person> getPeople() {
         Query query = session.createQuery("select p from PersonImpl p");
         List<?> people = query.list();
-        return (List<Person>) people;
+
+        @SuppressWarnings("unchecked")
+        List<Person> result = (List<Person>) people;
+        return result;
     }
 
     public Person storePerson(Person person) {
@@ -59,13 +61,15 @@ public class PersonService {
         return storePerson(person);
     }
 
-    @SuppressWarnings("unchecked")
+
     public void deletePerson(Person person) {
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery(
                 "select r from RelationshipImpl r where r.person = :person or r.target = :target");
         query.setParameter("person", person);
         query.setParameter("target", person);
+
+        @SuppressWarnings("unchecked")
         List<RelationshipImpl> relations = (List<RelationshipImpl>) query.list();
         for (RelationshipImpl relation : relations) {
             session.delete(relation);
@@ -73,6 +77,8 @@ public class PersonService {
         query = session.createQuery(
             "select a from ApplicationMemberImpl a where a.person = :person");
         query.setParameter("person", person);
+
+        @SuppressWarnings("unchecked")
         List<ApplicationMemberImpl> applicationMembers = (List<ApplicationMemberImpl>)query.list();
         for (ApplicationMemberImpl applicationMember : applicationMembers) {
             session.delete(applicationMember);
@@ -81,13 +87,15 @@ public class PersonService {
         tx.commit();
     }
 
-    @SuppressWarnings("unchecked")
+
     public List<RelationshipImpl> getRelationshipList(Person person) {
         Query query =
                 session.createQuery("select r from RelationshipImpl r where r.person = :person");
         query.setParameter("person", person);
-        List<?> results = query.list();
-        return (List<RelationshipImpl>) results;
+
+        @SuppressWarnings("unchecked")
+        List<RelationshipImpl> results = (List<RelationshipImpl>) query.list();
+        return results;
     }
 
     public RelationshipImpl createRelationship(String groupId, Person person, Person target)
@@ -114,10 +122,11 @@ public class PersonService {
             deletePerson(person);
         }
     }
-    
-    @SuppressWarnings("unchecked")
+
     public List<Person> getPeople(ApplicationImpl application) {
         Query query = session.createQuery("select p from PersonImpl p");
+
+        @SuppressWarnings("unchecked")
         List<Person> people = (List<Person>)query.list();
         for (Person person : people) {
             person.setHasApp(false);
@@ -125,6 +134,8 @@ public class PersonService {
         query = session.createQuery(
                 "select a.person from ApplicationMemberImpl a where a.application = :application");
         query.setParameter("application", application);
+
+        @SuppressWarnings("unchecked")
         List<Person> hasMembers = (List<Person>)query.list();
         for (Person hasMember : hasMembers) {
             for (Person person : people) {

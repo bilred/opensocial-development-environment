@@ -214,7 +214,6 @@ public class FeaturesPart extends AbstractFormPart {
         return button;
     }
 
-    @SuppressWarnings("unchecked")
     public void setValuesToModule() {
         Module module = getModule();
         ModulePrefs modulePrefs = module.getModulePrefs();
@@ -230,12 +229,18 @@ public class FeaturesPart extends AbstractFormPart {
                 requires.add(require);
             }
         }
-        Set<String> freeFeatures = (Set<String>) freeFraturesList.getInput();
+
+        Set<String> freeFeatures = getFeatures();
         for (String featureName : freeFeatures) {
             Require require = new Require();
             require.setFeature(featureName);
             requires.add(require);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Set<String> getFeatures() {
+        return (Set<String>) freeFraturesList.getInput();
     }
 
     public void changeModel() {
@@ -247,7 +252,6 @@ public class FeaturesPart extends AbstractFormPart {
         public void widgetDefaultSelected(SelectionEvent e) {
         }
 
-        @SuppressWarnings("unchecked")
         public void widgetSelected(SelectionEvent e) {
             InputDialog dialog = new InputDialog(
                     page.getSite().getShell(), "Add feature", "Please input the feature name.", "",
@@ -267,7 +271,7 @@ public class FeaturesPart extends AbstractFormPart {
                 if (featureName != null) {
                     buttonMap.get(featureName).setSelection(true);
                 } else {
-                    ((Set<String>) freeFraturesList.getInput()).add(featureRealName);
+                    getFeatures().add(featureRealName);
                     freeFraturesList.refresh();
                 }
                 markDirty();
@@ -281,7 +285,6 @@ public class FeaturesPart extends AbstractFormPart {
         public void widgetDefaultSelected(SelectionEvent e) {
         }
 
-        @SuppressWarnings("unchecked")
         public void widgetSelected(SelectionEvent e) {
             ISelection selection = freeFraturesList.getSelection();
             if (!selection.isEmpty()) {
@@ -290,8 +293,7 @@ public class FeaturesPart extends AbstractFormPart {
                 if (MessageDialog.openConfirm(page.getSite().getShell(),
                         "Deleting feature",
                         "Do you want to delete the feature '" + feature + "'?")) {
-                    Set<String> models = (Set<String>) freeFraturesList.getInput();
-                    models.remove(feature);
+                    getFeatures().remove(feature);
                     freeFraturesList.refresh();
                     markDirty();
                 }

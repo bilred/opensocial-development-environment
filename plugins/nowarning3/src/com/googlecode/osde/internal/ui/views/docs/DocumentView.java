@@ -249,11 +249,12 @@ public class DocumentView extends AbstractView {
         public void widgetDefaultSelected(SelectionEvent e) {
         }
 
-        @SuppressWarnings("unchecked")
         public void widgetSelected(SelectionEvent e) {
             ISelection selection = siteListTable.getSelection();
             if (!selection.isEmpty()) {
                 IStructuredSelection structured = (IStructuredSelection) selection;
+
+                @SuppressWarnings("unchecked")
                 Map.Entry<String, String> entry =
                         (Map.Entry<String, String>) structured.getFirstElement();
                 if (MessageDialog.openConfirm(getSite().getShell(), "Confirm",
