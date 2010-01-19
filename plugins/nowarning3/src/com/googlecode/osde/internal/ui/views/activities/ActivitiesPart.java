@@ -30,6 +30,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -160,6 +161,12 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
     }
 
     public void selectionChanged(IFormPart part, ISelection selection) {
+        if (part == this) {
+            return;
+        }
+        if (!(selection instanceof IStructuredSelection)) {
+            return;
+        }
     }
 
 }

@@ -43,8 +43,9 @@ import org.eclipse.core.resources.IProject;
  * This iGoogle utility class provides hosting-related methods to
  * interact with iGoogle (http://www.google.com/ig) gadget container.
  * <p>
- * Samples of usages could be found at
- * <code>IgHostingUtilTest#testLifeCycleForHostedFile()</code> etc.
+ * Samples of usages could be found at {@link
+ * com.googlecode.osde.internal.igoogle.IgHostingUtilTest#testLifeCycleForHostedFile()
+ * IgHostingUtilTest#testLifeCycleForHostedFile()} etc.
  *
  * @author albert.cheng.ig@gmail.com
  */

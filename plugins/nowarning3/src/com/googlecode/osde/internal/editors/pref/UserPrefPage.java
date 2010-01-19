@@ -313,11 +313,12 @@ public class UserPrefPage implements IDetailsPage {
         public void widgetDefaultSelected(SelectionEvent e) {
         }
 
-        @SuppressWarnings({"unchecked"})
         public void widgetSelected(SelectionEvent e) {
             ISelection selection = enumValuesList.getSelection();
             if (!selection.isEmpty()) {
                 IStructuredSelection structured = (IStructuredSelection) selection;
+
+                @SuppressWarnings({"unchecked"})
                 Map.Entry<String, String> model =
                         (Map.Entry<String, String>) structured.getFirstElement();
                 String value = model.getKey();
