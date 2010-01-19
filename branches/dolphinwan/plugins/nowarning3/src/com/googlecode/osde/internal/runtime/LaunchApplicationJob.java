@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.googlecode.osde.internal.Activator;
@@ -167,11 +168,12 @@ public class LaunchApplicationJob extends Job {
         }
     }
 
-    @SuppressWarnings({"unchecked"})
     protected String createJsonFromUserPrefs() throws ConnectionException {
         ApplicationService service = Activator.getDefault().getApplicationService();
         List<UserPrefImpl> userPrefs = service.getUserPrefs(appId, viewer);
-        JSONObject up = new JSONObject();
+
+        @SuppressWarnings({"unchecked"})
+        Map<String, String> up = new JSONObject();
         for (UserPrefImpl userPref : userPrefs) {
             String value = userPref.getValue();
             StringTokenizer st = new StringTokenizer(value);
