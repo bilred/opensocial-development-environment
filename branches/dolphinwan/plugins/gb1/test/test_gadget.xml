@@ -8,7 +8,8 @@
             author="author1"
             author_email="authorEmail1"
             screenshot="screenshot1"
-            thumbnail="thumbnail1">
+            thumbnail="thumbnail1"
+            height="78">
         <Require feature="feature1">
             <Param name="name1">value1</Param>
         </Require>
