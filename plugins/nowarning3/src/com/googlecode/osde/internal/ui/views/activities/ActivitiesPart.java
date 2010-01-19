@@ -161,6 +161,7 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
     }
 
     public void selectionChanged(IFormPart part, ISelection selection) {
+        // TODO: the following lines seems to be dead code.
         if (part == this) {
             return;
         }
