@@ -67,7 +67,6 @@ public class RunAction
                         launch(gadgetXmlFile, project);
                     }
                 });
-                return;
             }
         } else {
             launch(gadgetXmlFile, project);

@@ -58,6 +58,8 @@ public class AppDataService {
     public void removeAll() {
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery("select a from ApplicationDataMapImpl a");
+
+        @SuppressWarnings("unchecked")
         List<ApplicationDataMapImpl> appDatas = (List<ApplicationDataMapImpl>) query.list();
         for (ApplicationDataMapImpl appData : appDatas) {
             session.delete(appData);

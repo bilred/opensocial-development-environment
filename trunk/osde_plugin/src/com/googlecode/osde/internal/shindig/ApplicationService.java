@@ -65,14 +65,19 @@ public class ApplicationService {
 
     public List<ApplicationImpl> getApplications() {
         Query query = session.createQuery("select a from ApplicationImpl a order by a.id");
-        return (List<ApplicationImpl>) query.list();
+
+        @SuppressWarnings("unchecked")
+        List<ApplicationImpl> result = (List<ApplicationImpl>) query.list();
+        return result;
     }
 
     public ApplicationImpl getApplication(String appId) {
         Query query = session.createQuery("select a from ApplicationImpl a where a.id = :id");
         query.setParameter("id", appId);
-        ApplicationImpl application = (ApplicationImpl) query.uniqueResult();
-        return application;
+
+        @SuppressWarnings("unchecked")
+        ApplicationImpl result = (ApplicationImpl) query.uniqueResult();
+        return result;
     }
 
     public List<UserPrefImpl> getUserPrefs(String appId, String viewerId) {
@@ -80,7 +85,10 @@ public class ApplicationService {
                 "select u from UserPrefImpl u where u.appId = :appId and u.viewerId = :viewerId");
         query.setParameter("appId", appId);
         query.setParameter("viewerId", viewerId);
-        return (List<UserPrefImpl>) query.list();
+
+        @SuppressWarnings("unchecked")
+        List<UserPrefImpl> result = (List<UserPrefImpl>) query.list();
+        return result;
     }
 
     public void storeUserPrefs(String appId, String viewerId, Map<String, String> userPrefMap) {

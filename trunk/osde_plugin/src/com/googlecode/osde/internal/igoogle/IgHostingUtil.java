@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.googlecode.osde.internal.builders.GadgetBuilder;
-import com.googlecode.osde.internal.igoogle.IgHostingUtilTest;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.apache.http.HttpResponse;
@@ -43,9 +42,6 @@ import org.eclipse.core.resources.IProject;
 /**
  * This iGoogle utility class provides hosting-related methods to
  * interact with iGoogle (http://www.google.com/ig) gadget container.
- * <p>
- * Samples of usages could be found at
- * {@link IgHostingUtilTest#testLifeCycleForHostedFile()} etc.
  *
  * @author albert.cheng.ig@gmail.com
  */

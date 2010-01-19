@@ -17,7 +17,9 @@
  */
 package com.googlecode.osde.internal.shindig;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.ConnectionException;
@@ -260,7 +262,12 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         Enum<LookingFor> lookingFor2 = new LookingForImpl();
         lookingFor2.setValue(LookingFor.NETWORKING);
         lookingFor2.setDisplayValue("Networking");
-        canonical.setLookingFor(Arrays.asList(lookingFor1, lookingFor2));
+
+        List<Enum<LookingFor>> lookingFors = new ArrayList<Enum<LookingFor>>();
+        lookingFors.add(lookingFor1);
+        lookingFors.add(lookingFor2);
+        canonical.setLookingFor(lookingFors);
+
         canonical.setMovies(Arrays.asList("Iron Man", "Nosferatu"));
         canonical.setMusic(Arrays.asList("Chieftains", "Beck"));
         Name name = new NameImpl();
@@ -280,7 +287,7 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         PhoneNumberImpl phone2 = new PhoneNumberImpl();
         phone2.setValue("999-999-999");
         phone2.setType("mobile");
-        canonical.setPhoneNumbers(Arrays.asList((ListField) phone1, (ListField) phone2));
+        canonical.setPhoneNumbers(Arrays.<ListField>asList(phone1, phone2));
         canonical.setPoliticalViews("open leaning");
         UrlImpl profileSong = new UrlImpl();
         profileSong.setValue("http://www.example.org/songs/OnlyTheLonely.mp3");
@@ -316,7 +323,7 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         url2.setValue("http://www.example.org/pic/?id=1");
         url2.setLinkText("my awesome picture");
         url2.setType("thumbnail");
-        canonical.setUrls(Arrays.asList((Url) url1, (Url) url2));
+        canonical.setUrls(Arrays.<Url>asList(url1, url2));
         return canonical;
     }
 

@@ -56,7 +56,6 @@ public class RunFromEditorAction extends AbstractRunAction implements IEditorAct
                             launch(gadgetXmlFile, project);
                         }
                     });
-                    return;
                 }
             } else {
                 launch(gadgetXmlFile, project);

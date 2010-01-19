@@ -26,9 +26,8 @@ import java.util.EnumMap;
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.OsdeProjectNature;
 import com.googlecode.osde.internal.editors.GadgetXmlEditor;
-import com.googlecode.osde.internal.utils.StatusUtil;
-
 import com.googlecode.osde.internal.gadgets.ViewName;
+import com.googlecode.osde.internal.utils.StatusUtil;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -36,7 +35,6 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -205,11 +203,6 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
         }
         newProject = newProjectHandle;
         return newProject;
-    }
-
-    public void setInitializationData(IConfigurationElement config, String propertyName,
-            Object data) {
-        super.setInitializationData(config, propertyName, data);
     }
 
 }

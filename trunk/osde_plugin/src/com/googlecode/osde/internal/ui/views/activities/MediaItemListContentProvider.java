@@ -31,9 +31,9 @@ public class MediaItemListContentProvider implements IStructuredContentProvider 
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
 
+    @SuppressWarnings("unchecked")
     public Object[] getElements(Object inputElement) {
-        List<MediaItem> mediaItems = (List<MediaItem>) inputElement;
-        return mediaItems.toArray();
+        return ((List<MediaItem>) inputElement).toArray();
     }
 
 }

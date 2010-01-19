@@ -220,7 +220,6 @@ public class DocumentView extends AbstractView {
             String url = (String) sitesCombo.getData(sitesCombo.getItem(idx));
             if (url != null && url.length() > 0) {
                 browser.setUrl(url);
-                return;
             }
         }
     }
@@ -254,6 +253,8 @@ public class DocumentView extends AbstractView {
             ISelection selection = siteListTable.getSelection();
             if (!selection.isEmpty()) {
                 IStructuredSelection structured = (IStructuredSelection) selection;
+
+                @SuppressWarnings("unchecked")
                 Map.Entry<String, String> entry =
                         (Map.Entry<String, String>) structured.getFirstElement();
                 if (MessageDialog.openConfirm(getSite().getShell(), "Confirm",
