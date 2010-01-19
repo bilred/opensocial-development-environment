@@ -136,8 +136,7 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
                 int index = peopleCombo.getSelectionIndex();
                 if (index != -1) {
                     Person person = (Person) peopleCombo.getData(peopleCombo.getItem(index));
-                    List<Activity> activities =
-                            (List<Activity>) activityService.getActivities(person);
+                    List<Activity> activities = activityService.getActivities(person);
                     activityList.setInput(activities);
                 }
             } catch (ConnectionException e) {
@@ -162,6 +161,7 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
     }
 
     public void selectionChanged(IFormPart part, ISelection selection) {
+        // TODO: the following lines seems to be dead code.
         if (part == this) {
             return;
         }

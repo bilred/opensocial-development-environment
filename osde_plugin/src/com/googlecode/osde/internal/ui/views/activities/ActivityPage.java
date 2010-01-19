@@ -43,8 +43,6 @@ public class ActivityPage implements IDetailsPage {
 
     private IManagedForm managedForm;
 
-    private ActivitiesView activitiesView;
-
     private Activity activity;
 
     private Text titleText;
@@ -71,7 +69,6 @@ public class ActivityPage implements IDetailsPage {
 
     public ActivityPage(ActivitiesView activitiesView) {
         super();
-        this.activitiesView = activitiesView;
     }
 
     public void createContents(Composite parent) {

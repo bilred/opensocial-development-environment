@@ -198,9 +198,7 @@ public class MessageBundlePage implements IDetailsPage {
         public void widgetSelected(SelectionEvent e) {
             ISelection selection = messagesList.getSelection();
             if (!selection.isEmpty()) {
-                IStructuredSelection structured = (IStructuredSelection) selection;
-                final Map.Entry<String, String> message =
-                        (Map.Entry<String, String>) structured.getFirstElement();
+                final Map.Entry<String, String> message = getSelectedMessage(selection);
                 if (MessageDialog.openConfirm(page.getSite().getShell(),
                         "Deleting message",
                         "Do you want to delete message '" + message.getKey() + "'?")) {
@@ -215,6 +213,11 @@ public class MessageBundlePage implements IDetailsPage {
             }
         }
 
+        @SuppressWarnings({"unchecked"})
+        private Map.Entry<String, String> getSelectedMessage(ISelection selection) {
+            IStructuredSelection structured = (IStructuredSelection) selection;
+            return (Map.Entry<String, String>) structured.getFirstElement();
+        }
     }
 
     public void commit(boolean onSave) {

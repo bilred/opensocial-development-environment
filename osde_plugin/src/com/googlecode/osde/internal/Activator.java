@@ -93,7 +93,7 @@ public class Activator extends AbstractUIPlugin {
     // The shared instance
     private static Activator plugin;
 
-    private Map<RGB, Color> colorMap = new HashMap<RGB, Color>();
+    private final Map<RGB, Color> colorMap = new HashMap<RGB, Color>();
 
     private SessionFactory sessionFactory;
     private PersonService personService;
@@ -105,12 +105,6 @@ public class Activator extends AbstractUIPlugin {
     private LaunchApplicationInformation lastApplicationInformation;
 
     private Handler logHandler;
-
-    /**
-     * The constructor
-     */
-    public Activator() {
-    }
 
     /**
      * This method is called upon plug-in activation
@@ -528,7 +522,10 @@ public class Activator extends AbstractUIPlugin {
             byte[] decoded = Base64.decodeBase64(bytes);
             ByteArrayInputStream bais = new ByteArrayInputStream(decoded);
             ObjectInputStream in = new ObjectInputStream(bais);
-            return (Map<String, String>) in.readObject();
+
+            @SuppressWarnings("unchecked")
+            Map<String, String> result = (Map<String, String>) in.readObject();
+            return result;
         } else {
             return null;
         }

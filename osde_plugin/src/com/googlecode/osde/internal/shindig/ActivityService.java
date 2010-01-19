@@ -39,12 +39,17 @@ public class ActivityService {
         Query query = session.createQuery(
                 "select a from ActivityImpl a where a.userId = :userId order by a.postedTime desc");
         query.setParameter("userId", person.getId());
-        return (List<Activity>) query.list();
+
+        @SuppressWarnings("unchecked")
+        List<Activity> result = (List<Activity>) query.list();
+        return result;
     }
 
     public void removeAll() {
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery("select a from ActivityImpl a");
+
+        @SuppressWarnings("unchecked")
         List<ActivityImpl> activities = (List<ActivityImpl>) query.list();
         for (ActivityImpl activity : activities) {
             session.delete(activity);

@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 public class FriendListContentProvider implements IStructuredContentProvider {
 
+    @SuppressWarnings("unchecked")
     public Object[] getElements(Object inputElement) {
         return ((List<RelationshipImpl>) inputElement).toArray();
     }

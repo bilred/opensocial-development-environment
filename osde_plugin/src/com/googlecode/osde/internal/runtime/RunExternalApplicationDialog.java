@@ -24,8 +24,6 @@ import java.util.List;
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
-import org.eclipse.core.runtime.QualifiedName;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.shindig.social.opensocial.model.Person;
 import org.eclipse.jface.dialogs.TitleAreaDialog;

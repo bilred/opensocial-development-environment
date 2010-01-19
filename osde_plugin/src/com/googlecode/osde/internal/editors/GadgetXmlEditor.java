@@ -239,7 +239,6 @@ public class GadgetXmlEditor extends FormEditor {
         return content;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Object getAdapter(Class adapter) {
         if (adapter == IContentOutlinePage.class) {
