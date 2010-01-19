@@ -78,6 +78,7 @@ public class GadgetXmlLoadTest extends TestCase {
         assertEquals("authorEmail1", modulePrefs.getAuthorEmail());
         assertEquals("screenshot1", modulePrefs.getScreenshot());
         assertEquals("thumbnail1", modulePrefs.getThumbnail());
+        assertEquals("78", modulePrefs.getExtraProperties().get("height"));
 
         List<Require> requires = modulePrefs.getRequires();
         Require require = requires.get(0);
