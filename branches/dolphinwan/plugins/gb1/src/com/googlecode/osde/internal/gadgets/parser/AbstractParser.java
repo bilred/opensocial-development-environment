@@ -128,7 +128,11 @@ public abstract class AbstractParser implements IParser {
          * Converts underscore style to camel-case style. For example,
          * "some_useful_variable" is converted to "someUsefulVariable".
          */
-        private String toCamelCase(String name) {
+        static String toCamelCase(String name) {
+            if (name == null) {
+                return null;
+            }
+
             String[] ps = name.split("_");
             if (ps == null || ps.length == 0) {
                 return name;
@@ -146,8 +150,12 @@ public abstract class AbstractParser implements IParser {
             return b.toString();
         }
 
-        private String capitalize(String name) {
-            return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        private static String capitalize(String name) {
+            if (name.length() > 0) {
+                return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+            } else {
+                return "";
+            }
         }
     }
 }
