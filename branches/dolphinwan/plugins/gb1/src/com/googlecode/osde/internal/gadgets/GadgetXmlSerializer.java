@@ -19,7 +19,9 @@ package com.googlecode.osde.internal.gadgets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.googlecode.osde.internal.gadgets.parser.AcceptExtraProperties;
 import com.googlecode.osde.internal.utils.Gadgets;
 
 import com.googlecode.osde.internal.gadgets.model.MessageBundle.Msg;
@@ -78,6 +80,9 @@ public class GadgetXmlSerializer {
             createAttribute("href", content.getHref(), sb);
             createAttribute("type", content.getType(), sb);
             createAttribute("view", content.getView(), sb);
+            createAttribute("preferred_width", content.getPreferredWidth(), sb);
+            createAttribute("preferred_height", content.getPreferredHeight(), sb);
+
             String body = content.getValue();
             if (StringUtils.isNotEmpty(body)) {
                 sb.append("><![CDATA[");
@@ -202,8 +207,17 @@ public class GadgetXmlSerializer {
         for (String line : list) {
             sb.append("\n" + line);
         }
+
+        outputExtraProperties(modulePrefs, sb);
+
         sb.append(">\n");
         return sb.toString();
+    }
+
+    private static void outputExtraProperties(AcceptExtraProperties obj, StringBuilder sb) {
+        for (Map.Entry<String, String> entry : obj.getExtraProperties().entrySet()) {
+            createAttribute(entry.getKey(), entry.getValue(), sb);
+        }
     }
 
     private static void createModulePrefsAttribute(String name, String value, List<String> list) {
@@ -221,9 +235,12 @@ public class GadgetXmlSerializer {
         return result;
     }
 
-    private static void createAttribute(String name, String value, StringBuilder sb) {
-        if (StringUtils.isNotEmpty(value)) {
-            sb.append(" " + name + "=\"" + escape(value) + "\"");
+    private static void createAttribute(String name, Object value, StringBuilder sb) {
+        if (value != null) {
+            String stringValue = value.toString();
+            if (StringUtils.isNotEmpty(stringValue)) {
+                sb.append(" " + name + "=\"" + escape(stringValue) + "\"");
+            }
         }
     }
 
