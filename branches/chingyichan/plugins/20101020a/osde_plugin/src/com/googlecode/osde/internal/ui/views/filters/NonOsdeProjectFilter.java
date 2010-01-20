@@ -28,7 +28,6 @@ import com.googlecode.osde.internal.utils.Logger;
 
 /**
  * @author chingyichan.tw@gmail.com (qrtt1)
- *
  */
 public class NonOsdeProjectFilter extends ViewerFilter {
 
