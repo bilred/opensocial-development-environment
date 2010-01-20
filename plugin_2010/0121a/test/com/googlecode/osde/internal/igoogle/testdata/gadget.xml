@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+    <ModulePrefs
+            title="DummyTitle"
+            author_email="albert.cheng.ig@gmail.com">
+        <Require feature="opensocial-0.9" />
+        <Locale lang="zh" country="TW" messages="http://localhost:8080/aaa/messages_zh_TW.xml" />
+    </ModulePrefs>
+    <Content type="html" view="home"><![CDATA[<!-- The code for Home view is here. -->
+<div>Home view content</div>]]></Content>
+</Module>
