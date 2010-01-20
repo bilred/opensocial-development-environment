@@ -31,6 +31,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
@@ -231,7 +232,7 @@ public class DocumentView extends AbstractView {
 
         public void widgetSelected(SelectionEvent e) {
             AddSiteDialog dialog = new AddSiteDialog(getSite().getShell());
-            if (dialog.open() == AddSiteDialog.OK) {
+            if (dialog.open() == Window.OK) {
                 String name = dialog.getName();
                 String url = dialog.getUrl();
                 siteMap.put(name, url);
