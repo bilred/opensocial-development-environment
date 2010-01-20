@@ -74,7 +74,6 @@ public class ApplicationService {
     public ApplicationImpl getApplication(String appId) {
         Query query = session.createQuery("select a from ApplicationImpl a where a.id = :id");
         query.setParameter("id", appId);
-
         ApplicationImpl result = (ApplicationImpl) query.uniqueResult();
         return result;
     }

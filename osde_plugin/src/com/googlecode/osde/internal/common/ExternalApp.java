@@ -51,7 +51,7 @@ public class ExternalApp {
     /**
      * Terminates running application instance, if any.
      *
-     * @throws DebugException if failed to terminate the application.
+     * @throws ExternalAppException if failed to terminate the application.
      */
     public void stop() throws ExternalAppException {
         ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
@@ -73,7 +73,7 @@ public class ExternalApp {
      * Launches this application using its existing configuration. Nothing
      * happens if no configuration is found.
      *
-     * @throws CoreException if failed to launch the application
+     * @throws ExternalAppException if failed to launch the application
      */
     public void start() throws ExternalAppException {
         ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
