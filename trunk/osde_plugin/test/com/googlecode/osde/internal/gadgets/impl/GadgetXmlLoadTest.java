@@ -45,7 +45,13 @@ import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
 import com.googlecode.osde.internal.gadgets.parser.ParserType;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
+/**
+ * Tests for parsers.
+ *
+ * @author dolphin.wan@gmail.com (Dolphin Wan)
+ */
 public class GadgetXmlLoadTest extends TestCase {
 
     private IParser target;
@@ -62,6 +68,7 @@ public class GadgetXmlLoadTest extends TestCase {
         target = null;
     }
 
+    @Test
     public void testParseGadgetXml() throws Exception {
         File file = new File("test/test_gadget.xml");
         FileInputStream in = new FileInputStream(file);
@@ -78,6 +85,7 @@ public class GadgetXmlLoadTest extends TestCase {
         assertEquals("authorEmail1", modulePrefs.getAuthorEmail());
         assertEquals("screenshot1", modulePrefs.getScreenshot());
         assertEquals("thumbnail1", modulePrefs.getThumbnail());
+        assertEquals("78", modulePrefs.getExtraProperties().get("height"));
 
         List<Require> requires = modulePrefs.getRequires();
         Require require = requires.get(0);
