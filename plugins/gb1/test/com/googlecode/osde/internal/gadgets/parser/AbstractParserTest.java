@@ -39,16 +39,20 @@ public class AbstractParserTest {
     public void testToCamelCase() {
         assertNull(toCamelCase(null));
         assertEquals("", toCamelCase(""));
+        assertEquals("u", toCamelCase("u"));
         assertEquals("usual", toCamelCase("usual"));
         assertEquals("usualWord", toCamelCase("usualWord"));
         assertEquals("usualWord", toCamelCase("usual_word"));
         assertEquals("usualWord", toCamelCase("usual_Word"));
         assertEquals("threeUsualWords", toCamelCase("three_usual_words"));
         assertEquals("aBeC", toCamelCase("a__be_c"));
+        assertEquals("word", toCamelCase("_word"));
+        assertEquals("word", toCamelCase("word_"));
+        assertEquals("word", toCamelCase("Word"));
     }
 
     @Test
-    public void testA() throws ParserException {
+    public void testAcceptExtraProperties() throws ParserException {
         AbstractParser parser = new AbstractParser(){
             @Override
             protected void initialize(Digester digester) {
