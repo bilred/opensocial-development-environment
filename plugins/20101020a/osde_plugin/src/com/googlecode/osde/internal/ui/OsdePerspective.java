@@ -38,7 +38,7 @@ public class OsdePerspective implements IPerspectiveFactory {
         String editorArea = factory.getEditorArea();
         //
         IFolderLayout left = factory.createFolder("left", IPageLayout.LEFT, 0.25f, editorArea);
-        left.addView(IPageLayout.ID_RES_NAV);
+        left.addView(IPageLayout.ID_PROJECT_EXPLORER);
         //
         IFolderLayout bottom =
                 factory.createFolder("bottom", IPageLayout.BOTTOM, 0.70f, editorArea);
@@ -79,7 +79,7 @@ public class OsdePerspective implements IPerspectiveFactory {
         factory.addShowViewShortcut("org.eclipse.team.ccvs.ui.AnnotateView");
         factory.addShowViewShortcut("org.eclipse.team.ui.GenericHistoryView");
         factory.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
-        factory.addShowViewShortcut(IPageLayout.ID_RES_NAV);
+        factory.addShowViewShortcut(IPageLayout.ID_PROJECT_EXPLORER);
         factory.addShowViewShortcut(IPageLayout.ID_PROBLEM_VIEW);
         factory.addShowViewShortcut(IPageLayout.ID_OUTLINE);
     }
