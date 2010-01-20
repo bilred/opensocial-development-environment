@@ -19,9 +19,12 @@ package com.googlecode.osde.internal.gadgets.model;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.googlecode.osde.internal.gadgets.model.MessageBundle.Msg;
+import com.googlecode.osde.internal.gadgets.parser.AcceptExtraProperties;
 
 public class Module {
 
@@ -132,7 +135,7 @@ public class Module {
      * ModulePrefs contains sub-elements: Locale, Require, Optional, Preload,
      * icon, link, and OAuth.
      */
-    public static class ModulePrefs {
+    public static class ModulePrefs implements AcceptExtraProperties {
 
         protected List<Locale> locales = new ArrayList<Locale>();
         protected List<Require> requires = new ArrayList<Require>();
@@ -149,6 +152,7 @@ public class Module {
         protected String authorEmail;
         protected String screenshot;
         protected String thumbnail;
+        private Map<String, String> extraProperties = new LinkedHashMap<String, String>();
 
         public List<Locale> getLocales() {
             return locales;
@@ -260,6 +264,10 @@ public class Module {
 
         public void setThumbnail(String thumbnail) {
             this.thumbnail = thumbnail;
+        }
+
+        public Map<String, String> getExtraProperties() {
+            return extraProperties;
         }
 
         public static class Require {

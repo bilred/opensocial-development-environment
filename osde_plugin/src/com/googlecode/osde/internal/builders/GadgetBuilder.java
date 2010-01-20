@@ -76,6 +76,7 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
         ignoreFolderPattern = Pattern.compile("(\\.svn$)|(\\.git$)|(\\.hg$)|(\\.cvs$)|(\\.bzr$)");
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
         IProject project = getProject();

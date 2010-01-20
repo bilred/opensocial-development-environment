@@ -16,29 +16,22 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.googlecode.osde.internal.common;
+package com.googlecode.osde.internal.gadgets.parser;
+
+import java.util.Map;
 
 /**
- * Exception thrown when an operation to an {@link ExternalApp}
- * fails.
+ * Implemented by Java Beans that are deserialized from an
+ * {@link AbstractParser} and want to accept any XML attributes which cannot
+ * be automatically assigned by {@link AbstractParser}.
  *
- * @author Dolphin Wan
+ * @author dolphin.wan@gmail.com (Dolphin Wan)
  */
-public class ExternalAppException extends Exception {
-    private static final long serialVersionUID = 1L;
+public interface AcceptExtraProperties {
 
-    public ExternalAppException() {
-    }
-
-    public ExternalAppException(String message) {
-        super(message);
-    }
-
-    public ExternalAppException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ExternalAppException(Throwable cause) {
-        super(cause);
-    }
+    /**
+     * Returns a map in which an {@link AbstractParser} puts XML attributes
+     * that cannot be automatically assigned to this object instance.
+     */
+    Map<String, String> getExtraProperties();
 }

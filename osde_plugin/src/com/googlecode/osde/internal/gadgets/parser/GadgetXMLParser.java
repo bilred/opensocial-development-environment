@@ -45,160 +45,79 @@ import org.apache.commons.digester.SetPropertiesRule;
  */
 public class GadgetXMLParser extends AbstractParser {
 
-    public GadgetXMLParser() {
-        super();
-    }
-
     protected void initialize(Digester digester) {
         digester.addRule("Module", new ObjectCreateRule(Module.class));
 
-        digester.addRule("Module/ModulePrefs", new ObjectCreateRule(Module.ModulePrefs.class));
-        String[] attributeNames =
-                new String[] {"title", "title_url", "description", "author", "author_email",
-                        "screenshot", "thumbnail"};
-        String[] propertyNames =
-                new String[] {"title", "titleUrl", "description", "author", "authorEmail",
-                        "screenshot", "thumbnail"};
-        digester.addRule("Module/ModulePrefs",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs",
+                new ObjectFactory(Module.ModulePrefs.class));
         digester.addRule("Module/ModulePrefs", new SetNextRule("setModulePrefs"));
 
-        digester.addRule("Module/ModulePrefs/Require",
-                new ObjectCreateRule(Module.ModulePrefs.Require.class));
-        attributeNames = new String[] {"feature"};
-        propertyNames = new String[] {"feature"};
-        digester.addRule("Module/ModulePrefs/Require",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addRule("*/Param", new ObjectCreateRule(Param.class));
+        digester.addRule("*/Param", new SetPropertiesRule("name", "name"));
+        digester.addRule("*/Param", new CallMethodRule("setValue", 0));
+        digester.addRule("*/Param", new SetNextRule("addParam"));
+
+        digester.addFactoryCreate("Module/ModulePrefs/Require",
+                new ObjectFactory(Module.ModulePrefs.Require.class));
         digester.addRule("Module/ModulePrefs/Require", new SetNextRule("addRequire"));
 
-        digester.addRule("Module/ModulePrefs/Require/Param", new ObjectCreateRule(Param.class));
-        attributeNames = new String[] {"name"};
-        propertyNames = new String[] {"name"};
-        digester.addRule("Module/ModulePrefs/Require/Param",
-                new SetPropertiesRule(attributeNames, propertyNames));
-        digester.addRule("Module/ModulePrefs/Require/Param", new CallMethodRule("setValue", 0));
-        digester.addRule("Module/ModulePrefs/Require/Param", new SetNextRule("addParam"));
-
-        digester.addRule("Module/ModulePrefs/Optional",
-                new ObjectCreateRule(Module.ModulePrefs.Optional.class));
-        attributeNames = new String[] {"feature"};
-        propertyNames = new String[] {"feature"};
-        digester.addRule("Module/ModulePrefs/Optional",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/Optional",
+                new ObjectFactory(Module.ModulePrefs.Optional.class));
         digester.addRule("Module/ModulePrefs/Optional", new SetNextRule("addOptional"));
 
-        digester.addRule("Module/ModulePrefs/Optional/Param", new ObjectCreateRule(Param.class));
-        attributeNames = new String[] {"name"};
-        propertyNames = new String[] {"name"};
-        digester.addRule("Module/ModulePrefs/Optional/Param",
-                new SetPropertiesRule(attributeNames, propertyNames));
-        digester.addRule("Module/ModulePrefs/Optional/Param", new CallMethodRule("setValue", 0));
-        digester.addRule("Module/ModulePrefs/Optional/Param", new SetNextRule("addParam"));
-
-        digester.addRule("Module/ModulePrefs/Icon",
-                new ObjectCreateRule(Module.ModulePrefs.Icon.class));
-        attributeNames = new String[] {"mode", "type"};
-        propertyNames = new String[] {"mode", "type"};
-        digester.addRule("Module/ModulePrefs/Icon",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/Icon",
+                new ObjectFactory(Module.ModulePrefs.Icon.class));
         digester.addRule("Module/ModulePrefs/Icon", new CallMethodRule("setValue", 0));
         digester.addRule("Module/ModulePrefs/Icon", new SetNextRule("addIcon"));
 
-        digester.addRule("Module/ModulePrefs/Link",
-                new ObjectCreateRule(Module.ModulePrefs.Link.class));
-        attributeNames = new String[] {"href", "rel", "method"};
-        propertyNames = new String[] {"href", "rel", "method"};
-        digester.addRule("Module/ModulePrefs/Link",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/Link",
+                new ObjectFactory(Module.ModulePrefs.Link.class));
         digester.addRule("Module/ModulePrefs/Link", new SetNextRule("addLink"));
 
-        digester.addRule("Module/ModulePrefs/Locale",
-                new ObjectCreateRule(Module.ModulePrefs.Locale.class));
-        attributeNames = new String[] {"lang", "country", "messages", "language_direction"};
-        propertyNames = new String[] {"lang", "country", "messages", "languageDirection"};
-        digester.addRule("Module/ModulePrefs/Locale",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/Locale",
+                new ObjectFactory(Module.ModulePrefs.Locale.class));
         digester.addRule("Module/ModulePrefs/Locale", new SetNextRule("addLocale"));
 
-        digester.addRule("Module/ModulePrefs/Locale/msg",
-                new ObjectCreateRule(MessageBundle.Msg.class));
-        attributeNames = new String[] {"name", "desc"};
-        propertyNames = new String[] {"name", "desc"};
-        digester.addRule("Module/ModulePrefs/Locale/msg",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/Locale/msg",
+                new ObjectFactory(MessageBundle.Msg.class));
         digester.addRule("Module/ModulePrefs/Locale/msg", new CallMethodRule("setContent", 0));
         digester.addRule("Module/ModulePrefs/Locale/msg", new SetNextRule("addInlineMessage"));
 
-        digester.addRule("Module/ModulePrefs/OAuth",
-                new ObjectCreateRule(Module.ModulePrefs.OAuth.class));
+        digester.addFactoryCreate("Module/ModulePrefs/OAuth",
+                new ObjectFactory(Module.ModulePrefs.OAuth.class));
         digester.addRule("Module/ModulePrefs/OAuth", new SetNextRule("addOAuth"));
 
-        digester.addRule("Module/ModulePrefs/OAuth/Service",
-                new ObjectCreateRule(Module.ModulePrefs.OAuth.Service.class));
-        attributeNames = new String[] {"name"};
-        propertyNames = new String[] {"name"};
-        digester.addRule("Module/ModulePrefs/OAuth/Service",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/OAuth/Service",
+                new ObjectFactory(Module.ModulePrefs.OAuth.Service.class));
         digester.addRule("Module/ModulePrefs/OAuth/Service", new SetNextRule("addService"));
 
-        digester.addRule("Module/ModulePrefs/OAuth/Service/Request",
-                new ObjectCreateRule(Module.ModulePrefs.OAuth.Service.Request.class));
-        attributeNames = new String[] {"url", "method", "param_location"};
-        propertyNames = new String[] {"url", "method", "paramLocation"};
-        digester.addRule("Module/ModulePrefs/OAuth/Service/Request",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/OAuth/Service/Request",
+                new ObjectFactory(Module.ModulePrefs.OAuth.Service.Request.class));
         digester.addRule("Module/ModulePrefs/OAuth/Service/Request", new SetNextRule("setRequest"));
 
-        digester.addRule("Module/ModulePrefs/OAuth/Service/Access",
-                new ObjectCreateRule(Module.ModulePrefs.OAuth.Service.Access.class));
-        attributeNames = new String[] {"url", "method", "param_location"};
-        propertyNames = new String[] {"url", "method", "paramLocation"};
-        digester.addRule("Module/ModulePrefs/OAuth/Service/Access",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/OAuth/Service/Access",
+                new ObjectFactory(Module.ModulePrefs.OAuth.Service.Access.class));
         digester.addRule("Module/ModulePrefs/OAuth/Service/Access", new SetNextRule("setAccess"));
 
-        digester.addRule("Module/ModulePrefs/OAuth/Service/Authorization",
-                new ObjectCreateRule(Module.ModulePrefs.OAuth.Service.Authorization.class));
-        attributeNames = new String[] {"url"};
-        propertyNames = new String[] {"url"};
-        digester.addRule("Module/ModulePrefs/OAuth/Service/Authorization",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/OAuth/Service/Authorization",
+                new ObjectFactory(Module.ModulePrefs.OAuth.Service.Authorization.class));
         digester.addRule("Module/ModulePrefs/OAuth/Service/Authorization",
                 new SetNextRule("setAuthorization"));
 
-        digester.addRule("Module/ModulePrefs/Preload",
-                new ObjectCreateRule(Module.ModulePrefs.Preload.class));
-        attributeNames = new String[] {"href", "authz", "sign_owner", "sign_viewer", "views",
-                "oauth_service_name", "oauth_token_name", "oauth_request_token",
-                "oauth_request_token_secret"};
-        propertyNames = new String[] {"href", "authz", "signOwner", "signViewer", "views",
-                "oauthServiceName", "oauthTokenName", "oauthRequestToken",
-                "oauthRequestTokenSecret"};
-        digester.addRule("Module/ModulePrefs/Preload",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/ModulePrefs/Preload",
+                new ObjectFactory(Module.ModulePrefs.Preload.class));
         digester.addRule("Module/ModulePrefs/Preload", new SetNextRule("addPreload"));
 
-        digester.addRule("Module/UserPref", new ObjectCreateRule(Module.UserPref.class));
-        attributeNames =
-                new String[] {"name", "display_name", "default_value", "required", "datatype"};
-        propertyNames =
-                new String[] {"name", "displayName", "defaultValue", "required", "datatype"};
-        digester.addRule("Module/UserPref", new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/UserPref",
+                new ObjectFactory(Module.UserPref.class));
         digester.addRule("Module/UserPref", new SetNextRule("addUserPref"));
 
-        digester.addRule("Module/UserPref/EnumValue",
-                new ObjectCreateRule(Module.UserPref.EnumValue.class));
-        attributeNames = new String[] {"value", "display_value"};
-        propertyNames = new String[] {"value", "displayValue"};
-        digester.addRule("Module/UserPref/EnumValue",
-                new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/UserPref/EnumValue",
+                new ObjectFactory(Module.UserPref.EnumValue.class));
         digester.addRule("Module/UserPref/EnumValue", new SetNextRule("addEnumValue"));
 
-        digester.addRule("Module/Content", new ObjectCreateRule(Module.Content.class));
-        attributeNames =
-                new String[] {"type", "href", "view", "preferred_width", "preferred_height"};
-        propertyNames = new String[] {"type", "href", "view", "preferredWidth", "preferredHeight"};
-        digester.addRule("Module/Content", new SetPropertiesRule(attributeNames, propertyNames));
+        digester.addFactoryCreate("Module/Content",
+                new ObjectFactory(Module.Content.class));
         digester.addRule("Module/Content", new CallMethodRule("setValue", 0));
         digester.addRule("Module/Content", new SetNextRule("addContent"));
     }

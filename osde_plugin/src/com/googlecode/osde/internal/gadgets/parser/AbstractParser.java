@@ -22,8 +22,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.digester.AbstractObjectCreationFactory;
 import org.apache.commons.digester.Digester;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
@@ -68,4 +75,95 @@ public abstract class AbstractParser implements IParser {
         }
     }
 
+    /**
+     * A Digester object factory that:
+     * <ul>
+     * <li>Creates an instance of <code>beanClass</code> using its default constructor.
+     * <li>Sets any attribute value if its name is either in camel-case or underscore style.
+     * <li>Sets any unrecognized attribute name-value pair if the <code>beanClass</code>
+     * implements {@link com.googlecode.osde.internal.gadgets.parser.AcceptExtraProperties}.
+     * </ul>
+     * This object factory simplifies lots of rule configurations. For example, <pre>
+     * digester.addRule("someElement", new ObjectCreateRule(YourClass.class);
+     * digester.addRule("someElement", ["p1", "p2", "p3"], ["p1", "p2", "p3"]); </pre>
+     * can be replaced with: <pre>
+     * digester.addFactoryCreate("someElement", new ObjectFactory(YourClass.class);</pre>
+     */
+    static final class ObjectFactory extends AbstractObjectCreationFactory {
+
+        private final Class<?> beanClass;
+
+        public ObjectFactory(Class<?> beanClass) {
+            this.beanClass = beanClass;
+        }
+
+        @Override
+        public Object createObject(Attributes attributes) throws Exception {
+            final Object bean = beanClass.newInstance();
+
+            final Map<String, String> unrecognized = new LinkedHashMap<String, String>();
+            final Map<String, String> recognized = new HashMap<String, String>();
+            final int count = attributes.getLength();
+
+            for (int i = 0; i < count; i++) {
+                String propertyName = toCamelCase(attributes.getLocalName(i));
+                String value = attributes.getValue(i);
+
+                if (PropertyUtils.isWriteable(bean, propertyName)) {
+                    recognized.put(propertyName, value);
+                } else {
+                    unrecognized.put(attributes.getQName(i), value);
+                }
+            }
+
+            BeanUtils.populate(bean, recognized);
+            if (bean instanceof AcceptExtraProperties) {
+                ((AcceptExtraProperties) bean).getExtraProperties().putAll(unrecognized);
+            }
+
+            return bean;
+        }
+
+        /**
+         * Converts underscore style to camel-case style. For example,
+         * "some_useful_variable" is converted to "someUsefulVariable".
+         */
+        static String toCamelCase(String name) {
+            if (name == null) {
+                return null;
+            }
+
+            String[] ps = name.split("_");
+            if (ps == null || ps.length == 0) {
+                return name;
+            }
+
+            StringBuilder b = new StringBuilder();
+            for (String p : ps) {
+                if (b.length() > 0) {
+                    b.append(capitalize(p));
+                } else {
+                    b.append(lower(p));
+                }
+            }
+
+            return b.toString();
+        }
+
+        private static String lower(String name) {
+            if (name.length() > 0) {
+                return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+            } else {
+                return "";
+            }
+        }
+
+        private static String capitalize(String name) {
+            if (name.length() > 0) {
+                return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+            } else {
+                return "";
+            }
+        }
+    }
 }
