@@ -65,7 +65,10 @@ public class IgHostingUtilTest {
     private static final int TEST_HOSTED_FILES_COUNT = 6;
     private static final int MIN_QUOTA_BYTE = 1000000;
     private static final int TEST_MIN_QUOTA_BYTE_USED = 1000;
-    private static final String URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE =
+
+    // This sample gadget file demos OpenSocial feature of showing friends list.
+    // But it does not specify any view. So only "home" view is supported.
+    private static final String URL_SAMPLE_OS_GADGET_FILE_WITH_HOME_VIEW =
             "http://opensocial-resources.googlecode.com/"
                     + "svn/samples/tutorial/tags/api-0.8/gifts_1_friends.xml";
 
@@ -88,23 +91,25 @@ public class IgHostingUtilTest {
         // Prepare Authentication.
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
         String sid = igCredentials.getSid();
+        logger.info("sid: " + sid);
         String publicId = igCredentials.getPublicId();
+        logger.info("publicId: " + publicId);
 
         // Clean all files under TEST_HOSTING_FOLDER.
         IgHostingUtil.cleanFiles(igCredentials, TEST_HOSTING_FOLDER);
         List<String> fileNameList = retrieveFileNameList(sid, publicId, TEST_HOSTING_FOLDER);
         assertEquals(0, fileNameList.size());
 
-        // Upload file.
-        IgHostingUtil.uploadFiles(igCredentials, TEST_TARGET_PATH, TEST_HOSTING_FOLDER);
-
         // Retrieve quota info.
         String quotaByte = retrieveQuotaByte(sid, publicId);
-        logger.fine("quotaByte: " + quotaByte);
+        logger.info("quotaByte: " + quotaByte);
         assertTrue(Integer.valueOf(quotaByte) > MIN_QUOTA_BYTE);
         String quotaByteUsed = retrieveQuotaByteUsed(sid, publicId);
-        logger.fine("quotaByteUsed: " + quotaByteUsed);
+        logger.info("quotaByteUsed: " + quotaByteUsed);
         assertTrue(Integer.valueOf(quotaByteUsed) > TEST_MIN_QUOTA_BYTE_USED);
+
+        // Upload file.
+        IgHostingUtil.uploadFiles(igCredentials, TEST_TARGET_PATH, TEST_HOSTING_FOLDER);
 
         // Retrieve all files list.
         fileNameList = retrieveFileNameList(sid, publicId, TEST_HOSTING_FOLDER);
@@ -142,7 +147,7 @@ public class IgHostingUtilTest {
 
         // Test and verify the method call.
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
-        logger.info("igCredentials: " + igCredentials);
+        logger.info("igCredentials:\n" + igCredentials);
         String urlOfHostedGadgetFile = IgHostingUtil.uploadFiles(
                 igCredentials, gadgetXmlIFile, TEST_HOSTING_FOLDER, false);
         logger.info("urlOfHostedGadgetFile: " + urlOfHostedGadgetFile);
@@ -164,21 +169,22 @@ public class IgHostingUtilTest {
 
         // Verify preview legacy gadget.
         String previewUrlForLegacyGadget =
-                formPreviewLegacyGadgetUrl(URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE, false);
+                formPreviewLegacyGadgetUrl(URL_SAMPLE_OS_GADGET_FILE_WITH_HOME_VIEW, false);
         logger.info("previewUrlForLegacyGadget: " + previewUrlForLegacyGadget);
-        assertTrue(previewUrlForLegacyGadget.endsWith(URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE));
+        assertTrue(previewUrlForLegacyGadget.endsWith(URL_SAMPLE_OS_GADGET_FILE_WITH_HOME_VIEW));
 
         // Verify preview OpenSocial gadget.
-        boolean useCanvasView = true;
+        boolean useCanvasView = false;
         String previewUrlForOpenSocialGadget = formPreviewOpenSocialGadgetUrl(
-                URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE, useCanvasView, igCredentials.getSid());
+                URL_SAMPLE_OS_GADGET_FILE_WITH_HOME_VIEW, useCanvasView, igCredentials.getSid());
         logger.info("previewUrlForOpenSocialGadget:\n" + previewUrlForOpenSocialGadget);
         assertTrue(previewUrlForOpenSocialGadget,
                 previewUrlForOpenSocialGadget.startsWith("http://"));
         assertTrue(previewUrlForOpenSocialGadget,
-                previewUrlForOpenSocialGadget.indexOf(URL_SAMPLE_OPEN_SOCIAL_GADGET_FILE) != -1);
+                previewUrlForOpenSocialGadget.indexOf(URL_SAMPLE_OS_GADGET_FILE_WITH_HOME_VIEW)
+                != -1);
         assertTrue(previewUrlForOpenSocialGadget,
-                previewUrlForOpenSocialGadget.indexOf("view=canvas") != -1);
+                previewUrlForOpenSocialGadget.indexOf("view=home") != -1);
         assertTrue(previewUrlForOpenSocialGadget,
                 previewUrlForOpenSocialGadget.indexOf("nocache=1") != -1);
         assertTrue(previewUrlForOpenSocialGadget,
