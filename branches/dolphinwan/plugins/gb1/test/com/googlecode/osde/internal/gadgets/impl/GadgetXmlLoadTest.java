@@ -45,7 +45,13 @@ import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
 import com.googlecode.osde.internal.gadgets.parser.ParserType;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
+/**
+ * Tests for parsers.
+ *
+ * @author dolphin.wan@gmail.com (Dolphin Wan)
+ */
 public class GadgetXmlLoadTest extends TestCase {
 
     private IParser target;
@@ -62,6 +68,7 @@ public class GadgetXmlLoadTest extends TestCase {
         target = null;
     }
 
+    @Test
     public void testParseGadgetXml() throws Exception {
         File file = new File("test/test_gadget.xml");
         FileInputStream in = new FileInputStream(file);

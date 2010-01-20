@@ -76,7 +76,7 @@ public abstract class AbstractParser implements IParser {
     }
 
     /**
-     * An object factory that:
+     * A Digester object factory that:
      * <ul>
      * <li>Creates an instance of <code>beanClass</code> using its default constructor.
      * <li>Sets any attribute value if its name is either in camel-case or underscore style.
@@ -84,12 +84,12 @@ public abstract class AbstractParser implements IParser {
      * implements {@link com.googlecode.osde.internal.gadgets.parser.AcceptExtraProperties}.
      * </ul>
      * This object factory simplifies lots of rule configurations. For example, <pre>
-     * d.addRule("/a", new ObjectCreateRule(A.class);
-     * d.addRule("/a", ["p1", "p2", "p3"], ["p1", "p2", "p3"]); </pre> can be replaced
-     * with: <pre>
-     * d.addFactoryCreate("/a", new ObjectFactory(A.class);</pre>
+     * digester.addRule("someElement", new ObjectCreateRule(YourClass.class);
+     * digester.addRule("someElement", ["p1", "p2", "p3"], ["p1", "p2", "p3"]); </pre>
+     * can be replaced with: <pre>
+     * digester.addFactoryCreate("someElement", new ObjectFactory(YourClass.class);</pre>
      */
-    protected static final class ObjectFactory extends AbstractObjectCreationFactory {
+    static final class ObjectFactory extends AbstractObjectCreationFactory {
 
         private final Class<?> beanClass;
 
@@ -143,11 +143,19 @@ public abstract class AbstractParser implements IParser {
                 if (b.length() > 0) {
                     b.append(capitalize(p));
                 } else {
-                    b.append(p);
+                    b.append(lower(p));
                 }
             }
 
             return b.toString();
+        }
+
+        private static String lower(String name) {
+            if (name.length() > 0) {
+                return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+            } else {
+                return "";
+            }
         }
 
         private static String capitalize(String name) {
