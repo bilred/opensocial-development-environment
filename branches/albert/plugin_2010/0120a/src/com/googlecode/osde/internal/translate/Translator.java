@@ -62,8 +62,7 @@ public class Translator {
      * @param from language of the original string
      * @param to target language of the translation
      * @return translated string in target language
-     * @throws IOException
-     * @throws JSONException
+     * @throws Exception
      */
     public String translate(String text, Language from, Language to)
             throws Exception {
@@ -83,8 +82,7 @@ public class Translator {
      * @param fromLanguage original language of text
      * @param toLanguages target languages of translations of text
      * @return translations of text in different languages
-     * @throws IOException
-     * @throws JSONException
+     * @throws Exception
      */
     public ArrayList<String> translate(String text, Language fromLanguage, Language... toLanguages)
             throws Exception {
@@ -103,8 +101,7 @@ public class Translator {
      * @param toLanguage
      * @param texts
      * @return translations for every string in texts from fromLanguage to toLanguage
-     * @throws IOException
-     * @throws JSONException
+     * @throws Exception
      */
     public ArrayList<String> translate(Language fromLanguage, Language toLanguage, String... texts)
             throws Exception {
