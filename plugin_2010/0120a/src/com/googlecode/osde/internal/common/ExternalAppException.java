@@ -25,6 +25,8 @@ package com.googlecode.osde.internal.common;
  * @author Dolphin Wan
  */
 public class ExternalAppException extends Exception {
+    private static final long serialVersionUID = 1L;
+
     public ExternalAppException() {
     }
 
