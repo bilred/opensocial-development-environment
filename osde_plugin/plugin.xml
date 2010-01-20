@@ -444,6 +444,25 @@
       </view>
    </extension>
 
+   <!-- use Common Navigation Framework binding filters to ProjectExplorer -->
+   <extension point="org.eclipse.ui.navigator.viewer">
+       <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+           <includes>
+               <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.*"/>
+               <contentExtension pattern="com.googlecode.views.filters.*"/>
+           </includes>
+       </viewerContentBinding>
+   </extension>
+   <extension point="org.eclipse.ui.navigator.navigatorContent">
+      <commonFilter
+            class="com.googlecode.osde.internal.ui.views.filters.NonOsdeProjectFilter"
+            id="com.googlecode.views.filters.nonOsdeProject"
+            description="description"
+            activeByDefault="false"
+            name="Non-OSDE Project Filter">
+      </commonFilter>  
+   </extension>
+    
    <extension
          point="org.eclipse.help.toc">
       <toc
