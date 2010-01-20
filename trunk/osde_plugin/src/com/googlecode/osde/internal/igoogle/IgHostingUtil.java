@@ -68,8 +68,8 @@ public class IgHostingUtil {
     private static final String URL_PREVIEW_LEGACY_GADGET =
             "http://www.gmodules.com/gadgets/ifr?nocache=1";
 
-    private static final String PREVIEW_URL_IDENTIFIER_FOR_HOME = "hifr:\"";
-    private static final String PREVIEW_URL_IDENTIFIER_FOR_CANVAS = "cifr:\"";
+    private static final String PREVIEW_URL_IDENTIFIER_FOR_HOME = "name:\"home\",ifr:\"";
+    private static final String PREVIEW_URL_IDENTIFIER_FOR_CANVAS = "name:\"canvas\",ifr:\"";
     private static final String PREVIEW_URL_END_IDENTIFIER = "&is_social=1";
     private static final int PREVIEW_URL_END_IDENTIFIER_LENGTH =
             PREVIEW_URL_END_IDENTIFIER.length();
@@ -111,10 +111,10 @@ public class IgHostingUtil {
             String sourceFileRootPath, String sourceFileRelativePath, String hostingFolder)
             throws IgException {
         // Prepare HttpPost.
-        String url = URL_IG_GADGETS_FILE + igCredentials.getPublicId() + hostingFolder
+        String httpPostUrl = URL_IG_GADGETS_FILE + igCredentials.getPublicId() + hostingFolder
                 + sourceFileRelativePath + "?et=" + igCredentials.getEditToken();
-        logger.fine("url: " + url);
-        HttpPost httpPost = new HttpPost(url);
+        logger.fine("httpPostUrl: " + httpPostUrl);
+        HttpPost httpPost = new HttpPost(httpPostUrl);
         File sourceFile = new File(sourceFileRootPath, sourceFileRelativePath);
         String httpContentType = isTextExtensionForGadgetFile(sourceFileRelativePath)
                 ? HTTP_PLAIN_TEXT_TYPE
@@ -138,6 +138,8 @@ public class IgHostingUtil {
         } catch (IOException e) {
             throw new IgException(e);
         }
+
+        // Verify if the file is created.
         StatusLine statusLine = httpResponse.getStatusLine();
         logger.fine("statusLine: " + statusLine);
         if (HttpStatus.SC_CREATED != statusLine.getStatusCode()) {
@@ -182,6 +184,7 @@ public class IgHostingUtil {
             throws IgException {
         List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
         for (String relativePath : relativeFilePaths) {
+            logger.fine("uploading file: " + relativePath);
             uploadFile(igCredentials, sourceFileRootPath, relativePath, hostingFolder);
         }
     }
@@ -237,8 +240,10 @@ public class IgHostingUtil {
      */
     static List<String> retrieveFileNameList(String sid, String publicId, String hostingFolder)
             throws IgException {
-        String url = URL_IG_GADGETS_DIRECTORY + publicId;
-        String allFilesString = retrieveHttpResponseAsString(url, sid);
+        String fileListUrl = URL_IG_GADGETS_DIRECTORY + publicId;
+        logger.fine("fileListUrl: " + fileListUrl);
+        String allFilesString = retrieveHttpResponseAsString(fileListUrl, sid);
+        logger.fine("allFilesString:\n" + allFilesString);
         List<String> allFileNameList = new ArrayList<String>();
 
         // Return empty List when no file is found.
@@ -353,20 +358,26 @@ public class IgHostingUtil {
         logger.fine("response:\n" + response);
 
         // Sample response (all in one line):
-        // throw 1; < don't be evil' >{m:[{url:"http://.../gifts_1_friends.xml",
-        // hifr:"http://8...c.ig.ig.gmodules.com/gadgets/ifr
-        // ?view=home
-        // &url=http://.../gifts_1_friends.xml
+        // throw 1; < don't be evil' >
+        // {m:[{url:"http://.../osde/preview/gadget.xml",
+        // view:[{
+        // name:"home",
+        // ifr:"http://....ig.ig.gmodules.com/gadgets/ifr?
+        // view=home
+        // &url=http://.../file/...546/osde/preview/gadget.xml
         // &nocache=0
         // &lang=en&country=us&.lang=en&.country=us
-        // &synd=ig&mid=0&ifpctok=-3701245656769771047
-        // &exp_split_js=1&exp_track_js=1&exp_new_js_flags=1&exp_ids=300213
+        // &synd=ig&mid=0&ifpctok=-1987853101061147102
+        // &exp_split_js=1&exp_track_js=1&exp_new_js_flags=1&exp_ids=...
         // &parent=http://www.google.com&refresh=3600
-        // &libs=core:core.io:core.iglegacy:auth-refresh#st=c%3Dig%26e%3D...
-        // &gadgetId=...&gadgetOwner=...&gadgetViewer=...
+        // &libs=core:core.io:core.iglegacy:auth-refresh#st=...
+        // &gadgetId=...646
+        // &gadgetOwner=...450
+        // &gadgetViewer=...450
         // &is_signedin=1
-        // &is_social=1",
-        // cifr:"..."}]}
+        // &is_social=1
+        // "}]
+        // }]}
 
         // Form preview-url from response.
         // First, take out unwanted prepending string.
@@ -377,20 +388,12 @@ public class IgHostingUtil {
         String previewUrl = response.substring(startIndex);
         logger.fine("previewUrl with appending:\n" + previewUrl);
 
-        // TODO: (p1) remove this if-block once the server's bug is fixed
-        // This case is a bug from the igoogle server.
-        // The bug: the returned value for canvas view is sometimes empty.
-        // Here is the workaround.
+        // Handle the case when Canvas view is unavailable.
         if (!previewUrl.startsWith("http://")) {
             if (!useCanvasView) {
-                // If this happens, then it is another new bug from the igoogle server.
                 throw new IgException("Error: Invalid preview url with response:\n" + response);
             }
-            previewUrlIdentifier = PREVIEW_URL_IDENTIFIER_FOR_HOME;
-            startIndex = response.indexOf(previewUrlIdentifier) + previewUrlIdentifier.length();
-            previewUrl = response.substring(startIndex);
-            logger.fine("fixed previewUrl with appending:\n" + previewUrl);
-            previewUrl = previewUrl.replaceFirst("view=home", "view=canvas");
+            throw new IgException("Canvas view is not available for this gadget.");
         }
 
         // Take out unwanted appending string.
