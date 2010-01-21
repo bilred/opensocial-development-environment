@@ -36,20 +36,20 @@
 }}}
 
  * Check out the Apache Shindig for OSDE from the code repository
-  * trunk of shindig: https://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_735392
+  * trunk of shindig: https://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_796905 
   * if you use a svn command line client, try this:
   
     for commiter:
 {{{
-   svn co https://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_735392 shindig_735392
+   svn co https://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_796905 shindig_796905 
 }}}
 
 	for others:	
 {{{
-   svn co http://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_735392 shindig_735392
+   svn co http://opensocial-development-environment.googlecode.com/svn/trunk/shindig/shindig_7969052 shindig_796905 
 }}}
 
-	svn will check out working copy to shindig_735392 folder/path.
+	svn will check out working copy to shindig_796905 folder/path.
 
  * In shell/console, go to the working copy of shindig where you can find pom.xml. Maven will use this pom.xml build the project. If you check out everything, please check the pom.xml contains these messages:
 {{{
