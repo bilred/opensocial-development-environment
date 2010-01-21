@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
     <feature
+        url="http://opensocial-development-environment.googlecode.com/files/com.googlecode.osde.feature_0.7.0.C2.jar"
+        id="com.googlecode.osde.feature" version="0.7.0.C2">
+        <category name="jp.eisbahn.eclipse.plugins.osde.category" />
+    </feature>
+    <feature
         url="http://opensocial-development-environment.googlecode.com/files/com.googlecode.osde.feature_0.7.0.C1.jar"
         id="com.googlecode.osde.feature" version="0.7.0.C1">
         <category name="jp.eisbahn.eclipse.plugins.osde.category" />
