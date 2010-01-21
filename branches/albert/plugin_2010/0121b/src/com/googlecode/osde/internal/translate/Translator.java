@@ -228,7 +228,7 @@ public class Translator {
      * Encodes the text to be translated and construct query
      * parameter to be embedded into query URL.
      * <p>
-     * Returns "&q=encoded_text".
+     * Appends "&q=encoded_text" in the parameter builder.
      *
      * @throws UnsupportedEncodingException
      */
@@ -246,7 +246,7 @@ public class Translator {
     /**
      * Constructs language pair parameter for the query URL.
      * <p>
-     * Returns "&langpair=fromLanguage|toLanguage".
+     * Appends "&langpair=fromLanguage|toLanguage" in builder.
      */
     protected void constructLangPairQuery(StringBuilder builder, Language fromLanguage,
             Language toLanguage) {
@@ -258,7 +258,7 @@ public class Translator {
     /**
      * Constructs 1:1..* translation query URL to be fed to Google Translate API.
      * <p>
-     * Example return:<br>
+     * Example appending to builder:<br>
      * "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0
      * &q=text&langpair=fromLanguage|toLanguages[0]&lanpair=fromLanguage|toLanguages[1]..."
      *
@@ -276,7 +276,7 @@ public class Translator {
     /**
      * Constructs query URL for multiple string translations from fromLanguage to toLanguage.
      * <p>
-     * Example return:<br>
+     * Example appending to builder:<br>
      * "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0
      * &q=texts[0]&q=texts[1]&langpair=fromLanguage|toLanguage"
      *
