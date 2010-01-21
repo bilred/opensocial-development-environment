@@ -37,7 +37,7 @@ import com.googlecode.osde.internal.utils.Logger;
 
 /**
  * 
- * @author chingyichan.tw@gmail.com qrtt1
+ * @author chingyichan.tw@gmail.com (qrtt1)
  *
  */
 public class OsdePreferencesModel {
@@ -75,10 +75,8 @@ public class OsdePreferencesModel {
         file.mkdirs();
         node.put(OsdeConfig.WORK_DIRECTORY, file.getAbsolutePath());
         node.put(OsdeConfig.LOGGER_CONFIG_FILE, "");
-        node.putBoolean(OsdeConfig.COMPILE_JAVASCRIPT, JdkVersion
-                .isAtLeastJdk6());
-        node.put(OsdeConfig.FIREFOX_LOCATION,
-                OsdeConfig.DEFAULT_FIREFOX_LOCATION);
+        node.putBoolean(OsdeConfig.COMPILE_JAVASCRIPT, JdkVersion.isAtLeastJdk6());
+        node.put(OsdeConfig.FIREFOX_LOCATION, OsdeConfig.DEFAULT_FIREFOX_LOCATION);
     }
     
     public OsdeConfig getOsdeConfiguration() {
@@ -120,13 +118,20 @@ public class OsdePreferencesModel {
             config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
             config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
             config.setJettyDir(store.getDefaultString(OsdeConfig.JETTY_DIR));
-            config.setUseInternalDatabase(store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
-            config.setExternalDatabaseType(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
-            config.setExternalDatabaseHost(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
-            config.setExternalDatabasePort(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PORT));
-            config.setExternalDatabaseUsername(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
-            config.setExternalDatabasePassword(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
-            config.setExternalDatabaseName(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
+            config.setUseInternalDatabase(
+                    store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
+            config.setExternalDatabaseType(
+                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
+            config.setExternalDatabaseHost(
+                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
+            config.setExternalDatabasePort(
+                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PORT));
+            config.setExternalDatabaseUsername(
+                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+            config.setExternalDatabasePassword(
+                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+            config.setExternalDatabaseName(
+                    store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
             config.setWorkDirectory(store.getDefaultString(OsdeConfig.WORK_DIRECTORY));
             config.setLoggerConfigFile(store.getDefaultString(OsdeConfig.LOGGER_CONFIG_FILE));
             config.setCompileJavaScript(store.getDefaultBoolean(OsdeConfig.COMPILE_JAVASCRIPT));
