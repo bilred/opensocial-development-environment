@@ -3,6 +3,8 @@ package com.googlecode.osde.internal;
 import java.io.File;
 import java.util.Locale;
 
+import com.googlecode.osde.internal.common.JdkVersion;
+
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.osgi.service.prefs.Preferences;
@@ -38,7 +40,7 @@ public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
         file.mkdirs();
         node.put(OsdeConfig.WORK_DIRECTORY, file.getAbsolutePath());
         node.put(OsdeConfig.LOGGER_CONFIG_FILE, "");
-        node.putBoolean(OsdeConfig.COMPILE_JAVASCRIPT, false);
+        node.putBoolean(OsdeConfig.COMPILE_JAVASCRIPT, JdkVersion.isAtLeastJdk6());
         node.put(OsdeConfig.FIREFOX_LOCATION, OsdeConfig.DEFAULT_FIREFOX_LOCATION);
     }
 
