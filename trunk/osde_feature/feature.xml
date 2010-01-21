@@ -2,7 +2,7 @@
 <feature
       id="com.googlecode.osde.feature"
       label="OpenSocial Development Environment Feature"
-      version="0.7.0.C1"
+      version="0.7.0.C2"
       provider-name="Yoichiro Tanaka"
       plugin="com.googlecode.osde">
 
