@@ -1,5 +1,5 @@
-#labels Deprecated
 #summary How To Contribute To OSDE
+#labels Deprecated
 
 ----
 
@@ -61,7 +61,7 @@
  
  * Build and Install Shinding to Maven Local Reposiotry
 {{{
-  mvn install package
+  mvn package install 
 }}}
  
   * If you get a warning about compiling, try to execute the mvn command again
