@@ -58,7 +58,7 @@ public final class OsdeConfig {
     // Default values
     public static final String DEFAULT_FIREFOX_LOCATION = new FirefoxLocator().getBinaryLocation();
     
-    static interface PreferenceFetcher {
+    static interface PreferenceGetter {
         
         public String get(OsdePreferencesModel model, String name);
         
@@ -67,11 +67,11 @@ public final class OsdeConfig {
     }
     
     private OsdePreferencesModel model;
-    private PreferenceFetcher prefFetcher;
+    private PreferenceGetter prefGetter;
     
-    OsdeConfig(OsdePreferencesModel model, PreferenceFetcher fetcher){
+    OsdeConfig(OsdePreferencesModel model, PreferenceGetter getter){
         this.model = model;
-        this.prefFetcher = fetcher;
+        this.prefGetter = getter;
     }
 
     public String getExternalDatabaseName() {
@@ -144,11 +144,11 @@ public final class OsdeConfig {
     }
     
     protected String get(String name) {
-        return prefFetcher.get(model, name);
+        return prefGetter.get(model, name);
     }
     
     protected boolean getBoolean(String name) {
-        return prefFetcher.getBoolean(model, name);
+        return prefGetter.getBoolean(model, name);
     }    
 
     static String encodeSiteMap(Map<String, String> siteMap) throws IOException {
