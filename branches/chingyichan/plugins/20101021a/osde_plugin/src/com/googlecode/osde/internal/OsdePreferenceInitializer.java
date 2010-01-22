@@ -9,8 +9,7 @@ public class OsdePreferenceInitializer extends AbstractPreferenceInitializer {
 
     @Override
     public void initializeDefaultPreferences() {
-        // delegate the initialization to the Config Manager.
-        Activator.getDefault().getPreferencesModel().initializeDefaultPreferences();
+        OsdePreferencesModel.initializeDefaultPreferences();
     }
 
 }

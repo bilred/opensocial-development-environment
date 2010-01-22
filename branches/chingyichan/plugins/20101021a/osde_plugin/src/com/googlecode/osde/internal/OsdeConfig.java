@@ -17,14 +17,25 @@
  */
 package com.googlecode.osde.internal;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
+
 import com.googlecode.osde.internal.profiling.FirefoxLocator;
+import com.googlecode.osde.internal.utils.Logger;
 
 /**
- * A JavaBean of the OSDE configuration.
+ * An immutable JavaBean of the OSDE configuration.
  */
-public class OsdeConfig {
+public final class OsdeConfig {
+    
+    private static final Logger logger = new Logger(OsdeConfig.class);
 
     // Preference node names
     public static final String DEFAULT_LANGUAGE = "language";
@@ -46,149 +57,124 @@ public class OsdeConfig {
 
     // Default values
     public static final String DEFAULT_FIREFOX_LOCATION = new FirefoxLocator().getBinaryLocation();
-
-    private String defaultLanguage;
-    private String defaultCountry;
-    private String databaseDir;
-    private Map<String, String> docsSiteMap;
-    private String jettyDir;
-    private boolean useInternalDatabase;
-    private String externalDatabaseType;
-    private String externalDatabaseHost;
-    private String externalDatabasePort;
-    private String externalDatabaseUsername;
-    private String externalDatabasePassword;
-    private String externalDatabaseName;
-    private String workDirectory;
-    private String loggerConfigFile;
-    private boolean compileJavaScript;
-    private String firefoxLocation;
-
-    public String getExternalDatabaseName() {
-        return externalDatabaseName;
+    
+    static interface PreferenceFetcher {
+        
+        public String get(OsdePreferencesModel model, String name);
+        
+        public boolean getBoolean(OsdePreferencesModel model, String name);
+        
+    }
+    
+    private OsdePreferencesModel model;
+    private PreferenceFetcher prefFetcher;
+    
+    OsdeConfig(OsdePreferencesModel model, PreferenceFetcher fetcher){
+        this.model = model;
+        this.prefFetcher = fetcher;
     }
 
-    public void setExternalDatabaseName(String externalDatabaseName) {
-        this.externalDatabaseName = externalDatabaseName;
+    public String getExternalDatabaseName() {
+        return get(EXTERNAL_DATABASE_NAME);
     }
 
     public boolean isUseInternalDatabase() {
-        return useInternalDatabase;
-    }
-
-    public void setUseInternalDatabase(boolean useInternalDatabase) {
-        this.useInternalDatabase = useInternalDatabase;
+        return getBoolean(USE_INTERNAL_DATABASE);
     }
 
     public String getExternalDatabaseType() {
-        return externalDatabaseType;
-    }
-
-    public void setExternalDatabaseType(String externalDatabaseType) {
-        this.externalDatabaseType = externalDatabaseType;
+        return get(EXTERNAL_DATABASE_TYPE);
     }
 
     public String getExternalDatabaseHost() {
-        return externalDatabaseHost;
-    }
-
-    public void setExternalDatabaseHost(String externalDatabaseHost) {
-        this.externalDatabaseHost = externalDatabaseHost;
+        return get(EXTERNAL_DATABASE_HOST);
     }
 
     public String getExternalDatabasePort() {
-        return externalDatabasePort;
-    }
-
-    public void setExternalDatabasePort(String externalDatabasePort) {
-        this.externalDatabasePort = externalDatabasePort;
+        return get(EXTERNAL_DATABASE_PORT);
     }
 
     public String getExternalDatabaseUsername() {
-        return externalDatabaseUsername;
-    }
-
-    public void setExternalDatabaseUsername(String externalDatabaseUsername) {
-        this.externalDatabaseUsername = externalDatabaseUsername;
+        return get(EXTERNAL_DATABASE_USERNAME);
     }
 
     public String getExternalDatabasePassword() {
-        return externalDatabasePassword;
-    }
-
-    public void setExternalDatabasePassword(String externalDatabasePassword) {
-        this.externalDatabasePassword = externalDatabasePassword;
+        return get(EXTERNAL_DATABASE_PASSWORD);
     }
 
     public String getJettyDir() {
-        return jettyDir;
-    }
-
-    public void setJettyDir(String jettyDir) {
-        this.jettyDir = jettyDir;
+        return get(JETTY_DIR);
     }
 
     public Map<String, String> getDocsSiteMap() {
-        return docsSiteMap;
-    }
-
-    public void setDocsSiteMap(Map<String, String> docsSiteMap) {
-        this.docsSiteMap = docsSiteMap;
+        try {
+            return decodeSiteMap(get(DOCS_SITE_MAP));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return new HashMap<String, String>();
     }
 
     public String getDatabaseDir() {
-        return databaseDir;
-    }
-
-    public void setDatabaseDir(String databaseDir) {
-        this.databaseDir = databaseDir;
+        return get(DATABASE_DIR);
     }
 
     public String getDefaultLanguage() {
-        return defaultLanguage;
-    }
-
-    public void setDefaultLanguage(String defaultLanguage) {
-        this.defaultLanguage = defaultLanguage;
+        return get(DEFAULT_LANGUAGE);
     }
 
     public String getDefaultCountry() {
-        return defaultCountry;
-    }
-
-    public void setDefaultCountry(String defaultCountry) {
-        this.defaultCountry = defaultCountry;
+        return get(DEFAULT_COUNTRY);
     }
 
     public String getWorkDirectory() {
-        return workDirectory;
-    }
-
-    public void setWorkDirectory(String workDirectory) {
-        this.workDirectory = workDirectory;
+        return get(WORK_DIRECTORY);
     }
 
     public String getLoggerConfigFile() {
-        return loggerConfigFile;
-    }
-
-    public void setLoggerConfigFile(String loggerConfigFile) {
-        this.loggerConfigFile = loggerConfigFile;
+        return get(LOGGER_CONFIG_FILE);
     }
 
     public boolean isCompileJavaScript() {
-        return compileJavaScript;
-    }
-
-    public void setCompileJavaScript(boolean compileJavaScript) {
-        this.compileJavaScript = compileJavaScript;
+        return getBoolean(COMPILE_JAVASCRIPT);
     }
 
     public String getFirefoxLocation() {
-        return firefoxLocation;
+        return get(FIREFOX_LOCATION);
     }
+    
+    protected String get(String name) {
+        return prefFetcher.get(model, name);
+    }
+    
+    protected boolean getBoolean(String name) {
+        return prefFetcher.getBoolean(model, name);
+    }    
 
-    public void setFirefoxLocation(String firefoxLocation) {
-        this.firefoxLocation = firefoxLocation;
+    static String encodeSiteMap(Map<String, String> siteMap) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(baos);
+        out.writeObject(siteMap);
+        out.flush();
+        byte[] bytes = baos.toByteArray();
+        byte[] encoded = Base64.encodeBase64(bytes);
+        return new String(encoded, "UTF-8");
     }
+    
+    static Map<String, String> decodeSiteMap(String encodeSiteMap)
+            throws IOException, ClassNotFoundException {
+        if (encodeSiteMap != null && encodeSiteMap.length() > 0) {
+            byte[] bytes = encodeSiteMap.getBytes("UTF-8");
+            byte[] decoded = Base64.decodeBase64(bytes);
+            ByteArrayInputStream bais = new ByteArrayInputStream(decoded);
+            ObjectInputStream in = new ObjectInputStream(bais);
+
+            @SuppressWarnings("unchecked")
+            Map<String, String> result = (Map<String, String>) in.readObject();
+            return result;
+        } else {
+            return null;
+        }
+    }
+    
 }

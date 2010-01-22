@@ -18,12 +18,8 @@
 package com.googlecode.osde.internal.ui;
 
 import java.io.File;
-
-import com.googlecode.osde.internal.Activator;
-import com.googlecode.osde.internal.OsdeConfig;
-import com.googlecode.osde.internal.common.JdkVersion;
-import com.googlecode.osde.internal.shindig.DatabaseServer;
-import com.googlecode.osde.internal.utils.OpenSocialUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -42,6 +38,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.OsdeConfig;
+import com.googlecode.osde.internal.common.JdkVersion;
+import com.googlecode.osde.internal.shindig.DatabaseServer;
+import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
 /**
  * Eclipse preference page for OSDE.
@@ -358,46 +360,46 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
     }
 
     private void storeValues() {
-        OsdeConfig config = new OsdeConfig();
+        Map<String, Object> model = new HashMap<String, Object>();
         String country = countries.getItem(countries.getSelectionIndex());
-        config.setDefaultCountry(country.substring(country.indexOf('(') + 1, country.length() - 1));
+        model.put(OsdeConfig.DEFAULT_COUNTRY, 
+                country.substring(country.indexOf('(') + 1, country.length() - 1));
         String language = languages.getItem(languages.getSelectionIndex());
-        config.setDefaultLanguage(
+        model.put(OsdeConfig.DEFAULT_LANGUAGE, 
                 language.substring(language.indexOf('(') + 1, language.length() - 1));
-        config.setDatabaseDir(databaseDirText.getText());
-        config.setJettyDir(jettyDirText.getText());
-        config.setUseInternalDatabase(internalDatabaseRadio.getSelection());
-        config.setExternalDatabaseHost(hostText.getText());
-        config.setExternalDatabasePassword(passwordText.getText());
-        config.setExternalDatabasePort(portText.getText());
-        config.setExternalDatabaseUsername(usernameText.getText());
-        config.setExternalDatabaseType(databaseTypeCombo.getText());
-        config.setExternalDatabaseName(nameText.getText());
-        config.setLoggerConfigFile(loggerCfgLocationText.getText());
+        model.put(OsdeConfig.DATABASE_DIR, databaseDirText.getText());
+        model.put(OsdeConfig.JETTY_DIR, jettyDirText.getText());
+        model.put(OsdeConfig.USE_INTERNAL_DATABASE, internalDatabaseRadio.getSelection());
+        model.put(OsdeConfig.EXTERNAL_DATABASE_HOST, hostText.getText());
+        model.put(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, passwordText.getText());
+        model.put(OsdeConfig.EXTERNAL_DATABASE_PORT, portText.getText());
+        model.put(OsdeConfig.EXTERNAL_DATABASE_USERNAME, usernameText.getText());
+        model.put(OsdeConfig.EXTERNAL_DATABASE_TYPE, databaseTypeCombo.getText());
+        model.put(OsdeConfig.EXTERNAL_DATABASE_NAME, nameText.getText());
+        
+        model.put(OsdeConfig.LOGGER_CONFIG_FILE, loggerCfgLocationText.getText());
         String workDirectory = workDirectoryText.getText();
         File workDirectoryFile = new File(workDirectory);
         workDirectoryFile.mkdirs();
-        config.setWorkDirectory(workDirectory);
-        config.setLoggerConfigFile(loggerCfgLocationText.getText());
-        config.setCompileJavaScript(compileJavaScriptCheckbox.getSelection());
+        model.put(OsdeConfig.WORK_DIRECTORY, workDirectory);
+        model.put(OsdeConfig.LOGGER_CONFIG_FILE, loggerCfgLocationText.getText());
+        model.put(OsdeConfig.COMPILE_JAVASCRIPT, compileJavaScriptCheckbox.getSelection());
 
         String firefoxLocationValue = firefoxLocation.getText().trim();
         if (firefoxLocationValue.length() == 0) {
             firefoxLocationValue = OsdeConfig.DEFAULT_FIREFOX_LOCATION;
         }
-        config.setFirefoxLocation(firefoxLocationValue);
-
-        Activator.getDefault().storePreferences(config);
+        
+        model.put(OsdeConfig.FIREFOX_LOCATION, firefoxLocationValue);
+        Activator.getDefault().getPreferencesModel().store(model);
     }
 
     private void initializeValues() {
-        OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
-        setConfigurationToDisplay(config);
+        setConfigurationToDisplay(Activator.getDefault().getOsdeConfiguration());
     }
 
     private void initializeDefaults() {
-        OsdeConfig config = Activator.getDefault().getDefaultOsdeConfiguration();
-        setConfigurationToDisplay(config);
+        setConfigurationToDisplay(Activator.getDefault().getDefaultOsdeConfiguration());
     }
 
     private void setConfigurationToDisplay(OsdeConfig config) {
