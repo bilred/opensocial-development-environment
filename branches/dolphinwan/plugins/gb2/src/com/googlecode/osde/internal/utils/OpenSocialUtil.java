@@ -26,10 +26,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import com.googlecode.osde.internal.gadgets.model.Module;
-import com.googlecode.osde.internal.gadgets.parser.IParser;
+import com.googlecode.osde.internal.gadgets.parser.Parser;
 import com.googlecode.osde.internal.gadgets.parser.ParserException;
 import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
-import com.googlecode.osde.internal.gadgets.parser.ParserType;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
@@ -43,8 +42,8 @@ public class OpenSocialUtil {
     public static ApplicationInformation createApplicationInformation(IFile file)
             throws CoreException, ParserException {
         try {
-            IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-            Module module = (Module) parser.parse(file.getContents());
+            Parser<Module> parser = ParserFactory.gadgetSpecParser();
+            Module module = parser.parse(file.getContents());
 
             String path = file.getFullPath().toPortableString();
             MessageDigest digest = MessageDigest.getInstance("MD5");
@@ -71,8 +70,8 @@ public class OpenSocialUtil {
     public static ApplicationInformation createApplicationInformation(String url)
             throws CoreException, ParserException, IOException {
         try {
-            IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
-            Module module = (Module) parser.parse(new URL(url).openStream());
+            Parser<Module> parser = ParserFactory.gadgetSpecParser();
+            Module module = parser.parse(new URL(url).openStream());
 
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] hash = digest.digest(url.getBytes("UTF-8"));

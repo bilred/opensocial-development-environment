@@ -43,7 +43,7 @@ import org.apache.commons.digester.SetPropertiesRule;
  *
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  */
-public class GadgetXMLParser extends AbstractParser {
+class GadgetXMLParser extends AbstractParser<Module> {
 
     protected void initialize(Digester digester) {
         digester.addRule("Module", new ObjectCreateRule(Module.class));
@@ -121,5 +121,4 @@ public class GadgetXMLParser extends AbstractParser {
         digester.addRule("Module/Content", new CallMethodRule("setValue", 0));
         digester.addRule("Module/Content", new SetNextRule("addContent"));
     }
-
 }

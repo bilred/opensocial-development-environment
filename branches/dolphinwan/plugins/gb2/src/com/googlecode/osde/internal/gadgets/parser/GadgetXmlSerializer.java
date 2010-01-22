@@ -15,7 +15,7 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.googlecode.osde.internal.gadgets;
+package com.googlecode.osde.internal.gadgets.parser;
 
 import java.util.ArrayList;
 import java.util.List;
