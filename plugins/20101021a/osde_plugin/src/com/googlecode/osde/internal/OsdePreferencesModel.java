@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.osgi.service.prefs.Preferences;
 
-import com.googlecode.osde.internal.OsdeConfig.PreferenceFetcher;
+import com.googlecode.osde.internal.OsdeConfig.PreferenceGetter;
 import com.googlecode.osde.internal.common.JdkVersion;
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -47,8 +47,7 @@ public class OsdePreferencesModel {
     }
 
     public static void initializeDefaultPreferences() {
-        String tmpdir = Activator.getDefault().getWorkDirectory()
-                .getAbsolutePath();
+        String tmpdir = Activator.getDefault().getWorkDirectory().getAbsolutePath();
         Preferences node = new DefaultScope().getNode(Activator.PLUGIN_ID);
         Locale locale = Locale.getDefault();
         node.put(OsdeConfig.DEFAULT_COUNTRY, locale.getCountry());
@@ -76,36 +75,31 @@ public class OsdePreferencesModel {
         node.put(OsdeConfig.FIREFOX_LOCATION, OsdeConfig.DEFAULT_FIREFOX_LOCATION);
     }
     
-    
     public OsdeConfig getOsdeConfiguration() {
 
-        PreferenceFetcher commonPreferenceFetcher = new PreferenceFetcher() {
-
+        PreferenceGetter commonPreferenceGetter = new PreferenceGetter() {
             public boolean getBoolean(OsdePreferencesModel model, String name) {
                 return model.getBoolean(name);
             }
-
             public String get(OsdePreferencesModel model, String name) {
                 return model.get(name);
             }
         };
 
-        return new OsdeConfig(this, commonPreferenceFetcher);
+        return new OsdeConfig(this, commonPreferenceGetter);
     }
     
     public OsdeConfig getDefaultOsdeConfiguration() {
-        PreferenceFetcher defaultPrefereceFetcher = new PreferenceFetcher() {
-
+        PreferenceGetter defaultPrefereceGetter = new PreferenceGetter() {
             public boolean getBoolean(OsdePreferencesModel model, String name) {
                 return model.getDefaultBoolean(name);
             }
-
             public String get(OsdePreferencesModel model, String name) {
                 return model.getDefault(name);
             }
         };
 
-        return new OsdeConfig(this, defaultPrefereceFetcher);
+        return new OsdeConfig(this, defaultPrefereceGetter);
     }
     
     public void store(Map<String, Object> values) {

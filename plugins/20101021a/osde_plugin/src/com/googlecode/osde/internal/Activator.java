@@ -400,12 +400,29 @@ public class Activator extends AbstractUIPlugin {
     }
 
     public OsdeConfig getOsdeConfiguration() {
-        return getPreferencesModel().getOsdeConfiguration();
+        return preferencesModel.getOsdeConfiguration();
     }
 
     public OsdeConfig getDefaultOsdeConfiguration() {
-        return getPreferencesModel().getDefaultOsdeConfiguration();
+        return preferencesModel.getDefaultOsdeConfiguration();
     }
+    
+    public void storePreference(String name, String value){
+        preferencesModel.store(name, value);
+    }
+    
+    public void storePreference(String name, boolean value){
+        preferencesModel.store(name, value);
+    }
+    
+    public void storePreference(Map<String, Object> pref){
+        preferencesModel.store(pref);
+    }
+
+    public void storePreference(String name, Map<String, String> value){
+        preferencesModel.store(name, value);
+    }
+    
 
     public LaunchApplicationInformation getLastApplicationInformation() {
         return lastApplicationInformation;
@@ -424,7 +441,7 @@ public class Activator extends AbstractUIPlugin {
             File dir = new File(userHome, WORK_DIR_NAME);
             dir.mkdirs();
             workDirectory = dir.getAbsolutePath();
-            getPreferencesModel().store(OsdeConfig.WORK_DIRECTORY, workDirectory);
+            storePreference(OsdeConfig.WORK_DIRECTORY, workDirectory);
         }
         return new File(workDirectory);
     }
@@ -439,12 +456,4 @@ public class Activator extends AbstractUIPlugin {
                 .toExternalForm())).toExternalForm();
     }
     
-    /**
-     * Return the OsdeConfigManager 
-     * 
-     * @return configManager
-     */
-    public OsdePreferencesModel getPreferencesModel() {
-        return preferencesModel;
-    }
 }

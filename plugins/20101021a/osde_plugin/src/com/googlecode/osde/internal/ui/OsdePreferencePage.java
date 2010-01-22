@@ -382,7 +382,6 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         File workDirectoryFile = new File(workDirectory);
         workDirectoryFile.mkdirs();
         model.put(OsdeConfig.WORK_DIRECTORY, workDirectory);
-        model.put(OsdeConfig.LOGGER_CONFIG_FILE, loggerCfgLocationText.getText());
         model.put(OsdeConfig.COMPILE_JAVASCRIPT, compileJavaScriptCheckbox.getSelection());
 
         String firefoxLocationValue = firefoxLocation.getText().trim();
@@ -391,7 +390,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         }
         
         model.put(OsdeConfig.FIREFOX_LOCATION, firefoxLocationValue);
-        Activator.getDefault().getPreferencesModel().store(model);
+        Activator.getDefault().storePreference(model);
     }
 
     private void initializeValues() {
