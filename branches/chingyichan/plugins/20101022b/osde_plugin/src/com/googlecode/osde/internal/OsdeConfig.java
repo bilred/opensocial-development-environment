@@ -17,24 +17,21 @@
  */
 package com.googlecode.osde.internal;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
-
 import com.googlecode.osde.internal.profiling.FirefoxLocator;
 import com.googlecode.osde.internal.utils.Logger;
+import com.googlecode.osde.internal.utils.MapUtil;
 
 /**
- * An immutable JavaBean of the OSDE configuration.
+ * An OSDE configuration object for fetching data from the preference store
+ *
+ * @author yoichiro6642@gmail.com (Yoichiro Tanaka)
+ * @author chingyichan.tw@gmail.com (qrtt1)
  */
 public final class OsdeConfig {
-    
+
     private static final Logger logger = new Logger(OsdeConfig.class);
 
     // Preference node names
@@ -57,18 +54,18 @@ public final class OsdeConfig {
 
     // Default values
     public static final String DEFAULT_FIREFOX_LOCATION = new FirefoxLocator().getBinaryLocation();
-    
+
     static interface PreferenceGetter {
-        
+
         public String get(OsdePreferencesModel model, String name);
-        
+
         public boolean getBoolean(OsdePreferencesModel model, String name);
-        
+
     }
-    
+
     private OsdePreferencesModel model;
     private PreferenceGetter prefGetter;
-    
+
     OsdeConfig(OsdePreferencesModel model, PreferenceGetter getter){
         this.model = model;
         this.prefGetter = getter;
@@ -108,7 +105,7 @@ public final class OsdeConfig {
 
     public Map<String, String> getDocsSiteMap() {
         try {
-            return decodeSiteMap(get(DOCS_SITE_MAP));
+            return MapUtil.toMap(get(DOCS_SITE_MAP));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -142,39 +139,12 @@ public final class OsdeConfig {
     public String getFirefoxLocation() {
         return get(FIREFOX_LOCATION);
     }
-    
-    protected String get(String name) {
+
+    private String get(String name) {
         return prefGetter.get(model, name);
     }
-    
-    protected boolean getBoolean(String name) {
+
+    private boolean getBoolean(String name) {
         return prefGetter.getBoolean(model, name);
-    }    
-
-    static String encodeSiteMap(Map<String, String> siteMap) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(baos);
-        out.writeObject(siteMap);
-        out.flush();
-        byte[] bytes = baos.toByteArray();
-        byte[] encoded = Base64.encodeBase64(bytes);
-        return new String(encoded, "UTF-8");
     }
-    
-    static Map<String, String> decodeSiteMap(String encodeSiteMap)
-            throws IOException, ClassNotFoundException {
-        if (encodeSiteMap != null && encodeSiteMap.length() > 0) {
-            byte[] bytes = encodeSiteMap.getBytes("UTF-8");
-            byte[] decoded = Base64.decodeBase64(bytes);
-            ByteArrayInputStream bais = new ByteArrayInputStream(decoded);
-            ObjectInputStream in = new ObjectInputStream(bais);
-
-            @SuppressWarnings("unchecked")
-            Map<String, String> result = (Map<String, String>) in.readObject();
-            return result;
-        } else {
-            return null;
-        }
-    }
-    
 }
