@@ -28,18 +28,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.googlecode.osde.internal.Activator;
-import com.googlecode.osde.internal.jscompiler.JavaScriptCompilerRunner;
-import com.googlecode.osde.internal.utils.Logger;
-import com.googlecode.osde.internal.utils.OpenSocialUtil;
-
-import com.googlecode.osde.internal.gadgets.GadgetXmlSerializer;
 import com.googlecode.osde.internal.gadgets.ViewType;
 import com.googlecode.osde.internal.gadgets.model.Module;
 import com.googlecode.osde.internal.gadgets.model.Module.Content;
-import com.googlecode.osde.internal.gadgets.parser.IParser;
+import com.googlecode.osde.internal.gadgets.parser.GadgetXmlSerializer;
+import com.googlecode.osde.internal.gadgets.parser.Parser;
 import com.googlecode.osde.internal.gadgets.parser.ParserException;
 import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
-import com.googlecode.osde.internal.gadgets.parser.ParserType;
+import com.googlecode.osde.internal.jscompiler.JavaScriptCompilerRunner;
+import com.googlecode.osde.internal.utils.Logger;
+import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
@@ -194,12 +192,12 @@ public class GadgetBuilder extends IncrementalProjectBuilder {
     private void compileGadgetSpec(IFile source, IFile target, IProject project,
             IProgressMonitor monitor)
             throws CoreException, ParserException, UnsupportedEncodingException {
-        IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+        Parser<Module> parser = ParserFactory.gadgetSpecParser();
 
         InputStream fileContent = source.getContents();
         Module module;
         try {
-            module = (Module) gadgetXMLParser.parse(fileContent);
+            module = parser.parse(fileContent);
         } finally {
             IOUtils.closeQuietly(fileContent);
         }

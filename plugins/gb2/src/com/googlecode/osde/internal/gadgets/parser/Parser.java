@@ -17,8 +17,8 @@
  */
 package com.googlecode.osde.internal.gadgets.parser;
 
-import java.io.File;
 import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * A dummy interface for parsers
@@ -29,8 +29,8 @@ import java.io.InputStream;
  *
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  */
-public interface IParser {
-    public Object parse(InputStream in) throws ParserException;
+public interface Parser<T> {
+    public T parse(InputStream in) throws ParserException;
 
-    public Object parse(File fin) throws ParserException;
+    public T parse(Reader r) throws ParserException;
 }

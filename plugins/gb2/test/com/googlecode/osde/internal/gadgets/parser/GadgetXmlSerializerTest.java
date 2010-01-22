@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.googlecode.osde.internal.gadgets;
+package com.googlecode.osde.internal.gadgets.parser;
 
 import java.math.BigInteger;
 
 import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.parser.GadgetXmlSerializer;
 
 import org.junit.Before;
 import org.junit.Test;

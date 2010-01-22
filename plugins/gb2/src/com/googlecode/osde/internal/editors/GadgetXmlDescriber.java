@@ -20,12 +20,12 @@ package com.googlecode.osde.internal.editors;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.googlecode.osde.internal.utils.Logger;
+import com.googlecode.osde.internal.gadgets.model.Module;
 
-import com.googlecode.osde.internal.gadgets.parser.IParser;
+import com.googlecode.osde.internal.gadgets.parser.Parser;
 import com.googlecode.osde.internal.gadgets.parser.ParserException;
 import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
-import com.googlecode.osde.internal.gadgets.parser.ParserType;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescriber;
@@ -38,7 +38,7 @@ public class GadgetXmlDescriber implements IContentDescriber {
     private static final Logger logger = new Logger(GadgetXmlDescriber.class);
 
     public int describe(InputStream contents, IContentDescription description) throws IOException {
-        IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+        Parser<Module> parser = ParserFactory.gadgetSpecParser();
         try {
             parser.parse(contents);
         } catch (ParserException e) {
