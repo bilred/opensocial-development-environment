@@ -163,8 +163,7 @@ public class DocumentView extends AbstractView {
         } else {
             siteMap = new LinkedHashMap<String, String>();
             setDefaultSites(siteMap);
-            config.setDocsSiteMap(siteMap);
-            Activator.getDefault().storePreferences(config);
+            Activator.getDefault().getPreferencesModel().store(OsdeConfig.DOCS_SITE_MAP, siteMap);
         }
         siteListTable.setInput(siteMap);
         //
@@ -236,9 +235,7 @@ public class DocumentView extends AbstractView {
                 String name = dialog.getName();
                 String url = dialog.getUrl();
                 siteMap.put(name, url);
-                OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
-                config.setDocsSiteMap(siteMap);
-                Activator.getDefault().storePreferences(config);
+                Activator.getDefault().getPreferencesModel().store(OsdeConfig.DOCS_SITE_MAP, siteMap);
                 loadSites();
             }
         }
@@ -261,9 +258,7 @@ public class DocumentView extends AbstractView {
                 if (MessageDialog.openConfirm(getSite().getShell(), "Confirm",
                         "Would you like to delete the site '" + entry.getKey() + "'?")) {
                     siteMap.remove(entry.getKey());
-                    OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
-                    config.setDocsSiteMap(siteMap);
-                    Activator.getDefault().storePreferences(config);
+                    Activator.getDefault().getPreferencesModel().store(OsdeConfig.DOCS_SITE_MAP, siteMap);
                     loadSites();
                 }
             }
@@ -280,9 +275,7 @@ public class DocumentView extends AbstractView {
             if (MessageDialog.openConfirm(getSite().getShell(), "Confirm",
                     "Would you like to add default sites?")) {
                 setDefaultSites(siteMap);
-                OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
-                config.setDocsSiteMap(siteMap);
-                Activator.getDefault().storePreferences(config);
+                Activator.getDefault().getPreferencesModel().store(OsdeConfig.DOCS_SITE_MAP, siteMap);
                 loadSites();
             }
         }

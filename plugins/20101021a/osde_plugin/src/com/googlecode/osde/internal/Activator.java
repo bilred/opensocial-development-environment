@@ -407,10 +407,6 @@ public class Activator extends AbstractUIPlugin {
         return getPreferencesModel().getDefaultOsdeConfiguration();
     }
 
-    public void storePreferences(OsdeConfig config) {
-        getPreferencesModel().storePreferences(config);
-    }
-
     public LaunchApplicationInformation getLastApplicationInformation() {
         return lastApplicationInformation;
     }
@@ -428,8 +424,7 @@ public class Activator extends AbstractUIPlugin {
             File dir = new File(userHome, WORK_DIR_NAME);
             dir.mkdirs();
             workDirectory = dir.getAbsolutePath();
-            config.setWorkDirectory(workDirectory);
-            storePreferences(config);
+            getPreferencesModel().store(OsdeConfig.WORK_DIRECTORY, workDirectory);
         }
         return new File(workDirectory);
     }
