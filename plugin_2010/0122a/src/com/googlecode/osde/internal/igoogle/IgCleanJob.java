@@ -55,7 +55,7 @@ public class IgCleanJob extends Job {
         monitor.worked(1);
 
         // Clean all preview files as hosted on iGoogle.
-        // TODO: (p1) the files to be cleaned need not be for preview only
+        // TODO: (p2) the files to be cleaned need not be for preview only
         try {
             IgHostingUtil.cleanFiles(username, password, IgPreviewJob.OSDE_PREVIEW_DIRECTORY);
         } catch (IgException e) {
