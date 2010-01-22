@@ -24,16 +24,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.googlecode.osde.internal.OsdeConfig.PreferenceGetter;
+import com.googlecode.osde.internal.common.JdkVersion;
+import com.googlecode.osde.internal.utils.Logger;
+import com.googlecode.osde.internal.utils.MapUtil;
+
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.osgi.service.prefs.Preferences;
 
-import com.googlecode.osde.internal.OsdeConfig.PreferenceGetter;
-import com.googlecode.osde.internal.common.JdkVersion;
-import com.googlecode.osde.internal.utils.Logger;
-
 /**
- * 
  * @author chingyichan.tw@gmail.com (qrtt1)
  *
  */
@@ -74,7 +74,7 @@ public class OsdePreferencesModel {
         node.putBoolean(OsdeConfig.COMPILE_JAVASCRIPT, JdkVersion.isAtLeastJdk6());
         node.put(OsdeConfig.FIREFOX_LOCATION, OsdeConfig.DEFAULT_FIREFOX_LOCATION);
     }
-    
+
     public OsdeConfig getOsdeConfiguration() {
 
         PreferenceGetter commonPreferenceGetter = new PreferenceGetter() {
@@ -88,7 +88,7 @@ public class OsdePreferencesModel {
 
         return new OsdeConfig(this, commonPreferenceGetter);
     }
-    
+
     public OsdeConfig getDefaultOsdeConfiguration() {
         PreferenceGetter defaultPrefereceGetter = new PreferenceGetter() {
             public boolean getBoolean(OsdePreferencesModel model, String name) {
@@ -101,7 +101,7 @@ public class OsdePreferencesModel {
 
         return new OsdeConfig(this, defaultPrefereceGetter);
     }
-    
+
     public void store(Map<String, Object> values) {
         for (Entry<String, Object> entry : values.entrySet()) {
             Object value = entry.getValue();
@@ -110,42 +110,42 @@ public class OsdePreferencesModel {
             } else if (value instanceof Boolean) {
                 store(entry.getKey(), (Boolean) entry.getValue());
             } else {
-                logger.warn("can not store preference name[" 
+                logger.warn("can not store preference name["
                         + entry.getKey() + "] = " + entry.getValue());
             }
         }
     }
-    
+
     public void store(String name, Map<String, String> map){
         try {
-            store(name, OsdeConfig.encodeSiteMap(map));
+            store(name, MapUtil.toString(map));
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
     }
-    
+
     public void store(String name, String value){
         store.setValue(name, value);
     }
-    
+
     public void store(String name, boolean value){
         store.setValue(name, value);
     }
-    
+
     public String get(String name) {
         return store.getString(name);
     }
-    
+
     public boolean getBoolean(String name) {
         return store.getBoolean(name);
     }
-    
+
     public String getDefault(String name){
         return store.getDefaultString(name);
     }
-    
+
     public boolean getDefaultBoolean(String name){
         return store.getDefaultBoolean(name);
     }
-    
+
 }

@@ -26,6 +26,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Handler;
 
+import com.googlecode.osde.internal.runtime.LaunchApplicationInformation;
+import com.googlecode.osde.internal.shindig.ActivityService;
+import com.googlecode.osde.internal.shindig.AppDataService;
+import com.googlecode.osde.internal.shindig.ApplicationService;
+import com.googlecode.osde.internal.shindig.DatabaseServer;
+import com.googlecode.osde.internal.shindig.PersonService;
+import com.googlecode.osde.internal.shindig.ShindigServer;
+import com.googlecode.osde.internal.ui.views.activities.ActivitiesView;
+import com.googlecode.osde.internal.ui.views.appdata.AppDataView;
+import com.googlecode.osde.internal.ui.views.apps.ApplicationView;
+import com.googlecode.osde.internal.ui.views.people.PersonView;
+import com.googlecode.osde.internal.ui.views.userprefs.UserPrefsView;
+import com.googlecode.osde.internal.utils.EclipseLogHandler;
+import com.googlecode.osde.internal.utils.Logger;
+
 import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,24 +67,9 @@ import org.hibernate.classic.Session;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import com.googlecode.osde.internal.runtime.LaunchApplicationInformation;
-import com.googlecode.osde.internal.shindig.ActivityService;
-import com.googlecode.osde.internal.shindig.AppDataService;
-import com.googlecode.osde.internal.shindig.ApplicationService;
-import com.googlecode.osde.internal.shindig.DatabaseServer;
-import com.googlecode.osde.internal.shindig.PersonService;
-import com.googlecode.osde.internal.shindig.ShindigServer;
-import com.googlecode.osde.internal.ui.views.activities.ActivitiesView;
-import com.googlecode.osde.internal.ui.views.appdata.AppDataView;
-import com.googlecode.osde.internal.ui.views.apps.ApplicationView;
-import com.googlecode.osde.internal.ui.views.people.PersonView;
-import com.googlecode.osde.internal.ui.views.userprefs.UserPrefsView;
-import com.googlecode.osde.internal.utils.EclipseLogHandler;
-import com.googlecode.osde.internal.utils.Logger;
-
 /**
  * The activator class controls the plug-in life cycle.
- * 
+ *
  * Note that when the plug-in shuts down, AbstractUIPlugin automatically saves
  * any plug-in preferences. So anything specified in the preference page will
  * persist next time you activate this plug-in.
@@ -157,7 +157,7 @@ public class Activator extends AbstractUIPlugin {
 
     /**
      * Returns the shared instance
-     * 
+     *
      * @return the shared instance
      */
     public static Activator getDefault() {
@@ -406,15 +406,15 @@ public class Activator extends AbstractUIPlugin {
     public OsdeConfig getDefaultOsdeConfiguration() {
         return preferencesModel.getDefaultOsdeConfiguration();
     }
-    
+
     public void storePreference(String name, String value){
         preferencesModel.store(name, value);
     }
-    
+
     public void storePreference(String name, boolean value){
         preferencesModel.store(name, value);
     }
-    
+
     public void storePreference(Map<String, Object> pref){
         preferencesModel.store(pref);
     }
@@ -422,7 +422,7 @@ public class Activator extends AbstractUIPlugin {
     public void storePreference(String name, Map<String, String> value){
         preferencesModel.store(name, value);
     }
-    
+
 
     public LaunchApplicationInformation getLastApplicationInformation() {
         return lastApplicationInformation;
@@ -455,5 +455,5 @@ public class Activator extends AbstractUIPlugin {
         return FileLocator.toFileURL(new URL(getDefault().getBundle().getEntry(path)
                 .toExternalForm())).toExternalForm();
     }
-    
+
 }
