@@ -17,12 +17,8 @@
  */
 package com.googlecode.osde.internal;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -30,22 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Handler;
 
-import com.googlecode.osde.internal.runtime.LaunchApplicationInformation;
-import com.googlecode.osde.internal.shindig.ActivityService;
-import com.googlecode.osde.internal.shindig.AppDataService;
-import com.googlecode.osde.internal.shindig.ApplicationService;
-import com.googlecode.osde.internal.shindig.DatabaseServer;
-import com.googlecode.osde.internal.shindig.PersonService;
-import com.googlecode.osde.internal.shindig.ShindigServer;
-import com.googlecode.osde.internal.ui.views.activities.ActivitiesView;
-import com.googlecode.osde.internal.ui.views.appdata.AppDataView;
-import com.googlecode.osde.internal.ui.views.apps.ApplicationView;
-import com.googlecode.osde.internal.ui.views.people.PersonView;
-import com.googlecode.osde.internal.ui.views.userprefs.UserPrefsView;
-import com.googlecode.osde.internal.utils.EclipseLogHandler;
-import com.googlecode.osde.internal.utils.Logger;
-
-import org.apache.commons.codec.binary.Base64;
 import org.apache.shindig.social.opensocial.hibernate.utils.HibernateUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,7 +34,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Color;
@@ -72,6 +51,21 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+
+import com.googlecode.osde.internal.runtime.LaunchApplicationInformation;
+import com.googlecode.osde.internal.shindig.ActivityService;
+import com.googlecode.osde.internal.shindig.AppDataService;
+import com.googlecode.osde.internal.shindig.ApplicationService;
+import com.googlecode.osde.internal.shindig.DatabaseServer;
+import com.googlecode.osde.internal.shindig.PersonService;
+import com.googlecode.osde.internal.shindig.ShindigServer;
+import com.googlecode.osde.internal.ui.views.activities.ActivitiesView;
+import com.googlecode.osde.internal.ui.views.appdata.AppDataView;
+import com.googlecode.osde.internal.ui.views.apps.ApplicationView;
+import com.googlecode.osde.internal.ui.views.people.PersonView;
+import com.googlecode.osde.internal.ui.views.userprefs.UserPrefsView;
+import com.googlecode.osde.internal.utils.EclipseLogHandler;
+import com.googlecode.osde.internal.utils.Logger;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -103,6 +97,7 @@ public class Activator extends AbstractUIPlugin {
     private Session session;
     private boolean runningShindig = false;
     private LaunchApplicationInformation lastApplicationInformation;
+    private OsdePreferencesModel preferencesModel;
 
     private Handler logHandler;
 
@@ -112,7 +107,7 @@ public class Activator extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
-
+        preferencesModel = new OsdePreferencesModel(getPreferenceStore());
         logHandler = new EclipseLogHandler();
 
         java.util.logging.Logger.getLogger(PLUGIN_ID).addHandler(logHandler);
@@ -405,96 +400,29 @@ public class Activator extends AbstractUIPlugin {
     }
 
     public OsdeConfig getOsdeConfiguration() {
-        try {
-            IPreferenceStore store = getPreferenceStore();
-            OsdeConfig config = new OsdeConfig();
-            config.setDefaultCountry(store.getString(OsdeConfig.DEFAULT_COUNTRY));
-            config.setDefaultLanguage(store.getString(OsdeConfig.DEFAULT_LANGUAGE));
-            config.setDatabaseDir(store.getString(OsdeConfig.DATABASE_DIR));
-            config.setDocsSiteMap(decodeSiteMap(store.getString(OsdeConfig.DOCS_SITE_MAP)));
-            config.setJettyDir(store.getString(OsdeConfig.JETTY_DIR));
-            config.setUseInternalDatabase(store.getBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
-            config.setExternalDatabaseType(store.getString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
-            config.setExternalDatabaseHost(store.getString(OsdeConfig.EXTERNAL_DATABASE_HOST));
-            config.setExternalDatabasePort(store.getString(OsdeConfig.EXTERNAL_DATABASE_PORT));
-            config.setExternalDatabaseUsername(store
-                    .getString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
-            config.setExternalDatabasePassword(store
-                    .getString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
-            config.setExternalDatabaseName(store.getString(OsdeConfig.EXTERNAL_DATABASE_NAME));
-            config.setWorkDirectory(store.getString(OsdeConfig.WORK_DIRECTORY));
-            config.setLoggerConfigFile(store.getString(OsdeConfig.LOGGER_CONFIG_FILE));
-            config.setCompileJavaScript(store.getBoolean(OsdeConfig.COMPILE_JAVASCRIPT));
-            config.setFirefoxLocation(store.getString(OsdeConfig.FIREFOX_LOCATION));
-            return config;
-        } catch (IOException e) {
-            logger.error("Something went wrong while getting OSDE configurations.", e);
-            throw new IllegalStateException(e);
-        } catch (ClassNotFoundException e) {
-            logger.error("Retrieving the preference values failed.", e);
-            throw new IllegalStateException(e);
-        }
+        return preferencesModel.getOsdeConfiguration();
     }
 
     public OsdeConfig getDefaultOsdeConfiguration() {
-        try {
-            IPreferenceStore store = getPreferenceStore();
-            OsdeConfig config = new OsdeConfig();
-            config.setDefaultCountry(store.getDefaultString(OsdeConfig.DEFAULT_COUNTRY));
-            config.setDefaultLanguage(store.getDefaultString(OsdeConfig.DEFAULT_LANGUAGE));
-            config.setDatabaseDir(store.getDefaultString(OsdeConfig.DATABASE_DIR));
-            config.setDocsSiteMap(decodeSiteMap(store.getDefaultString(OsdeConfig.DOCS_SITE_MAP)));
-            config.setJettyDir(store.getDefaultString(OsdeConfig.JETTY_DIR));
-            config.setUseInternalDatabase(store.getDefaultBoolean(OsdeConfig.USE_INTERNAL_DATABASE));
-            config.setExternalDatabaseType(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_TYPE));
-            config.setExternalDatabaseHost(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_HOST));
-            config.setExternalDatabasePort(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PORT));
-            config.setExternalDatabaseUsername(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_USERNAME));
-            config.setExternalDatabasePassword(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
-            config.setExternalDatabaseName(store.getDefaultString(OsdeConfig.EXTERNAL_DATABASE_NAME));
-            config.setWorkDirectory(store.getDefaultString(OsdeConfig.WORK_DIRECTORY));
-            config.setLoggerConfigFile(store.getDefaultString(OsdeConfig.LOGGER_CONFIG_FILE));
-            config.setCompileJavaScript(store.getDefaultBoolean(OsdeConfig.COMPILE_JAVASCRIPT));
-            config.setFirefoxLocation(store.getDefaultString(OsdeConfig.FIREFOX_LOCATION));
-            return config;
-        } catch (IOException e) {
-            logger.error("Retrieving preference values failed.", e);
-            throw new IllegalStateException(e);
-        } catch (ClassNotFoundException e) {
-            logger.error("Retrieving preference values failed.", e);
-            throw new IllegalStateException(e);
-        }
+        return preferencesModel.getDefaultOsdeConfiguration();
+    }
+    
+    public void storePreference(String name, String value){
+        preferencesModel.store(name, value);
+    }
+    
+    public void storePreference(String name, boolean value){
+        preferencesModel.store(name, value);
+    }
+    
+    public void storePreference(Map<String, Object> pref){
+        preferencesModel.store(pref);
     }
 
-    public void storePreferences(OsdeConfig config) {
-        storePreferences(getPreferenceStore(), config);
+    public void storePreference(String name, Map<String, String> value){
+        preferencesModel.store(name, value);
     }
-
-    public void storePreferences(IPreferenceStore store, OsdeConfig config) {
-        try {
-            store.setValue(OsdeConfig.DEFAULT_COUNTRY, config.getDefaultCountry());
-            store.setValue(OsdeConfig.DEFAULT_LANGUAGE, config.getDefaultLanguage());
-            store.setValue(OsdeConfig.DATABASE_DIR, config.getDatabaseDir());
-            store.setValue(OsdeConfig.DOCS_SITE_MAP, encodeSiteMap(config.getDocsSiteMap()));
-            store.setValue(OsdeConfig.JETTY_DIR, config.getJettyDir());
-            store.setValue(OsdeConfig.USE_INTERNAL_DATABASE, config.isUseInternalDatabase());
-            store.setValue(OsdeConfig.EXTERNAL_DATABASE_HOST, config.getExternalDatabaseHost());
-            store.setValue(OsdeConfig.EXTERNAL_DATABASE_PORT, config.getExternalDatabasePort());
-            store.setValue(OsdeConfig.EXTERNAL_DATABASE_USERNAME, config
-                    .getExternalDatabaseUsername());
-            store.setValue(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, config
-                    .getExternalDatabasePassword());
-            store.setValue(OsdeConfig.EXTERNAL_DATABASE_TYPE, config.getExternalDatabaseType());
-            store.setValue(OsdeConfig.EXTERNAL_DATABASE_NAME, config.getExternalDatabaseName());
-            store.setValue(OsdeConfig.WORK_DIRECTORY, config.getWorkDirectory());
-            store.setValue(OsdeConfig.LOGGER_CONFIG_FILE, config.getLoggerConfigFile());
-            store.setValue(OsdeConfig.COMPILE_JAVASCRIPT, config.isCompileJavaScript());
-            store.setValue(OsdeConfig.FIREFOX_LOCATION, config.getFirefoxLocation());
-        } catch (IOException e) {
-            logger.error("Storing preference values failed.", e);
-            throw new IllegalStateException(e);
-        }
-    }
+    
 
     public LaunchApplicationInformation getLastApplicationInformation() {
         return lastApplicationInformation;
@@ -505,32 +433,6 @@ public class Activator extends AbstractUIPlugin {
         this.lastApplicationInformation = lastApplicationInformation;
     }
 
-    private String encodeSiteMap(Map<String, String> siteMap) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(baos);
-        out.writeObject(siteMap);
-        out.flush();
-        byte[] bytes = baos.toByteArray();
-        byte[] encoded = Base64.encodeBase64(bytes);
-        return new String(encoded, "UTF-8");
-    }
-
-    private Map<String, String> decodeSiteMap(String encodeSiteMap) throws IOException,
-            ClassNotFoundException {
-        if (encodeSiteMap != null && encodeSiteMap.length() > 0) {
-            byte[] bytes = encodeSiteMap.getBytes("UTF-8");
-            byte[] decoded = Base64.decodeBase64(bytes);
-            ByteArrayInputStream bais = new ByteArrayInputStream(decoded);
-            ObjectInputStream in = new ObjectInputStream(bais);
-
-            @SuppressWarnings("unchecked")
-            Map<String, String> result = (Map<String, String>) in.readObject();
-            return result;
-        } else {
-            return null;
-        }
-    }
-
     public File getWorkDirectory() {
         OsdeConfig config = getOsdeConfiguration();
         String workDirectory = config.getWorkDirectory();
@@ -539,8 +441,7 @@ public class Activator extends AbstractUIPlugin {
             File dir = new File(userHome, WORK_DIR_NAME);
             dir.mkdirs();
             workDirectory = dir.getAbsolutePath();
-            config.setWorkDirectory(workDirectory);
-            storePreferences(config);
+            storePreference(OsdeConfig.WORK_DIRECTORY, workDirectory);
         }
         return new File(workDirectory);
     }
@@ -554,4 +455,5 @@ public class Activator extends AbstractUIPlugin {
         return FileLocator.toFileURL(new URL(getDefault().getBundle().getEntry(path)
                 .toExternalForm())).toExternalForm();
     }
+    
 }
