@@ -18,12 +18,20 @@
  */
 package com.googlecode.osde.internal.igoogle;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.googlecode.osde.internal.builders.GadgetBuilder;
 import com.googlecode.osde.internal.utils.Logger;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -69,6 +77,15 @@ public class IgPreviewJob extends Job {
         final String previewGadgetUrl;
         try {
             IgCredentials igCredentials = new IgCredentials(username, password);
+
+            // Get hosting URL.
+            String hostingUrl = IgHostingUtil.formHostingUrl(
+                    igCredentials.getPublicId(), OSDE_PREVIEW_DIRECTORY);
+
+            // Modify gadget file with new hosting url.
+            modifyHostingUrlForGadgetFileInTargetFolder(hostingUrl);
+
+            // TODO: (p1) get rid of gadgetXmlIFile from parameters
             String urlOfHostedGadgetFile = IgHostingUtil.uploadFiles(
                     igCredentials, gadgetXmlIFile, OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
             previewGadgetUrl = IgHostingUtil.formPreviewOpenSocialGadgetUrl(
@@ -88,6 +105,41 @@ public class IgPreviewJob extends Job {
 
         monitor.done();
         return Status.OK_STATUS;
+    }
+
+    /**
+     * Replaces "http://localhost:8080/" with newHostingUrl in the gadgetXmlIFile
+     * which is copied into the target folder.
+     */
+    void modifyHostingUrlForGadgetFileInTargetFolder(String newHostingUrl) {
+        // TODO: (p1) implement modifyHostingBaseUrlForGadgetFile
+        IProject project = gadgetXmlIFile.getProject();
+        String targetFolder =
+            project.getFolder(GadgetBuilder.TARGET_FOLDER_NAME).getLocation().toOSString();
+        String gadgetFileName = gadgetXmlIFile.getName();
+        String gadgetFileFullPath = targetFolder + gadgetFileName;
+        logger.info("gadgetFileFullPath: " + gadgetFileFullPath);
+        try {
+            FileReader fileReader = new FileReader(gadgetFileFullPath);
+            String fileContentAsString = IOUtils.toString(fileReader);
+            logger.info("fileContentAsString: " + fileContentAsString);
+            String modifiedFileContent =
+                fileContentAsString.replaceAll("http://localhost:8080/", newHostingUrl);
+            logger.info("modifiedFileContent: " + modifiedFileContent);
+
+            // TODO: (p0) Write file to target folder
+            FileWriter modifiedGadgetXmlFile = new FileWriter("test/com/googlecode/osde/internal/igoogle/testdata/osde_preview.xml"); // TODO: (p0) make this a constant
+            //IOUtils.write(modifiedFileContent, modifiedGadgetXmlFile);
+            modifiedGadgetXmlFile.write(modifiedFileContent);
+            modifiedGadgetXmlFile.flush();
+        } catch (FileNotFoundException e) {
+            logger.warn(e.getMessage());
+        } catch (IOException e) {
+            logger.warn(e.getMessage());
+        } finally {
+            // TODO: (p0) close stream/reader
+        }
+
     }
 
     private static class PreviewingRunnable implements Runnable {

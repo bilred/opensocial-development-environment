@@ -270,29 +270,29 @@ public class IgHostingUtil {
     }
 
     /**
-     * Returns the url for the hosted directory given hosting folder
-     * and public id.
-     *
-     * @param publicId iGoogle public id
-     * @param hostingFolder hosting folder
-     * @return the url for the hosted directory
-     */
-    public static String formHostedDirectoryUrl(String publicId, String hostingFolder) {
-        return URL_GMODULE_FILE + publicId + hostingFolder;
-    }
-
-    /**
      * Returns the url for the hosted file given hosting folder,
      * file path, and public id.
      *
      * @param publicId iGoogle public id
-     * @param hostingFolder hosting folder
+     * @param hostingFolder hosting folder starting and ending with &quot;/&quot;
      * @param filePath path of the hosted file
      * @return the url for the hosted file
      */
     public static String formHostedFileUrl(
             String publicId, String hostingFolder, String filePath) {
-        return formHostedDirectoryUrl(publicId, hostingFolder) + filePath;
+        return formHostingUrl(publicId, hostingFolder) + filePath;
+    }
+
+    /**
+     * Returns the url for the hosting directory given hosting folder
+     * and public id.
+     *
+     * @param publicId iGoogle public id
+     * @param hostingFolder hosting folder starting and ending with &quot;/&quot;
+     * @return the url for the hosting directory; it ends with &quot;/&quot;
+     */
+    public static String formHostingUrl(String publicId, String hostingFolder) {
+        return URL_GMODULE_FILE + publicId + hostingFolder;
     }
 
     /**
@@ -483,5 +483,4 @@ public class IgHostingUtil {
         // Clean files.
         IgHostingUtil.cleanFiles(igCredentials, hostingFolder);
     }
-
 }
