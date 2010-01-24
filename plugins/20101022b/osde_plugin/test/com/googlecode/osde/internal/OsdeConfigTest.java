@@ -3,208 +3,75 @@ package com.googlecode.osde.internal;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * TODO: add javadoc for type
- */
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
 public class OsdeConfigTest {
 
-    /**
-     * @throws java.lang.Exception
-     */
+    OsdeConfig.PreferenceGetter getter;
+    OsdeConfig config;
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception{
+        getter = createMock(OsdeConfig.PreferenceGetter.class);
+        config = new OsdeConfig(null, getter);
     }
 
-    /**
-     * Test method for {@link OsdeConfig#getExternalDatabaseName()}.
-     */
+
     @Test
-    public void testGetExternalDatabaseName() {
-        // TODO: implement test method
+    public void testPreferenceGetter() {
+        OsdeConfig.PreferenceGetter getter = createMock(OsdeConfig.PreferenceGetter.class);
+        OsdeConfig config = new OsdeConfig(null, getter);
+
+        expect(getter.get(null, OsdeConfig.DATABASE_DIR)).andStubReturn("");
+        expect(getter.getBoolean(null, OsdeConfig.COMPILE_JAVASCRIPT)).andStubReturn(true);
+
+        replay(getter);
+        config.getDatabaseDir();
+        config.isCompileJavaScript();
+        verify(getter);
     }
 
-    /**
-     * Test method for {@link OsdeConfig#setExternalDatabaseName(java.lang.String)}.
-     */
     @Test
-    public void testSetExternalDatabaseName() {
-        // TODO: implement test method
-    }
+    public void testGetters() throws Exception {
 
-    /**
-     * Test method for {@link OsdeConfig#isUseInternalDatabase()}.
-     */
-    @Test
-    public void testIsUseInternalDatabase() {
-        // TODO: implement test method
-    }
+        expect(getter.get(null, OsdeConfig.DATABASE_DIR)).andReturn("");
+        expect(getter.get(null, OsdeConfig.DEFAULT_COUNTRY)).andReturn("");
+        expect(getter.get(null, OsdeConfig.DEFAULT_LANGUAGE)).andReturn("");
+        expect(getter.get(null, OsdeConfig.DOCS_SITE_MAP)).andReturn("");
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_HOST)).andReturn("");
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_NAME)).andReturn("");
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_PASSWORD)).andReturn("");
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_PORT)).andReturn("");
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_TYPE)).andReturn("");
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_USERNAME)).andReturn("");
+        expect(getter.get(null, OsdeConfig.FIREFOX_LOCATION)).andReturn("");
+        expect(getter.get(null, OsdeConfig.JETTY_DIR)).andReturn("");
+        expect(getter.get(null, OsdeConfig.LOGGER_CONFIG_FILE)).andReturn("");
+        expect(getter.get(null, OsdeConfig.WORK_DIRECTORY)).andReturn("");
+        expect(getter.getBoolean(null, OsdeConfig.COMPILE_JAVASCRIPT)).andReturn(true);
+        expect(getter.getBoolean(null, OsdeConfig.USE_INTERNAL_DATABASE)).andReturn(true);
 
-    /**
-     * Test method for {@link OsdeConfig#setUseInternalDatabase(boolean)}.
-     */
-    @Test
-    public void testSetUseInternalDatabase() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getExternalDatabaseType()}.
-     */
-    @Test
-    public void testGetExternalDatabaseType() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setExternalDatabaseType(java.lang.String)}.
-     */
-    @Test
-    public void testSetExternalDatabaseType() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getExternalDatabaseHost()}.
-     */
-    @Test
-    public void testGetExternalDatabaseHost() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setExternalDatabaseHost(java.lang.String)}.
-     */
-    @Test
-    public void testSetExternalDatabaseHost() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getExternalDatabasePort()}.
-     */
-    @Test
-    public void testGetExternalDatabasePort() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setExternalDatabasePort(java.lang.String)}.
-     */
-    @Test
-    public void testSetExternalDatabasePort() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getExternalDatabaseUsername()}.
-     */
-    @Test
-    public void testGetExternalDatabaseUsername() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setExternalDatabaseUsername(java.lang.String)}.
-     */
-    @Test
-    public void testSetExternalDatabaseUsername() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getExternalDatabasePassword()}.
-     */
-    @Test
-    public void testGetExternalDatabasePassword() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setExternalDatabasePassword(java.lang.String)}.
-     */
-    @Test
-    public void testSetExternalDatabasePassword() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getJettyDir()}.
-     */
-    @Test
-    public void testGetJettyDir() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setJettyDir(java.lang.String)}.
-     */
-    @Test
-    public void testSetJettyDir() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getDocsSiteMap()}.
-     */
-    @Test
-    public void testGetDocsSiteMap() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setDocsSiteMap(java.util.Map)}.
-     */
-    @Test
-    public void testSetDocsSiteMap() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getDatabaseDir()}.
-     */
-    @Test
-    public void testGetDatabaseDir() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setDatabaseDir(java.lang.String)}.
-     */
-    @Test
-    public void testSetDatabaseDir() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getDefaultLanguage()}.
-     */
-    @Test
-    public void testGetDefaultLanguage() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setDefaultLanguage(java.lang.String)}.
-     */
-    @Test
-    public void testSetDefaultLanguage() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#getDefaultCountry()}.
-     */
-    @Test
-    public void testGetDefaultCountry() {
-        // TODO: implement test method
-    }
-
-    /**
-     * Test method for {@link OsdeConfig#setDefaultCountry(java.lang.String)}.
-     */
-    @Test
-    public void testSetDefaultCountry() {
-        // TODO: implement test method
+        replay(getter);
+        config.getDatabaseDir();
+        config.getDefaultCountry();
+        config.getDefaultLanguage();
+        config.getDocsSiteMap();
+        config.getExternalDatabaseHost();
+        config.getExternalDatabaseName();
+        config.getExternalDatabasePassword();
+        config.getExternalDatabasePort();
+        config.getExternalDatabaseType();
+        config.getExternalDatabaseUsername();
+        config.getFirefoxLocation();
+        config.getJettyDir();
+        config.getLoggerConfigFile();
+        config.getWorkDirectory();
+        config.isCompileJavaScript();
+        config.isUseInternalDatabase();
+        verify(getter);
     }
 
 }
