@@ -37,22 +37,22 @@ public class OsdeConfigTest {
     @Test
     public void testGetters() throws Exception {
 
-        expect(getter.get(null, OsdeConfig.DATABASE_DIR)).andReturn("");
-        expect(getter.get(null, OsdeConfig.DEFAULT_COUNTRY)).andReturn("");
-        expect(getter.get(null, OsdeConfig.DEFAULT_LANGUAGE)).andReturn("");
-        expect(getter.get(null, OsdeConfig.DOCS_SITE_MAP)).andReturn("");
-        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_HOST)).andReturn("");
-        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_NAME)).andReturn("");
-        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_PASSWORD)).andReturn("");
-        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_PORT)).andReturn("");
-        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_TYPE)).andReturn("");
-        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_USERNAME)).andReturn("");
-        expect(getter.get(null, OsdeConfig.FIREFOX_LOCATION)).andReturn("");
-        expect(getter.get(null, OsdeConfig.JETTY_DIR)).andReturn("");
-        expect(getter.get(null, OsdeConfig.LOGGER_CONFIG_FILE)).andReturn("");
-        expect(getter.get(null, OsdeConfig.WORK_DIRECTORY)).andReturn("");
-        expect(getter.getBoolean(null, OsdeConfig.COMPILE_JAVASCRIPT)).andReturn(true);
-        expect(getter.getBoolean(null, OsdeConfig.USE_INTERNAL_DATABASE)).andReturn(true);
+        expect(getter.get(null, OsdeConfig.DATABASE_DIR)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.DEFAULT_COUNTRY)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.DEFAULT_LANGUAGE)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.DOCS_SITE_MAP)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_HOST)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_NAME)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_PASSWORD)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_PORT)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_TYPE)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.EXTERNAL_DATABASE_USERNAME)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.FIREFOX_LOCATION)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.JETTY_DIR)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.LOGGER_CONFIG_FILE)).andReturn("").once();
+        expect(getter.get(null, OsdeConfig.WORK_DIRECTORY)).andReturn("").once();
+        expect(getter.getBoolean(null, OsdeConfig.COMPILE_JAVASCRIPT)).andReturn(true).once();
+        expect(getter.getBoolean(null, OsdeConfig.USE_INTERNAL_DATABASE)).andReturn(true).once();
 
         replay(getter);
         config.getDatabaseDir();
