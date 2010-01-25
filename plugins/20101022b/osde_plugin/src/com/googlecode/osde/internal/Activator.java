@@ -456,4 +456,8 @@ public class Activator extends AbstractUIPlugin {
                 .toExternalForm())).toExternalForm();
     }
 
+    public OsdePreferencesModel getPreferenceModel() {
+        return preferencesModel;
+    }
+
 }

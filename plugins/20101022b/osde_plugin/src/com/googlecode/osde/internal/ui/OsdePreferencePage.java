@@ -18,8 +18,19 @@
 package com.googlecode.osde.internal.ui;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+
+import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.OsdeConfig;
+import com.googlecode.osde.internal.OsdePreferencesModel;
+import com.googlecode.osde.internal.common.JdkVersion;
+import com.googlecode.osde.internal.shindig.DatabaseServer;
+import com.googlecode.osde.internal.ui.pref_binder.ComboBinder;
+import com.googlecode.osde.internal.ui.pref_binder.FirefoxTextBinder;
+import com.googlecode.osde.internal.ui.pref_binder.LocaleComboBinder;
+import com.googlecode.osde.internal.ui.pref_binder.PreferenceBinder;
+import com.googlecode.osde.internal.ui.pref_binder.SelectionBinder;
+import com.googlecode.osde.internal.ui.pref_binder.TextBinder;
+import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -39,17 +50,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import com.googlecode.osde.internal.Activator;
-import com.googlecode.osde.internal.OsdeConfig;
-import com.googlecode.osde.internal.common.JdkVersion;
-import com.googlecode.osde.internal.shindig.DatabaseServer;
-import com.googlecode.osde.internal.utils.OpenSocialUtil;
-
 /**
  * Eclipse preference page for OSDE.
  */
 public class OsdePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
+    private PreferenceBinder preferenceBinder = new PreferenceBinder();
     private Combo languages;
     private Combo countries;
     private Text databaseDirText;
@@ -274,6 +280,8 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         label = new Label(composite, SWT.NONE);
         label.setText("Revision of Apache Shindig: " + shindigRevision);
         //
+        bindUIandPreferences();
+        //
         initializeValues();
         //
         return composite;
@@ -359,87 +367,58 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         return true;
     }
 
-    private void storeValues() {
-        Map<String, Object> model = new HashMap<String, Object>();
-        String country = countries.getItem(countries.getSelectionIndex());
-        model.put(OsdeConfig.DEFAULT_COUNTRY, 
-                country.substring(country.indexOf('(') + 1, country.length() - 1));
-        String language = languages.getItem(languages.getSelectionIndex());
-        model.put(OsdeConfig.DEFAULT_LANGUAGE, 
-                language.substring(language.indexOf('(') + 1, language.length() - 1));
-        model.put(OsdeConfig.DATABASE_DIR, databaseDirText.getText());
-        model.put(OsdeConfig.JETTY_DIR, jettyDirText.getText());
-        model.put(OsdeConfig.USE_INTERNAL_DATABASE, internalDatabaseRadio.getSelection());
-        model.put(OsdeConfig.EXTERNAL_DATABASE_HOST, hostText.getText());
-        model.put(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, passwordText.getText());
-        model.put(OsdeConfig.EXTERNAL_DATABASE_PORT, portText.getText());
-        model.put(OsdeConfig.EXTERNAL_DATABASE_USERNAME, usernameText.getText());
-        model.put(OsdeConfig.EXTERNAL_DATABASE_TYPE, databaseTypeCombo.getText());
-        model.put(OsdeConfig.EXTERNAL_DATABASE_NAME, nameText.getText());
+    private void bindUIandPreferences(){
+        preferenceBinder.addBinder(new LocaleComboBinder(countries, OsdeConfig.DEFAULT_COUNTRY));
+        preferenceBinder.addBinder(new LocaleComboBinder(languages, OsdeConfig.DEFAULT_LANGUAGE));
+        preferenceBinder.addBinder(new TextBinder(databaseDirText, OsdeConfig.DATABASE_DIR));
+        preferenceBinder.addBinder(new TextBinder(jettyDirText, OsdeConfig.JETTY_DIR));
+        preferenceBinder.addBinder(new TextBinder(hostText, OsdeConfig.EXTERNAL_DATABASE_HOST));
+        preferenceBinder.addBinder(
+                new TextBinder(passwordText, OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
+        preferenceBinder.addBinder(new TextBinder(portText, OsdeConfig.EXTERNAL_DATABASE_PORT));
+        preferenceBinder.addBinder(
+                new TextBinder(usernameText, OsdeConfig.EXTERNAL_DATABASE_USERNAME));
+        preferenceBinder.addBinder(new TextBinder(nameText, OsdeConfig.EXTERNAL_DATABASE_NAME));
+        preferenceBinder.addBinder(
+                new TextBinder(loggerCfgLocationText, OsdeConfig.LOGGER_CONFIG_FILE));
         
-        model.put(OsdeConfig.LOGGER_CONFIG_FILE, loggerCfgLocationText.getText());
-        String workDirectory = workDirectoryText.getText();
-        File workDirectoryFile = new File(workDirectory);
-        workDirectoryFile.mkdirs();
-        model.put(OsdeConfig.WORK_DIRECTORY, workDirectory);
-        model.put(OsdeConfig.COMPILE_JAVASCRIPT, compileJavaScriptCheckbox.getSelection());
+        preferenceBinder.addBinder(new TextBinder(workDirectoryText,
+                OsdeConfig.WORK_DIRECTORY) {
+            @Override
+            public void doSave(OsdePreferencesModel model) throws Exception {
+                super.doSave(model);
+                try {
+                    new File(control.getText()).mkdirs();
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        });
+        
+        preferenceBinder.addBinder(new FirefoxTextBinder(firefoxLocation,
+                OsdeConfig.DEFAULT_FIREFOX_LOCATION));
 
-        String firefoxLocationValue = firefoxLocation.getText().trim();
-        if (firefoxLocationValue.length() == 0) {
-            firefoxLocationValue = OsdeConfig.DEFAULT_FIREFOX_LOCATION;
-        }
-        
-        model.put(OsdeConfig.FIREFOX_LOCATION, firefoxLocationValue);
-        Activator.getDefault().storePreference(model);
+        preferenceBinder.addBinder(
+                new ComboBinder(databaseTypeCombo, OsdeConfig.EXTERNAL_DATABASE_TYPE));
+
+        preferenceBinder.addBinder(
+                new SelectionBinder(compileJavaScriptCheckbox, OsdeConfig.COMPILE_JAVASCRIPT));
+        preferenceBinder.addBinder(
+                new SelectionBinder(internalDatabaseRadio, OsdeConfig.USE_INTERNAL_DATABASE));
+    }
+
+    private void storeValues() {
+        preferenceBinder.doSave(Activator.getDefault().getPreferenceModel());
     }
 
     private void initializeValues() {
-        setConfigurationToDisplay(Activator.getDefault().getOsdeConfiguration());
+        preferenceBinder.doLoad(Activator.getDefault().getPreferenceModel());
+        changeDatabaseControlEnabled();
     }
 
     private void initializeDefaults() {
-        setConfigurationToDisplay(Activator.getDefault().getDefaultOsdeConfiguration());
-    }
-
-    private void setConfigurationToDisplay(OsdeConfig config) {
-        for (int i = 0; i < countries.getItemCount(); i++) {
-            String country = countries.getItem(i);
-            if (country.substring(country.indexOf('(') + 1, country.length() - 1)
-                    .equals(config.getDefaultCountry())) {
-                countries.select(i);
-                break;
-            }
-        }
-        for (int i = 0; i < languages.getItemCount(); i++) {
-            String language = languages.getItem(i);
-            if (language.substring(language.indexOf('(') + 1, language.length() - 1)
-                    .equals(config.getDefaultLanguage())) {
-                languages.select(i);
-                break;
-            }
-        }
-        databaseDirText.setText(config.getDatabaseDir());
-        jettyDirText.setText(config.getJettyDir());
-        internalDatabaseRadio.setSelection(config.isUseInternalDatabase());
-        externalDatabaseRadio.setSelection(!config.isUseInternalDatabase());
-        for (int i = 0; i < databaseTypeCombo.getItemCount(); i++) {
-            if (databaseTypeCombo.getItem(i).equals(config.getExternalDatabaseType())) {
-                databaseTypeCombo.select(i);
-                break;
-            }
-        }
-        hostText.setText(config.getExternalDatabaseHost());
-        portText.setText(config.getExternalDatabasePort());
-        usernameText.setText(config.getExternalDatabaseUsername());
-        passwordText.setText(config.getExternalDatabasePassword());
-        nameText.setText(config.getExternalDatabaseName());
-        workDirectoryText.setText(config.getWorkDirectory());
-
+        preferenceBinder.doLoadDefault(Activator.getDefault().getPreferenceModel());
         changeDatabaseControlEnabled();
-
-        loggerCfgLocationText.setText(config.getLoggerConfigFile());
-        compileJavaScriptCheckbox.setSelection(config.isCompileJavaScript());
-        firefoxLocation.setText(config.getFirefoxLocation());
     }
 
     private class DatabaseRadioSelectionListener implements SelectionListener {
