@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import com.googlecode.osde.internal.gadgets.model.Module;
+import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs;
 
 import junit.framework.TestCase;
 import org.junit.After;
@@ -43,7 +44,9 @@ public class GadgetXMLParserTest extends TestCase {
         fout = new FileWriter("test.txt");
         fout.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
         fout.write("<Module>");
-        fout.write("  <ModulePrefs title=\"hello world example\" />");
+        fout.write("  <ModulePrefs title=\"hello world example\">");
+        fout.write("    <Require feature=\"opensocial-0.9\" />");
+        fout.write("  </ModulePrefs>");
         fout.write("    <Content type=\"html\">");
         fout.write("      <![CDATA[");
         fout.write("        Hello, world!");
@@ -74,6 +77,9 @@ public class GadgetXMLParserTest extends TestCase {
         Module module = null;
         module = (Module) parser.parse(fin);
         assertFalse(module == null);
+        ModulePrefs modulePrefs = module.getModulePrefs();
+        assertNotNull(modulePrefs);
+        assertEquals("hello world example", modulePrefs.getTitle());
     }
 
 }
