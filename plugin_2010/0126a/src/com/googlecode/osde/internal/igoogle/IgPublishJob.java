@@ -68,8 +68,9 @@ public class IgPublishJob extends Job {
         final String publishGadgetUrl;
         try {
             IgCredentials igCredentials = new IgCredentials(username, password);
-            String urlOfHostedFile = IgHostingUtil.uploadFiles(igCredentials,
-                    gadgetXmlIFile, OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
+            String hostingUrl = IgHostingUtil.uploadFiles(igCredentials,
+                    gadgetXmlIFile.getProject(), OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
+            String urlOfHostedFile = hostingUrl + gadgetXmlIFile.getName();
             publishGadgetUrl = IgHostingUtil.formPublishGadgetUrl(urlOfHostedFile);
 
         } catch (IgException e) {
@@ -109,7 +110,7 @@ public class IgPublishJob extends Job {
                         | IWorkbenchBrowserSupport.AS_EDITOR;
                 IWebBrowser browser = support.createBrowser(style, PUBLISH_IGOOGLE_BROWSER_ID,
                         PUBLISH_IGOOGLE_BROWSER_NAME, PUBLISH_IGOOGLE_TOOLTIP);
-                // TODO: (p1) Provide SID cookie when open the browser so that ...
+                // TODO: (p2) Provide SID cookie when open the browser so that ...
                 // the user does not need to login again on the publish page.
                 // Or, we need 2 features of: host file and publish file.
                 URL url = new URL(publishGadgetUrl);
