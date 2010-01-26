@@ -26,7 +26,6 @@ import com.googlecode.osde.internal.igoogle.IgHostingUtil;
 import com.googlecode.osde.internal.igoogle.IgCredentials;
 import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
@@ -58,7 +57,7 @@ public class IgHostingUtilTest {
     private static final String TEST_USERNAME = "osde.test.001";
     private static final String TEST_PASSWORD = "osdetest888";
     private static final String TEST_TARGET_PATH =
-            "test/com/googlecode/osde/internal/igoogle/testdata/";
+            "test/com/googlecode/osde/internal/igoogle/test_data_for_hosting_util/";
     private static final String TEST_HOSTING_FOLDER = "/osde/test/";
     private static final String GADGET_XML_FILE_RELATIVE_PATH = "gadget.xml";
     private static final String TEST_GADGET_FILE_START_CONTENT = "<?xml version";
@@ -125,7 +124,7 @@ public class IgHostingUtilTest {
 
     /**
      * Test method for
-     * {@link IgHostingUtil#uploadFiles(IgCredentials, IFile, String, boolean)}.
+     * {@link IgHostingUtil#uploadFiles(IgCredentials, IProject, String, boolean)}.
      *
      * @throws IgException
      */
@@ -133,26 +132,23 @@ public class IgHostingUtilTest {
     public void testUploadFilesToIg()
             throws IgException {
         // Prepare mocks.
-        IFile gadgetXmlIFile = createMock(IFile.class);
         IProject project = createMock(IProject.class);
         IFolder targetFolder = createMock(IFolder.class);
         IPath targetFolderLocation = createMock(IPath.class);
-        expect(gadgetXmlIFile.getName()).andReturn(GADGET_XML_FILE_RELATIVE_PATH).anyTimes();
-        expect(gadgetXmlIFile.getProject()).andReturn(project).anyTimes();
         expect(project.getFolder(eq(GadgetBuilder.TARGET_FOLDER_NAME)))
                 .andReturn(targetFolder).anyTimes();
         expect(targetFolder.getLocation()).andReturn(targetFolderLocation).anyTimes();
         expect(targetFolderLocation.toOSString()).andReturn(TEST_TARGET_PATH);
-        replay(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
+        replay(project, targetFolder, targetFolderLocation);
 
         // Test and verify the method call.
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
         logger.info("igCredentials:\n" + igCredentials);
-        String urlOfHostedGadgetFile = IgHostingUtil.uploadFiles(
-                igCredentials, gadgetXmlIFile, TEST_HOSTING_FOLDER, false);
-        logger.info("urlOfHostedGadgetFile: " + urlOfHostedGadgetFile);
-        assertTrue(urlOfHostedGadgetFile.endsWith("/" + GADGET_XML_FILE_RELATIVE_PATH));
-        verify(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
+        String hostingUrl = IgHostingUtil.uploadFiles(
+                igCredentials, project, TEST_HOSTING_FOLDER, false);
+        logger.info("hostingUrl: " + hostingUrl);
+        assertTrue(hostingUrl.endsWith("/"));
+        verify(project, targetFolder, targetFolderLocation);
     }
 
     /**
