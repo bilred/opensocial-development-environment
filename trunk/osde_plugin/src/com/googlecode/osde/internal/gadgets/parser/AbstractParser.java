@@ -106,7 +106,7 @@ public abstract class AbstractParser implements IParser {
             final int count = attributes.getLength();
 
             for (int i = 0; i < count; i++) {
-                String propertyName = toCamelCase(attributes.getLocalName(i));
+                String propertyName = toCamelCase(attributes.getQName(i));
                 String value = attributes.getValue(i);
 
                 if (PropertyUtils.isWriteable(bean, propertyName)) {
