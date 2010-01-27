@@ -170,6 +170,7 @@ public class IgPreviewJob extends Job {
         }
     }
 
+    // TODO: Move this to Activator.
     static File getOsdeWorkFolder() {
         String userHome = System.getProperty("user.home");
         File osdeWorkFolder = new File(userHome, Activator.WORK_DIR_NAME);
