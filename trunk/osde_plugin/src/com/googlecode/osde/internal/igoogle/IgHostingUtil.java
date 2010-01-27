@@ -36,7 +36,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 
 /**
@@ -79,27 +78,25 @@ public class IgHostingUtil {
     }
 
     /**
-     * Uploads files to iGoogle and returns the url for the hosted gadget file.
+     * Uploads files to iGoogle and returns the url for hosting files.
      *
-     * @return the url for the hosted gadget file
+     * @return the url for hosting files
      * @throws IgException
      */
-    static String uploadFiles(IgCredentials igCredentials, IFile gadgetXmlIFile,
+    static String uploadFiles(IgCredentials igCredentials, IProject project,
             String hostingFolder, boolean useCanvasView)
             throws IgException {
         logger.fine("in PreviewIGoogleJob.uploadFilesToIg");
 
-        IProject project = gadgetXmlIFile.getProject();
         String uploadFromPath =
                 project.getFolder(GadgetBuilder.TARGET_FOLDER_NAME).getLocation().toOSString();
+        logger.fine("uploadFromPath: " + uploadFromPath);
 
         // Upload files.
         IgHostingUtil.uploadFiles(igCredentials, uploadFromPath, hostingFolder);
 
-        // Form hosted gadget file url.
-        String urlOfHostedGadgetFile = IgHostingUtil.formHostedFileUrl(igCredentials.getPublicId(),
-                hostingFolder, gadgetXmlIFile.getName());
-        return urlOfHostedGadgetFile;
+        // Form and return the hosting url.
+        return IgHostingUtil.formHostingUrl(igCredentials.getPublicId(), hostingFolder);
     }
 
     /**
@@ -146,7 +143,7 @@ public class IgHostingUtil {
             String response =
                     IgHttpUtil.retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
             throw new IgException("Failed file-upload with status line: "
-                    + statusLine.toString() + "\nand response:\n" + response);
+                    + statusLine.toString() + ",\nand response:\n" + response);
         }
     }
 
@@ -270,29 +267,15 @@ public class IgHostingUtil {
     }
 
     /**
-     * Returns the url for the hosted directory given hosting folder
-     * and public id.
+     * Returns the full url for hosting given public id and hosting
+     * folder name.
      *
      * @param publicId iGoogle public id
-     * @param hostingFolder hosting folder
-     * @return the url for the hosted directory
+     * @param hostingFolder hosting folder name which starts and ends with &quot;/&quot;
+     * @return the full url for hosting which ends with &quot;/&quot;
      */
-    public static String formHostedDirectoryUrl(String publicId, String hostingFolder) {
+    public static String formHostingUrl(String publicId, String hostingFolder) {
         return URL_GMODULE_FILE + publicId + hostingFolder;
-    }
-
-    /**
-     * Returns the url for the hosted file given hosting folder,
-     * file path, and public id.
-     *
-     * @param publicId iGoogle public id
-     * @param hostingFolder hosting folder
-     * @param filePath path of the hosted file
-     * @return the url for the hosted file
-     */
-    public static String formHostedFileUrl(
-            String publicId, String hostingFolder, String filePath) {
-        return formHostedDirectoryUrl(publicId, hostingFolder) + filePath;
     }
 
     /**
@@ -483,5 +466,4 @@ public class IgHostingUtil {
         // Clean files.
         IgHostingUtil.cleanFiles(igCredentials, hostingFolder);
     }
-
 }

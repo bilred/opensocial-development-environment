@@ -18,28 +18,16 @@
  */
 package com.googlecode.osde.internal.igoogle;
 
-import java.util.List;
-
-import com.googlecode.osde.internal.builders.GadgetBuilder;
-import com.googlecode.osde.internal.igoogle.IgException;
-import com.googlecode.osde.internal.igoogle.IgHostingUtil;
-import com.googlecode.osde.internal.igoogle.IgCredentials;
-import com.googlecode.osde.internal.utils.Logger;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
-import org.junit.Test;
-
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.cleanFiles;
 import static com.googlecode.osde.internal.igoogle.IgHostingUtil.findAllRelativeFilePaths;
-import static com.googlecode.osde.internal.igoogle.IgHostingUtil.formHostedFileUrl;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.formHostingUrl;
 import static com.googlecode.osde.internal.igoogle.IgHostingUtil.formPreviewLegacyGadgetUrl;
 import static com.googlecode.osde.internal.igoogle.IgHostingUtil.formPreviewOpenSocialGadgetUrl;
 import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrieveFileNameList;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrieveHttpResponseAsString;
 import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrieveQuotaByte;
 import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrieveQuotaByteUsed;
-import static com.googlecode.osde.internal.igoogle.IgHostingUtil.retrieveHttpResponseAsString;
+import static com.googlecode.osde.internal.igoogle.IgHostingUtil.uploadFiles;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -47,6 +35,16 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.junit.Test;
+
+import com.googlecode.osde.internal.builders.GadgetBuilder;
+import com.googlecode.osde.internal.utils.Logger;
 
 /**
  * @author albert.cheng.ig@gmail.com
@@ -75,11 +73,11 @@ public class IgHostingUtilTest {
     /**
      * Test method for
      * {@link IgHostingUtil#cleanFiles(IgCredentials, String)},
+     * {@link IgHostingUtil#formHostingUrl(String, String)},
      * {@link IgHostingUtil#uploadFiles(IgCredentials, String, String)},
      * {@link IgHostingUtil#retrieveQuotaByte(String, String)},
      * {@link IgHostingUtil#retrieveQuotaByteUsed(String, String)},
      * {@link IgHostingUtil#retrieveFileNameList(String, String, String)},
-     * {@link IgHostingUtil#formHostedFileUrl(String, String, String)},
      * {@link IgHostingUtil#retrieveHttpResponseAsString(String, String)},
      * etc.
      *
@@ -96,7 +94,7 @@ public class IgHostingUtilTest {
         logger.info("publicId: " + publicId);
 
         // Clean all files under TEST_HOSTING_FOLDER.
-        IgHostingUtil.cleanFiles(igCredentials, TEST_HOSTING_FOLDER);
+        cleanFiles(igCredentials, TEST_HOSTING_FOLDER);
         List<String> fileNameList = retrieveFileNameList(sid, publicId, TEST_HOSTING_FOLDER);
         assertEquals(0, fileNameList.size());
 
@@ -109,15 +107,15 @@ public class IgHostingUtilTest {
         assertTrue(Integer.valueOf(quotaByteUsed) > TEST_MIN_QUOTA_BYTE_USED);
 
         // Upload file.
-        IgHostingUtil.uploadFiles(igCredentials, TEST_TARGET_PATH, TEST_HOSTING_FOLDER);
+        uploadFiles(igCredentials, TEST_TARGET_PATH, TEST_HOSTING_FOLDER);
 
         // Retrieve all files list.
         fileNameList = retrieveFileNameList(sid, publicId, TEST_HOSTING_FOLDER);
         assertEquals(TEST_HOSTED_FILES_COUNT, fileNameList.size());
 
         // Retrieve file content.
-        String hostedFileUrl =
-                formHostedFileUrl(publicId, TEST_HOSTING_FOLDER, GADGET_XML_FILE_RELATIVE_PATH);
+        String hostedFileUrl = formHostingUrl(publicId, TEST_HOSTING_FOLDER)
+                + GADGET_XML_FILE_RELATIVE_PATH;
         String fileContent = retrieveHttpResponseAsString(hostedFileUrl, sid);
         logger.fine("fileContent:\n" + fileContent);
         assertTrue(fileContent.startsWith(TEST_GADGET_FILE_START_CONTENT));
@@ -125,7 +123,7 @@ public class IgHostingUtilTest {
 
     /**
      * Test method for
-     * {@link IgHostingUtil#uploadFiles(IgCredentials, IFile, String, boolean)}.
+     * {@link IgHostingUtil#uploadFiles(IgCredentials, IProject, String, boolean)}.
      *
      * @throws IgException
      */
@@ -133,26 +131,22 @@ public class IgHostingUtilTest {
     public void testUploadFilesToIg()
             throws IgException {
         // Prepare mocks.
-        IFile gadgetXmlIFile = createMock(IFile.class);
         IProject project = createMock(IProject.class);
         IFolder targetFolder = createMock(IFolder.class);
         IPath targetFolderLocation = createMock(IPath.class);
-        expect(gadgetXmlIFile.getName()).andReturn(GADGET_XML_FILE_RELATIVE_PATH).anyTimes();
-        expect(gadgetXmlIFile.getProject()).andReturn(project).anyTimes();
         expect(project.getFolder(eq(GadgetBuilder.TARGET_FOLDER_NAME)))
                 .andReturn(targetFolder).anyTimes();
         expect(targetFolder.getLocation()).andReturn(targetFolderLocation).anyTimes();
-        expect(targetFolderLocation.toOSString()).andReturn(TEST_TARGET_PATH);
-        replay(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
+        expect(targetFolderLocation.toOSString()).andReturn(TEST_TARGET_PATH).anyTimes();
+        replay(project, targetFolder, targetFolderLocation);
 
         // Test and verify the method call.
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
         logger.info("igCredentials:\n" + igCredentials);
-        String urlOfHostedGadgetFile = IgHostingUtil.uploadFiles(
-                igCredentials, gadgetXmlIFile, TEST_HOSTING_FOLDER, false);
-        logger.info("urlOfHostedGadgetFile: " + urlOfHostedGadgetFile);
-        assertTrue(urlOfHostedGadgetFile.endsWith("/" + GADGET_XML_FILE_RELATIVE_PATH));
-        verify(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
+        String hostingUrl = uploadFiles(igCredentials, project, TEST_HOSTING_FOLDER, false);
+        logger.info("hostingUrl: " + hostingUrl);
+        assertTrue(hostingUrl.endsWith("/"));
+        verify(project, targetFolder, targetFolderLocation);
     }
 
     /**
