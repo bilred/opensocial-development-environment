@@ -134,6 +134,7 @@ public class IgPreviewJob extends Job {
         logger.fine("gadgetFileFullPath: " + gadgetFileFullPath);
 
         // Read content from gadget file, and then modify them and save as a new gadget file.
+        // TODO: Do we need to specify the encoding for the pair of reader and writer?
         FileReader originalGadgetXmlFileReader = null;
         FileWriter modifiedGadgetXmlFileWriter = null;
         try {
