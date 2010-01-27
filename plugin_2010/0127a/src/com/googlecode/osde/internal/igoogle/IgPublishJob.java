@@ -68,8 +68,9 @@ public class IgPublishJob extends Job {
         final String publishGadgetUrl;
         try {
             IgCredentials igCredentials = new IgCredentials(username, password);
-            String urlOfHostedFile = IgHostingUtil.uploadFiles(igCredentials,
-                    gadgetXmlIFile, OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
+            String hostingUrl = IgHostingUtil.uploadFiles(igCredentials,
+                    gadgetXmlIFile.getProject(), OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
+            String urlOfHostedFile = hostingUrl + gadgetXmlIFile.getName();
             publishGadgetUrl = IgHostingUtil.formPublishGadgetUrl(urlOfHostedFile);
 
         } catch (IgException e) {
