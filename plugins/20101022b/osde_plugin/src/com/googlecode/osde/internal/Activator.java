@@ -415,7 +415,7 @@ public class Activator extends AbstractUIPlugin {
         preferencesModel.store(name, value);
     }
 
-    public void storePreference(Map<String, Object> pref){
+    public void storePreferences(Map<String, Object> pref){
         preferencesModel.store(pref);
     }
 

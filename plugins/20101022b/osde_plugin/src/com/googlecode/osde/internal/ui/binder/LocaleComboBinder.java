@@ -17,10 +17,7 @@
  */
 package com.googlecode.osde.internal.ui.binder;
 
-import com.googlecode.osde.internal.OsdePreferencesModel;
-
 import org.apache.commons.lang.StringUtils;
-
 import org.eclipse.swt.widgets.Combo;
 
 /**
@@ -32,21 +29,10 @@ public class LocaleComboBinder extends ComboBinder {
         super(control, preferenceName);
     }
 
-    /**
-     * override compare to extract data from combo item. 
-     * @param comboItem has the form <b>DATA (value)</b>, the value is used to compared.
-     */
-    protected boolean compare(String storedValue, String comboItem) {
-        String target = StringUtils.substringBetween(
-                comboItem, "(", ")");
-        return StringUtils.equals(storedValue, target);
-    }
 
     @Override
-    public void doSave(OsdePreferencesModel model) throws Exception {
-        String value = control.getItem(control.getSelectionIndex());
-        String target = StringUtils.substringBetween(value, "(", ")");
-        model.store(preferenceName, target);
+    protected String controlValueToModelValue(String value) {
+        return StringUtils.substringBetween(value, "(", ")");
     }
 
 }

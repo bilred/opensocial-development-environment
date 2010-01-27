@@ -41,14 +41,9 @@ public class PreferenceBinder {
             try {
                 binder.doLoad(model);
             } catch (Exception e) {
-                logError("doLoad", binder, e);
+                logger.error("Failed to " + binder + ".doLoad()", e);
             }
         }
-    }
-
-    private void logError(String action, AbstractBinder<?> binder, Exception e) {
-        logger.error("failure when " + action + " preference: "
-                + binder.preferenceName + " with binder " + binder, e);
     }
 
     public void doLoadDefault(OsdePreferencesModel model) {
@@ -56,7 +51,7 @@ public class PreferenceBinder {
             try {
                 binder.doLoadDefault(model);
             } catch (Exception e) {
-                logError("doLoadDefault", binder, e);
+                logger.error("Failed to " + binder + ".doLoadDefault()", e);
             }
         }
     }
@@ -66,7 +61,7 @@ public class PreferenceBinder {
             try {
                 binder.doSave(model);
             } catch (Exception e) {
-                logError("doSave", binder, e);
+                logger.error("Failed to " + binder + ".doSave()", e);
             }
         }
     }
