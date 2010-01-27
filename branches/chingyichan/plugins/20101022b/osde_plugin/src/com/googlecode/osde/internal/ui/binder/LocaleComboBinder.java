@@ -15,34 +15,38 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.googlecode.osde.internal.ui.pref_binder;
+package com.googlecode.osde.internal.ui.binder;
 
 import com.googlecode.osde.internal.OsdePreferencesModel;
 
-import org.eclipse.swt.widgets.Text;
+import org.apache.commons.lang.StringUtils;
+
+import org.eclipse.swt.widgets.Combo;
 
 /**
  * @author chingyichan.tw@gmail.com (qrtt1)
  */
-public class TextBinder extends AbstractBinder<Text> {
+public class LocaleComboBinder extends ComboBinder {
 
-    public TextBinder(Text control, String preferenceName) {
+    public LocaleComboBinder(Combo control, String preferenceName) {
         super(control, preferenceName);
     }
 
-    @Override
-    public void doLoad(OsdePreferencesModel model) throws Exception {
-        control.setText(model.get(preferenceName));
-    }
-
-    @Override
-    public void doLoadDefault(OsdePreferencesModel model) throws Exception {
-        control.setText(model.getDefault(preferenceName));
+    /**
+     * override compare to extract data from combo item. 
+     * @param comboItem has the form <b>DATA (value)</b>, the value is used to compared.
+     */
+    protected boolean compare(String storedValue, String comboItem) {
+        String target = StringUtils.substringBetween(
+                comboItem, "(", ")");
+        return StringUtils.equals(storedValue, target);
     }
 
     @Override
     public void doSave(OsdePreferencesModel model) throws Exception {
-        model.store(preferenceName, control.getText());
+        String value = control.getItem(control.getSelectionIndex());
+        String target = StringUtils.substringBetween(value, "(", ")");
+        model.store(preferenceName, target);
     }
 
 }

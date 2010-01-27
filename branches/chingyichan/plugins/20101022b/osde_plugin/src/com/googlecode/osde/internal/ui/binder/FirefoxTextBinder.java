@@ -15,38 +15,41 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.googlecode.osde.internal.ui.pref_binder;
 
+package com.googlecode.osde.internal.ui.binder;
+
+import com.googlecode.osde.internal.OsdeConfig;
 import com.googlecode.osde.internal.OsdePreferencesModel;
 
 import org.apache.commons.lang.StringUtils;
-
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author chingyichan.tw@gmail.com (qrtt1)
  */
-public class LocaleComboBinder extends ComboBinder {
-
-    public LocaleComboBinder(Combo control, String preferenceName) {
+public class FirefoxTextBinder extends AbstractBinder<Text> {
+    
+    public FirefoxTextBinder(Text control, String preferenceName) {
         super(control, preferenceName);
-    }
-
-    /**
-     * override compare to extract data from combo item. 
-     * @param comboItem has the form <b>DATA (value)</b>, the value is used to compared.
-     */
-    protected boolean compare(String storedValue, String comboItem) {
-        String target = StringUtils.substringBetween(
-                comboItem, "(", ")");
-        return StringUtils.equals(storedValue, target);
     }
 
     @Override
     public void doSave(OsdePreferencesModel model) throws Exception {
-        String value = control.getItem(control.getSelectionIndex());
-        String target = StringUtils.substringBetween(value, "(", ")");
-        model.store(preferenceName, target);
+        model.store(preferenceName, getFirefoxLocation(control.getText()));
     }
 
+    @Override
+    public void doLoad(OsdePreferencesModel model) throws Exception {
+        control.setText(getFirefoxLocation(model.get(preferenceName)));
+    }
+
+    @Override
+    public void doLoadDefault(OsdePreferencesModel model) throws Exception {
+        control.setText(getFirefoxLocation(model.getDefault(preferenceName)));
+    }
+
+    private String getFirefoxLocation(String value) {
+        return StringUtils.isBlank(value) ? OsdeConfig.DEFAULT_FIREFOX_LOCATION
+                : value;
+    }
 }

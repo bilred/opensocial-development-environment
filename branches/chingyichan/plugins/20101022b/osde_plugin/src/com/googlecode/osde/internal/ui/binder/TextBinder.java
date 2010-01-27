@@ -15,53 +15,29 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package com.googlecode.osde.internal.ui.pref_binder;
+package com.googlecode.osde.internal.ui.binder;
 
 import com.googlecode.osde.internal.OsdePreferencesModel;
 
-import org.apache.commons.lang.StringUtils;
-
-import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author chingyichan.tw@gmail.com (qrtt1)
  */
-public class ComboBinder extends AbstractBinder<Combo> {
+public class TextBinder extends AbstractBinder<Text> {
 
-    public ComboBinder(Combo control, String preferenceName) {
+    public TextBinder(Text control, String preferenceName) {
         super(control, preferenceName);
     }
 
     @Override
     public void doLoad(OsdePreferencesModel model) throws Exception {
-        select(model.get(preferenceName));
+        control.setText(model.get(preferenceName));
     }
 
     @Override
     public void doLoadDefault(OsdePreferencesModel model) throws Exception {
-        select(model.getDefault(preferenceName));
-    }
-
-    protected boolean compare(String storedValue, String comboItem) {
-        return StringUtils.equals(storedValue, comboItem);
-    }
-
-    /**
-     * Select a item in the combo control. The item value is equals to store data 
-     * @param value
-     */
-    protected void select(String value) {
-        for (int index = 0; index < control.getItemCount(); index++) {
-            if (compare(value, control.getItem(index))) {
-                try {
-                    control.select(index);
-                } catch (Exception e) {
-                    logger.error("select item failure @index = " + index, e);
-                }
-
-                break;
-            }
-        }
+        control.setText(model.getDefault(preferenceName));
     }
 
     @Override

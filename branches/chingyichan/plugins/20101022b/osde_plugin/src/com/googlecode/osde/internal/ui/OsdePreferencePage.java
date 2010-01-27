@@ -24,12 +24,12 @@ import com.googlecode.osde.internal.OsdeConfig;
 import com.googlecode.osde.internal.OsdePreferencesModel;
 import com.googlecode.osde.internal.common.JdkVersion;
 import com.googlecode.osde.internal.shindig.DatabaseServer;
-import com.googlecode.osde.internal.ui.pref_binder.ComboBinder;
-import com.googlecode.osde.internal.ui.pref_binder.FirefoxTextBinder;
-import com.googlecode.osde.internal.ui.pref_binder.LocaleComboBinder;
-import com.googlecode.osde.internal.ui.pref_binder.PreferenceBinder;
-import com.googlecode.osde.internal.ui.pref_binder.SelectionBinder;
-import com.googlecode.osde.internal.ui.pref_binder.TextBinder;
+import com.googlecode.osde.internal.ui.binder.ComboBinder;
+import com.googlecode.osde.internal.ui.binder.FirefoxTextBinder;
+import com.googlecode.osde.internal.ui.binder.LocaleComboBinder;
+import com.googlecode.osde.internal.ui.binder.PreferenceBinder;
+import com.googlecode.osde.internal.ui.binder.SelectionBinder;
+import com.googlecode.osde.internal.ui.binder.TextBinder;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
 import org.eclipse.jface.preference.PreferencePage;
