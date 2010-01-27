@@ -141,8 +141,7 @@ public class IgPreviewJob extends Job {
             String fileContentAsString = IOUtils.toString(originalGadgetXmlFileReader);
             logger.fine("fileContentAsString:\n" + fileContentAsString);
             String modifiedFileContent =
-                fileContentAsString.replaceAll(oldHostingUrl, newHostingUrl);
-            logger.fine("modifiedFileContent:\n" + modifiedFileContent);
+                    fileContentAsString.replaceAll(oldHostingUrl, newHostingUrl);
 
             // Prepare the modified gadget file.
             File osdeWorkFolder = getOsdeWorkFolder();
