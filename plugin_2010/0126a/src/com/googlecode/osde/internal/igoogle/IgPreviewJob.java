@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.builders.GadgetBuilder;
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -84,7 +85,10 @@ public class IgPreviewJob extends Job {
                     igCredentials.getPublicId(), OSDE_PREVIEW_DIRECTORY);
 
             // Modify gadget file with new hosting url, and upload it.
-            modifyHostingUrlForGadgetFileAndUploadIt(LOCAL_HOST_URL, hostingUrl, igCredentials, OSDE_PREVIEW_DIRECTORY);
+            String eclipseProjectName = gadgetXmlIFile.getProject().getName();
+            String oldHostingUrl = LOCAL_HOST_URL + eclipseProjectName + "/";
+            modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
+                    OSDE_PREVIEW_DIRECTORY);
 
             // Upload files.
             IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(),
@@ -124,8 +128,6 @@ public class IgPreviewJob extends Job {
             throws IgException {
         // Get gadget file full path.
         IProject project = gadgetXmlIFile.getProject();
-
-        // FIXME: we should not use targetFolder
         String targetFolder =
             project.getFolder(GadgetBuilder.TARGET_FOLDER_NAME).getLocation().toOSString();
         String gadgetFileName = gadgetXmlIFile.getName();
@@ -138,22 +140,28 @@ public class IgPreviewJob extends Job {
         try {
             fileReader = new FileReader(gadgetFileFullPath);
             String fileContentAsString = IOUtils.toString(fileReader);
-            logger.info("fileContentAsString: " + fileContentAsString);
+            logger.fine("fileContentAsString:\n" + fileContentAsString);
             String modifiedFileContent =
                 fileContentAsString.replaceAll(oldHostingUrl, newHostingUrl);
-            logger.info("modifiedFileContent: " + modifiedFileContent);
+            logger.fine("modifiedFileContent:\n" + modifiedFileContent);
 
-            // Write the modified file to target folder
-            File modifiedFile = new File(targetFolder + GADGET_FILE_WITH_MODIFIED_URL);
+            // Prepare the modified gadget file.
+            File osdeWorkFolder = getOsdeWorkFolder();
+            File modifiedFile = new File(osdeWorkFolder, GADGET_FILE_WITH_MODIFIED_URL);
+            if (modifiedFile.exists()) {
+                modifiedFile.delete();
+            }
             boolean isCreated = modifiedFile.createNewFile();
             logger.info("isCreated: " + isCreated);
+
+            // Write modified content to the new modified gadget file.
             modifiedGadgetXmlFile = new FileWriter(modifiedFile);
             modifiedGadgetXmlFile.write(modifiedFileContent);
             modifiedGadgetXmlFile.flush();
 
-            // Upload the modified file to iGoogle.
-            IgHostingUtil.uploadFile(igCredentials, targetFolder, GADGET_FILE_WITH_MODIFIED_URL,
-                    hostingFolder);
+            // Upload the modified gadget file to iGoogle.
+            IgHostingUtil.uploadFile(igCredentials, osdeWorkFolder.getAbsolutePath(),
+                    GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
 
         } catch (IOException e) {
             logger.warn(e.getMessage());
@@ -162,6 +170,15 @@ public class IgPreviewJob extends Job {
             IOUtils.closeQuietly(fileReader);
             IOUtils.closeQuietly(modifiedGadgetXmlFile);
         }
+    }
+
+    static File getOsdeWorkFolder() {
+        String userHome = System.getProperty("user.home");
+        File osdeWorkFolder = new File(userHome, Activator.WORK_DIR_NAME);
+        if (!osdeWorkFolder.exists()) {
+            osdeWorkFolder.mkdir();
+        }
+        return osdeWorkFolder;
     }
 
     private static class PreviewingRunnable implements Runnable {

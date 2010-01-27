@@ -90,6 +90,7 @@ public class IgHostingUtil {
 
         String uploadFromPath =
                 project.getFolder(GadgetBuilder.TARGET_FOLDER_NAME).getLocation().toOSString();
+        logger.fine("uploadFromPath: " + uploadFromPath);
 
         // Upload files.
         IgHostingUtil.uploadFiles(igCredentials, uploadFromPath, hostingFolder);
@@ -106,6 +107,10 @@ public class IgHostingUtil {
     public static void uploadFile(IgCredentials igCredentials,
             String sourceFileRootPath, String sourceFileRelativePath, String hostingFolder)
             throws IgException {
+        logger.fine("sourceFileRootPath: " + sourceFileRootPath);
+        logger.fine("sourceFileRelativePath: " + sourceFileRelativePath);
+        logger.fine("hostingFolder: " + hostingFolder);
+
         // Prepare HttpPost.
         String httpPostUrl = URL_IG_GADGETS_FILE + igCredentials.getPublicId() + hostingFolder
                 + sourceFileRelativePath + "?et=" + igCredentials.getEditToken();
@@ -142,7 +147,7 @@ public class IgHostingUtil {
             String response =
                     IgHttpUtil.retrieveHttpResponseAsString(httpClient, httpPost, httpResponse);
             throw new IgException("Failed file-upload with status line: "
-                    + statusLine.toString() + "\nand response:\n" + response);
+                    + statusLine.toString() + ",\nand response:\n" + response);
         }
     }
 

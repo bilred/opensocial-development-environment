@@ -76,16 +76,16 @@ public class IgPreviewJobTest {
         expect(gadgetXmlIFile.getName()).andReturn(GADGET_XML_FILE_RELATIVE_PATH).anyTimes();
         replay(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
 
-        // Execute modifyHostingUrlForGadgetFileInTargetFolder().
+        // Execute modifyHostingUrlForGadgetFileAndUploadIt().
         IgPreviewJob job = new IgPreviewJob(null, null, gadgetXmlIFile, null, false, false);
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
         job.modifyHostingUrlForGadgetFileAndUploadIt(IgPreviewJob.LOCAL_HOST_URL,
                 NEW_HOSTING_URL, igCredentials, IgPreviewJob.OSDE_PREVIEW_DIRECTORY);
 
         // Make sure the modified file contains the string of NEW_HOSTING_URL.
-        File modifiedFile = new File(TEST_TARGET_PATH, IgPreviewJob.GADGET_FILE_WITH_MODIFIED_URL);
-        FileReader modifiedFileReader = new FileReader(modifiedFile);
-        String modifiedFileContent = IOUtils.toString(modifiedFileReader);
+        File modifiedFile = new File(IgPreviewJob.getOsdeWorkFolder(),
+                IgPreviewJob.GADGET_FILE_WITH_MODIFIED_URL);
+        String modifiedFileContent = IOUtils.toString(new FileReader(modifiedFile));
         logger.fine("modifiedFileContent: " + modifiedFileContent);
         Assert.assertTrue(modifiedFileContent.indexOf(NEW_HOSTING_URL) != -1);
 
