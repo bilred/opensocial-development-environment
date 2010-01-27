@@ -28,18 +28,16 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import com.googlecode.osde.internal.utils.Logger;
-import com.googlecode.osde.internal.utils.OpenSocialUtil;
-import com.googlecode.osde.internal.utils.StatusUtil;
-
-import com.googlecode.osde.internal.gadgets.GadgetXmlSerializer;
+import com.googlecode.osde.internal.gadgets.parser.GadgetXmlSerializer;
 import com.googlecode.osde.internal.gadgets.ViewType;
 import com.googlecode.osde.internal.gadgets.model.Module;
 import com.googlecode.osde.internal.gadgets.model.Module.Content;
-import com.googlecode.osde.internal.gadgets.parser.IParser;
+import com.googlecode.osde.internal.gadgets.parser.Parser;
 import com.googlecode.osde.internal.gadgets.parser.ParserException;
 import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
-import com.googlecode.osde.internal.gadgets.parser.ParserType;
+import com.googlecode.osde.internal.utils.Logger;
+import com.googlecode.osde.internal.utils.OpenSocialUtil;
+import com.googlecode.osde.internal.utils.StatusUtil;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
@@ -161,9 +159,8 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
                             out.putNextEntry(entry);
                             if (OpenSocialUtil.isGadgetSpecXML(orgFile)) {
                                 try {
-                                    IParser parser = ParserFactory
-                                            .createParser(ParserType.GADGET_XML_PARSER);
-                                    Module module = (Module) parser.parse(orgFile.getContents());
+                                    Parser<Module> parser = ParserFactory.gadgetSpecParser();
+                                    Module module = parser.parse(orgFile.getContents());
                                     List<Content> contents = module.getContent();
                                     for (Content content : contents) {
                                         if (ViewType.html.toString().equals(content.getType())) {

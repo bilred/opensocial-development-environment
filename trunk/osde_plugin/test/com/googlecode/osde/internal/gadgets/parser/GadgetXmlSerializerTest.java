@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.googlecode.osde.internal.gadgets;
+package com.googlecode.osde.internal.gadgets.parser;
 
 import java.math.BigInteger;
 

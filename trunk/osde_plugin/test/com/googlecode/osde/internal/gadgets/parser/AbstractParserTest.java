@@ -53,7 +53,7 @@ public class AbstractParserTest {
 
     @Test
     public void testAcceptExtraProperties() throws ParserException {
-        AbstractParser parser = new AbstractParser(){
+        AbstractParser<A> parser = new AbstractParser<A>(){
             @Override
             protected void initialize(Digester digester) {
                 digester.addFactoryCreate("a", new ObjectFactory(A.class));
@@ -62,7 +62,7 @@ public class AbstractParserTest {
 
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><a b=\"3\"/>";
 
-        A a = (A) parser.parse(new ByteArrayInputStream(xml.getBytes()));
+        A a = parser.parse(new ByteArrayInputStream(xml.getBytes()));
         assertEquals("3", a.getExtraProperties().get("b"));
     }
 

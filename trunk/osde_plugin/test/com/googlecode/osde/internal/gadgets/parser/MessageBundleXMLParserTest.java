@@ -17,68 +17,48 @@
  */
 package com.googlecode.osde.internal.gadgets.parser;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.util.List;
+import java.io.StringReader;
 
 import com.googlecode.osde.internal.gadgets.model.MessageBundle;
-import com.googlecode.osde.internal.gadgets.model.MessageBundle.Msg;
 
-import junit.framework.TestCase;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 /**
+ * Tests for {@link MessageBundleXMLParser}.
+ *
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
+ * @author Dolphin Wan (dolphin.wan@gmail.com)
  */
-public class MessageBundleXMLParserTest extends TestCase {
+public class MessageBundleXMLParserTest {
 
     private MessageBundleXMLParser msgBundleParser;
-    private FileWriter fout;
-    private File fin;
+    private StringReader reader;
 
-    public MessageBundleXMLParserTest(String testName) {
-        super(testName);
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
         msgBundleParser = new MessageBundleXMLParser();
-        fout = new FileWriter("test.txt");
-        fout.write("<messagebundle>");
-        fout.write("  <msg name=\"hello_world\">");
-        fout.write("    Hello World.");
-        fout.write("  </msg>");
-        fout.write("  <msg name=\"color\">Color</msg>");
-        fout.write("  <msg name=\"red\">Red</msg>");
-        fout.write("  <msg name=\"green\">Green</msg>");
-        fout.write("  <msg name=\"blue\">Blue</msg>");
-        fout.write("  <msg name=\"gray\">Gray</msg>");
-        fout.write("  <msg name=\"purple\">Purple</msg>");
-        fout.write("  <msg name=\"black\">Black</msg>");
-        fout.write("</messagebundle>");
-        fout.close();
+        reader = new StringReader("<messagebundle>"
+                + "  <msg name=\"hello_world\">"
+                + "    Hello World."
+                + "  </msg>"
+                + "  <msg name=\"color\">Color</msg>"
+                + "  <msg name=\"red\">Red</msg>"
+                + "  <msg name=\"green\">Green</msg>"
+                + "  <msg name=\"blue\">Blue</msg>"
+                + "  <msg name=\"gray\">Gray</msg>"
+                + "  <msg name=\"purple\">Purple</msg>"
+                + "  <msg name=\"black\">Black</msg>"
+                + "</messagebundle>");
     }
 
     @Test
     public void testParse() throws Exception {
-        fin = new File("test.txt");
-        MessageBundle msgBundle = (MessageBundle) msgBundleParser.parse(fin);
-        assertFalse(msgBundle == null);
-        List<Msg> messages = msgBundle.getMessages();
-        assertEquals(messages.size(), 8);
+        MessageBundle msgBundle = msgBundleParser.parse(reader);
+        assertNotNull(msgBundle);
+        assertEquals(8, msgBundle.getMessages().size());
     }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        fin.deleteOnExit();
-    }
-
 }

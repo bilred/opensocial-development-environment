@@ -23,7 +23,6 @@ import org.apache.commons.digester.CallMethodRule;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreateRule;
 import org.apache.commons.digester.SetNextRule;
-import org.apache.commons.digester.SetPropertiesRule;
 
 /**
  * Parser class for parsing message bundle XML file using Apache's Digester
@@ -32,18 +31,11 @@ import org.apache.commons.digester.SetPropertiesRule;
  *
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
  */
-public class MessageBundleXMLParser extends AbstractParser {
-
-    public MessageBundleXMLParser() {
-        super();
-    }
+class MessageBundleXMLParser extends AbstractParser<MessageBundle> {
 
     protected void initialize(Digester digester) {
         digester.addRule("messagebundle", new ObjectCreateRule(MessageBundle.class));
-        digester.addRule("messagebundle/msg", new ObjectCreateRule(MessageBundle.Msg.class));
-        String[] propertyNames = new String[] {"name", "desc"};
-        String[] attributeNames = new String[] {"name", "desc"};
-        digester.addRule("messagebundle/msg", new SetPropertiesRule(propertyNames, attributeNames));
+        digester.addFactoryCreate("messagebundle/msg", new ObjectFactory(MessageBundle.Msg.class));
         digester.addRule("messagebundle/msg", new CallMethodRule("setContent", 0));
         digester.addRule("messagebundle/msg", new SetNextRule("addMessage"));
     }

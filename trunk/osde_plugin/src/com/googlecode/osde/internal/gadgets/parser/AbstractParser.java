@@ -17,11 +17,11 @@
  */
 package com.googlecode.osde.internal.gadgets.parser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,12 +35,12 @@ import org.xml.sax.SAXException;
 
 /**
  * A new parser in OSDE must extend this abstract class and provide implementation
- * for initialize() method to define behaviors of the digester. The new parser should also
- * register itself in ParserType enum. Refer to GadgetXMLParser.java as an example.
+ * for initialize() method to define behaviors of a Apache Commons digester.
  *
  * @author Sega Shih-Chia Cheng (sccheng@gmail.com, shihchia@google.com)
+ * @author Chi-Ngai Wan (dolphinwan@gmail.com)
  */
-public abstract class AbstractParser implements IParser {
+public abstract class AbstractParser<T> implements Parser<T> {
 
     private Digester digester;
 
@@ -51,27 +51,30 @@ public abstract class AbstractParser implements IParser {
 
     protected abstract void initialize(Digester digester);
 
-    public Object parse(File file) throws ParserException {
+    public T parse(Reader r) throws ParserException {
         try {
-            return parse(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
-            throw new ParserException(file.getAbsolutePath() + " not found", e);
-        }
-    }
+            @SuppressWarnings({"unchecked"})
+            T result = (T) digester.parse(r);
 
-    public Object parse(InputStream stream) throws ParserException {
-        try {
-            Object result = digester.parse(stream);
             if (result == null) {
                 throw new ParserException("Digester returned null as the result of parsing.");
             }
+
             return result;
         } catch (IOException e) {
-            throw new ParserException("IO error during parsing.", e);
+            throw new ParserException(e);
         } catch (SAXException e) {
-            throw new ParserException("Parsing error", e);
+            throw new ParserException(e);
         } finally {
             digester.clear();
+        }
+    }
+
+    public T parse(InputStream stream) throws ParserException {
+        try {
+            return parse(new InputStreamReader(stream, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError("Should not happen");
         }
     }
 

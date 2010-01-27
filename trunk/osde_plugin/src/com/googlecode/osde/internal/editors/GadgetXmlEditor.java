@@ -27,14 +27,12 @@ import com.googlecode.osde.internal.editors.contents.ContentsPage;
 import com.googlecode.osde.internal.editors.locale.LocalePage;
 import com.googlecode.osde.internal.editors.outline.GadgetXmlOutlinePage;
 import com.googlecode.osde.internal.editors.pref.UserPrefsPage;
-import com.googlecode.osde.internal.utils.Logger;
-
-import com.googlecode.osde.internal.gadgets.GadgetXmlSerializer;
 import com.googlecode.osde.internal.gadgets.model.Module;
-import com.googlecode.osde.internal.gadgets.parser.IParser;
+import com.googlecode.osde.internal.gadgets.parser.GadgetXmlSerializer;
+import com.googlecode.osde.internal.gadgets.parser.Parser;
 import com.googlecode.osde.internal.gadgets.parser.ParserException;
 import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
-import com.googlecode.osde.internal.gadgets.parser.ParserType;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -86,9 +84,9 @@ public class GadgetXmlEditor extends FormEditor {
         try {
             IFile file = (IFile) input.getAdapter(IResource.class);
             setPartName(file.getName());
-            IParser gadgetXMLParser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+            Parser<Module> parser = ParserFactory.gadgetSpecParser();
             try {
-                module = (Module) gadgetXMLParser.parse(file.getContents());
+                module = parser.parse(file.getContents());
             } catch (ParserException e) {
                 logger.error(e.getMessage());
             }
@@ -129,7 +127,7 @@ public class GadgetXmlEditor extends FormEditor {
             setPageText(4, "Source");
             addPageChangedListener(new IPageChangedListener() {
                 public void pageChanged(PageChangedEvent event) {
-                    IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+                    Parser<Module> parser = ParserFactory.gadgetSpecParser();
                     try {
                         parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
                     } catch (UnsupportedEncodingException e) {
@@ -224,10 +222,10 @@ public class GadgetXmlEditor extends FormEditor {
     private void reflectModel() throws ParserException, UnsupportedEncodingException {
         reflecting = true;
         try {
-            IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
+            Parser<Module> parser = ParserFactory.gadgetSpecParser();
             String content = getSource();
 
-            changeModel((Module) parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
+            changeModel(parser.parse(new ByteArrayInputStream(content.getBytes("UTF-8"))));
         } finally {
             reflecting = false;
         }
@@ -235,8 +233,7 @@ public class GadgetXmlEditor extends FormEditor {
 
     public String getSource() {
         IDocument document = sourceEditor.getDocumentProvider().getDocument(getEditorInput());
-        String content = document.get();
-        return content;
+        return document.get();
     }
 
     @SuppressWarnings("unchecked")
