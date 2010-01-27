@@ -20,7 +20,6 @@ package com.googlecode.osde.internal.ui.binder;
 import com.googlecode.osde.internal.OsdePreferencesModel;
 
 import org.apache.commons.lang.StringUtils;
-
 import org.eclipse.swt.widgets.Combo;
 
 /**
@@ -42,12 +41,13 @@ public class ComboBinder extends AbstractBinder<Combo> {
         select(model.getDefault(preferenceName));
     }
 
-    protected boolean compare(String storedValue, String comboItem) {
-        return StringUtils.equals(storedValue, comboItem);
+    protected boolean compare(String storedValue, String controlValue) {
+        return StringUtils.equals(storedValue, controlValueToModelValue(controlValue));
     }
 
     /**
-     * Select a item in the combo control. The item value is equals to store data 
+     * Iterates through the combo items
+     * and selects one that {@link compare(String, String)} evaluates to true.
      * @param value
      */
     protected void select(String value) {
@@ -66,7 +66,16 @@ public class ComboBinder extends AbstractBinder<Combo> {
 
     @Override
     public void doSave(OsdePreferencesModel model) throws Exception {
-        model.store(preferenceName, control.getText());
+        try {
+            String controlValue = control.getItem(control.getSelectionIndex());
+            model.store(preferenceName, controlValueToModelValue(controlValue));
+        } catch (Exception e) {
+            logger.error("Failed to " + this + ".doSave()", e);
+        }
+    }
+
+    protected String controlValueToModelValue(String controlValue) {
+        return controlValue;
     }
 
 }

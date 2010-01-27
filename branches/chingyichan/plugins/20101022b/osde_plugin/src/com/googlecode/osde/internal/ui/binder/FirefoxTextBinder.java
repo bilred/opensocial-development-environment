@@ -19,7 +19,6 @@
 package com.googlecode.osde.internal.ui.binder;
 
 import com.googlecode.osde.internal.OsdeConfig;
-import com.googlecode.osde.internal.OsdePreferencesModel;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Text;
@@ -27,29 +26,15 @@ import org.eclipse.swt.widgets.Text;
 /**
  * @author chingyichan.tw@gmail.com (qrtt1)
  */
-public class FirefoxTextBinder extends AbstractBinder<Text> {
-    
+public class FirefoxTextBinder extends TextBinder {
+
     public FirefoxTextBinder(Text control, String preferenceName) {
         super(control, preferenceName);
     }
 
-    @Override
-    public void doSave(OsdePreferencesModel model) throws Exception {
-        model.store(preferenceName, getFirefoxLocation(control.getText()));
-    }
 
-    @Override
-    public void doLoad(OsdePreferencesModel model) throws Exception {
-        control.setText(getFirefoxLocation(model.get(preferenceName)));
-    }
-
-    @Override
-    public void doLoadDefault(OsdePreferencesModel model) throws Exception {
-        control.setText(getFirefoxLocation(model.getDefault(preferenceName)));
-    }
-
-    private String getFirefoxLocation(String value) {
-        return StringUtils.isBlank(value) ? OsdeConfig.DEFAULT_FIREFOX_LOCATION
-                : value;
+    protected String convertValue(String value) {
+        return StringUtils.isBlank(value) ?
+                OsdeConfig.DEFAULT_FIREFOX_LOCATION : value;
     }
 }

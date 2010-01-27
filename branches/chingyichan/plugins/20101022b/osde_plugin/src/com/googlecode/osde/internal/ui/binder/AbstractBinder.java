@@ -30,7 +30,7 @@ public abstract class AbstractBinder<T> {
     protected T control;
 
     /**
-     * To create a binding relation between the SWT control and Preference name 
+     * Creates a binding between a SWT control and a preference name.
      * @param control
      * @param preferenceName
      */
@@ -40,28 +40,29 @@ public abstract class AbstractBinder<T> {
     }
 
     /**
-     * load the value from OsdePreferencesModel and assign to SWT control
+     * Loads the value from OsdePreferencesModel and assigns to SWT control
      * @param model
      * @throws Exception
      */
     public abstract void doLoad(OsdePreferencesModel model) throws Exception;
 
     /**
-     * load the default value from OsdePreferencesModel and assign to SWT control
+     * Loads the default value from OsdePreferencesModel and assigns to SWT control
      * @param model
      * @throws Exception
      */
     public abstract void doLoadDefault(OsdePreferencesModel model) throws Exception;
 
     /**
-     * get data from SWT control and store to OsdePreferencesModel
+     * Gets data from SWT control and stores the OsdePreferencesModel
      * @param model
      * @throws Exception
      */
     public abstract void doSave(OsdePreferencesModel model) throws Exception;
-    
+
     @Override
     public String toString() {
-        return "binder[" + preferenceName + "]::" + control;
+        return String.format("binder[%s, %s]", preferenceName, control);
     }
+
 }

@@ -32,17 +32,21 @@ public class TextBinder extends AbstractBinder<Text> {
 
     @Override
     public void doLoad(OsdePreferencesModel model) throws Exception {
-        control.setText(model.get(preferenceName));
+        control.setText(convertValue(model.get(preferenceName)));
     }
 
     @Override
     public void doLoadDefault(OsdePreferencesModel model) throws Exception {
-        control.setText(model.getDefault(preferenceName));
+        control.setText(convertValue(model.getDefault(preferenceName)));
     }
 
     @Override
     public void doSave(OsdePreferencesModel model) throws Exception {
-        model.store(preferenceName, control.getText());
+        model.store(preferenceName, convertValue(control.getText()));
+    }
+
+    protected String convertValue(String value) {
+        return value;
     }
 
 }
