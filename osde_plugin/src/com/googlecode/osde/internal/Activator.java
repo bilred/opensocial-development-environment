@@ -75,7 +75,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle.
- * 
+ *
  * Note that when the plug-in shuts down, AbstractUIPlugin automatically saves
  * any plug-in preferences. So anything specified in the preference page will
  * persist next time you activate this plug-in.
@@ -88,7 +88,7 @@ public class Activator extends AbstractUIPlugin {
     public static final String PLUGIN_ID = "com.googlecode.osde";
 
     // Work directory name for OSDE
-    static final String WORK_DIR_NAME = ".osde";
+    public static final String WORK_DIR_NAME = ".osde";
 
     // The shared instance
     private static Activator plugin;
@@ -162,7 +162,7 @@ public class Activator extends AbstractUIPlugin {
 
     /**
      * Returns the shared instance
-     * 
+     *
      * @return the shared instance
      */
     public static Activator getDefault() {

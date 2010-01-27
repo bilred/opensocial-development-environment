@@ -18,12 +18,20 @@
  */
 package com.googlecode.osde.internal.igoogle;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.builders.GadgetBuilder;
 import com.googlecode.osde.internal.utils.Logger;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -43,6 +51,8 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class IgPreviewJob extends Job {
     private static Logger logger = new Logger(IgPreviewJob.class);
     static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
+    static final String LOCAL_HOST_URL = "http://localhost:8080/";
+    static final String GADGET_FILE_WITH_MODIFIED_URL = "modified_gadget.xml";
 
     private String username;
     private String password;
@@ -69,8 +79,24 @@ public class IgPreviewJob extends Job {
         final String previewGadgetUrl;
         try {
             IgCredentials igCredentials = new IgCredentials(username, password);
-            String urlOfHostedGadgetFile = IgHostingUtil.uploadFiles(
-                    igCredentials, gadgetXmlIFile, OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
+
+            // Get hosting URL.
+            String hostingUrl = IgHostingUtil.formHostingUrl(
+                    igCredentials.getPublicId(), OSDE_PREVIEW_DIRECTORY);
+
+            // Modify gadget file with new hosting url, and upload it.
+            String eclipseProjectName = gadgetXmlIFile.getProject().getName();
+            String oldHostingUrl = LOCAL_HOST_URL + eclipseProjectName + "/";
+            modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
+                    OSDE_PREVIEW_DIRECTORY);
+
+            // Upload files.
+            IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(),
+                    OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
+
+            // Form hosted gadget file url.
+            String urlOfHostedGadgetFile = hostingUrl + GADGET_FILE_WITH_MODIFIED_URL;
+
             previewGadgetUrl = IgHostingUtil.formPreviewOpenSocialGadgetUrl(
                     urlOfHostedGadgetFile, useCanvasView, igCredentials.getSid());
         } catch (IgException e) {
@@ -88,6 +114,70 @@ public class IgPreviewJob extends Job {
 
         monitor.done();
         return Status.OK_STATUS;
+    }
+
+    /**
+     * Replaces oldHostingUrl with newHostingUrl in the gadgetXmlIFile,
+     * which is stored in a temporary file.
+     * Then upload the temporary file to iGoogle.
+     *
+     * @throws IgException
+     */
+    void modifyHostingUrlForGadgetFileAndUploadIt(String oldHostingUrl, String newHostingUrl,
+            IgCredentials igCredentials, String hostingFolder)
+            throws IgException {
+        // Get gadget file's full path.
+        IProject project = gadgetXmlIFile.getProject();
+        String targetFolder =
+            project.getFolder(GadgetBuilder.TARGET_FOLDER_NAME).getLocation().toOSString();
+        String gadgetFileFullPath = targetFolder + "/" + gadgetXmlIFile.getName();
+        logger.fine("gadgetFileFullPath: " + gadgetFileFullPath);
+
+        // Read content from gadget file, and then modify them and save as a new gadget file.
+        // TODO: Do we need to specify the encoding for the pair of reader and writer?
+        FileReader originalGadgetXmlFileReader = null;
+        FileWriter modifiedGadgetXmlFileWriter = null;
+        try {
+            originalGadgetXmlFileReader = new FileReader(gadgetFileFullPath);
+            String fileContentAsString = IOUtils.toString(originalGadgetXmlFileReader);
+            logger.fine("fileContentAsString:\n" + fileContentAsString);
+            String modifiedFileContent =
+                    fileContentAsString.replaceAll(oldHostingUrl, newHostingUrl);
+
+            // Prepare the modified gadget file.
+            File osdeWorkFolder = getOsdeWorkFolder();
+            File modifiedFile = new File(osdeWorkFolder, GADGET_FILE_WITH_MODIFIED_URL);
+            if (modifiedFile.exists()) {
+                modifiedFile.delete();
+            }
+            boolean isCreated = modifiedFile.createNewFile();
+            logger.fine("isCreated: " + isCreated);
+
+            // Write modified content to the new gadget file.
+            modifiedGadgetXmlFileWriter = new FileWriter(modifiedFile);
+            modifiedGadgetXmlFileWriter.write(modifiedFileContent);
+            modifiedGadgetXmlFileWriter.flush();
+
+            // Upload the modified gadget file to iGoogle.
+            IgHostingUtil.uploadFile(igCredentials, osdeWorkFolder.getAbsolutePath(),
+                    GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
+        } catch (IOException e) {
+            logger.warn(e.getMessage());
+            throw new IgException(e);
+        } finally {
+            IOUtils.closeQuietly(originalGadgetXmlFileReader);
+            IOUtils.closeQuietly(modifiedGadgetXmlFileWriter);
+        }
+    }
+
+    // TODO: Move this to Activator.
+    static File getOsdeWorkFolder() {
+        String userHome = System.getProperty("user.home");
+        File osdeWorkFolder = new File(userHome, Activator.WORK_DIR_NAME);
+        if (!osdeWorkFolder.exists()) {
+            osdeWorkFolder.mkdir();
+        }
+        return osdeWorkFolder;
     }
 
     private static class PreviewingRunnable implements Runnable {
