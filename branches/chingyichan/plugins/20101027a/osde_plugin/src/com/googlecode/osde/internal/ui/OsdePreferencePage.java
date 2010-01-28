@@ -281,7 +281,6 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
     }
 
     private void initializeBinding() {
-
         binder.bind(languages, OsdeConfig.DEFAULT_LANGUAGE, String.class,
                 OsdePreferenceBinder.LANGUAGE_CONVERTER,
                 OsdePreferenceBinder.LANGUAGE_CONVERTER);
@@ -318,6 +317,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
                 firefoxConverter, firefoxConverter);
 
         binder.updateUI();
+        changeDatabaseControlEnabled();
     }
 
     /**
@@ -392,6 +392,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
     protected void performDefaults() {
         super.performDefaults();
         binder.updateDefaultUI();
+        changeDatabaseControlEnabled();
     }
 
     public boolean performOk() {
@@ -399,40 +400,6 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         new DatabaseServer().createConfiguration();
         return true;
     }
-
-//    private void storeValues() {
-//        Map<String, Object> model = new HashMap<String, Object>();
-//        String country = countries.getItem(countries.getSelectionIndex());
-//        model.put(OsdeConfig.DEFAULT_COUNTRY,
-//                country.substring(country.indexOf('(') + 1, country.length() - 1));
-//        String language = languages.getItem(languages.getSelectionIndex());
-//        model.put(OsdeConfig.DEFAULT_LANGUAGE,
-//                language.substring(language.indexOf('(') + 1, language.length() - 1));
-//        model.put(OsdeConfig.DATABASE_DIR, databaseDirText.getText());
-//        model.put(OsdeConfig.JETTY_DIR, jettyDirText.getText());
-//        model.put(OsdeConfig.USE_INTERNAL_DATABASE, internalDatabaseRadio.getSelection());
-//        model.put(OsdeConfig.EXTERNAL_DATABASE_HOST, hostText.getText());
-//        model.put(OsdeConfig.EXTERNAL_DATABASE_PASSWORD, passwordText.getText());
-//        model.put(OsdeConfig.EXTERNAL_DATABASE_PORT, portText.getText());
-//        model.put(OsdeConfig.EXTERNAL_DATABASE_USERNAME, usernameText.getText());
-//        model.put(OsdeConfig.EXTERNAL_DATABASE_TYPE, databaseTypeCombo.getText());
-//        model.put(OsdeConfig.EXTERNAL_DATABASE_NAME, nameText.getText());
-//
-//        model.put(OsdeConfig.LOGGER_CONFIG_FILE, loggerCfgLocationText.getText());
-//        String workDirectory = workDirectoryText.getText();
-//        File workDirectoryFile = new File(workDirectory);
-//        workDirectoryFile.mkdirs();
-//        model.put(OsdeConfig.WORK_DIRECTORY, workDirectory);
-//        model.put(OsdeConfig.COMPILE_JAVASCRIPT, compileJavaScriptCheckbox.getSelection());
-//
-//        String firefoxLocationValue = firefoxLocation.getText().trim();
-//        if (firefoxLocationValue.length() == 0) {
-//            firefoxLocationValue = OsdeConfig.DEFAULT_FIREFOX_LOCATION;
-//        }
-//
-//        model.put(OsdeConfig.FIREFOX_LOCATION, firefoxLocationValue);
-//        Activator.getDefault().storePreference(model);
-//    }
 
     private class DatabaseRadioSelectionListener implements SelectionListener {
         public void widgetDefaultSelected(SelectionEvent e) {
