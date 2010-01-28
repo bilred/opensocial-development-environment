@@ -412,6 +412,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 
     private void changeDatabaseControlEnabled() {
         boolean selection = internalDatabaseRadio.getSelection();
+        externalDatabaseRadio.setSelection(!selection);
         databaseDirText.setEnabled(selection);
         databaseBrowseButton.setEnabled(selection);
         hostText.setEnabled(!selection);
