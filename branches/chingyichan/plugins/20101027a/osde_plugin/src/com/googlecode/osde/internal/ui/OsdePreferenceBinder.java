@@ -147,7 +147,18 @@ public class OsdePreferenceBinder {
         }
     }
 
-    final static ConverterAdapter LOCALE_CONVERTER = new ConverterAdapter() {
+    static class LocalConverter extends ConverterAdapter {
+
+        String[] list;
+        public LocalConverter(String[] list) {
+            this.list = list;
+        }
+        private boolean getValue(String data, String lang) {
+            return StringUtils.equals(data, StringUtils.substringBetween(lang,
+                    "(", ")"));
+        }
+
+        @Override
         public Object convert(Object fromObject) {
             if (fromObject instanceof String) {
                 String data = (String) fromObject;
@@ -157,37 +168,22 @@ public class OsdePreferenceBinder {
                     return value;
                 }
 
-                // try languages
                 String result = null;
-                for (String lang : OpenSocialUtil.LANGUAGES) {
-                    if (getValue(data, lang)) {
-                        result = lang;
+                for (String item : list) {
+                    if (getValue(data, item)) {
+                        result = item;
                         break;
                     }
                 }
                 if (result != null) {
                     return result;
                 }
-
-                // try countries
-                for (String country : OpenSocialUtil.COUNTRIES) {
-                    if (getValue(data, country)) {
-                        result = country;
-                        break;
-                    }
-                }
-                if (result != null) {
-                    return result;
-                }
-
-                return fromObject;
             }
             return null;
         }
+    }
 
-        private boolean getValue(String data, String lang) {
-            return StringUtils.equals(data, StringUtils.substringBetween(lang,
-                    "(", ")"));
-        }
-    };
+    final static ConverterAdapter LANGUAGE_CONVERTER = new LocalConverter(OpenSocialUtil.LANGUAGES);
+    final static ConverterAdapter COUNTRY_CONVERTER = new LocalConverter(OpenSocialUtil.COUNTRIES);
+
 }

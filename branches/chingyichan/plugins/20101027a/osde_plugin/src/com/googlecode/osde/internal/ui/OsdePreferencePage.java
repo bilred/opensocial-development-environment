@@ -283,11 +283,11 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
     private void initializeBinding() {
 
         binder.bind(languages, OsdeConfig.DEFAULT_LANGUAGE, String.class,
-                OsdePreferenceBinder.LOCALE_CONVERTER,
-                OsdePreferenceBinder.LOCALE_CONVERTER);
+                OsdePreferenceBinder.LANGUAGE_CONVERTER,
+                OsdePreferenceBinder.LANGUAGE_CONVERTER);
         binder.bind(countries, OsdeConfig.DEFAULT_COUNTRY, String.class,
-                OsdePreferenceBinder.LOCALE_CONVERTER,
-                OsdePreferenceBinder.LOCALE_CONVERTER);
+                OsdePreferenceBinder.COUNTRY_CONVERTER,
+                OsdePreferenceBinder.COUNTRY_CONVERTER);
 
         binder.bind(databaseDirText, OsdeConfig.DATABASE_DIR, String.class);
         binder.bind(jettyDirText, OsdeConfig.JETTY_DIR, String.class);
