@@ -23,6 +23,7 @@ import java.util.Map;
 import com.googlecode.osde.internal.OsdePreferencesModel;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -30,6 +31,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 
@@ -40,19 +42,34 @@ public class OsdePreferenceBinder {
 
     private Map<String, Object> store = new HashMap<String, Object>();
     private Map<String, Class<?>> types = new HashMap<String, Class<?>>();
-    private DataBindingContext ctx = new DataBindingContext();
+    private DataBindingContext context = new DataBindingContext();
     private OsdePreferencesModel model;
+
+    private static final Class<?>[] supportedTypes = new Class<?>[]{
+        Boolean.class, String.class
+    };
 
     public OsdePreferenceBinder(OsdePreferencesModel model) {
         this.model = model;
     }
 
+    /**
+     * @param type only support String or Boolean
+     */
     public void bind(Control control, String preferenceName, Class<?> type) {
         bind(control, preferenceName, type, null, null);
     }
 
+    /**
+     * @param type only support String or Boolean
+     */
     public void bind(Control control, String preferenceName, Class<?> type,
             IConverter targetToModel, IConverter modelToTarget) {
+
+        if (!ArrayUtils.contains(supportedTypes, type)) {
+            throw new IllegalArgumentException("type[" + type + "] is not supported.");
+        }
+
         IObservableValue model = new ObservableMapValue(store, preferenceName);
         IObservableValue ui = null;
 
@@ -68,7 +85,11 @@ public class OsdePreferenceBinder {
         }
 
         if (control instanceof Button) {
-            ui = SWTObservables.observeSelection(control);
+            boolean isRadio = (control.getStyle() & SWT.RADIO) != 0;
+            boolean isCheck = (control.getStyle() & SWT.CHECK) != 0;
+            if (isRadio || isCheck) {
+                ui = SWTObservables.observeSelection(control);
+            }
         }
 
         if (ui == null) {
@@ -76,7 +97,7 @@ public class OsdePreferenceBinder {
         }
 
         propagateData(preferenceName, type);
-        ctx.bindValue(ui, model, modelUpdater, uiUpdater);
+        context.bindValue(ui, model, modelUpdater, uiUpdater);
     }
 
     private void propagateData(String preferenceName, Class<?> type) {
@@ -89,7 +110,7 @@ public class OsdePreferenceBinder {
     }
 
     public void updateUI() {
-        ctx.updateTargets();
+        context.updateTargets();
     }
 
     public void store() {
@@ -147,15 +168,15 @@ public class OsdePreferenceBinder {
         }
     }
 
-    static class LocalConverter extends ConverterAdapter {
+    static class LocaleConverter extends ConverterAdapter {
 
-        String[] list;
-        public LocalConverter(String[] list) {
+        private String[] list;
+        public LocaleConverter(String[] list) {
             this.list = list;
         }
+
         private boolean getValue(String data, String lang) {
-            return StringUtils.equals(data, StringUtils.substringBetween(lang,
-                    "(", ")"));
+            return StringUtils.equals(data, StringUtils.substringBetween(lang, "(", ")"));
         }
 
         @Override
@@ -183,7 +204,7 @@ public class OsdePreferenceBinder {
         }
     }
 
-    final static ConverterAdapter LANGUAGE_CONVERTER = new LocalConverter(OpenSocialUtil.LANGUAGES);
-    final static ConverterAdapter COUNTRY_CONVERTER = new LocalConverter(OpenSocialUtil.COUNTRIES);
+    final static ConverterAdapter LANGUAGE_CONVERTER = new LocaleConverter(OpenSocialUtil.LANGUAGES);
+    final static ConverterAdapter COUNTRY_CONVERTER = new LocaleConverter(OpenSocialUtil.COUNTRIES);
 
 }
