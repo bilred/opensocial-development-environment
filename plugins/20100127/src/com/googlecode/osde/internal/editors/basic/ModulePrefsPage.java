@@ -18,13 +18,14 @@
 package com.googlecode.osde.internal.editors.basic;
 
 
+import com.googlecode.osde.internal.editors.ISelectionCallback;
 import com.googlecode.osde.internal.gadgets.model.Module;
 
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
-public class ModulePrefsPage extends FormPage {
+public class ModulePrefsPage extends FormPage implements ISelectionCallback {
 
     private Module module;
     private ApplicationInformationPart applicationInformationPart;
@@ -74,6 +75,9 @@ public class ModulePrefsPage extends FormPage {
         featuresPart.changeModel();
         contentRewritePart.changeModel();
         iconPart.changeModel();
+    }
+
+    public void selectedPage() {
     }
 
 }
