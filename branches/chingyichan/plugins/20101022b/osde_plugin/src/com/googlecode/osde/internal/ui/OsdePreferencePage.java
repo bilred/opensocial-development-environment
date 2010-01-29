@@ -17,20 +17,15 @@
  */
 package com.googlecode.osde.internal.ui;
 
-import java.io.File;
-
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.OsdeConfig;
 import com.googlecode.osde.internal.OsdePreferencesModel;
 import com.googlecode.osde.internal.common.JdkVersion;
 import com.googlecode.osde.internal.shindig.DatabaseServer;
-import com.googlecode.osde.internal.ui.binder.ComboBinder;
-import com.googlecode.osde.internal.ui.binder.FirefoxTextBinder;
-import com.googlecode.osde.internal.ui.binder.LocaleComboBinder;
-import com.googlecode.osde.internal.ui.binder.PreferenceBinder;
-import com.googlecode.osde.internal.ui.binder.SelectionBinder;
-import com.googlecode.osde.internal.ui.binder.TextBinder;
+import com.googlecode.osde.internal.ui.OsdePreferenceBinder.ConverterAdapter;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -55,7 +50,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class OsdePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-    private PreferenceBinder preferenceBinder = new PreferenceBinder();
     private Combo languages;
     private Combo countries;
     private Text databaseDirText;
@@ -73,10 +67,12 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
     private Text loggerCfgLocationText;
     private Button compileJavaScriptCheckbox;
     private Text firefoxLocation;
+    private OsdePreferenceBinder binder;
 
     public OsdePreferencePage() {
         super();
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
+        binder = new OsdePreferenceBinder(new OsdePreferencesModel(getPreferenceStore()));
     }
 
     public void init(IWorkbench workbench) {
@@ -279,12 +275,49 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         label.setText(name + " Version " + version);
         label = new Label(composite, SWT.NONE);
         label.setText("Revision of Apache Shindig: " + shindigRevision);
-        //
-        bindUIandPreferences();
-        //
-        initializeValues();
-        //
+
+        initializeBinding();
         return composite;
+    }
+
+    private void initializeBinding() {
+        binder.bind(languages, OsdeConfig.DEFAULT_LANGUAGE, String.class,
+                OsdePreferenceBinder.LANGUAGE_CONVERTER,
+                OsdePreferenceBinder.LANGUAGE_CONVERTER);
+        binder.bind(countries, OsdeConfig.DEFAULT_COUNTRY, String.class,
+                OsdePreferenceBinder.COUNTRY_CONVERTER,
+                OsdePreferenceBinder.COUNTRY_CONVERTER);
+
+        binder.bind(databaseDirText, OsdeConfig.DATABASE_DIR, String.class);
+        binder.bind(jettyDirText, OsdeConfig.JETTY_DIR, String.class);
+        binder.bind(internalDatabaseRadio, OsdeConfig.USE_INTERNAL_DATABASE, Boolean.class);
+        binder.bind(databaseTypeCombo, OsdeConfig.EXTERNAL_DATABASE_TYPE, String.class);
+        binder.bind(hostText, OsdeConfig.EXTERNAL_DATABASE_HOST, String.class);
+        binder.bind(portText, OsdeConfig.EXTERNAL_DATABASE_PORT, String.class);
+        binder.bind(usernameText, OsdeConfig.EXTERNAL_DATABASE_USERNAME, String.class);
+        binder.bind(passwordText, OsdeConfig.EXTERNAL_DATABASE_PASSWORD, String.class);
+        binder.bind(nameText, OsdeConfig.EXTERNAL_DATABASE_NAME, String.class);
+        binder.bind(workDirectoryText, OsdeConfig.WORK_DIRECTORY, String.class);
+        binder.bind(loggerCfgLocationText, OsdeConfig.LOGGER_CONFIG_FILE, String.class);
+        binder.bind(compileJavaScriptCheckbox, OsdeConfig.COMPILE_JAVASCRIPT, Boolean.class);
+
+        ConverterAdapter firefoxConverter = new ConverterAdapter() {
+            @Override
+            public Object convert(Object fromObject) {
+                if (fromObject instanceof String) {
+                    String loc = (String) fromObject;
+                    if(StringUtils.isBlank(loc)){
+                        return OsdeConfig.DEFAULT_FIREFOX_LOCATION;
+                    }
+                }
+                return fromObject;
+            }
+        };
+        binder.bind(firefoxLocation, OsdeConfig.FIREFOX_LOCATION, String.class,
+                firefoxConverter, firefoxConverter);
+
+        binder.updateUI();
+        changeDatabaseControlEnabled();
     }
 
     /**
@@ -357,68 +390,15 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
     }
 
     protected void performDefaults() {
-        initializeDefaults();
         super.performDefaults();
+        binder.updateDefaultUI();
+        changeDatabaseControlEnabled();
     }
 
     public boolean performOk() {
-        storeValues();
+        binder.store();
         new DatabaseServer().createConfiguration();
         return true;
-    }
-
-    private void bindUIandPreferences(){
-        preferenceBinder.addBinder(new LocaleComboBinder(countries, OsdeConfig.DEFAULT_COUNTRY));
-        preferenceBinder.addBinder(new LocaleComboBinder(languages, OsdeConfig.DEFAULT_LANGUAGE));
-        preferenceBinder.addBinder(new TextBinder(databaseDirText, OsdeConfig.DATABASE_DIR));
-        preferenceBinder.addBinder(new TextBinder(jettyDirText, OsdeConfig.JETTY_DIR));
-        preferenceBinder.addBinder(new TextBinder(hostText, OsdeConfig.EXTERNAL_DATABASE_HOST));
-        preferenceBinder.addBinder(
-                new TextBinder(passwordText, OsdeConfig.EXTERNAL_DATABASE_PASSWORD));
-        preferenceBinder.addBinder(new TextBinder(portText, OsdeConfig.EXTERNAL_DATABASE_PORT));
-        preferenceBinder.addBinder(
-                new TextBinder(usernameText, OsdeConfig.EXTERNAL_DATABASE_USERNAME));
-        preferenceBinder.addBinder(new TextBinder(nameText, OsdeConfig.EXTERNAL_DATABASE_NAME));
-        preferenceBinder.addBinder(
-                new TextBinder(loggerCfgLocationText, OsdeConfig.LOGGER_CONFIG_FILE));
-        
-        preferenceBinder.addBinder(new TextBinder(workDirectoryText,
-                OsdeConfig.WORK_DIRECTORY) {
-            @Override
-            public void doSave(OsdePreferencesModel model) throws Exception {
-                super.doSave(model);
-                try {
-                    new File(control.getText()).mkdirs();
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
-        });
-        
-        preferenceBinder.addBinder(new FirefoxTextBinder(firefoxLocation,
-                OsdeConfig.DEFAULT_FIREFOX_LOCATION));
-
-        preferenceBinder.addBinder(
-                new ComboBinder(databaseTypeCombo, OsdeConfig.EXTERNAL_DATABASE_TYPE));
-
-        preferenceBinder.addBinder(
-                new SelectionBinder(compileJavaScriptCheckbox, OsdeConfig.COMPILE_JAVASCRIPT));
-        preferenceBinder.addBinder(
-                new SelectionBinder(internalDatabaseRadio, OsdeConfig.USE_INTERNAL_DATABASE));
-    }
-
-    private void storeValues() {
-        preferenceBinder.doSave(Activator.getDefault().getPreferenceModel());
-    }
-
-    private void initializeValues() {
-        preferenceBinder.doLoad(Activator.getDefault().getPreferenceModel());
-        changeDatabaseControlEnabled();
-    }
-
-    private void initializeDefaults() {
-        preferenceBinder.doLoadDefault(Activator.getDefault().getPreferenceModel());
-        changeDatabaseControlEnabled();
     }
 
     private class DatabaseRadioSelectionListener implements SelectionListener {
@@ -432,6 +412,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 
     private void changeDatabaseControlEnabled() {
         boolean selection = internalDatabaseRadio.getSelection();
+        externalDatabaseRadio.setSelection(!selection);
         databaseDirText.setEnabled(selection);
         databaseBrowseButton.setEnabled(selection);
         hostText.setEnabled(!selection);
