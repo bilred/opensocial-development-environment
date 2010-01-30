@@ -18,62 +18,64 @@
 
 package com.googlecode.osde.internal.shindig;
 
+import java.io.IOException;
+
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.OsdeConfig;
-import com.googlecode.osde.internal.common.AbstractJob;
 import com.googlecode.osde.internal.common.ExternalApp;
 import com.googlecode.osde.internal.common.JavaLaunchConfigurationBuilder;
+import com.googlecode.osde.internal.utils.Logger;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.CoreException;
 
 /**
- * Configuration to launch the Shindig database. Note that all
- * operation are started in another thread and return immediately.
+ * Configuration to launch the Shindig database.
  *
  * @author Dolphin Wan
  */
 public class DatabaseServer extends ExternalApp {
     private static final String H2_DATABASE_LIBRARY = "/libs/h2-1.1.117.jar";
+    private static final Logger logger = new Logger(DatabaseServer.class);
 
     public DatabaseServer() {
         super("Shindig Database");
     }
 
     public void createConfiguration() {
-        new AbstractJob("Create the database launch configuration") {
-            @Override
-            protected void runImpl(IProgressMonitor monitor) throws Exception {
-                JavaLaunchConfigurationBuilder builder =
-                        new JavaLaunchConfigurationBuilder(configurationName)
-                                .withLibrary(H2_DATABASE_LIBRARY)
-                                .withMainClassName("org.h2.tools.Server")
-                                .withArgument("-tcp")
-                                .withArgument("-tcpAllowOthers");
+        JavaLaunchConfigurationBuilder builder =
+                new JavaLaunchConfigurationBuilder(configurationName)
+                        .withLibrary(H2_DATABASE_LIBRARY)
+                        .withMainClassName("org.h2.tools.Server")
+                        .withArgument("-tcp")
+                        .withArgument("-tcpAllowOthers");
 
-                OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
-                String databaseDir = config.getDatabaseDir();
-                if (StringUtils.isNotEmpty(databaseDir)) {
-                    if (databaseDir.endsWith("\\")) {
-                        databaseDir = databaseDir.substring(0, databaseDir.length() - 1);
-                    }
-                    builder.withArgument("-baseDir");
-                    builder.withArgumentQuoted(databaseDir);
-                }
-
-                builder.removeExistingConfiguration();
-                builder.build();
+        OsdeConfig config = Activator.getDefault().getOsdeConfiguration();
+        String databaseDir = config.getDatabaseDir();
+        if (StringUtils.isNotEmpty(databaseDir)) {
+            if (databaseDir.endsWith("\\")) {
+                databaseDir = databaseDir.substring(0, databaseDir.length() - 1);
             }
-        }.schedule();
+            builder.withArgument("-baseDir");
+            builder.withArgumentQuoted(databaseDir);
+        }
+
+        try {
+            builder.removeExistingConfiguration();
+            builder.build();
+        } catch (CoreException e) {
+            logger.error("Failed to create the database launch configuration", e);
+        } catch (IOException e) {
+            logger.error("Failed to create the database launch configuration", e);
+        }
     }
 
     public void deleteConfiguration() {
-        new AbstractJob("Delete the Apache Shindig launch configuration") {
-            @Override
-            protected void runImpl(IProgressMonitor monitor) throws Exception {
-                new JavaLaunchConfigurationBuilder(configurationName)
-                        .removeExistingConfiguration();
-            }
-        }.schedule();
+        try {
+            new JavaLaunchConfigurationBuilder(configurationName)
+                    .removeExistingConfiguration();
+        } catch (CoreException e) {
+            logger.error("Failed to delete the Apache Shindig launch configuration", e);
+        }
     }
 }

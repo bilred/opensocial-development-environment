@@ -22,71 +22,70 @@ import java.io.File;
 import java.io.IOException;
 
 import com.googlecode.osde.internal.Activator;
-import com.googlecode.osde.internal.common.AbstractJob;
 import com.googlecode.osde.internal.common.ExternalApp;
 import com.googlecode.osde.internal.common.JavaLaunchConfigurationBuilder;
+import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * @author Dolphin Wan
  */
 public class ShindigServer extends ExternalApp {
     private static final String PREBUNDLED_LOGGING_CONFIG_FILE = "/shindig/logging.properties";
+    private static final Logger logger = new Logger(ShindigServer.class);
 
     public ShindigServer() {
         super("Apache Shindig");
     }
 
     public void createConfiguration() {
-        new AbstractJob("Create the Apache Shindig launch configuration") {
-            @Override
-            protected void runImpl(IProgressMonitor monitor) throws Exception {
-                new JavaLaunchConfigurationBuilder(configurationName)
-                        .withLibrary("/libs/jetty-6.1.15.jar")
-                        .withLibrary("/libs/jetty-util-6.1.15.jar")
-                        .withLibrary("/libs/servlet-api-2.5-6.1.14.jar")
-                        .withLibrary("/shindig/juel-api-2.1.2.jar")
-                        .withLibrary("/shindig/launcher.jar")
-                        .withLibrary("/shindig/slf4j-api-1.5.10.jar")
-                        .withLibrary("/shindig/slf4j-log4j12-1.5.10.jar")
-                        .withLibrary("/libs/log4j-1.2.14.jar")
-                        .withMainClassName("Main")
-                        .withArgument("8080") // port
-                        .withArgumentQuoted(Activator.getResourceUrl(
-                                "/shindig/shindig-server-1.1-BETA1-incubating.war"))
-                        .withArgumentQuoted(
-                                Activator.getDefault().getOsdeConfiguration().getJettyDir())
-                        .withVmArgument("log4j.configuration", getLoggerConfigurationFile())
-                        .withVmArgument("java.util.logging.config.file",
-                                getLoggerConfigurationFile())
-                        .removeExistingConfiguration()
-                        .build();
-            }
-
-            private String getLoggerConfigurationFile() throws IOException {
-                File logFile = new File(Activator.getDefault()
-                        .getOsdeConfiguration().getLoggerConfigFile());
-                if (logFile.isFile() && logFile.exists()) {
-                    logger.info("Found logger configuration file: " + logFile);
-                    return logFile.toURI().toURL().toExternalForm();
-                }
-
-                // returns the default pre-bundled logging configuration file.
-                return Activator.getResourceUrl(PREBUNDLED_LOGGING_CONFIG_FILE);
-            }
-
-        }.schedule();
+        try {
+            new JavaLaunchConfigurationBuilder(configurationName)
+                    .withLibrary("/libs/jetty-6.1.15.jar")
+                    .withLibrary("/libs/jetty-util-6.1.15.jar")
+                    .withLibrary("/libs/servlet-api-2.5-6.1.14.jar")
+                    .withLibrary("/shindig/juel-api-2.1.2.jar")
+                    .withLibrary("/shindig/launcher.jar")
+                    .withLibrary("/shindig/slf4j-api-1.5.10.jar")
+                    .withLibrary("/shindig/slf4j-log4j12-1.5.10.jar")
+                    .withLibrary("/libs/log4j-1.2.14.jar")
+                    .withMainClassName("Main")
+                    .withArgument("8080") // port
+                    .withArgumentQuoted(Activator.getResourceUrl(
+                            "/shindig/shindig-server-1.1-BETA1-incubating.war"))
+                    .withArgumentQuoted(
+                            Activator.getDefault().getOsdeConfiguration().getJettyDir())
+                    .withVmArgument("log4j.configuration", getLoggerConfigurationFile())
+                    .withVmArgument("java.util.logging.config.file",
+                            getLoggerConfigurationFile())
+                    .removeExistingConfiguration()
+                    .build();
+        } catch (CoreException e) {
+            logger.error("Failed to create the Apache Shindig launch configuration", e);
+        } catch (IOException e) {
+            logger.error("Failed to create the Apache Shindig launch configuration", e);
+        }
     }
 
     public void deleteConfiguration() {
-        new AbstractJob("Delete the Apache Shindig launch configuration") {
-            @Override
-            protected void runImpl(IProgressMonitor monitor) throws Exception {
-                new JavaLaunchConfigurationBuilder(configurationName)
-                        .removeExistingConfiguration();
-            }
-        }.schedule();
+        try {
+            new JavaLaunchConfigurationBuilder(configurationName)
+                    .removeExistingConfiguration();
+        } catch (CoreException e) {
+            logger.error("Failed to delete the Apache Shindig launch configuration", e);
+        }
     }
 
+    private String getLoggerConfigurationFile() throws IOException {
+        File logFile = new File(Activator.getDefault()
+                .getOsdeConfiguration().getLoggerConfigFile());
+        if (logFile.isFile() && logFile.exists()) {
+            logger.info("Found logger configuration file: " + logFile);
+            return logFile.toURI().toURL().toExternalForm();
+        }
+
+        // returns the default pre-bundled logging configuration file.
+        return Activator.getResourceUrl(PREBUNDLED_LOGGING_CONFIG_FILE);
+    }
 }
