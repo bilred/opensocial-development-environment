@@ -129,7 +129,10 @@ public class GadgetXmlEditor extends FormEditor {
             setPageText(4, "Source");
             addPageChangedListener(new IPageChangedListener() {
                 public void pageChanged(PageChangedEvent event) {
-                    ((ISelectionCallback)event.getSelectedPage()).selectedPage();
+                    Object page = event.getSelectedPage();
+                    if (page instanceof PageSelectionListener) {
+                        ((PageSelectionListener)page).pageSelected();
+                    }
                     IParser parser = ParserFactory.createParser(ParserType.GADGET_XML_PARSER);
                     try {
                         parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));

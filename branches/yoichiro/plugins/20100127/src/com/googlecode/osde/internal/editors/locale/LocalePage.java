@@ -20,14 +20,14 @@ package com.googlecode.osde.internal.editors.locale;
 
 import java.util.List;
 
-import com.googlecode.osde.internal.editors.ISelectionCallback;
+import com.googlecode.osde.internal.editors.PageSelectionListener;
 import com.googlecode.osde.internal.gadgets.model.Module;
 
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
-public class LocalePage extends FormPage implements ISelectionCallback {
+public class LocalePage extends FormPage implements PageSelectionListener {
 
     private Module module;
 
@@ -65,7 +65,7 @@ public class LocalePage extends FormPage implements ISelectionCallback {
         block.changeModel();
     }
 
-    public void selectedPage() {
+    public void pageSelected() {
         changeModel(module);
     }
 
