@@ -22,11 +22,11 @@ package com.googlecode.osde.internal.editors;
  * 
  * @author yoichiro
  */
-public interface ISelectionCallback {
+public interface PageSelectionListener {
 
     /**
      * This method will be called when this implementation is selected.
      */
-    public void selectedPage();
+    public void pageSelected();
 
 }

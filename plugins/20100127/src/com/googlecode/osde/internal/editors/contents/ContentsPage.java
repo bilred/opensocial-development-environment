@@ -20,14 +20,13 @@ package com.googlecode.osde.internal.editors.contents;
 
 import java.util.List;
 
-import com.googlecode.osde.internal.editors.ISelectionCallback;
 import com.googlecode.osde.internal.gadgets.model.Module;
 
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
-public class ContentsPage extends FormPage implements ISelectionCallback {
+public class ContentsPage extends FormPage {
 
     private Module module;
 
@@ -63,9 +62,6 @@ public class ContentsPage extends FormPage implements ISelectionCallback {
     public void changeModel(Module model) {
         this.module = model;
         block.changeModel();
-    }
-
-    public void selectedPage() {
     }
 
 }
