@@ -26,7 +26,8 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "com.googlecode.osde.internal.messages"; //$NON-NLS-1$
-    public static String PERF_01;
+    public static String pref01;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
