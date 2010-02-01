@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.Messages;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -214,7 +215,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         }
         //
         measurePerformanceCheck = new Button(panel, SWT.CHECK);
-        measurePerformanceCheck.setText("Measure gadget performance (required Firefox)");
+        measurePerformanceCheck.setText(Messages.getString("MEASURE_PERFORMANCE")); //$NON-NLS-1$
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 4;
         measurePerformanceCheck.setLayoutData(layoutData);

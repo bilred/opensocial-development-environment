@@ -20,6 +20,7 @@ package com.googlecode.osde.internal.runtime;
 import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.Messages;
 import com.googlecode.osde.internal.OsdeConfig;
 import com.googlecode.osde.internal.utils.Logger;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
@@ -205,7 +206,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
         }
         //
         measurePerformanceCheck = new Button(panel, SWT.CHECK);
-        measurePerformanceCheck.setText("Measure gadget performance (required Firefox)");
+        measurePerformanceCheck.setText(Messages.getString("MEASURE_PERFORMANCE")); //$NON-NLS-1$
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 4;
         measurePerformanceCheck.setLayoutData(layoutData);
