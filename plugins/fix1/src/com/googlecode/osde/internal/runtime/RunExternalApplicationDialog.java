@@ -215,7 +215,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         }
         //
         measurePerformanceCheck = new Button(panel, SWT.CHECK);
-        measurePerformanceCheck.setText(Messages.getString("MEASURE_PERFORMANCE")); //$NON-NLS-1$
+        measurePerformanceCheck.setText(Messages.PERF_01);
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 4;
         measurePerformanceCheck.setLayoutData(layoutData);
