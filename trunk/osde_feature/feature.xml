@@ -2,7 +2,7 @@
 <feature
       id="com.googlecode.osde.feature"
       label="OpenSocial Development Environment Feature"
-      version="0.7.0.C2"
+      version="0.7.0.C3"
       provider-name="Yoichiro Tanaka"
       plugin="com.googlecode.osde">
 
@@ -792,7 +792,7 @@ for NSIS, however, are subject to the terms of the Common Public License version
    </license>
 
    <url>
-      <update url="http://opensocial-development-environment.googlecode.com/svn/update-site-candidate/site.xml"/>
+      <update label="OSDE Release Candiate - Update Site" url="http://opensocial-development-environment.googlecode.com/svn/update-site-candidate/site.xml"/>
    </url>
 
    <requires>
