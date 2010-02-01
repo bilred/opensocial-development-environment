@@ -127,6 +127,10 @@ public class GadgetXmlEditor extends FormEditor {
             setPageText(4, "Source");
             addPageChangedListener(new IPageChangedListener() {
                 public void pageChanged(PageChangedEvent event) {
+                    Object page = event.getSelectedPage();
+                    if (page instanceof PageSelectionListener) {
+                        ((PageSelectionListener)page).pageSelected();
+                    }
                     Parser<Module> parser = ParserFactory.gadgetSpecParser();
                     try {
                         parser.parse(new ByteArrayInputStream(getSource().getBytes("UTF-8")));
@@ -273,6 +277,14 @@ public class GadgetXmlEditor extends FormEditor {
         }
         resultMap.put(lineNumber++, lineStart);
         return resultMap;
+    }
+
+    @Override
+    public void setFocus() {
+        super.setFocus();
+        if (module != null) {
+            messageBundlePage.changeModel(module);
+        }
     }
 
 }
