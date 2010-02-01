@@ -77,6 +77,11 @@ class Profile {
         return macAndLinuxLockFile.exists() || windowsLockFile.exists();
     }
 
+    void installPageSpeed() throws IOException {
+        // TODO: collect beacons in port 8900 in the future.
+        installPageSpeed(null);
+    }
+
     void installPageSpeed(String beaconUrl) throws IOException {
         addExtension("firebug-1.4.5-fx.xpi", "firebug@software.joehewitt.com");
         addExtension("pagespeed-1.5b.xpi", "{e3f6c2cc-d8db-498c-af6c-499fb211db97}");
@@ -189,6 +194,13 @@ class Profile {
         prefs.put("extensions.firebug.allPagesActivation", "\"on\"");
         prefs.put("extensions.firebug.defaultPanelName", "\"pagespeed\"");
         prefs.put("extensions.PageSpeed.autorun", "true");
+
+        if (beaconUrl != null) {
+            prefs.put("extensions.PageSpeed.beacon.full_results.url", "\"" + beaconUrl + "\"");
+            prefs.put("extensions.PageSpeed.beacon.full_results.enabled", "true");
+            prefs.put("extensions.PageSpeed.beacon.full_results.autorun", "true");
+            prefs.put("extensions.PageSpeed.quit_after_scoring", "true");
+        }
 
         writeNewPrefs(prefs);
     }
