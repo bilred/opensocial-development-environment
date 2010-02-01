@@ -94,8 +94,7 @@ public class ProfilingBrowserSupport extends AbstractWorkbenchBrowserSupport {
             monitor.worked(1);
 
             monitor.subTask("Install Firebug and PageSpeed plugins");
-            // TODO: collect beacons in port 8900 in the future.
-            profile.installPageSpeed("http://localhost:8900/beacon/full");
+            profile.installPageSpeed();
             monitor.worked(1);
 
             monitor.subTask("Launch Firefox browser window");
