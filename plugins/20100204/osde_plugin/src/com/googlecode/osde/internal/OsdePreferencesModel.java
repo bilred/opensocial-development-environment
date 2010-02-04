@@ -59,6 +59,7 @@ public class OsdePreferencesModel {
         file = new File(tmpdir, "osde_jetty");
         file.mkdirs();
         node.put(OsdeConfig.JETTY_DIR, file.getAbsolutePath());
+        node.put(OsdeConfig.JETTY_PORT, "8080");
         node.put(OsdeConfig.USE_INTERNAL_DATABASE, "true");
         node.put(OsdeConfig.EXTERNAL_DATABASE_TYPE, "MySQL");
         node.put(OsdeConfig.EXTERNAL_DATABASE_HOST, "localhost");
