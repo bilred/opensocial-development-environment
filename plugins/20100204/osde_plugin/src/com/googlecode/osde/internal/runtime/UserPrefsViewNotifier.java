@@ -17,6 +17,7 @@
  */
 package com.googlecode.osde.internal.runtime;
 
+import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.ui.views.userprefs.UserPrefsView;
 import com.googlecode.osde.internal.utils.Logger;
 
@@ -35,9 +36,10 @@ public class UserPrefsViewNotifier {
     public static void fire(final LaunchApplicationInformation information, Shell shell,
             IWorkbenchPart targetPart) {
         IProject project = information.getProject();
-        final String url =
-                "http://localhost:8080/" + project.getName().replace(" ", "%20") + "/" + information
-                        .getUrl().replace(" ", "%20");
+        final String url = "http://localhost:"
+                + Activator.getDefault().getOsdeConfiguration().getJettyPort()
+                + "/" + project.getName().replace(" ", "%20") + "/"
+                + information.getUrl().replace(" ", "%20");
         final IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
         shell.getDisplay().syncExec(new Runnable() {
             public void run() {

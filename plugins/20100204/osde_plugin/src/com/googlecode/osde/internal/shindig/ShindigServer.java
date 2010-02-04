@@ -51,7 +51,7 @@ public class ShindigServer extends ExternalApp {
                     .withLibrary("/shindig/slf4j-log4j12-1.5.10.jar")
                     .withLibrary("/libs/log4j-1.2.14.jar")
                     .withMainClassName("Main")
-                    .withArgument("8080") // port
+                    .withArgument(Activator.getDefault().getOsdeConfiguration().getJettyPort()) 
                     .withArgumentQuoted(Activator.getResourceUrl(
                             "/shindig/shindig-server-1.1-BETA1-incubating.war"))
                     .withArgumentQuoted(

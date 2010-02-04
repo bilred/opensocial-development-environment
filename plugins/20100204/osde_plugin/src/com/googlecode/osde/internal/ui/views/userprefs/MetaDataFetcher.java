@@ -32,6 +32,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.editors.pref.UserPrefModel;
 import com.googlecode.osde.internal.editors.pref.UserPrefModel.DataType;
 
@@ -49,7 +50,10 @@ public class MetaDataFetcher {
         body = body.replace("$language$", language);
         body = body.replace("$view$", view);
         body = body.replace("$url$", url);
-        HttpPost post = new HttpPost("http://localhost:8080/gadgets/metadata");
+        HttpPost post = new HttpPost(
+                "http://localhost:"
+                + Activator.getDefault().getOsdeConfiguration().getJettyPort()
+                + "/gadgets/metadata");
         post.setHeader("Content-Type", "text/json");
         post.setEntity(new StringEntity(body, "UTF-8"));
         String response = client.execute(post, new BasicResponseHandler());
