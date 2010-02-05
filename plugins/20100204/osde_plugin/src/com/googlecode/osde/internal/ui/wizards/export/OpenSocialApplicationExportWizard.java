@@ -166,8 +166,8 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
                                         if (ViewType.html.toString().equals(content.getType())) {
                                             String value = content.getValue();
                                             Pattern pattern = Pattern.compile(
-                                                    "http://localhost:8080/" + project.getName()
-                                                            + "/");
+                                                    "http://localhost:[0-9]+/" 
+                                                    + project.getName() + "/");
                                             Matcher matcher = pattern.matcher(value);
                                             StringBuffer sb = new StringBuffer();
                                             while (matcher.find()) {

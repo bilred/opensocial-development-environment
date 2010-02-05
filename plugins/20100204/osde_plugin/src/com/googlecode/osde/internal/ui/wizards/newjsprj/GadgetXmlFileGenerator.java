@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.EnumMap;
 import java.util.Set;
 
+import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.gadgets.ViewName;
 import com.googlecode.osde.internal.gadgets.ViewType;
 import com.googlecode.osde.internal.utils.Gadgets;
@@ -148,10 +149,11 @@ public class GadgetXmlFileGenerator {
                     } else {
                         if (viewData.isCreateExternalJavaScript()) {
                             content += "\n";
-                            content +=
-                                    "<script type=\"text/javascript\" src=\"http://localhost:8080/"
-                                            + project.getName() + "/" + viewData.getFilename()
-                                            + "\"></script>\n";
+                            content += "<script type=\"text/javascript\" src=\"http://localhost:" 
+                                    + Activator.getDefault().getOsdeConfiguration().getJettyPort()
+                                    + "/"
+                                    + project.getName() + "/" + viewData.getFilename()
+                                    + "\"></script>\n";
                             if (viewData.isCreateInitFunction()) {
                                 content += "\n";
                                 content += "<script type=\"text/javascript\">\n";
