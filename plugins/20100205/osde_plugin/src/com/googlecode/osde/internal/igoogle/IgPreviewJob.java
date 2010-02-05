@@ -51,7 +51,6 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class IgPreviewJob extends Job {
     private static Logger logger = new Logger(IgPreviewJob.class);
     static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
-    static final String LOCAL_HOST_URL = "http://localhost:8080/";
     static final String GADGET_FILE_WITH_MODIFIED_URL = "modified_gadget.xml";
 
     private String username;
@@ -71,6 +70,11 @@ public class IgPreviewJob extends Job {
         this.useCanvasView = useCanvasView;
         this.useExternalBrowser = useExternalBrowser;
     }
+    
+    protected String getLocalHostUrl() {
+        return String.format("http://localhost:%s/", 
+                Activator.getDefault().getOsdeConfiguration().getJettyPort());
+    }
 
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
@@ -86,7 +90,7 @@ public class IgPreviewJob extends Job {
 
             // Modify gadget file with new hosting url, and upload it.
             String eclipseProjectName = gadgetXmlIFile.getProject().getName();
-            String oldHostingUrl = LOCAL_HOST_URL + eclipseProjectName + "/";
+            String oldHostingUrl = getLocalHostUrl() + eclipseProjectName + "/";
             modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
                     OSDE_PREVIEW_DIRECTORY);
 

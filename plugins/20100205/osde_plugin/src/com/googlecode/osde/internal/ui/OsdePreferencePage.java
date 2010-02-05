@@ -54,6 +54,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
     private Combo countries;
     private Text databaseDirText;
     private Text jettyDirText;
+    private Text jettyPortText;
     private Button internalDatabaseRadio;
     private Button externalDatabaseRadio;
     private Combo databaseTypeCombo;
@@ -135,6 +136,12 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         jettyDirText.setLayoutData(layoutData);
         createFolderButton(group, "Context directory",
                 "Please select the directory to store the Jetty context files.", jettyDirText);
+        Label jettyPortLabel = new Label(group, SWT.NONE);
+        jettyPortLabel.setText("Jetty httpd port:");
+        jettyPortText = new Text(group, SWT.BORDER);
+        layoutData = new GridData(GridData.FILL_HORIZONTAL);
+        jettyPortText.setLayoutData(layoutData);
+        //
         //
         Label noticeLabel = new Label(group, SWT.NONE);
         noticeLabel.setText("You need to restart Eclipse when this setting is changed.");
@@ -287,9 +294,10 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
         binder.bind(countries, OsdeConfig.DEFAULT_COUNTRY, String.class,
                 OsdePreferenceBinder.COUNTRY_CONVERTER,
                 OsdePreferenceBinder.COUNTRY_CONVERTER);
-
+        
         binder.bind(databaseDirText, OsdeConfig.DATABASE_DIR, String.class);
         binder.bind(jettyDirText, OsdeConfig.JETTY_DIR, String.class);
+        binder.bind(jettyPortText, OsdeConfig.JETTY_PORT, String.class);
         binder.bind(internalDatabaseRadio, OsdeConfig.USE_INTERNAL_DATABASE, Boolean.class);
         binder.bind(databaseTypeCombo, OsdeConfig.EXTERNAL_DATABASE_TYPE, String.class);
         binder.bind(hostText, OsdeConfig.EXTERNAL_DATABASE_HOST, String.class);
@@ -313,6 +321,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
                 return fromObject;
             }
         };
+        
         binder.bind(firefoxLocation, OsdeConfig.FIREFOX_LOCATION, String.class,
                 firefoxConverter, firefoxConverter);
 

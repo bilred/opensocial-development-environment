@@ -99,22 +99,23 @@ public class LaunchApplicationJob extends Job {
                 forSt = "&viewerId=" + URLEncoder.encode(viewer, "UTF-8")
                       + "&ownerId=" + URLEncoder.encode(owner, "UTF-8");
             }
+            final String jettyPort = Activator.getDefault().getOsdeConfiguration().getJettyPort(); 
             if (project != null) {
-                kicker =
-                        "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:8080/"
-                                + project.getName().replace(" ", "%20") + "/"
-                                + url.replace(" ", "%20")
-                                + "&view=" + view
-                                + "&width=" + URLEncoder.encode(width, "UTF-8")
-                                + "&appId=" + URLEncoder.encode(appId, "UTF-8")
-                                + "&country=" + URLEncoder.encode(country, "UTF-8")
-                                + "&language=" + URLEncoder.encode(language, "UTF-8")
-                                + "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8")
-                                + "&use_st=" + (notUseSecurityToken ? "0" : "1")
-                                + forSt;
-            } else {
-                kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url="
+                kicker = "http://localhost:"+ jettyPort +"/gadgets/files/osdecontainer/index.html" 
+                        + "?url=http://localhost:" +jettyPort+ "/"
+                        + project.getName().replace(" ", "%20") + "/"
                         + url.replace(" ", "%20")
+                        + "&view=" + view
+                        + "&width=" + URLEncoder.encode(width, "UTF-8")
+                        + "&appId=" + URLEncoder.encode(appId, "UTF-8")
+                        + "&country=" + URLEncoder.encode(country, "UTF-8")
+                        + "&language=" + URLEncoder.encode(language, "UTF-8")
+                        + "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8")
+                        + "&use_st=" + (notUseSecurityToken ? "0" : "1")
+                        + forSt;
+            } else {
+                kicker = "http://localhost:" + jettyPort + "/gadgets/files/osdecontainer/index.html" 
+                        + "?url=" + url.replace(" ", "%20")
                         + "&view=" + view
                         + "&width=" + URLEncoder.encode(width, "UTF-8")
                         + "&appId=" + URLEncoder.encode(appId, "UTF-8")
