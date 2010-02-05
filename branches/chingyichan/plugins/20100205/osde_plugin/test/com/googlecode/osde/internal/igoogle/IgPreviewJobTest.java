@@ -80,7 +80,7 @@ public class IgPreviewJobTest {
         // Execute modifyHostingUrlForGadgetFileAndUploadIt().
         IgPreviewJob job = new IgPreviewJob(null, null, gadgetXmlIFile, null, false, false);
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
-        job.modifyHostingUrlForGadgetFileAndUploadIt(IgPreviewJob.LOCAL_HOST_URL,
+        job.modifyHostingUrlForGadgetFileAndUploadIt(job.getLocalHostUrl(),
                 NEW_HOSTING_URL, igCredentials, IgPreviewJob.OSDE_PREVIEW_DIRECTORY);
 
         // Make sure the modified file contains the string of NEW_HOSTING_URL.
