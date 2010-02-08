@@ -23,6 +23,8 @@ import java.util.Map;
 import com.googlecode.osde.internal.OsdePreferencesModel;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
+import org.eclipse.swt.widgets.Text;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -91,7 +93,11 @@ public class OsdePreferenceBinder {
                 ui = SWTObservables.observeSelection(control);
             }
         }
-
+        
+        if(control instanceof Text){
+            ui = SWTObservables.observeText(control, SWT.Modify);
+        }
+        
         if (ui == null) {
             ui = SWTObservables.observeText(control);
         }
