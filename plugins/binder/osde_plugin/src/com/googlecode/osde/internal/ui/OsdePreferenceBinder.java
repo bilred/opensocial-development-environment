@@ -34,6 +34,7 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author chingyichan.tw@gmail.com (qrtt1)
@@ -61,7 +62,8 @@ public class OsdePreferenceBinder {
     }
 
     /**
-     * @param type only support String or Boolean
+     * @param control supports Button (Radio or Checkbox) and Text.
+     * @param type supports String and Boolean
      */
     public void bind(Control control, String preferenceName, Class<?> type,
             IConverter targetToModel, IConverter modelToTarget) {
@@ -91,9 +93,13 @@ public class OsdePreferenceBinder {
                 ui = SWTObservables.observeSelection(control);
             }
         }
+        
+        if (control instanceof Text) {
+            ui = SWTObservables.observeText(control, SWT.Modify);
+        }
 
         if (ui == null) {
-            ui = SWTObservables.observeText(control);
+            throw new UnsupportedOperationException(control + " is not supported yet.");
         }
 
         propagateData(preferenceName, type);
