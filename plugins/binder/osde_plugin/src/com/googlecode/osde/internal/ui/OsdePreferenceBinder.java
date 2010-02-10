@@ -21,7 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.googlecode.osde.internal.OsdePreferencesModel;
+import com.googlecode.osde.internal.utils.Logger;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
+
+import org.eclipse.swt.widgets.Combo;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +43,8 @@ import org.eclipse.swt.widgets.Text;
  * @author chingyichan.tw@gmail.com (qrtt1)
  */
 public class OsdePreferenceBinder {
+
+    private static Logger logger = new Logger(OsdePreferenceBinder.class);
 
     private Map<String, Object> store = new HashMap<String, Object>();
     private Map<String, Class<?>> types = new HashMap<String, Class<?>>();
@@ -62,7 +67,7 @@ public class OsdePreferenceBinder {
     }
 
     /**
-     * @param control supports Button (Radio or Checkbox) and Text.
+     * @param control supports Button (Radio or Checkbox), Combo and Text.
      * @param type supports String and Boolean
      */
     public void bind(Control control, String preferenceName, Class<?> type,
@@ -93,12 +98,17 @@ public class OsdePreferenceBinder {
                 ui = SWTObservables.observeSelection(control);
             }
         }
-        
+
         if (control instanceof Text) {
             ui = SWTObservables.observeText(control, SWT.Modify);
         }
 
+        if (control instanceof Combo) {
+            ui = SWTObservables.observeText(control);
+        }
+
         if (ui == null) {
+            logger.error(control + " is not supported yet.");
             throw new UnsupportedOperationException(control + " is not supported yet.");
         }
 
