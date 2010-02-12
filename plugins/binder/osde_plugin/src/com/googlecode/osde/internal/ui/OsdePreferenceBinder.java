@@ -60,7 +60,26 @@ public class OsdePreferenceBinder {
     }
 
     /**
-     * @param type only support String or Boolean
+     * Binds a <code>preferenceName<code> to the attribute of the provided <code>control</code>.
+     * The supported controls are:
+     * <ul>
+     * <li>org.eclipse.swt.widgets.Button (Radio or Checkbox)</li>
+     * <li>org.eclipse.swt.widgets.Combo</li>
+     * <li>org.eclipse.swt.widgets.Text</li>
+     * </ul>
+     *
+     * The supported preference types are:
+     * <ul>
+     * <li>java.lang.Boolean</li>
+     * <li>java.lang.String</li>
+     * </ul>
+     *
+     * @param control
+     *            the SWT widget will be bound
+     * @param preferenceName
+     *            a key used to the preference store
+     * @param type
+     *            model type
      */
     public void bind(Control control, String preferenceName, Class<?> type) {
         bind(control, preferenceName, type, null, null);
@@ -145,15 +164,23 @@ public class OsdePreferenceBinder {
         }
     }
 
+    /**
+     * restores the model attributes to observed SWT controls
+     */
     public void updateUI() {
         context.updateTargets();
     }
 
+    /**
+     * stores the model to the real PreferenceStore
+     */
     public void store() {
-        System.err.println(store);
         model.store(store);
     }
 
+    /**
+     * restores the default value to observed SWT controls
+     */
     public void updateDefaultUI() {
         for (String preferenceName : store.keySet()) {
             if (String.class.equals(types.get(preferenceName))) {
