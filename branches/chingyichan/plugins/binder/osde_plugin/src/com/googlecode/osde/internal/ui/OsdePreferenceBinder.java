@@ -67,8 +67,32 @@ public class OsdePreferenceBinder {
     }
 
     /**
-     * @param control supports Button (Radio or Checkbox), Combo and Text.
-     * @param type supports String and Boolean
+     * Binds a <code>preferenceName<code> to the attribute of the provided <code>control</code>.
+     * The supported controls are:
+     * <ul>
+     * <li>org.eclipse.swt.widgets.Button (Radio or Checkbox)</li>
+     * <li>org.eclipse.swt.widgets.Combo</li>
+     * <li>org.eclipse.swt.widgets.Text</li>
+     * </ul>
+     *
+     * The supported preference types are:
+     * <ul>
+     * <li>java.lang.Boolean</li>
+     * <li>java.lang.String</li>
+     * </ul>
+     *
+     * @param control
+     *            the SWT widget will be bound
+     * @param preferenceName
+     *            a key used to the preference store
+     * @param type
+     *            model type
+     * @param targetToModel
+     *            strategy to employ when the target is the source of the change
+     *            and the model is the destination
+     * @param modelToTarget
+     *            strategy to employ when the model is the source of the change
+     *            and the target is the destination
      */
     public void bind(Control control, String preferenceName, Class<?> type,
             IConverter targetToModel, IConverter modelToTarget) {
@@ -97,13 +121,9 @@ public class OsdePreferenceBinder {
             if (isRadio || isCheck) {
                 ui = SWTObservables.observeSelection(control);
             }
-        }
-
-        if (control instanceof Text) {
+        } else if (control instanceof Text) {
             ui = SWTObservables.observeText(control, SWT.Modify);
-        }
-
-        if (control instanceof Combo) {
+        } else if (control instanceof Combo) {
             ui = SWTObservables.observeText(control);
         }
 
@@ -130,6 +150,7 @@ public class OsdePreferenceBinder {
     }
 
     public void store() {
+        System.err.println(store);
         model.store(store);
     }
 
