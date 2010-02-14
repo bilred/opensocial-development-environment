@@ -21,7 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.googlecode.osde.internal.OsdePreferencesModel;
+import com.googlecode.osde.internal.utils.Logger;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
+
+import org.eclipse.swt.widgets.Combo;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -34,11 +37,14 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * @author chingyichan.tw@gmail.com (qrtt1)
  */
 public class OsdePreferenceBinder {
+
+    private static Logger logger = new Logger(OsdePreferenceBinder.class);
 
     private Map<String, Object> store = new HashMap<String, Object>();
     private Map<String, Class<?>> types = new HashMap<String, Class<?>>();
@@ -54,14 +60,58 @@ public class OsdePreferenceBinder {
     }
 
     /**
-     * @param type only support String or Boolean
+     * Binds a <code>preferenceName<code> to the attribute of the provided <code>control</code>.
+     * The supported controls are:
+     * <ul>
+     * <li>org.eclipse.swt.widgets.Button (Radio or Checkbox)</li>
+     * <li>org.eclipse.swt.widgets.Combo</li>
+     * <li>org.eclipse.swt.widgets.Text</li>
+     * </ul>
+     *
+     * The supported preference types are:
+     * <ul>
+     * <li>java.lang.Boolean</li>
+     * <li>java.lang.String</li>
+     * </ul>
+     *
+     * @param control
+     *            the SWT widget will be bound
+     * @param preferenceName
+     *            a key used to the preference store
+     * @param type
+     *            model type
      */
     public void bind(Control control, String preferenceName, Class<?> type) {
         bind(control, preferenceName, type, null, null);
     }
 
     /**
-     * @param type only support String or Boolean
+     * Binds a <code>preferenceName<code> to the attribute of the provided <code>control</code>.
+     * The supported controls are:
+     * <ul>
+     * <li>org.eclipse.swt.widgets.Button (Radio or Checkbox)</li>
+     * <li>org.eclipse.swt.widgets.Combo</li>
+     * <li>org.eclipse.swt.widgets.Text</li>
+     * </ul>
+     *
+     * The supported preference types are:
+     * <ul>
+     * <li>java.lang.Boolean</li>
+     * <li>java.lang.String</li>
+     * </ul>
+     *
+     * @param control
+     *            the SWT widget will be bound
+     * @param preferenceName
+     *            a key used to the preference store
+     * @param type
+     *            model type
+     * @param targetToModel
+     *            strategy to employ when the target is the source of the change
+     *            and the model is the destination
+     * @param modelToTarget
+     *            strategy to employ when the model is the source of the change
+     *            and the target is the destination
      */
     public void bind(Control control, String preferenceName, Class<?> type,
             IConverter targetToModel, IConverter modelToTarget) {
@@ -90,10 +140,15 @@ public class OsdePreferenceBinder {
             if (isRadio || isCheck) {
                 ui = SWTObservables.observeSelection(control);
             }
+        } else if (control instanceof Text) {
+            ui = SWTObservables.observeText(control, SWT.Modify);
+        } else if (control instanceof Combo) {
+            ui = SWTObservables.observeText(control);
         }
 
         if (ui == null) {
-            ui = SWTObservables.observeText(control);
+            logger.error(control + " is not supported yet.");
+            throw new UnsupportedOperationException(control + " is not supported yet.");
         }
 
         propagateData(preferenceName, type);
@@ -109,14 +164,23 @@ public class OsdePreferenceBinder {
         }
     }
 
+    /**
+     * restores the model attributes to observed SWT controls
+     */
     public void updateUI() {
         context.updateTargets();
     }
 
+    /**
+     * stores the model to the real PreferenceStore
+     */
     public void store() {
         model.store(store);
     }
 
+    /**
+     * restores the default value to observed SWT controls
+     */
     public void updateDefaultUI() {
         for (String preferenceName : store.keySet()) {
             if (String.class.equals(types.get(preferenceName))) {
