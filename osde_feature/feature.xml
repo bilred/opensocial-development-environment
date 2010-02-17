@@ -2,8 +2,8 @@
 <feature
       id="com.googlecode.osde.feature"
       label="OpenSocial Development Environment Feature"
-      version="0.7.0.C4"
-      provider-name="Yoichiro Tanaka"
+      version="0.7.0.C5"
+      provider-name="OSDE Project"
       plugin="com.googlecode.osde">
 
    <description url="http://www.eisbahn.jp/trac/osde">

@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OpenSocial Development Environment Plug-in
 Bundle-SymbolicName: com.googlecode.osde;singleton:=true
-Bundle-Version: 0.7.0.C4
+Bundle-Version: 0.7.0.C5
 Bundle-Activator: com.googlecode.osde.internal.Activator
-Bundle-Vendor: Yoichiro Tanaka
+Bundle-Vendor: OSDE Project
 Bundle-Shindig-Revision: 796905
 Require-Bundle: org.eclipse.core.databinding;bundle-version="1.2.0",
  org.eclipse.core.databinding.beans;bundle-version="1.2.0",
