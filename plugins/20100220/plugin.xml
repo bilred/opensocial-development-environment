@@ -502,5 +502,7 @@
             name="Non-OSDE Project Filter">
       </commonFilter>  
    </extension>
+   
+   <extension-point id="shindig" name="Apache Shindig for OSDE" />
 
 </plugin>

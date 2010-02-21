@@ -70,3 +70,4 @@ Bundle-ClassPath: .,
  libs/shindig-common-1.1-BETA1-incubating.jar,
  libs/shindig-hibernate-1.1-BETA1-incubating.jar,
  libs/shindig-social-api-1.1-BETA1-incubating.jar
+Export-Package: com.googlecode.osde.shindig
