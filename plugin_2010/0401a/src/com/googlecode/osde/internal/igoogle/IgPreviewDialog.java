@@ -62,7 +62,7 @@ public class IgPreviewDialog extends TitleAreaDialog {
 
         // Set title and message.
         setTitle("Preview Gadget on iGoogle");
-        setMessage("Please enter your gmail account info.");
+        setMessage("Please enter your Google account info");
 
         // Prepare composite and panel.
         Composite composite = (Composite) super.createDialogArea(parent);
@@ -90,17 +90,17 @@ public class IgPreviewDialog extends TitleAreaDialog {
         Label viewTypeLabel = new Label(panel, SWT.LEFT);
         viewTypeLabel.setText("View type: ");
         viewTypeLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+        canvasViewButton = new Button(panel, SWT.RADIO);
+        canvasViewButton.setText("Canvas");
+        canvasViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         Button homeViewButton = new Button(panel, SWT.RADIO);
         homeViewButton.setText("Home");
         homeViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         homeViewButton.setSelection(true); // default view is home view
-        canvasViewButton = new Button(panel, SWT.RADIO);
-        canvasViewButton.setText("Canvas");
-        canvasViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 
         // Prepare checkbox of useExternalBrowser.
         useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
-        useExternalBrowserCheckbox.setText("Use an external Web browser.");
+        useExternalBrowserCheckbox.setText("Use an external Web browser");
         useExternalBrowserCheckbox.setLayoutData(
                 new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
         IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
