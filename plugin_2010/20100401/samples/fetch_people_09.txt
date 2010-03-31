@@ -1,0 +1,23 @@
+<!-- Fetch a person and friends code for OpenSocial 0.9 -->
+<div>
+  <button onclick='fetchPeople();'>Fetch people and friends</button>
+  <div>
+    <span id='viewer'></span>
+    <ul id='friends'></ul>
+  </div>
+</div>
+<script type='text/javascript'>
+function fetchPeople() {
+  var batch = osapi.newBatch().
+      add('viewer', osapi.people.getViewer()).
+      add('friends', osapi.people.get({userId: '@viewer', groupId: '@friends'}));
+  batch.execute(function(result) {
+    document.getElementById('viewer').innerHTML = result.viewer.id;
+    var friends = result.friends.list;
+    for (var i = 0; i < friends.length; i++) {
+      document.getElementById('friends').innerHTML += '<li>' + friends[i].id + '</li>';
+    }
+    gadgets.window.adjustHeight();
+  });
+}
+</script>
