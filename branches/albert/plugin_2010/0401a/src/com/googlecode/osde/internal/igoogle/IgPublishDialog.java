@@ -57,7 +57,7 @@ public class IgPublishDialog extends TitleAreaDialog {
 
         // Set title and message.
         setTitle("Publish Gadget on iGoogle");
-        setMessage("Please enter your gmail account info.");
+        setMessage("Please enter your Google account info");
 
         // Prepare composite and panel.
         Composite composite = (Composite) super.createDialogArea(parent);

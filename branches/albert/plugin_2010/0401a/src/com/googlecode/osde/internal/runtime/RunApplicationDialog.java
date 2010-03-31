@@ -188,7 +188,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
         separator.setLayoutData(layoutData);
         //
         notUseSecurityTokenCheck = new Button(panel, SWT.CHECK);
-        notUseSecurityTokenCheck.setText("Not use Security token.");
+        notUseSecurityTokenCheck.setText("Non-social.");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 4;
         notUseSecurityTokenCheck.setLayoutData(layoutData);

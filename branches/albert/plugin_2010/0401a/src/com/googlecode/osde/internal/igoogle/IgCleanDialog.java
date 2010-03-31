@@ -55,7 +55,7 @@ public class IgCleanDialog extends TitleAreaDialog {
 
         // Set title and message.
         setTitle("iGoogle - Clean Preview Files");
-        setMessage("Please enter your gmail account info.");
+        setMessage("Please enter your Google account info");
 
         // Prepare composite and panel.
         Composite composite = (Composite) super.createDialogArea(parent);
