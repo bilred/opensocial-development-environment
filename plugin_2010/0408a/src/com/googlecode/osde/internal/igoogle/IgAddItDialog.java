@@ -36,23 +36,21 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
  * The popup dialog asking for users authentication info in order
- * for previewing gadget on iGoogle.
+ * for adding a gadget to iGoogle page.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgPreviewDialog extends TitleAreaDialog {
-    private static Logger logger = new Logger(IgPreviewDialog.class);
+public class IgAddItDialog extends TitleAreaDialog {
+    private static Logger logger = new Logger(IgAddItDialog.class);
 
     private String username;
     private String password;
-    private boolean useCanvasView;
     private boolean useExternalBrowser;
     private Text usernameText;
     private Text passwordText;
-    private Button canvasViewButton;
     private Button useExternalBrowserCheckbox;
 
-    public IgPreviewDialog(Shell shell) {
+    public IgAddItDialog(Shell shell) {
         super(shell);
     }
 
@@ -61,7 +59,7 @@ public class IgPreviewDialog extends TitleAreaDialog {
         logger.fine("createDialogArea");
 
         // Set title and message.
-        setTitle("Preview Gadget on iGoogle");
+        setTitle("Add a gadget to your iGoogle page");
         setMessage("Please enter your Google account info");
 
         // Prepare composite and panel.
@@ -85,19 +83,6 @@ public class IgPreviewDialog extends TitleAreaDialog {
         passwordText = new Text(panel, SWT.SINGLE);
         passwordText.setEchoChar('*');
         passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-
-        // Prepare radio buttons for choosing view type.
-        Label viewTypeLabel = new Label(panel, SWT.LEFT);
-        viewTypeLabel.setText("View type: ");
-        viewTypeLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        canvasViewButton = new Button(panel, SWT.RADIO);
-        canvasViewButton.setText("Canvas");
-        canvasViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        canvasViewButton.setSelection(true); // default view is canvas view
-        Button homeViewButton = new Button(panel, SWT.RADIO);
-        homeViewButton.setText("Home");
-        homeViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        homeViewButton.setSelection(false); // default view is canvas view
 
         // Prepare checkbox of useExternalBrowser.
         useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
@@ -125,14 +110,9 @@ public class IgPreviewDialog extends TitleAreaDialog {
 
         username = usernameText.getText();
         password = passwordText.getText();
-        useCanvasView = canvasViewButton.getSelection();
-        logger.fine("useCanvasView: " + useCanvasView);
         useExternalBrowser = useExternalBrowserCheckbox.getSelection();
-        logger.fine("useExternalBrowser: " + useExternalBrowser);
 
-        logger.fine("gonna setReturnCode");
         setReturnCode(OK);
-        logger.fine("gonna close");
         close();
     }
 
@@ -142,10 +122,6 @@ public class IgPreviewDialog extends TitleAreaDialog {
 
     String getPassword() {
         return password;
-    }
-
-    boolean isUseCanvasView() {
-        return useCanvasView;
     }
 
     boolean isUseExternalBrowser() {
