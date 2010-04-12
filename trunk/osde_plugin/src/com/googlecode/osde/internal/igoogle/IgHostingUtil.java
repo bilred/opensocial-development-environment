@@ -66,6 +66,7 @@ public class IgHostingUtil {
     private static final String URL_GMODULE_FILE = "http://hosting.gmodules.com/ig/gadgets/file/";
     private static final String URL_PREVIEW_LEGACY_GADGET =
             "http://www.gmodules.com/gadgets/ifr?nocache=1";
+    private static final String URL_ADD_GADGET = "http://www.google.com/ig/directory?url=";
 
     private static final String PREVIEW_URL_IDENTIFIER_FOR_HOME = "name:\"home\",ifr:\"";
     private static final String PREVIEW_URL_IDENTIFIER_FOR_CANVAS = "name:\"canvas\",ifr:\"";
@@ -306,6 +307,18 @@ public class IgHostingUtil {
         return IgHttpUtil.retrieveHttpResponseAsString(httpClient, httpGet, httpResponse);
     }
 
+    /**
+     * Forms the url for adding a gadget to iGoogle.
+     */
+    public static String formAddGadgetUrl(String hostedFileUrl) {
+        StringBuilder sb = new StringBuilder(URL_ADD_GADGET);
+
+        // Append hosted file's url.
+        sb.append(hostedFileUrl);
+
+        return sb.toString();
+    }
+    
     /**
      * Forms the url for previewing a legacy gadget.
      *
