@@ -133,6 +133,21 @@
             </enablement>
          </action>
          <action
+               class="com.googlecode.osde.internal.igoogle.IgHostFileAction"
+               enablesFor="1"
+               icon="icons/action_go.gif"
+               id="com.googlecode.osde.runActionHostFileIGoogle2"
+               label="iGoogle - Host Files"
+               menubarPath="opensocialMenu/opensocialGroup4"
+               tooltip="iGoogle - Host Files">
+            <enablement>
+               <objectState
+                   name="contentTypeId"
+	               value="com.googlecode.osde.gadgetSpecXML">
+	           </objectState>
+            </enablement>
+         </action>
+         <action
                class="com.googlecode.osde.internal.igoogle.IgAddItAction"
                enablesFor="1"
                icon="icons/action_go.gif"
@@ -403,6 +418,20 @@
                label="Run this application locally"
                icon="icons/action_go.gif"
                menubarPath="com.googlecode.osde.menu2/group2">
+            <enablement>
+               <objectState
+                   name="contentTypeId"
+	               value="com.googlecode.osde.gadgetSpecXML">
+	           </objectState>
+            </enablement>
+         </action>
+         <action
+               class="com.googlecode.osde.internal.igoogle.IgHostFileAction"
+               enablesFor="1"
+               id="com.googlecode.osde.runActionHostFileIGoogle1"
+               label="iGoogle - Host Files"
+               icon="icons/action_go.gif"
+               menubarPath="com.googlecode.osde.menu2/group4">
             <enablement>
                <objectState
                    name="contentTypeId"

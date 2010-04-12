@@ -143,9 +143,7 @@ public class IgHostingUtilTest {
         // Test and verify the method call.
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
         logger.info("igCredentials:\n" + igCredentials);
-        String hostingUrl = uploadFiles(igCredentials, project, TEST_HOSTING_FOLDER, false);
-        logger.info("hostingUrl: " + hostingUrl);
-        assertTrue(hostingUrl.endsWith("/"));
+        uploadFiles(igCredentials, project, TEST_HOSTING_FOLDER);
         verify(project, targetFolder, targetFolderLocation);
     }
 
