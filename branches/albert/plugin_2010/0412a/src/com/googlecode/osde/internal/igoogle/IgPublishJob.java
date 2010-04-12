@@ -42,7 +42,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  */
 public class IgPublishJob extends Job {
     private static Logger logger = new Logger(IgPublishJob.class);
-    private static final String OSDE_PUBLISH_DIRECTORY = "/osde/publish/";
+    private static final String OSDE_PUBLISH_DIRECTORY = "/osde/";
 
     private String username;
     private String password;
@@ -68,8 +68,10 @@ public class IgPublishJob extends Job {
         final String publishGadgetUrl;
         try {
             IgCredentials igCredentials = new IgCredentials(username, password);
-            String hostingUrl = IgHostingUtil.uploadFiles(igCredentials,
-                    gadgetXmlIFile.getProject(), OSDE_PUBLISH_DIRECTORY + projectName + "/", false);
+            String hostingFolder = OSDE_PUBLISH_DIRECTORY + projectName + "/";
+            String hostingUrl =
+            	    IgHostingUtil.formHostingUrl(igCredentials.getPublicId(), hostingFolder);
+            IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(), hostingFolder);
             String urlOfHostedFile = hostingUrl + gadgetXmlIFile.getName();
             publishGadgetUrl = IgHostingUtil.formPublishGadgetUrl(urlOfHostedFile);
 
