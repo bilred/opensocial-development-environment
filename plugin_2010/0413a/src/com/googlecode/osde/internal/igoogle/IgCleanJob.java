@@ -40,12 +40,14 @@ public class IgCleanJob extends Job {
     private Shell shell;
     private String username;
     private String password;
+    private String hostProjectName;
 
-    public IgCleanJob(Shell shell, String username, String password) {
+    public IgCleanJob(Shell shell, String username, String password, String hostProjectName) {
         super("iGoogle - Clean Host Files");
         this.shell = shell;
         this.username = username;
         this.password = password;
+        this.hostProjectName = hostProjectName;
     }
 
     @Override
@@ -54,10 +56,11 @@ public class IgCleanJob extends Job {
         monitor.beginTask("Running CleanIGoogleJob", 4);
         monitor.worked(1);
 
-        // Clean all preview files as hosted on iGoogle.
-        // TODO: (p1) the files to be cleaned need not be for preview only
+        // Get hosting folder.
+        String hostingFolder = IgHostFileJob.OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
         try {
-            IgHostingUtil.cleanFiles(username, password, IgPreviewJob.OSDE_PREVIEW_DIRECTORY);
+            // Clean all preview files as hosted on iGoogle.
+            IgHostingUtil.cleanFiles(username, password, hostingFolder);
         } catch (IgException e) {
             logger.warn(e.getMessage());
             monitor.setCanceled(true);
@@ -76,7 +79,8 @@ public class IgCleanJob extends Job {
     private class CleaningRunnable implements Runnable {
         public void run() {
             String dialogTitle = "Your Files Are Cleaned.";
-            String dialogMessage = "All your files hosted at iGoogle for preview are cleaned.";
+            String dialogMessage = "All your files hosted at iGoogle for \"" + hostProjectName
+                    + "\" are cleaned.";
             int dialogImageType = MessageDialog.INFORMATION;
             Image dialogTitleImage = null;
             String[] dialogButtonLabels = {"OK"};

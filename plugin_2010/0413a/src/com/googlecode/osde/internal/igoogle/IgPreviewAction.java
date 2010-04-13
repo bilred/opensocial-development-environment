@@ -76,9 +76,10 @@ public class IgPreviewAction
             logger.fine("OK pressed");
             String username = dialog.getUsername();
             String password = dialog.getPassword();
+            String hostProjectName = dialog.getHostProjectName();
             boolean useCanvasView = dialog.isUseCanvasView();
             boolean useExternalBrowser = dialog.isUseExternalBrowser();
-            Job job = new IgPreviewJob(username, password, gadgetXmlIFile, shell,
+            Job job = new IgPreviewJob(username, password, hostProjectName, gadgetXmlIFile, shell,
                     useCanvasView, useExternalBrowser);
             logger.fine("job: " + job);
             job.schedule();

@@ -45,10 +45,12 @@ public class IgPreviewDialog extends TitleAreaDialog {
 
     private String username;
     private String password;
+    private String hostProjectName;
     private boolean useCanvasView;
     private boolean useExternalBrowser;
     private Text usernameText;
     private Text passwordText;
+    private Text hostProjectNameText;
     private Button canvasViewButton;
     private Button useExternalBrowserCheckbox;
 
@@ -62,7 +64,7 @@ public class IgPreviewDialog extends TitleAreaDialog {
 
         // Set title and message.
         setTitle("Preview Gadget on iGoogle");
-        setMessage("Please enter your Google account info");
+        setMessage("The allows you to preview a gadget on iGoogle.");
 
         // Prepare composite and panel.
         Composite composite = (Composite) super.createDialogArea(parent);
@@ -71,20 +73,33 @@ public class IgPreviewDialog extends TitleAreaDialog {
         panel.setLayout(layout);
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
+        // Prepare the description for google account info.
+        Label googleAccountInfo = new Label(panel, SWT.LEFT);
+        googleAccountInfo.setText("Google account info");
+        googleAccountInfo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+        
         // Prepare username.
         Label usernameLabel = new Label(panel, SWT.LEFT);
-        usernameLabel.setText("Username: ");
+        usernameLabel.setText("\tUsername: ");
         usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         usernameText = new Text(panel, SWT.SINGLE);
         usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
         // Prepare password.
         Label passwordLabel = new Label(panel, SWT.LEFT);
-        passwordLabel.setText("Password: ");
+        passwordLabel.setText("\tPassword: ");
         passwordLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         passwordText = new Text(panel, SWT.SINGLE);
         passwordText.setEchoChar('*');
         passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+
+        // Prepare host-project-name.
+        Label hostProjectNameLabel = new Label(panel, SWT.LEFT);
+        hostProjectNameLabel.setText("Project name: ");
+        hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+        hostProjectNameText = new Text(panel, SWT.SINGLE);
+        hostProjectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        hostProjectNameText.setText(IgPreviewJob.HOST_PROJECT_NAME_FOR_PREVIEW);
 
         // Prepare radio buttons for choosing view type.
         Label viewTypeLabel = new Label(panel, SWT.LEFT);
@@ -109,6 +124,14 @@ public class IgPreviewDialog extends TitleAreaDialog {
             useExternalBrowserCheckbox.setSelection(true);
             useExternalBrowserCheckbox.setEnabled(false);
         }
+        
+        // Prepare extra description.
+        Label extraDescription = new Label(panel, SWT.LEFT);
+        extraDescription.setText("NOTE: Some social-related functions might not work here\n"
+        		+ "unless you check some options via the OSDE feature:\n"
+        		+ "iGoogle - Add Gadget.");
+        extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+
 
         return composite;
     }
@@ -125,6 +148,7 @@ public class IgPreviewDialog extends TitleAreaDialog {
 
         username = usernameText.getText();
         password = passwordText.getText();
+        hostProjectName = hostProjectNameText.getText();
         useCanvasView = canvasViewButton.getSelection();
         logger.fine("useCanvasView: " + useCanvasView);
         useExternalBrowser = useExternalBrowserCheckbox.getSelection();
@@ -142,6 +166,10 @@ public class IgPreviewDialog extends TitleAreaDialog {
 
     String getPassword() {
         return password;
+    }
+
+    String getHostProjectName() {
+    	return hostProjectName;
     }
 
     boolean isUseCanvasView() {

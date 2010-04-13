@@ -42,8 +42,10 @@ public class IgCleanDialog extends TitleAreaDialog {
 
     private String username;
     private String password;
+    private String hostProjectName;
     private Text usernameText;
     private Text passwordText;
+    private Text hostProjectNameText;
 
     public IgCleanDialog(Shell shell) {
         super(shell);
@@ -54,8 +56,8 @@ public class IgCleanDialog extends TitleAreaDialog {
         logger.fine("createDialogArea");
 
         // Set title and message.
-        setTitle("iGoogle - Clean Preview Files");
-        setMessage("Please enter your Google account info");
+        setTitle("iGoogle - Clean Hosted Files");
+        setMessage("This allows you to clean hosted files on iGoogle.");
 
         // Prepare composite and panel.
         Composite composite = (Composite) super.createDialogArea(parent);
@@ -64,20 +66,33 @@ public class IgCleanDialog extends TitleAreaDialog {
         panel.setLayout(layout);
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
+        // Prepare the description for google account info.
+        Label googleAccountInfo = new Label(panel, SWT.LEFT);
+        googleAccountInfo.setText("Google account info");
+        googleAccountInfo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+        
         // Prepare username.
         Label usernameLabel = new Label(panel, SWT.LEFT);
-        usernameLabel.setText("Username: ");
+        usernameLabel.setText("\tUsername: ");
         usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         usernameText = new Text(panel, SWT.SINGLE);
         usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
         // Prepare password.
         Label passwordLabel = new Label(panel, SWT.LEFT);
-        passwordLabel.setText("Password: ");
+        passwordLabel.setText("\tPassword: ");
         passwordLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         passwordText = new Text(panel, SWT.SINGLE);
         passwordText.setEchoChar('*');
         passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+
+        // Prepare host-project-name.
+        Label hostProjectNameLabel = new Label(panel, SWT.LEFT);
+        hostProjectNameLabel.setText("Project name: ");
+        hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+        hostProjectNameText = new Text(panel, SWT.SINGLE);
+        hostProjectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        hostProjectNameText.setText(IgPreviewJob.HOST_PROJECT_NAME_FOR_PREVIEW);
 
         return composite;
     }
@@ -93,6 +108,7 @@ public class IgCleanDialog extends TitleAreaDialog {
         logger.fine("okPressed");
         username = usernameText.getText();
         password = passwordText.getText();
+        hostProjectName = hostProjectNameText.getText();
 
         setReturnCode(OK);
         close();
@@ -104,5 +120,9 @@ public class IgCleanDialog extends TitleAreaDialog {
 
     String getPassword() {
         return password;
+    }
+    
+    String getHostProjectName() {
+    	return hostProjectName;
     }
 }
