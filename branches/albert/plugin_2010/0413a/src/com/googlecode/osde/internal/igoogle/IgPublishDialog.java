@@ -42,10 +42,10 @@ public class IgPublishDialog extends TitleAreaDialog {
 
     private String username;
     private String password;
-    private String projectName;
+    private String hostProjectName;
     private Text usernameText;
     private Text passwordText;
-    private Text projectNameText;
+    private Text hostProjectNameText;
 
     public IgPublishDialog(Shell shell) {
         super(shell);
@@ -57,7 +57,7 @@ public class IgPublishDialog extends TitleAreaDialog {
 
         // Set title and message.
         setTitle("Publish Gadget on iGoogle");
-        setMessage("Please enter your Google account info");
+        setMessage("This allows you to publish a gadget on iGoogle.");
 
         // Prepare composite and panel.
         Composite composite = (Composite) super.createDialogArea(parent);
@@ -66,27 +66,32 @@ public class IgPublishDialog extends TitleAreaDialog {
         panel.setLayout(layout);
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
+        // Prepare the description for google account info.
+        Label googleAccountInfo = new Label(panel, SWT.LEFT);
+        googleAccountInfo.setText("Google account info");
+        googleAccountInfo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+        
         // Prepare username.
         Label usernameLabel = new Label(panel, SWT.LEFT);
-        usernameLabel.setText("Username: ");
+        usernameLabel.setText("\tUsername: ");
         usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         usernameText = new Text(panel, SWT.SINGLE);
         usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
         // Prepare password.
         Label passwordLabel = new Label(panel, SWT.LEFT);
-        passwordLabel.setText("Password: ");
+        passwordLabel.setText("\tPassword: ");
         passwordLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         passwordText = new Text(panel, SWT.SINGLE);
         passwordText.setEchoChar('*');
         passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
         // Prepare project name.
-        Label projectNameLabel = new Label(panel, SWT.LEFT);
-        projectNameLabel.setText("Project name: ");
-        projectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        projectNameText = new Text(panel, SWT.SINGLE);
-        projectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        Label hostProjectNameLabel = new Label(panel, SWT.LEFT);
+        hostProjectNameLabel.setText("Project name: ");
+        hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+        hostProjectNameText = new Text(panel, SWT.SINGLE);
+        hostProjectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
         return composite;
     }
@@ -104,9 +109,9 @@ public class IgPublishDialog extends TitleAreaDialog {
         username = usernameText.getText();
         password = passwordText.getText();
 
-        // TODO: Need a validator for projectName.
-        projectName = projectNameText.getText();
-        logger.fine("projectName: " + projectName);
+        // TODO: Need a validator for hostProjectName.
+        hostProjectName = hostProjectNameText.getText();
+        logger.fine("hostProjectName: " + hostProjectName);
 
         setReturnCode(OK);
         close();
@@ -120,7 +125,7 @@ public class IgPublishDialog extends TitleAreaDialog {
         return password;
     }
 
-    String getProjectName() {
-        return projectName;
+    String getHostProjectName() {
+        return hostProjectName;
     }
 }

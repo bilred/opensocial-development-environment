@@ -50,21 +50,23 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  */
 public class IgAddItJob extends Job {
     private static Logger logger = new Logger(IgAddItJob.class);
-    static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
+    // TODO: (p1) get rid of duplicate LOCAL_HOST_URL and GADGET_FILE_WITH_MODIFIED_URL
     static final String LOCAL_HOST_URL = "http://localhost:8080/";
     static final String GADGET_FILE_WITH_MODIFIED_URL = "modified_gadget.xml";
 
     private String username;
     private String password;
+    private String hostProjectName;
     private IFile gadgetXmlIFile;
     private Shell shell;
     private boolean useExternalBrowser;
 
-    public IgAddItJob(String username, String password, IFile gadgetXmlIFile,
-            Shell shell, boolean useExternalBrowser) {
+    public IgAddItJob(String username, String password, String hostProjectName,
+    		IFile gadgetXmlIFile, Shell shell, boolean useExternalBrowser) {
         super("iGoogle - Add a Gadget");
         this.username = username;
         this.password = password;
+        this.hostProjectName = hostProjectName;
         this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
         this.useExternalBrowser = useExternalBrowser;
@@ -79,18 +81,18 @@ public class IgAddItJob extends Job {
             IgCredentials igCredentials = new IgCredentials(username, password);
 
             // Get hosting URL.
+            String hostingFolder = IgHostFileJob.OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
             String hostingUrl = IgHostingUtil.formHostingUrl(
-                    igCredentials.getPublicId(), OSDE_PREVIEW_DIRECTORY);
+            		igCredentials.getPublicId(), hostingFolder);
 
             // Modify gadget file with new hosting url, and upload it.
             String eclipseProjectName = gadgetXmlIFile.getProject().getName();
             String oldHostingUrl = LOCAL_HOST_URL + eclipseProjectName + "/";
             modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
-                    OSDE_PREVIEW_DIRECTORY);
+            		hostingFolder);
 
             // Upload files.
-            IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(),
-                    OSDE_PREVIEW_DIRECTORY);
+            IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(), hostingFolder);
 
             // Form hosted gadget file url.
             String urlOfHostedGadgetFile = hostingUrl + GADGET_FILE_WITH_MODIFIED_URL;
