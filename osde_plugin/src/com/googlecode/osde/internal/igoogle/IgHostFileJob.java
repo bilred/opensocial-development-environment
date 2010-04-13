@@ -22,8 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.builders.GadgetBuilder;
@@ -36,65 +35,60 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWebBrowser;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
- * The job to open a browser and add a gadget to iGoogle page.
+ * The job to host gadget files to iGoogle.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgAddItJob extends Job {
-    private static Logger logger = new Logger(IgAddItJob.class);
-    static final String OSDE_PREVIEW_DIRECTORY = "/osde/preview/";
+public class IgHostFileJob extends Job {
+    private static Logger logger = new Logger(IgHostFileJob.class);
+    static final String OSDE_HOST_BASE_FOLDER = "/osde/";
     static final String LOCAL_HOST_URL = "http://localhost:8080/";
     static final String GADGET_FILE_WITH_MODIFIED_URL = "modified_gadget.xml";
 
     private String username;
     private String password;
+	private String hostProjectName;
     private IFile gadgetXmlIFile;
     private Shell shell;
-    private boolean useExternalBrowser;
 
-    public IgAddItJob(String username, String password, IFile gadgetXmlIFile,
-            Shell shell, boolean useExternalBrowser) {
-        super("iGoogle - Add a Gadget");
+    public IgHostFileJob(String username, String password, String hostProjectName,
+    		IFile gadgetXmlIFile, Shell shell) {
+        super("iGoogle - Host Gadget Files");
         this.username = username;
         this.password = password;
+        this.hostProjectName = hostProjectName;
         this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
-        this.useExternalBrowser = useExternalBrowser;
     }
 
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
-        monitor.beginTask("Running IgAddItJob", 3);
+        monitor.beginTask("Running IgHostFileJob", 3);
 
-        final String addGadgetUrl;
+        List<String> relativeFilePathsOfHostedFiles = null;
+        String hostingUrl = null;
         try {
             IgCredentials igCredentials = new IgCredentials(username, password);
 
             // Get hosting URL.
-            String hostingUrl = IgHostingUtil.formHostingUrl(
-                    igCredentials.getPublicId(), OSDE_PREVIEW_DIRECTORY);
+            String hostingFolder = OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
+            hostingUrl = IgHostingUtil.formHostingUrl(igCredentials.getPublicId(), hostingFolder);
 
             // Modify gadget file with new hosting url, and upload it.
             String eclipseProjectName = gadgetXmlIFile.getProject().getName();
             String oldHostingUrl = LOCAL_HOST_URL + eclipseProjectName + "/";
             modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
-                    OSDE_PREVIEW_DIRECTORY);
+            		hostingFolder);
 
             // Upload files.
-            IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(),
-                    OSDE_PREVIEW_DIRECTORY);
-
-            // Form hosted gadget file url.
-            String urlOfHostedGadgetFile = hostingUrl + GADGET_FILE_WITH_MODIFIED_URL;
-            addGadgetUrl = IgHostingUtil.formAddGadgetUrl(urlOfHostedGadgetFile);
+            relativeFilePathsOfHostedFiles = IgHostingUtil.uploadFiles(
+            		igCredentials, gadgetXmlIFile.getProject(), hostingFolder);
         } catch (IgException e) {
             logger.warn(e.getMessage());
             monitor.setCanceled(true);
@@ -105,7 +99,7 @@ public class IgAddItJob extends Job {
         Display display = shell.getDisplay();
         monitor.worked(1);
 
-        display.syncExec(new AddingGadgetRunnable(addGadgetUrl, useExternalBrowser));
+        display.syncExec(new HostingFileRunnable(hostingUrl, relativeFilePathsOfHostedFiles));
         monitor.worked(1);
 
         monitor.done();
@@ -176,40 +170,39 @@ public class IgAddItJob extends Job {
         return osdeWorkFolder;
     }
 
-    private static class AddingGadgetRunnable implements Runnable {
-        private static final String ADD_IGOOGLE_BROWSER_ID = "add_ig_bid";
-        private static final String ADD_IGOOGLE_BROWSER_NAME = "Add gadget to iGoogle";
-        private static final String ADD_IGOOGLE_TOOLTIP = "Add gadget to iGoogle";
+    private class HostingFileRunnable implements Runnable {
+    	String hostingUrl;
+    	List<String> relativeFilePathsOfHostedFiles;
 
-        private String addGadgetUrl;
-        private boolean useExternalBrowser;
-
-        private AddingGadgetRunnable(String addGadgetUrl, boolean useExternalBrowser) {
-            this.addGadgetUrl = addGadgetUrl;
-            this.useExternalBrowser = useExternalBrowser;
+        private HostingFileRunnable(String hostingUrl,
+        		List<String> relativeFilePathsOfHostedFiles) {
+        	this.hostingUrl = hostingUrl;
+        	this.relativeFilePathsOfHostedFiles = relativeFilePathsOfHostedFiles;
         }
 
         public void run() {
             logger.fine("in Runnable's run");
-            try {
-                IWorkbenchBrowserSupport support =
-                        PlatformUI.getWorkbench().getBrowserSupport();
-                IWebBrowser browser;
-                if (useExternalBrowser) {
-                    browser = support.getExternalBrowser();
-                } else {
-                    int style = IWorkbenchBrowserSupport.LOCATION_BAR
-                            | IWorkbenchBrowserSupport.NAVIGATION_BAR
-                            | IWorkbenchBrowserSupport.AS_EDITOR;
-                    browser = support.createBrowser(style, ADD_IGOOGLE_BROWSER_ID,
-                            ADD_IGOOGLE_BROWSER_NAME, ADD_IGOOGLE_TOOLTIP);
-                }
-                browser.openURL(new URL(addGadgetUrl));
-            } catch (MalformedURLException e) {
-                logger.warn(e.getMessage());
-            } catch (PartInitException e) {
-                logger.warn(e.getMessage());
+            String dialogTitle = "Your Files Are Hosted.";
+            
+            // For dialog message
+            StringBuilder dialogMessage = new StringBuilder();
+            dialogMessage.append("All your following gadget files:\n");
+            for (String urlOfHostedFile : relativeFilePathsOfHostedFiles) {
+            	dialogMessage.append(urlOfHostedFile).append("\n");
             }
+            dialogMessage.append("\nand the gadget file for preview: ");
+            dialogMessage.append(GADGET_FILE_WITH_MODIFIED_URL);
+            dialogMessage.append("\nare hosted at this URL:\n");
+            dialogMessage.append(hostingUrl);
+            
+            int dialogImageType = MessageDialog.INFORMATION;
+            Image dialogTitleImage = null;
+            String[] dialogButtonLabels = {"OK"};
+            int defaultIndex = 0;
+            MessageDialog dialog = new MessageDialog(shell, dialogTitle, dialogTitleImage,
+                    dialogMessage.toString(), dialogImageType, dialogButtonLabels, defaultIndex);
+            int openResult = dialog.open();
+            logger.fine("openResult: " + openResult);
         }
     }
 }
