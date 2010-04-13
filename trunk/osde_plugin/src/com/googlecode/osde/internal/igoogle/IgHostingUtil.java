@@ -79,25 +79,40 @@ public class IgHostingUtil {
     }
 
     /**
-     * Uploads files to iGoogle and returns the url for hosting files.
+     * Uploads files to iGoogle.
      *
-     * @return the url for hosting files
+     * @return the relative file paths for the hosted files
      * @throws IgException
      */
-    static String uploadFiles(IgCredentials igCredentials, IProject project,
-            String hostingFolder, boolean useCanvasView)
+    static List<String> uploadFiles(IgCredentials igCredentials, IProject project,
+    		String hostingFolder)
             throws IgException {
-        logger.fine("in PreviewIGoogleJob.uploadFilesToIg");
-
         String uploadFromPath =
                 project.getFolder(GadgetBuilder.TARGET_FOLDER_NAME).getLocation().toOSString();
         logger.fine("uploadFromPath: " + uploadFromPath);
 
         // Upload files.
-        IgHostingUtil.uploadFiles(igCredentials, uploadFromPath, hostingFolder);
+        List<String> relativeFilePaths =
+        	    IgHostingUtil.uploadFiles(igCredentials, uploadFromPath, hostingFolder);
 
-        // Form and return the hosting url.
-        return IgHostingUtil.formHostingUrl(igCredentials.getPublicId(), hostingFolder);
+        return relativeFilePaths;
+    }
+
+    /**
+     * Uploads files to iGoogle.
+     *
+     * @return the relative file paths for the hosted files
+     * @throws IgException
+     */
+    public static List<String> uploadFiles(IgCredentials igCredentials,
+            String sourceFileRootPath, String hostingFolder)
+            throws IgException {
+        List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
+        for (String relativePath : relativeFilePaths) {
+            logger.fine("uploading file: " + relativePath);
+            uploadFile(igCredentials, sourceFileRootPath, relativePath, hostingFolder);
+        }
+        return relativeFilePaths;
     }
 
     /**
@@ -170,21 +185,6 @@ public class IgHostingUtil {
             }
         }
         return false;
-    }
-
-    /**
-     * Uploads a list of files to iGoogle.
-     *
-     * @throws IgException
-     */
-    public static void uploadFiles(IgCredentials igCredentials,
-            String sourceFileRootPath, String hostingFolder)
-            throws IgException {
-        List<String> relativeFilePaths = findAllRelativeFilePaths(sourceFileRootPath);
-        for (String relativePath : relativeFilePaths) {
-            logger.fine("uploading file: " + relativePath);
-            uploadFile(igCredentials, sourceFileRootPath, relativePath, hostingFolder);
-        }
     }
 
     /**

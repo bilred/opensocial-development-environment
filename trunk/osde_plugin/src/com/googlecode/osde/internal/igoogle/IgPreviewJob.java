@@ -92,7 +92,7 @@ public class IgPreviewJob extends Job {
 
             // Upload files.
             IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(),
-                    OSDE_PREVIEW_DIRECTORY, useExternalBrowser);
+                    OSDE_PREVIEW_DIRECTORY);
 
             // Form hosted gadget file url.
             String urlOfHostedGadgetFile = hostingUrl + GADGET_FILE_WITH_MODIFIED_URL;
