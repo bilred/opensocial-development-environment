@@ -42,14 +42,22 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  */
 public class IgAddItDialog extends TitleAreaDialog {
     private static Logger logger = new Logger(IgAddItDialog.class);
+    
+    /**
+     * The static variable stores current gadgetUrl.
+     * It is for the convenience purpose to help users to enter gadgetUrl.
+     */
+    private static String currentGadgetUrl = "";
+    static void setCurrentGadgetUrl(String newValue) {
+    	currentGadgetUrl = newValue;
+    }
+    static String getCurrentGadgetUrl() {
+    	return currentGadgetUrl;
+    }
 
-    private String username;
-    private String password;
-    private String hostProjectName;
+    private String gadgetUrl;
     private boolean useExternalBrowser;
-    private Text usernameText;
-    private Text passwordText;
-    private Text hostProjectNameText;
+    private Text gadgetUrlText;
     private Button useExternalBrowserCheckbox;
 
     public IgAddItDialog(Shell shell) {
@@ -59,6 +67,9 @@ public class IgAddItDialog extends TitleAreaDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         logger.fine("createDialogArea");
+        
+        // Disable help dialog.
+        setDialogHelpAvailable(false);
 
         // Set title and message.
         setTitle("Add a gadget to your iGoogle page");
@@ -71,33 +82,13 @@ public class IgAddItDialog extends TitleAreaDialog {
         panel.setLayout(layout);
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        // Prepare the description for google account info.
-        Label googleAccountInfo = new Label(panel, SWT.LEFT);
-        googleAccountInfo.setText("Google account info");
-        googleAccountInfo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-        
-        // Prepare username.
-        Label usernameLabel = new Label(panel, SWT.LEFT);
-        usernameLabel.setText("\tUsername: ");
-        usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        usernameText = new Text(panel, SWT.SINGLE);
-        usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-
-        // Prepare password.
-        Label passwordLabel = new Label(panel, SWT.LEFT);
-        passwordLabel.setText("\tPassword: ");
-        passwordLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        passwordText = new Text(panel, SWT.SINGLE);
-        passwordText.setEchoChar('*');
-        passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-
-        // Prepare host-project-name.
-        Label hostProjectNameLabel = new Label(panel, SWT.LEFT);
-        hostProjectNameLabel.setText("Project name: ");
-        hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        hostProjectNameText = new Text(panel, SWT.SINGLE);
-        hostProjectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-        hostProjectNameText.setText(IgPreviewJob.HOST_PROJECT_NAME_FOR_PREVIEW);
+        // Prepare gadgetUrl.
+        Label gadgetUrlLabel = new Label(panel, SWT.LEFT);
+        gadgetUrlLabel.setText("Gadget URL: ");
+        gadgetUrlLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+        gadgetUrlText = new Text(panel, SWT.SINGLE);
+        gadgetUrlText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+        gadgetUrlText.setText(currentGadgetUrl);
 
         // Prepare checkbox of useExternalBrowser.
         useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
@@ -110,38 +101,34 @@ public class IgAddItDialog extends TitleAreaDialog {
             useExternalBrowserCheckbox.setEnabled(false);
         }
 
+        // Prepare extra description.
+        Label extraDescription = new Label(panel, SWT.LEFT);
+        extraDescription.setText(
+        		"\nNOTE: Please remember to login to your iGoogle page on browser.\n");
+        extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+
         return composite;
     }
 
     @Override
     protected Point getInitialSize() {
         logger.fine("getInitialSize");
-        return new Point(350, 300);
+        return new Point(750, 300);
     }
 
     @Override
     protected void okPressed() {
         logger.fine("okPressed");
 
-        username = usernameText.getText();
-        password = passwordText.getText();
-        hostProjectName = hostProjectNameText.getText();
+        gadgetUrl = gadgetUrlText.getText();
         useExternalBrowser = useExternalBrowserCheckbox.getSelection();
 
         setReturnCode(OK);
         close();
     }
 
-    String getUsername() {
-        return username;
-    }
-
-    String getPassword() {
-        return password;
-    }
-
-    String getHostProjectName() {
-    	return hostProjectName;
+    String getGadgetUrl() {
+    	return gadgetUrl;
     }
 
     boolean isUseExternalBrowser() {

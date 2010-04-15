@@ -76,7 +76,7 @@ public class IgPreviewJob extends Job {
 
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
-        monitor.beginTask("Running PreviewIGoogleJob", 3);
+        monitor.beginTask("Running PreviewIGoogleJob", 2);
 
         final String previewGadgetUrl;
         try {
@@ -111,11 +111,9 @@ public class IgPreviewJob extends Job {
 
         Display display = shell.getDisplay();
         monitor.worked(1);
+        monitor.done();
 
         display.syncExec(new PreviewingRunnable(previewGadgetUrl, useExternalBrowser));
-        monitor.worked(1);
-
-        monitor.done();
         return Status.OK_STATUS;
     }
 

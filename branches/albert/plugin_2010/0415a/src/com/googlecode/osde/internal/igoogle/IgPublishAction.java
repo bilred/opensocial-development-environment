@@ -20,11 +20,9 @@ package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
@@ -41,7 +39,6 @@ public class IgPublishAction
         implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
     private static Logger logger = new Logger(IgPublishAction.class);
 
-    private IFile gadgetXmlIFile;
     private Shell shell;
 
     public void init(IWorkbenchWindow window) {
@@ -52,13 +49,6 @@ public class IgPublishAction
 
     public void selectionChanged(IAction action, ISelection selection) {
         logger.fine("in selectionChanged");
-        if (selection instanceof IStructuredSelection) {
-            IStructuredSelection structured = (IStructuredSelection) selection;
-            Object element = structured.getFirstElement();
-            if (element instanceof IFile) {
-                gadgetXmlIFile = (IFile) element;
-            }
-        }
     }
 
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -74,10 +64,8 @@ public class IgPublishAction
         logger.fine("openResult: " + openResult);
         if (openResult == Window.OK) {
             logger.fine("OK pressed");
-            String username = dialog.getUsername();
-            String password = dialog.getPassword();
-            String hostProjectName = dialog.getHostProjectName();
-            Job job = new IgPublishJob(shell, username, password, hostProjectName, gadgetXmlIFile);
+            String hostProjectName = dialog.getGadgetUrl();
+            Job job = new IgPublishJob(shell, hostProjectName);
             logger.fine("job: " + job);
             job.schedule();
         }

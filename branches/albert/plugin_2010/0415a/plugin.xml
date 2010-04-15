@@ -149,18 +149,11 @@
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgAddItAction"
-               enablesFor="1"
                icon="icons/action_go.gif"
                id="com.googlecode.osde.runActionAddToIGoogle2"
                label="iGoogle - Add Gadget"
                menubarPath="opensocialMenu/opensocialGroup4"
                tooltip="iGoogle - Add Gadget">
-            <enablement>
-               <objectState
-                   name="contentTypeId"
-	               value="com.googlecode.osde.gadgetSpecXML">
-	           </objectState>
-            </enablement>
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPreviewAction"
@@ -179,18 +172,11 @@
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPublishAction"
-               enablesFor="1"
                icon="icons/action_go.gif"
                id="com.googlecode.osde.runActionPublishOnIGoogle2"
                label="iGoogle - Publish Gadget"
                menubarPath="opensocialMenu/opensocialGroup4"
                tooltip="iGoogle - Publish Gadget">
-            <enablement>
-               <objectState
-                   name="contentTypeId"
-                   value="com.googlecode.osde.gadgetSpecXML">
-               </objectState>
-            </enablement>
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgCleanAction"
@@ -441,17 +427,10 @@
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgAddItAction"
-               enablesFor="1"
                id="com.googlecode.osde.runActionAddToIGoogle1"
                label="iGoogle - Add Gadget"
                icon="icons/action_go.gif"
                menubarPath="com.googlecode.osde.menu2/group4">
-            <enablement>
-               <objectState
-                   name="contentTypeId"
-	               value="com.googlecode.osde.gadgetSpecXML">
-	           </objectState>
-            </enablement>
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPreviewAction"
@@ -469,17 +448,10 @@
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPublishAction"
-               enablesFor="1"
                id="com.googlecode.osde.runActionPublishOnIGoogle1"
                label="iGoogle - Publish Gadget"
                icon="icons/action_go.gif"
                menubarPath="com.googlecode.osde.menu2/group4">
-            <enablement>
-               <objectState
-                   name="contentTypeId"
-                   value="com.googlecode.osde.gadgetSpecXML">
-               </objectState>
-            </enablement>
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgCleanAction"

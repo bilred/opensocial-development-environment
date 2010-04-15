@@ -40,12 +40,8 @@ import org.eclipse.swt.widgets.Text;
 public class IgPublishDialog extends TitleAreaDialog {
     private static Logger logger = new Logger(IgPublishDialog.class);
 
-    private String username;
-    private String password;
-    private String hostProjectName;
-    private Text usernameText;
-    private Text passwordText;
-    private Text hostProjectNameText;
+    private String gadgetUrl;
+    private Text gadgetUrlText;
 
     public IgPublishDialog(Shell shell) {
         super(shell);
@@ -54,6 +50,9 @@ public class IgPublishDialog extends TitleAreaDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         logger.fine("createDialogArea");
+
+        // Disable help dialog.
+        setDialogHelpAvailable(false);
 
         // Set title and message.
         setTitle("Publish Gadget on iGoogle");
@@ -66,32 +65,13 @@ public class IgPublishDialog extends TitleAreaDialog {
         panel.setLayout(layout);
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-        // Prepare the description for google account info.
-        Label googleAccountInfo = new Label(panel, SWT.LEFT);
-        googleAccountInfo.setText("Google account info");
-        googleAccountInfo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-        
-        // Prepare username.
-        Label usernameLabel = new Label(panel, SWT.LEFT);
-        usernameLabel.setText("\tUsername: ");
-        usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        usernameText = new Text(panel, SWT.SINGLE);
-        usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-
-        // Prepare password.
-        Label passwordLabel = new Label(panel, SWT.LEFT);
-        passwordLabel.setText("\tPassword: ");
-        passwordLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        passwordText = new Text(panel, SWT.SINGLE);
-        passwordText.setEchoChar('*');
-        passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-
-        // Prepare project name.
-        Label hostProjectNameLabel = new Label(panel, SWT.LEFT);
-        hostProjectNameLabel.setText("Project name: ");
-        hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        hostProjectNameText = new Text(panel, SWT.SINGLE);
-        hostProjectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        // Prepare gadgetUrl.
+        Label gadgetUrlLabel = new Label(panel, SWT.LEFT);
+        gadgetUrlLabel.setText("Gadget URL: ");
+        gadgetUrlLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+        gadgetUrlText = new Text(panel, SWT.SINGLE);
+        gadgetUrlText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+        gadgetUrlText.setText(IgAddItDialog.getCurrentGadgetUrl());
 
         return composite;
     }
@@ -99,33 +79,22 @@ public class IgPublishDialog extends TitleAreaDialog {
     @Override
     protected Point getInitialSize() {
         logger.fine("getInitialSize");
-        return new Point(350, 300);
+        return new Point(750, 300);
     }
 
     @Override
     protected void okPressed() {
         logger.fine("okPressed");
 
-        username = usernameText.getText();
-        password = passwordText.getText();
-
-        // TODO: Need a validator for hostProjectName.
-        hostProjectName = hostProjectNameText.getText();
-        logger.fine("hostProjectName: " + hostProjectName);
+        // TODO: Need a validator for gadgetUrl.
+        gadgetUrl = gadgetUrlText.getText();
+        logger.fine("gadgetUrl: " + gadgetUrl);
 
         setReturnCode(OK);
         close();
     }
 
-    String getUsername() {
-        return username;
-    }
-
-    String getPassword() {
-        return password;
-    }
-
-    String getHostProjectName() {
-        return hostProjectName;
+    String getGadgetUrl() {
+        return gadgetUrl;
     }
 }

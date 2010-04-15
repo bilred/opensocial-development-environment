@@ -71,12 +71,9 @@ public class IgAddItAction
         IgAddItDialog dialog = new IgAddItDialog(shell);
         int openResult = dialog.open();
         if (openResult == Window.OK) {
-            String username = dialog.getUsername();
-            String password = dialog.getPassword();
-            String hostProjectName = dialog.getHostProjectName();
+            String gadgetUrl = dialog.getGadgetUrl();
             boolean useExternalBrowser = dialog.isUseExternalBrowser();
-            Job job = new IgAddItJob(
-            		username, password, hostProjectName, gadgetXmlIFile, shell, useExternalBrowser);
+            Job job = new IgAddItJob(gadgetUrl, gadgetXmlIFile, shell, useExternalBrowser);
             job.schedule();
         }
     }
