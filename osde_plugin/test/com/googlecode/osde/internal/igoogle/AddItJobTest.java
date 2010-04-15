@@ -78,10 +78,10 @@ public class AddItJobTest {
         replay(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
 
         // Execute modifyHostingUrlForGadgetFileAndUploadIt().
-        IgAddItJob job = new IgAddItJob(null, null, gadgetXmlIFile, null, false);
+        IgAddItJob job = new IgAddItJob(null, null, "preview", gadgetXmlIFile, null, false);
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
         job.modifyHostingUrlForGadgetFileAndUploadIt(IgAddItJob.LOCAL_HOST_URL,
-                NEW_HOSTING_URL, igCredentials, IgAddItJob.OSDE_PREVIEW_DIRECTORY);
+                NEW_HOSTING_URL, igCredentials, "/osde/preview/"); // TODO: (p1) make string const
 
         // Make sure the modified file contains the string of NEW_HOSTING_URL.
         File modifiedFile = new File(IgAddItJob.getOsdeWorkFolder(),

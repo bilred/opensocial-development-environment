@@ -45,9 +45,11 @@ public class IgAddItDialog extends TitleAreaDialog {
 
     private String username;
     private String password;
+    private String hostProjectName;
     private boolean useExternalBrowser;
     private Text usernameText;
     private Text passwordText;
+    private Text hostProjectNameText;
     private Button useExternalBrowserCheckbox;
 
     public IgAddItDialog(Shell shell) {
@@ -60,7 +62,7 @@ public class IgAddItDialog extends TitleAreaDialog {
 
         // Set title and message.
         setTitle("Add a gadget to your iGoogle page");
-        setMessage("Please enter your Google account info");
+        setMessage("This allows you to add this gadget to your iGoogle page.");
 
         // Prepare composite and panel.
         Composite composite = (Composite) super.createDialogArea(parent);
@@ -69,20 +71,33 @@ public class IgAddItDialog extends TitleAreaDialog {
         panel.setLayout(layout);
         panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
+        // Prepare the description for google account info.
+        Label googleAccountInfo = new Label(panel, SWT.LEFT);
+        googleAccountInfo.setText("Google account info");
+        googleAccountInfo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+        
         // Prepare username.
         Label usernameLabel = new Label(panel, SWT.LEFT);
-        usernameLabel.setText("Username: ");
+        usernameLabel.setText("\tUsername: ");
         usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         usernameText = new Text(panel, SWT.SINGLE);
         usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
         // Prepare password.
         Label passwordLabel = new Label(panel, SWT.LEFT);
-        passwordLabel.setText("Password: ");
+        passwordLabel.setText("\tPassword: ");
         passwordLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         passwordText = new Text(panel, SWT.SINGLE);
         passwordText.setEchoChar('*');
         passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+
+        // Prepare host-project-name.
+        Label hostProjectNameLabel = new Label(panel, SWT.LEFT);
+        hostProjectNameLabel.setText("Project name: ");
+        hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+        hostProjectNameText = new Text(panel, SWT.SINGLE);
+        hostProjectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        hostProjectNameText.setText(IgPreviewJob.HOST_PROJECT_NAME_FOR_PREVIEW);
 
         // Prepare checkbox of useExternalBrowser.
         useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
@@ -110,6 +125,7 @@ public class IgAddItDialog extends TitleAreaDialog {
 
         username = usernameText.getText();
         password = passwordText.getText();
+        hostProjectName = hostProjectNameText.getText();
         useExternalBrowser = useExternalBrowserCheckbox.getSelection();
 
         setReturnCode(OK);
@@ -122,6 +138,10 @@ public class IgAddItDialog extends TitleAreaDialog {
 
     String getPassword() {
         return password;
+    }
+
+    String getHostProjectName() {
+    	return hostProjectName;
     }
 
     boolean isUseExternalBrowser() {
