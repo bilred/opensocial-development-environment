@@ -62,6 +62,9 @@ public class IgPreviewDialog extends TitleAreaDialog {
     protected Control createDialogArea(Composite parent) {
         logger.fine("createDialogArea");
 
+        // Disable help dialog.
+        setDialogHelpAvailable(false);
+
         // Set title and message.
         setTitle("Preview Gadget on iGoogle");
         setMessage("The allows you to preview a gadget on iGoogle.");
@@ -127,11 +130,10 @@ public class IgPreviewDialog extends TitleAreaDialog {
         
         // Prepare extra description.
         Label extraDescription = new Label(panel, SWT.LEFT);
-        extraDescription.setText("NOTE: Some social-related functions might not work here\n"
+        extraDescription.setText("\nNOTE: Some social-related functions might not work here\n"
         		+ "unless you check some options via the OSDE feature:\n"
         		+ "iGoogle - Add Gadget.");
         extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-
 
         return composite;
     }
