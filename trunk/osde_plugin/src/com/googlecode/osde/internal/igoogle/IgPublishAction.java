@@ -76,8 +76,8 @@ public class IgPublishAction
             logger.fine("OK pressed");
             String username = dialog.getUsername();
             String password = dialog.getPassword();
-            String projectName = dialog.getProjectName();
-            Job job = new IgPublishJob(shell, username, password, projectName, gadgetXmlIFile);
+            String hostProjectName = dialog.getHostProjectName();
+            Job job = new IgPublishJob(shell, username, password, hostProjectName, gadgetXmlIFile);
             logger.fine("job: " + job);
             job.schedule();
         }

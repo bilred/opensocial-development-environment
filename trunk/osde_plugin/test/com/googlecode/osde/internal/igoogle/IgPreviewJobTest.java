@@ -78,10 +78,11 @@ public class IgPreviewJobTest {
         replay(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
 
         // Execute modifyHostingUrlForGadgetFileAndUploadIt().
-        IgPreviewJob job = new IgPreviewJob(null, null, gadgetXmlIFile, null, false, false);
+        IgPreviewJob job =
+        	    new IgPreviewJob(null, null, "preview", gadgetXmlIFile, null, false, false);
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
         job.modifyHostingUrlForGadgetFileAndUploadIt(IgPreviewJob.LOCAL_HOST_URL,
-                NEW_HOSTING_URL, igCredentials, IgPreviewJob.OSDE_PREVIEW_DIRECTORY);
+                NEW_HOSTING_URL, igCredentials, "/osde/preview/");
 
         // Make sure the modified file contains the string of NEW_HOSTING_URL.
         File modifiedFile = new File(IgPreviewJob.getOsdeWorkFolder(),

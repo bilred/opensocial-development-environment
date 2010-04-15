@@ -48,16 +48,16 @@ public class IgPublishJob extends Job {
     private String password;
     private IFile gadgetXmlIFile;
     private Shell shell;
-    private String projectName; // contains only chars of A-Z, a-z, or 0-9.
+    private String hostProjectName; // contains only chars of A-Z, a-z, or 0-9.
 
-    public IgPublishJob(Shell shell, String username, String password, String projectName,
+    public IgPublishJob(Shell shell, String username, String password, String hostProjectName,
             IFile gadgetXmlIFile) {
         super("iGoogle - Publish Gadget");
         this.username = username;
         this.password = password;
         this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
-        this.projectName = projectName;
+        this.hostProjectName = hostProjectName;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class IgPublishJob extends Job {
         final String publishGadgetUrl;
         try {
             IgCredentials igCredentials = new IgCredentials(username, password);
-            String hostingFolder = OSDE_PUBLISH_DIRECTORY + projectName + "/";
+            String hostingFolder = OSDE_PUBLISH_DIRECTORY + hostProjectName + "/";
             String hostingUrl =
             	    IgHostingUtil.formHostingUrl(igCredentials.getPublicId(), hostingFolder);
             IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(), hostingFolder);

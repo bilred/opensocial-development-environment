@@ -81,7 +81,7 @@ public class IgHostFileDialog extends TitleAreaDialog {
         passwordText.setEchoChar('*');
         passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
-        // Prepare host-folder-name.
+        // Prepare host-project-name.
         Label hostProjectNameLabel = new Label(panel, SWT.LEFT);
         hostProjectNameLabel.setText("Project name: ");
         hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));

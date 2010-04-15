@@ -63,7 +63,8 @@ public class IgCleanAction
         if (openResult == Window.OK) {
             String username = dialog.getUsername();
             String password = dialog.getPassword();
-            Job job = new IgCleanJob(shell, username, password);
+            String hostProjectName = dialog.getHostProjectName();
+            Job job = new IgCleanJob(shell, username, password, hostProjectName);
             job.schedule();
         }
     }
