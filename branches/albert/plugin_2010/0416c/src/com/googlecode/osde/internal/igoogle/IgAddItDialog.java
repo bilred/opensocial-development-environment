@@ -89,6 +89,7 @@ public class IgAddItDialog extends TitleAreaDialog {
         gadgetUrlText = new Text(panel, SWT.SINGLE);
         gadgetUrlText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
         gadgetUrlText.setText(currentGadgetUrl);
+        gadgetUrlText.setFocus();
 
         // Prepare checkbox of useExternalBrowser.
         useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);

@@ -75,6 +75,7 @@ public class IgHostFileDialog extends TitleAreaDialog {
         usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         usernameText = new Text(panel, SWT.SINGLE);
         usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        usernameText.setFocus();
 
         // Prepare password.
         Label passwordLabel = new Label(panel, SWT.LEFT);
