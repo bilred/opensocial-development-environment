@@ -89,6 +89,14 @@
                   name="opensocialGroup4">
             </separator>
          </menu>
+         <menu
+               id="iGoogleMenu"
+               label="iGoogle"
+               path="opensocialMenu/opensocialGroup4">
+               <separator
+                     name="iGoogleGroup">
+               </separator>
+         </menu>
          <action
                class="com.googlecode.osde.internal.shindig.ShowPublicCertificateAction"
                id="com.googlecode.osde.internal.shindig.ShowPublicCertificateAction"
@@ -133,35 +141,25 @@
             </enablement>
          </action>
          <action
-               class="com.googlecode.osde.internal.igoogle.IgHostFileAction"
-               enablesFor="1"
-               icon="icons/action_go.gif"
-               id="com.googlecode.osde.runActionHostFileIGoogle2"
-               label="iGoogle - Host Files"
-               menubarPath="opensocialMenu/opensocialGroup4"
-               tooltip="iGoogle - Host Files">
-            <enablement>
-               <objectState
-                   name="contentTypeId"
-	               value="com.googlecode.osde.gadgetSpecXML">
-	           </objectState>
-            </enablement>
+               class="com.googlecode.osde.internal.igoogle.IgCleanAction"
+               id="com.googlecode.osde.runActionCleanOnIGoogle2"
+               label="iGoogle - Clean Preview Files"
+               menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
+               tooltip="iGoogle - Clean Preview Files">
          </action>
          <action
-               class="com.googlecode.osde.internal.igoogle.IgAddItAction"
-               icon="icons/action_go.gif"
-               id="com.googlecode.osde.runActionAddToIGoogle2"
-               label="iGoogle - Add Gadget"
-               menubarPath="opensocialMenu/opensocialGroup4"
-               tooltip="iGoogle - Add Gadget">
+               class="com.googlecode.osde.internal.igoogle.IgPublishAction"
+               id="com.googlecode.osde.runActionPublishOnIGoogle2"
+               label="iGoogle - Publish Gadget"
+               menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
+               tooltip="iGoogle - Publish Gadget">
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPreviewAction"
                enablesFor="1"
-               icon="icons/action_go.gif"
                id="com.googlecode.osde.runActionPreviewOnIGoogle2"
                label="iGoogle - Preview Gadget"
-               menubarPath="opensocialMenu/opensocialGroup4"
+               menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
                tooltip="iGoogle - Preview Gadget">
             <enablement>
                <objectState
@@ -171,20 +169,25 @@
             </enablement>
          </action>
          <action
-               class="com.googlecode.osde.internal.igoogle.IgPublishAction"
-               icon="icons/action_go.gif"
-               id="com.googlecode.osde.runActionPublishOnIGoogle2"
-               label="iGoogle - Publish Gadget"
-               menubarPath="opensocialMenu/opensocialGroup4"
-               tooltip="iGoogle - Publish Gadget">
+               class="com.googlecode.osde.internal.igoogle.IgAddItAction"
+               id="com.googlecode.osde.runActionAddToIGoogle2"
+               label="iGoogle - Add Gadget"
+               menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
+               tooltip="iGoogle - Add Gadget">
          </action>
          <action
-               class="com.googlecode.osde.internal.igoogle.IgCleanAction"
-               icon="icons/action_go.gif"
-               id="com.googlecode.osde.runActionCleanOnIGoogle2"
-               label="iGoogle - Clean Preview Files"
-               menubarPath="opensocialMenu/opensocialGroup4"
-               tooltip="iGoogle - Clean Preview Files">
+               class="com.googlecode.osde.internal.igoogle.IgHostFileAction"
+               enablesFor="1"
+               id="com.googlecode.osde.runActionHostFileIGoogle2"
+               label="iGoogle - Host Files"
+               menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
+               tooltip="iGoogle - Host Files">
+            <enablement>
+               <objectState
+                   name="contentTypeId"
+	               value="com.googlecode.osde.gadgetSpecXML">
+	           </objectState>
+            </enablement>
          </action>
          <action
                class="com.googlecode.osde.internal.shindig.CreateSampleDataAction"
@@ -369,6 +372,14 @@
                   name="group4">
             </separator>
          </menu>
+         <menu
+               id="iGoogleMenu2"
+               label="iGoogle"
+               path="com.googlecode.osde.menu2/group4">
+               <separator
+                     name="iGoogleGroup2">
+               </separator>
+         </menu>
          <action
                class="com.googlecode.osde.internal.runtime.CreateJavaProjectAction"
                enablesFor="1"
@@ -412,12 +423,23 @@
             </enablement>
          </action>
          <action
-               class="com.googlecode.osde.internal.igoogle.IgHostFileAction"
+               class="com.googlecode.osde.internal.igoogle.IgCleanAction"
+               id="com.googlecode.osde.runActionCleanOnIGoogle1"
+               label="iGoogle - Clean Preview Files"
+               menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
+         </action>
+         <action
+               class="com.googlecode.osde.internal.igoogle.IgPublishAction"
+               id="com.googlecode.osde.runActionPublishOnIGoogle1"
+               label="iGoogle - Publish Gadget"
+               menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
+         </action>
+         <action
+               class="com.googlecode.osde.internal.igoogle.IgPreviewAction"
                enablesFor="1"
-               id="com.googlecode.osde.runActionHostFileIGoogle1"
-               label="iGoogle - Host Files"
-               icon="icons/action_go.gif"
-               menubarPath="com.googlecode.osde.menu2/group4">
+               id="com.googlecode.osde.runActionPreviewOnIGoogle1"
+               label="iGoogle - Preview Gadget"
+               menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
             <enablement>
                <objectState
                    name="contentTypeId"
@@ -429,36 +451,20 @@
                class="com.googlecode.osde.internal.igoogle.IgAddItAction"
                id="com.googlecode.osde.runActionAddToIGoogle1"
                label="iGoogle - Add Gadget"
-               icon="icons/action_go.gif"
-               menubarPath="com.googlecode.osde.menu2/group4">
+               menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
          </action>
          <action
-               class="com.googlecode.osde.internal.igoogle.IgPreviewAction"
+               class="com.googlecode.osde.internal.igoogle.IgHostFileAction"
                enablesFor="1"
-               id="com.googlecode.osde.runActionPreviewOnIGoogle1"
-               label="iGoogle - Preview Gadget"
-               icon="icons/action_go.gif"
-               menubarPath="com.googlecode.osde.menu2/group4">
+               id="com.googlecode.osde.runActionHostFileIGoogle1"
+               label="iGoogle - Host Files"
+               menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
             <enablement>
                <objectState
                    name="contentTypeId"
 	               value="com.googlecode.osde.gadgetSpecXML">
 	           </objectState>
             </enablement>
-         </action>
-         <action
-               class="com.googlecode.osde.internal.igoogle.IgPublishAction"
-               id="com.googlecode.osde.runActionPublishOnIGoogle1"
-               label="iGoogle - Publish Gadget"
-               icon="icons/action_go.gif"
-               menubarPath="com.googlecode.osde.menu2/group4">
-         </action>
-         <action
-               class="com.googlecode.osde.internal.igoogle.IgCleanAction"
-               id="com.googlecode.osde.runActionCleanOnIGoogle1"
-               label="iGoogle - Clean Preview Files"
-               icon="icons/action_go.gif"
-               menubarPath="com.googlecode.osde.menu2/group4">
          </action>
       </objectContribution>
    </extension>
