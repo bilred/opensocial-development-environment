@@ -48,8 +48,6 @@ import org.eclipse.swt.widgets.Shell;
 public class IgHostFileJob extends Job {
     private static Logger logger = new Logger(IgHostFileJob.class);
     static final String OSDE_HOST_BASE_FOLDER = "/osde/";
-    static final String LOCAL_HOST_URL = "http://localhost:8080/";
-    static final String GADGET_FILE_WITH_MODIFIED_URL = "modified_gadget.xml";
 
     private String username;
     private String password;
@@ -82,7 +80,7 @@ public class IgHostFileJob extends Job {
             
             // Modify gadget file with new hosting url, and upload it.
             String eclipseProjectName = gadgetXmlIFile.getProject().getName();
-            String oldHostingUrl = LOCAL_HOST_URL + eclipseProjectName + "/";
+            String oldHostingUrl = IgConstants.LOCAL_HOST_URL + eclipseProjectName + "/";
             modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
             		hostingFolder);
 
@@ -134,7 +132,7 @@ public class IgHostFileJob extends Job {
 
             // Prepare the modified gadget file.
             File osdeWorkFolder = getOsdeWorkFolder();
-            File modifiedFile = new File(osdeWorkFolder, GADGET_FILE_WITH_MODIFIED_URL);
+            File modifiedFile = new File(osdeWorkFolder, IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
             if (modifiedFile.exists()) {
                 modifiedFile.delete();
             }
@@ -148,10 +146,11 @@ public class IgHostFileJob extends Job {
 
             // Upload the modified gadget file to iGoogle.
             IgHostingUtil.uploadFile(igCredentials, osdeWorkFolder.getAbsolutePath(),
-                    GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
+            		IgConstants.GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
             
             // Update IgAddItDialog.currentGadgetUrl
-            IgAddItDialog.setCurrentGadgetUrl(newHostingUrl + GADGET_FILE_WITH_MODIFIED_URL);
+            IgAddItDialog.setCurrentGadgetUrl(
+            		newHostingUrl + IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
 
 
         } catch (IOException e) {
@@ -194,7 +193,7 @@ public class IgHostFileJob extends Job {
             	dialogMessage.append(urlOfHostedFile).append("\n");
             }
             dialogMessage.append("\nand the gadget file for preview: ");
-            dialogMessage.append(GADGET_FILE_WITH_MODIFIED_URL);
+            dialogMessage.append(IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
             dialogMessage.append("\nare hosted at this URL:\n");
             dialogMessage.append(hostingUrl);
             

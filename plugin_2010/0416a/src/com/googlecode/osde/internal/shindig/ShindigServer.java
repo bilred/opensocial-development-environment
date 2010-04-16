@@ -32,8 +32,9 @@ import org.eclipse.core.runtime.CoreException;
  * @author Dolphin Wan
  */
 public class ShindigServer extends ExternalApp {
-    private static final String PREBUNDLED_LOGGING_CONFIG_FILE = "/shindig/logging.properties";
     private static final Logger logger = new Logger(ShindigServer.class);
+    private static final String PREBUNDLED_LOGGING_CONFIG_FILE = "/shindig/logging.properties";
+    public static final String DEFAULT_SHINDIG_PORT = "8123";
 
     public ShindigServer() {
         super("Apache Shindig");
@@ -51,7 +52,7 @@ public class ShindigServer extends ExternalApp {
                     .withLibrary("/shindig/slf4j-log4j12-1.5.10.jar")
                     .withLibrary("/libs/log4j-1.2.14.jar")
                     .withMainClassName("Main")
-                    .withArgument("8080") // port
+                    .withArgument(DEFAULT_SHINDIG_PORT)
                     .withArgumentQuoted(Activator.getResourceUrl(
                             "/shindig/shindig-server-1.1-BETA1-incubating.war"))
                     .withArgumentQuoted(

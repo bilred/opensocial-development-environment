@@ -51,8 +51,6 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class IgPreviewJob extends Job {
     private static Logger logger = new Logger(IgPreviewJob.class);
     static final String HOST_PROJECT_NAME_FOR_PREVIEW = "preview";
-    static final String LOCAL_HOST_URL = "http://localhost:8080/";
-    static final String GADGET_FILE_WITH_MODIFIED_URL = "modified_gadget.xml";
 
     private String username;
     private String password;
@@ -89,7 +87,7 @@ public class IgPreviewJob extends Job {
 
             // Modify gadget file with new hosting url, and upload it.
             String eclipseProjectName = gadgetXmlIFile.getProject().getName();
-            String oldHostingUrl = LOCAL_HOST_URL + eclipseProjectName + "/";
+            String oldHostingUrl = IgConstants.LOCAL_HOST_URL + eclipseProjectName + "/";
             modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
             		hostingFolder);
 
@@ -98,7 +96,7 @@ public class IgPreviewJob extends Job {
             		hostingFolder);
 
             // Form hosted gadget file url.
-            String urlOfHostedGadgetFile = hostingUrl + GADGET_FILE_WITH_MODIFIED_URL;
+            String urlOfHostedGadgetFile = hostingUrl + IgConstants.GADGET_FILE_WITH_MODIFIED_URL;
 
             previewGadgetUrl = IgHostingUtil.formPreviewOpenSocialGadgetUrl(
                     urlOfHostedGadgetFile, useCanvasView, igCredentials.getSid());
@@ -147,7 +145,7 @@ public class IgPreviewJob extends Job {
 
             // Prepare the modified gadget file.
             File osdeWorkFolder = getOsdeWorkFolder();
-            File modifiedFile = new File(osdeWorkFolder, GADGET_FILE_WITH_MODIFIED_URL);
+            File modifiedFile = new File(osdeWorkFolder, IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
             if (modifiedFile.exists()) {
                 modifiedFile.delete();
             }
@@ -161,7 +159,7 @@ public class IgPreviewJob extends Job {
 
             // Upload the modified gadget file to iGoogle.
             IgHostingUtil.uploadFile(igCredentials, osdeWorkFolder.getAbsolutePath(),
-                    GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
+            		IgConstants.GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
         } catch (IOException e) {
             logger.warn(e.getMessage());
             throw new IgException(e);

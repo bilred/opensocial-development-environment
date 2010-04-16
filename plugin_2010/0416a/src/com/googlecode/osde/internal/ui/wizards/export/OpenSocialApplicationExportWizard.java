@@ -35,6 +35,7 @@ import com.googlecode.osde.internal.gadgets.model.Module.Content;
 import com.googlecode.osde.internal.gadgets.parser.Parser;
 import com.googlecode.osde.internal.gadgets.parser.ParserException;
 import com.googlecode.osde.internal.gadgets.parser.ParserFactory;
+import com.googlecode.osde.internal.shindig.ShindigServer;
 import com.googlecode.osde.internal.utils.Logger;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 import com.googlecode.osde.internal.utils.StatusUtil;
@@ -165,9 +166,9 @@ public class OpenSocialApplicationExportWizard extends Wizard implements IExport
                                     for (Content content : contents) {
                                         if (ViewType.html.toString().equals(content.getType())) {
                                             String value = content.getValue();
-                                            Pattern pattern = Pattern.compile(
-                                                    "http://localhost:8080/" + project.getName()
-                                                            + "/");
+                                            Pattern pattern = Pattern.compile("http://localhost:"
+                                            		+ ShindigServer.DEFAULT_SHINDIG_PORT + "/"
+                                            		+ project.getName() + "/");
                                             Matcher matcher = pattern.matcher(value);
                                             StringBuffer sb = new StringBuffer();
                                             while (matcher.find()) {
