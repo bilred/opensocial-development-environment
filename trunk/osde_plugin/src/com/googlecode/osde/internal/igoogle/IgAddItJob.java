@@ -54,19 +54,15 @@ public class IgAddItJob extends Job {
     static final String LOCAL_HOST_URL = "http://localhost:8080/";
     static final String GADGET_FILE_WITH_MODIFIED_URL = "modified_gadget.xml";
 
-    private String username;
-    private String password;
-    private String hostProjectName;
+    private String gadgetUrl;
     private IFile gadgetXmlIFile;
     private Shell shell;
     private boolean useExternalBrowser;
 
-    public IgAddItJob(String username, String password, String hostProjectName,
-    		IFile gadgetXmlIFile, Shell shell, boolean useExternalBrowser) {
+    public IgAddItJob(String gadgetUrl, IFile gadgetXmlIFile, Shell shell,
+    		boolean useExternalBrowser) {
         super("iGoogle - Add a Gadget");
-        this.username = username;
-        this.password = password;
-        this.hostProjectName = hostProjectName;
+        this.gadgetUrl = gadgetUrl;
         this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
         this.useExternalBrowser = useExternalBrowser;
@@ -74,43 +70,16 @@ public class IgAddItJob extends Job {
 
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
-        monitor.beginTask("Running IgAddItJob", 3);
+        monitor.beginTask("Running IgAddItJob", 2);
 
-        final String addGadgetUrl;
-        try {
-            IgCredentials igCredentials = new IgCredentials(username, password);
-
-            // Get hosting URL.
-            String hostingFolder = IgHostFileJob.OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
-            String hostingUrl = IgHostingUtil.formHostingUrl(
-            		igCredentials.getPublicId(), hostingFolder);
-
-            // Modify gadget file with new hosting url, and upload it.
-            String eclipseProjectName = gadgetXmlIFile.getProject().getName();
-            String oldHostingUrl = LOCAL_HOST_URL + eclipseProjectName + "/";
-            modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
-            		hostingFolder);
-
-            // Upload files.
-            IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(), hostingFolder);
-
-            // Form hosted gadget file url.
-            String urlOfHostedGadgetFile = hostingUrl + GADGET_FILE_WITH_MODIFIED_URL;
-            addGadgetUrl = IgHostingUtil.formAddGadgetUrl(urlOfHostedGadgetFile);
-        } catch (IgException e) {
-            logger.warn(e.getMessage());
-            monitor.setCanceled(true);
-            return Status.CANCEL_STATUS;
-        }
+        final String addGadgetUrl = IgHostingUtil.formAddGadgetUrl(gadgetUrl);
         monitor.worked(1);
 
         Display display = shell.getDisplay();
         monitor.worked(1);
+        monitor.done();
 
         display.syncExec(new AddingGadgetRunnable(addGadgetUrl, useExternalBrowser));
-        monitor.worked(1);
-
-        monitor.done();
         return Status.OK_STATUS;
     }
 

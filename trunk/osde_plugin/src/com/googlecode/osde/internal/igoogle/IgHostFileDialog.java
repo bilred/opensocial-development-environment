@@ -55,6 +55,9 @@ public class IgHostFileDialog extends TitleAreaDialog {
     protected Control createDialogArea(Composite parent) {
         logger.fine("createDialogArea");
 
+        // Disable help dialog.
+        setDialogHelpAvailable(false);
+
         // Set title and message.
         setTitle("Host gadget files to iGoogle");
         setMessage("Please enter your Google account info");
@@ -87,6 +90,7 @@ public class IgHostFileDialog extends TitleAreaDialog {
         hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         hostProjectNameText = new Text(panel, SWT.SINGLE);
         hostProjectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        hostProjectNameText.setText(IgPreviewJob.HOST_PROJECT_NAME_FOR_PREVIEW);
 
         return composite;
     }

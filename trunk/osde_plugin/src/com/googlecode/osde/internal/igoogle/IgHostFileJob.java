@@ -69,7 +69,7 @@ public class IgHostFileJob extends Job {
 
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
-        monitor.beginTask("Running IgHostFileJob", 3);
+        monitor.beginTask("Running IgHostFileJob", 2);
 
         List<String> relativeFilePathsOfHostedFiles = null;
         String hostingUrl = null;
@@ -79,7 +79,7 @@ public class IgHostFileJob extends Job {
             // Get hosting URL.
             String hostingFolder = OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
             hostingUrl = IgHostingUtil.formHostingUrl(igCredentials.getPublicId(), hostingFolder);
-
+            
             // Modify gadget file with new hosting url, and upload it.
             String eclipseProjectName = gadgetXmlIFile.getProject().getName();
             String oldHostingUrl = LOCAL_HOST_URL + eclipseProjectName + "/";
@@ -98,11 +98,9 @@ public class IgHostFileJob extends Job {
 
         Display display = shell.getDisplay();
         monitor.worked(1);
+        monitor.done();
 
         display.syncExec(new HostingFileRunnable(hostingUrl, relativeFilePathsOfHostedFiles));
-        monitor.worked(1);
-
-        monitor.done();
         return Status.OK_STATUS;
     }
 
@@ -151,6 +149,11 @@ public class IgHostFileJob extends Job {
             // Upload the modified gadget file to iGoogle.
             IgHostingUtil.uploadFile(igCredentials, osdeWorkFolder.getAbsolutePath(),
                     GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
+            
+            // Update IgAddItDialog.currentGadgetUrl
+            IgAddItDialog.setCurrentGadgetUrl(newHostingUrl + GADGET_FILE_WITH_MODIFIED_URL);
+
+
         } catch (IOException e) {
             logger.warn(e.getMessage());
             throw new IgException(e);
