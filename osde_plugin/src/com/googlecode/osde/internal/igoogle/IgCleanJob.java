@@ -53,7 +53,7 @@ public class IgCleanJob extends Job {
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
-        monitor.beginTask("Running CleanIGoogleJob", 4);
+        monitor.beginTask("Running CleanIGoogleJob", 3);
         monitor.worked(1);
 
         // Get hosting folder.

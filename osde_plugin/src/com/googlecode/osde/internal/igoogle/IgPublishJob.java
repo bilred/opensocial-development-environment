@@ -23,7 +23,6 @@ import java.net.URL;
 
 import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -42,53 +41,30 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  */
 public class IgPublishJob extends Job {
     private static Logger logger = new Logger(IgPublishJob.class);
-    private static final String OSDE_PUBLISH_DIRECTORY = "/osde/";
 
-    private String username;
-    private String password;
-    private IFile gadgetXmlIFile;
     private Shell shell;
-    private String hostProjectName; // contains only chars of A-Z, a-z, or 0-9.
+    private String gadgetUrl;
 
-    public IgPublishJob(Shell shell, String username, String password, String hostProjectName,
-            IFile gadgetXmlIFile) {
+    public IgPublishJob(Shell shell, String gadgetUrl) {
         super("iGoogle - Publish Gadget");
-        this.username = username;
-        this.password = password;
-        this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
-        this.hostProjectName = hostProjectName;
+        this.gadgetUrl = gadgetUrl;
     }
 
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
         logger.fine("in run");
-        monitor.beginTask("Running PublishIGoogleJob", 3);
+        monitor.beginTask("Running PublishIGoogleJob", 2);
 
-        final String publishGadgetUrl;
-        try {
-            IgCredentials igCredentials = new IgCredentials(username, password);
-            String hostingFolder = OSDE_PUBLISH_DIRECTORY + hostProjectName + "/";
-            String hostingUrl =
-            	    IgHostingUtil.formHostingUrl(igCredentials.getPublicId(), hostingFolder);
-            IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(), hostingFolder);
-            String urlOfHostedFile = hostingUrl + gadgetXmlIFile.getName();
-            publishGadgetUrl = IgHostingUtil.formPublishGadgetUrl(urlOfHostedFile);
-
-        } catch (IgException e) {
-            logger.warn(e.getMessage());
-            monitor.setCanceled(true);
-            return Status.CANCEL_STATUS;
-        }
+        final String publishGadgetUrl = IgHostingUtil.formPublishGadgetUrl(gadgetUrl);
         monitor.worked(1);
 
         Display display = shell.getDisplay();
         monitor.worked(1);
+        monitor.done();
 
         display.syncExec(new PublishingRunnable(publishGadgetUrl));
-        monitor.worked(1);
 
-        monitor.done();
         return Status.OK_STATUS;
     }
 

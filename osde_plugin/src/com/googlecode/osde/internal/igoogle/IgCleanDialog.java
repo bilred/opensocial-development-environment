@@ -55,6 +55,9 @@ public class IgCleanDialog extends TitleAreaDialog {
     protected Control createDialogArea(Composite parent) {
         logger.fine("createDialogArea");
 
+        // Disable help dialog.
+        setDialogHelpAvailable(false);
+
         // Set title and message.
         setTitle("iGoogle - Clean Hosted Files");
         setMessage("This allows you to clean hosted files on iGoogle.");
