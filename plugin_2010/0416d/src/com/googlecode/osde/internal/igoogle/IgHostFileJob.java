@@ -74,7 +74,7 @@ public class IgHostFileJob extends Job {
         List<String> relativeFilePathsOfHostedFiles = null;
         String hostingUrl = null;
         try {
-            IgCredentials igCredentials = new IgCredentials(username, password);
+            IgCredentials igCredentials = IgCredentials.createCurrentInstance(username, password);
 
             // Get hosting URL.
             String hostingFolder = OSDE_HOST_BASE_FOLDER + hostProjectName + "/";

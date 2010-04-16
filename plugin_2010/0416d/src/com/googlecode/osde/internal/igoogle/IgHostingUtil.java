@@ -474,7 +474,7 @@ public class IgHostingUtil {
 
     static void cleanFiles(String username, String password, String hostingFolder)
             throws IgException {
-        IgCredentials igCredentials = new IgCredentials(username, password);
+        IgCredentials igCredentials = IgCredentials.createCurrentInstance(username, password);
 
         // Clean files.
         IgHostingUtil.cleanFiles(igCredentials, hostingFolder);

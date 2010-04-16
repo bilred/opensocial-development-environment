@@ -80,7 +80,7 @@ public class IgPreviewJob extends Job {
 
         final String previewGadgetUrl;
         try {
-            IgCredentials igCredentials = new IgCredentials(username, password);
+            IgCredentials igCredentials = IgCredentials.createCurrentInstance(username, password);
 
             // Get hosting URL.
             String hostingFolder = IgHostFileJob.OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
