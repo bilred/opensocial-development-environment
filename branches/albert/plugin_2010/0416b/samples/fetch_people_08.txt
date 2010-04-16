@@ -1,0 +1,29 @@
+<!-- Fetch a person and friends code for OpenSocial 0.8 -->
+<div>
+  <button onclick='fetchPeople();'>Fetch people and friends</button>
+  <div>
+    <span id='viewer'></span>
+    <ul id='friends'></ul>
+  </div>
+</div>
+<script type='text/javascript'>
+function fetchPeople() {
+  var req = opensocial.newDataRequest();
+  req.add(req.newFetchPersonRequest(opensocial.IdSpec.PersonId.VIEWER), 'viewer');
+  var params = {};
+  params[opensocial.IdSpec.Field.USER_ID] = opensocial.IdSpec.PersonId.VIEWER;
+  params[opensocial.IdSpec.Field.GROUP_ID] = 'FRIENDS';
+  var idSpec = opensocial.newIdSpec(params);
+  req.add(req.newFetchPeopleRequest(idSpec), 'friends');
+  req.send(function(data) {
+    var viewer = data.get('viewer').getData();
+    document.getElementById('viewer').innerHTML = viewer.getId();
+    var friends = data.get('friends').getData();
+    document.getElementById('friends').innerHTML = '';
+    friends.each(function(friend) {
+      document.getElementById('friends').innerHTML += '<li>' + friend.getId() + '</li>';
+    });
+    gadgets.window.adjustHeight();
+  });
+}
+</script>
