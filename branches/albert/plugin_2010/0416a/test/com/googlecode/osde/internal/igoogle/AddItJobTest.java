@@ -80,12 +80,12 @@ public class AddItJobTest {
         // Execute modifyHostingUrlForGadgetFileAndUploadIt().
         IgAddItJob job = new IgAddItJob("preview", gadgetXmlIFile, null, false);
         IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
-        job.modifyHostingUrlForGadgetFileAndUploadIt(IgAddItJob.LOCAL_HOST_URL,
+        job.modifyHostingUrlForGadgetFileAndUploadIt(IgConstants.LOCAL_HOST_URL,
                 NEW_HOSTING_URL, igCredentials, "/osde/preview/"); // TODO: (p1) make string const
 
         // Make sure the modified file contains the string of NEW_HOSTING_URL.
         File modifiedFile = new File(IgAddItJob.getOsdeWorkFolder(),
-                IgAddItJob.GADGET_FILE_WITH_MODIFIED_URL);
+                IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
         String modifiedFileContent = IOUtils.toString(new FileReader(modifiedFile));
         logger.fine("modifiedFileContent: " + modifiedFileContent);
         Assert.assertTrue(modifiedFileContent.indexOf(NEW_HOSTING_URL) != -1);
