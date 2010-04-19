@@ -70,8 +70,9 @@ public class IgPublishDialog extends TitleAreaDialog {
         gadgetUrlLabel.setText("Gadget URL: ");
         gadgetUrlLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
         gadgetUrlText = new Text(panel, SWT.SINGLE);
-        gadgetUrlText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+        gadgetUrlText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
         gadgetUrlText.setText(IgAddItDialog.getCurrentGadgetUrl());
+        gadgetUrlText.setFocus();
 
         return composite;
     }
