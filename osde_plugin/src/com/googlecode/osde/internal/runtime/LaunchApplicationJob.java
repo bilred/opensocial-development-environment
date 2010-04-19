@@ -29,6 +29,7 @@ import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.ConnectionException;
 import com.googlecode.osde.internal.profiling.ProfilingBrowserSupport;
 import com.googlecode.osde.internal.shindig.ApplicationService;
+import com.googlecode.osde.internal.shindig.ShindigServer;
 import com.googlecode.osde.internal.utils.Logger;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
@@ -100,20 +101,22 @@ public class LaunchApplicationJob extends Job {
                       + "&ownerId=" + URLEncoder.encode(owner, "UTF-8");
             }
             if (project != null) {
-                kicker =
-                        "http://localhost:8080/gadgets/files/osdecontainer/index.html?url=http://localhost:8080/"
-                                + project.getName().replace(" ", "%20") + "/"
-                                + url.replace(" ", "%20")
-                                + "&view=" + view
-                                + "&width=" + URLEncoder.encode(width, "UTF-8")
-                                + "&appId=" + URLEncoder.encode(appId, "UTF-8")
-                                + "&country=" + URLEncoder.encode(country, "UTF-8")
-                                + "&language=" + URLEncoder.encode(language, "UTF-8")
-                                + "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8")
-                                + "&use_st=" + (notUseSecurityToken ? "0" : "1")
-                                + forSt;
+                kicker = "http://localhost:" + ShindigServer.DEFAULT_SHINDIG_PORT
+                        + "/gadgets/files/osdecontainer/index.html?url=http://localhost:"
+                        + ShindigServer.DEFAULT_SHINDIG_PORT + "/"
+                        + project.getName().replace(" ", "%20") + "/"
+                        + url.replace(" ", "%20")
+                        + "&view=" + view
+                        + "&width=" + URLEncoder.encode(width, "UTF-8")
+                        + "&appId=" + URLEncoder.encode(appId, "UTF-8")
+                        + "&country=" + URLEncoder.encode(country, "UTF-8")
+                        + "&language=" + URLEncoder.encode(language, "UTF-8")
+                        + "&userPrefs=" + URLEncoder.encode(upJson, "UTF-8")
+                        + "&use_st=" + (notUseSecurityToken ? "0" : "1")
+                        + forSt;
             } else {
-                kicker = "http://localhost:8080/gadgets/files/osdecontainer/index.html?url="
+                kicker = "http://localhost:" + ShindigServer.DEFAULT_SHINDIG_PORT
+                        + "/gadgets/files/osdecontainer/index.html?url="
                         + url.replace(" ", "%20")
                         + "&view=" + view
                         + "&width=" + URLEncoder.encode(width, "UTF-8")

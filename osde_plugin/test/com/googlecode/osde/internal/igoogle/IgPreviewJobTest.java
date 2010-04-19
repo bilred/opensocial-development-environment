@@ -82,12 +82,12 @@ public class IgPreviewJobTest {
         	    new IgPreviewJob(null, null, "preview", gadgetXmlIFile, null, false, false);
         IgCredentials igCredentials =
     	        IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
-        job.modifyHostingUrlForGadgetFileAndUploadIt(IgPreviewJob.LOCAL_HOST_URL,
+        job.modifyHostingUrlForGadgetFileAndUploadIt(IgConstants.LOCAL_HOST_URL,
                 NEW_HOSTING_URL, igCredentials, "/osde/preview/");
 
         // Make sure the modified file contains the string of NEW_HOSTING_URL.
         File modifiedFile = new File(IgPreviewJob.getOsdeWorkFolder(),
-                IgPreviewJob.GADGET_FILE_WITH_MODIFIED_URL);
+                IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
         String modifiedFileContent = IOUtils.toString(new FileReader(modifiedFile));
         logger.fine("modifiedFileContent: " + modifiedFileContent);
         Assert.assertTrue(modifiedFileContent.indexOf(NEW_HOSTING_URL) != -1);

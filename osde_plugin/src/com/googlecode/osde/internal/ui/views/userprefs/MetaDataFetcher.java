@@ -34,6 +34,7 @@ import org.json.simple.parser.JSONParser;
 
 import com.googlecode.osde.internal.editors.pref.UserPrefModel;
 import com.googlecode.osde.internal.editors.pref.UserPrefModel.DataType;
+import com.googlecode.osde.internal.shindig.ShindigServer;
 
 public class MetaDataFetcher {
 
@@ -49,7 +50,8 @@ public class MetaDataFetcher {
         body = body.replace("$language$", language);
         body = body.replace("$view$", view);
         body = body.replace("$url$", url);
-        HttpPost post = new HttpPost("http://localhost:8080/gadgets/metadata");
+        HttpPost post = new HttpPost(
+        		"http://localhost:" + ShindigServer.DEFAULT_SHINDIG_PORT + "/gadgets/metadata");
         post.setHeader("Content-Type", "text/json");
         post.setEntity(new StringEntity(body, "UTF-8"));
         String response = client.execute(post, new BasicResponseHandler());

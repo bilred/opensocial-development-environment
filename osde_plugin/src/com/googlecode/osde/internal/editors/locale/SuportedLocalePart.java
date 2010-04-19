@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.googlecode.osde.internal.shindig.ShindigServer;
 import com.googlecode.osde.internal.utils.Logger;
 
 import com.googlecode.osde.internal.gadgets.model.MessageBundle;
@@ -209,7 +210,8 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
                     bundleFile.create(in, true, new NullProgressMonitor());
 
                     locale.setMessages(
-                            "http://localhost:8080/" + project.getName() + "/" + fileName);
+                            "http://localhost:" + ShindigServer.DEFAULT_SHINDIG_PORT
+                            + "/" + project.getName() + "/" + fileName);
                     locale.setMessageBundle(msgBundle);
                 } catch (CoreException e) {
                     logger.warn("Creating the message bundle file failed.", e);

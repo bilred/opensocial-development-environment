@@ -25,6 +25,7 @@ import java.util.Set;
 
 import com.googlecode.osde.internal.gadgets.ViewName;
 import com.googlecode.osde.internal.gadgets.ViewType;
+import com.googlecode.osde.internal.shindig.ShindigServer;
 import com.googlecode.osde.internal.utils.Gadgets;
 import com.googlecode.osde.internal.utils.ResourceUtil;
 
@@ -148,10 +149,10 @@ public class GadgetXmlFileGenerator {
                     } else {
                         if (viewData.isCreateExternalJavaScript()) {
                             content += "\n";
-                            content +=
-                                    "<script type=\"text/javascript\" src=\"http://localhost:8080/"
-                                            + project.getName() + "/" + viewData.getFilename()
-                                            + "\"></script>\n";
+                            content += "<script type=\"text/javascript\" src=\"http://localhost:"
+                            	    + ShindigServer.DEFAULT_SHINDIG_PORT + "/"
+                                    + project.getName() + "/" + viewData.getFilename()
+                                    + "\"></script>\n";
                             if (viewData.isCreateInitFunction()) {
                                 content += "\n";
                                 content += "<script type=\"text/javascript\">\n";
