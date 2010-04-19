@@ -79,7 +79,8 @@ public class AddItJobTest {
 
         // Execute modifyHostingUrlForGadgetFileAndUploadIt().
         IgAddItJob job = new IgAddItJob("preview", gadgetXmlIFile, null, false);
-        IgCredentials igCredentials = new IgCredentials(TEST_USERNAME, TEST_PASSWORD);
+        IgCredentials igCredentials =
+        	    IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
         job.modifyHostingUrlForGadgetFileAndUploadIt(IgAddItJob.LOCAL_HOST_URL,
                 NEW_HOSTING_URL, igCredentials, "/osde/preview/"); // TODO: (p1) make string const
 
