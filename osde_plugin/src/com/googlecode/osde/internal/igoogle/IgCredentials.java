@@ -59,10 +59,25 @@ public class IgCredentials {
     private final String publicId;
     private final String pref;
     private final String editToken;
+    
+    private static IgCredentials currentInstance = null;
+    
+    static boolean hasCurrentInstance() {
+    	return currentInstance != null;
+    }
+    
+    static IgCredentials getCurrentInstance() {
+    	return currentInstance;
+    }
+    
+    static IgCredentials createCurrentInstance(String username, String password)
+            throws IgException {
+    	currentInstance = new IgCredentials(username, password);
+    	return currentInstance;
+    }
 
-    IgCredentials(String username, String password) throws IgException {
+    private IgCredentials(String username, String password) throws IgException {
         // Retrieve sid.
-        // TODO: Support save igCredentials in session.
         // TODO: Support captcha.
         sid = retrieveSid(username, password, null, null);
         validateSid();
