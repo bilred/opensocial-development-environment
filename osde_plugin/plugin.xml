@@ -143,9 +143,9 @@
          <action
                class="com.googlecode.osde.internal.igoogle.IgCleanAction"
                id="com.googlecode.osde.runActionCleanOnIGoogle2"
-               label="iGoogle - Clean Preview Files"
+               label="iGoogle - Clean Hosted Files"
                menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
-               tooltip="iGoogle - Clean Preview Files">
+               tooltip="iGoogle - Clean Hosted Files">
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPublishAction"
@@ -425,7 +425,7 @@
          <action
                class="com.googlecode.osde.internal.igoogle.IgCleanAction"
                id="com.googlecode.osde.runActionCleanOnIGoogle1"
-               label="iGoogle - Clean Preview Files"
+               label="iGoogle - Clean Hosted Files"
                menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
          </action>
          <action
