@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * The popup dialog asking for users authentication info etc in order
- * for cleaning preview files as hosted on iGoogle.
+ * for cleaning files as hosted on iGoogle.
  *
  * @author albert.cheng.ig@gmail.com
  */

@@ -142,7 +142,7 @@ public class IgPreviewDialog extends TitleAreaDialog {
     @Override
     protected Point getInitialSize() {
         logger.fine("getInitialSize");
-        return new Point(350, 300);
+        return new Point(350, 350);
     }
 
     @Override

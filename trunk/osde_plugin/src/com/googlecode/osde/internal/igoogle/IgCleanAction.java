@@ -31,7 +31,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
- * The Action for cleaning preview files as hosted on iGoogle server.
+ * The Action for cleaning files as hosted on iGoogle server.
  *
  * @author albert.cheng.ig@gmail.com
  */

@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * The job to clean preview files as hosted on iGoogle.
+ * The job to clean files as hosted on iGoogle.
  *
  * @author albert.cheng.ig@gmail.com
  */
@@ -59,7 +59,7 @@ public class IgCleanJob extends Job {
         // Get hosting folder.
         String hostingFolder = IgHostFileJob.OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
         try {
-            // Clean all preview files as hosted on iGoogle.
+            // Clean all files as hosted on iGoogle.
             IgHostingUtil.cleanFiles(username, password, hostingFolder);
         } catch (IgException e) {
             logger.warn(e.getMessage());
