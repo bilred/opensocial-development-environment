@@ -105,7 +105,13 @@ public class IgAddItDialog extends TitleAreaDialog {
         // Prepare extra description.
         Label extraDescription = new Label(panel, SWT.LEFT);
         extraDescription.setText(
-        		"\nNOTE: Please remember to login to your iGoogle page on browser.\n");
+        		"\nNOTES:\n"
+        		+ "* This features allows you to configure the following two social features\n"
+        		+ "for your gadget.\n"
+        		+ "(1) Know who I am and see my Friends group\n"
+        		+ "(2) Post my activities to Updates.\n"
+        		+ "* You need to do this only once for each URL of the hosted gadget file.\n"
+        		+ "* Please remember to login to your iGoogle page on browser.\n");
         extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 
         return composite;
@@ -114,7 +120,7 @@ public class IgAddItDialog extends TitleAreaDialog {
     @Override
     protected Point getInitialSize() {
         logger.fine("getInitialSize");
-        return new Point(750, 300);
+        return new Point(750, 400);
     }
 
     @Override
