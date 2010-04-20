@@ -143,14 +143,14 @@
          <action
                class="com.googlecode.osde.internal.igoogle.IgCleanAction"
                id="com.googlecode.osde.runActionCleanOnIGoogle2"
-               label="iGoogle - Clean Hosted Files"
+               label="Clean Hosted Files"
                menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
                tooltip="iGoogle - Clean Hosted Files">
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPublishAction"
                id="com.googlecode.osde.runActionPublishOnIGoogle2"
-               label="iGoogle - Publish Gadget"
+               label="Publish Gadget"
                menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
                tooltip="iGoogle - Publish Gadget">
          </action>
@@ -158,7 +158,7 @@
                class="com.googlecode.osde.internal.igoogle.IgPreviewAction"
                enablesFor="1"
                id="com.googlecode.osde.runActionPreviewOnIGoogle2"
-               label="iGoogle - Preview Gadget"
+               label="Preview Gadget"
                menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
                tooltip="iGoogle - Preview Gadget">
             <enablement>
@@ -171,7 +171,7 @@
          <action
                class="com.googlecode.osde.internal.igoogle.IgAddItAction"
                id="com.googlecode.osde.runActionAddToIGoogle2"
-               label="iGoogle - Add Gadget"
+               label="Add Gadget"
                menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
                tooltip="iGoogle - Add Gadget">
          </action>
@@ -179,7 +179,7 @@
                class="com.googlecode.osde.internal.igoogle.IgHostFileAction"
                enablesFor="1"
                id="com.googlecode.osde.runActionHostFileIGoogle2"
-               label="iGoogle - Host Files"
+               label="Host Files"
                menubarPath="opensocialMenu/iGoogleMenu/iGoogleGroup"
                tooltip="iGoogle - Host Files">
             <enablement>
@@ -425,20 +425,20 @@
          <action
                class="com.googlecode.osde.internal.igoogle.IgCleanAction"
                id="com.googlecode.osde.runActionCleanOnIGoogle1"
-               label="iGoogle - Clean Hosted Files"
+               label="Clean Hosted Files"
                menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPublishAction"
                id="com.googlecode.osde.runActionPublishOnIGoogle1"
-               label="iGoogle - Publish Gadget"
+               label="Publish Gadget"
                menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgPreviewAction"
                enablesFor="1"
                id="com.googlecode.osde.runActionPreviewOnIGoogle1"
-               label="iGoogle - Preview Gadget"
+               label="Preview Gadget"
                menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
             <enablement>
                <objectState
@@ -450,14 +450,14 @@
          <action
                class="com.googlecode.osde.internal.igoogle.IgAddItAction"
                id="com.googlecode.osde.runActionAddToIGoogle1"
-               label="iGoogle - Add Gadget"
+               label="Add Gadget"
                menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
          </action>
          <action
                class="com.googlecode.osde.internal.igoogle.IgHostFileAction"
                enablesFor="1"
                id="com.googlecode.osde.runActionHostFileIGoogle1"
-               label="iGoogle - Host Files"
+               label="Host Files"
                menubarPath="com.googlecode.osde.menu2/iGoogleMenu2/iGoogleGroup2">
             <enablement>
                <objectState
