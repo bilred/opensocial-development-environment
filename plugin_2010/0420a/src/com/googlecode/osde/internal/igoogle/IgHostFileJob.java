@@ -188,13 +188,13 @@ public class IgHostFileJob extends Job {
             
             // For dialog message
             StringBuilder dialogMessage = new StringBuilder();
-            dialogMessage.append("All your following gadget files:\n");
+            dialogMessage.append("All your following gadget files:\n\n");
             for (String urlOfHostedFile : relativeFilePathsOfHostedFiles) {
             	dialogMessage.append(urlOfHostedFile).append("\n");
             }
             dialogMessage.append("\nand the gadget file for preview: ");
             dialogMessage.append(IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
-            dialogMessage.append("\nare hosted at this URL:\n");
+            dialogMessage.append("\nare hosted under this URL:\n\n");
             dialogMessage.append(hostingUrl);
             
             int dialogImageType = MessageDialog.INFORMATION;
