@@ -2,26 +2,24 @@
 <feature
       id="com.googlecode.osde.feature"
       label="OpenSocial Development Environment Feature"
-      version="0.7.0.C5"
+      version="0.9.0"
       provider-name="OSDE Project"
       plugin="com.googlecode.osde">
 
    <description url="http://www.eisbahn.jp/trac/osde">
       OSDE is the Eclipse Plug-in for developing OpenSocial application.
-When you want to develop and test a social application, you must
-use some SNS(ex. orkut.com, myspace.com, hi5.com and etc.). The
-method of using some SNS may give you a strong limitation. For
-example, you must make friends for testing your social application,
-must find some SNS supported many functions, and the server of
-the SNS must be running stablity.
-
+When you develop and test a social application, you must
+use some SNS (ex. igoogle, orkut, myspace, hi5, and etc.). The
+method of using some SNS may give you a limitation. For
+examples, you must make friends for testing your social application,
+you must find some SNS supported many functions, and the server of
+the SNS must be running stablity, etc.
 OSDE is able to provide the individual SNS for you. In this small
 SNS, you can make some person&apos;s profiles, social graph, groups,
 and most test data. These test data will be used in your OpenSocial
 application. In addition, OSDE provides some views for listing
 people, appdata, activities, and etc. in your eclipse. By using
-these views, you will be able to control most test data and testing
-your application.
+these views, you will be able to control most test data.
    </description>
 
    <copyright>
