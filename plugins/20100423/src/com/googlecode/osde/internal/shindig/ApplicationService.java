@@ -24,6 +24,8 @@ import com.googlecode.osde.internal.utils.ApplicationInformation;
 
 import com.googlecode.osde.internal.gadgets.model.Module;
 
+import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationDataMapImpl;
+
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationMemberImpl;
 import org.apache.shindig.social.opensocial.hibernate.entities.UserPrefImpl;
@@ -121,6 +123,13 @@ public class ApplicationService {
     public void deleteApplication(ApplicationImpl application) {
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery(
+                "select a from ApplicationDataMapImpl a where a.application = :application");
+        query.setParameter("application", application);
+        List<ApplicationDataMapImpl> applicationDataMaps = (List<ApplicationDataMapImpl>)query.list();
+        for (ApplicationDataMapImpl applicationDataMap : applicationDataMaps) {
+            session.delete(applicationDataMap);
+        }
+        query = session.createQuery(
                 "select a from ApplicationMemberImpl a where a.application = :application");
         query.setParameter("application", application);
         List<ApplicationMemberImpl> applicationMembers = (List<ApplicationMemberImpl>)query.list();
