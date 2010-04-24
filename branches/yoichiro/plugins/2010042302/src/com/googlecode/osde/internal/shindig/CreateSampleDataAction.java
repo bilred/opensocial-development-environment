@@ -84,20 +84,25 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
                 Job job = new Job("Create sample data") {
                     @Override
                     protected IStatus run(IProgressMonitor monitor) {
-                        monitor.beginTask("Create sample data", 6);
-                        Person canonical = createCanonicalPerson();
-                        personService.storePerson(canonical);
-                        monitor.worked(1);
-                        Person john = createJohnPerson();
-                        personService.storePerson(john);
-                        monitor.worked(1);
-                        Person jane = createJanePerson();
-                        personService.storePerson(jane);
-                        monitor.worked(1);
-                        Person george = createGeorgePerson();
-                        personService.storePerson(george);
-                        monitor.worked(1);
-                        setRelations(canonical, john, jane, george, personService);
+                        Person[] samplePeople = createSamplePeople();
+                        monitor.beginTask("Create sample data", samplePeople.length + 2);
+                        if (isAlreadyExistsPeople(samplePeople, personService)) {
+                            shell.getDisplay().syncExec(new Runnable() {
+                                public void run() {
+                                    IWorkbenchWindow window =
+                                        targetPart.getSite().getWorkbenchWindow();
+                                    MessageDialog.openWarning(
+                                            window.getShell(), "Warning", "Sample people already exists.");
+                                }
+                            });
+                            monitor.done();
+                            return Status.OK_STATUS;
+                        }
+                        for (Person p : samplePeople) {
+                            personService.storePerson(p);
+                            monitor.worked(1);
+                        }
+                        setRelations(samplePeople, personService);
                         monitor.worked(1);
                         shell.getDisplay().syncExec(new Runnable() {
                             public void run() {
@@ -126,8 +131,23 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         }
     }
 
-    protected void setRelations(Person canonical, Person john, Person jane, Person george,
-            PersonService personService) {
+    protected boolean isAlreadyExistsPeople(Person[] samplePeople, PersonService personService) {
+        List<Person> entities = personService.getPeople();
+        for (Person sample : samplePeople) {
+            for (Person entity: entities) {
+                if (entity.getId().equals(sample.getId())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected void setRelations(Person[] samplePeople, PersonService personService) {
+        Person canonical = samplePeople[0];
+        Person john = samplePeople[1];
+        Person jane = samplePeople[2];
+        Person george = samplePeople[3];
         personService.createRelationship("friends", canonical, john);
         personService.createRelationship("friends", canonical, jane);
         personService.createRelationship("friends", canonical, george);
@@ -135,6 +155,15 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         personService.createRelationship("friends", john, george);
         personService.createRelationship("friends", jane, john);
         personService.createRelationship("friends", george, john);
+    }
+    
+    protected Person[] createSamplePeople() {
+        return  new Person[] {
+                createCanonicalPerson(),
+                createJohnPerson(),
+                createJanePerson(),
+                createGeorgePerson()
+        };
     }
 
     protected Person createGeorgePerson() {
