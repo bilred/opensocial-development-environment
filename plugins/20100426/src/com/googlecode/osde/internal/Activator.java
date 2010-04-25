@@ -247,10 +247,20 @@ public class Activator extends AbstractUIPlugin {
 
     public void disconnect(final IWorkbenchWindow window, final IProgressMonitor monitor) {
         if (session != null && session.isConnected()) {
-            session.close();
+            try {
+                session.close();
+            } catch(Exception e) {
+                // Ignore this exception, only logging it.
+                logger.warn("Closing the session failed.", e);
+            }
         }
         if (sessionFactory != null && !sessionFactory.isClosed()) {
-            sessionFactory.close();
+            try {
+                sessionFactory.close();
+            } catch(Exception e) {
+                // Ignore this exception, only logging it.
+                logger.warn("Closing the session factory failed.", e);
+            }
         }
         session = null;
         sessionFactory = null;
