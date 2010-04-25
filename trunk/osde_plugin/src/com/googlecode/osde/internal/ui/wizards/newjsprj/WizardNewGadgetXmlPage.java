@@ -122,6 +122,7 @@ public class WizardNewGadgetXmlPage extends WizardPage {
         titleText.addListener(SWT.Modify, modifyListener);
         createLabel(infoGroup, "Author Email(*):");
         authorEmailText = createText(infoGroup);
+        authorEmailText.setText(System.getProperty("user.name") + "@your.domain");
         authorEmailText.addListener(SWT.Modify, modifyListener);
         createLabel(infoGroup, "Description:");
         descriptionText = new Text(infoGroup, SWT.MULTI | SWT.BORDER);
@@ -213,6 +214,18 @@ public class WizardNewGadgetXmlPage extends WizardPage {
         data.setViews(viewsButton.getSelection());
         data.setGadgetSpecFilename(specFilenameText.getText().trim());
         return data;
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            if (titleText.getText().length() == 0) {
+                NewOpenSocialProjectResourceWizard wizard =
+                        (NewOpenSocialProjectResourceWizard)getWizard();
+                titleText.setText(wizard.getProjectName());
+            }
+        }
     }
 
 }
