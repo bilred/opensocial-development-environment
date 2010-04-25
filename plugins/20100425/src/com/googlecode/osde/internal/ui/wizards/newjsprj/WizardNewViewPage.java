@@ -90,8 +90,8 @@ public class WizardNewViewPage extends WizardPage {
                 && profile.getNotSupportButton().getSelection()
                 && preview.getNotSupportButton().getSelection()
                 && home.getNotSupportButton().getSelection()) {
-            setErrorMessage(null);
-            setMessage("It is necessary to support at least one view.");
+            setMessage(null);
+            setErrorMessage("It is necessary to support at least one view.");
             return false;
         }
         Set<ViewName> keySet = partMap.keySet();
@@ -100,8 +100,8 @@ public class WizardNewViewPage extends WizardPage {
             if (part.getUrlButton().getSelection()) {
                 String text = part.getHrefText().getText().trim();
                 if (text.length() == 0) {
-                    setErrorMessage(null);
-                    setMessage("Location URL for " + viewName.getDisplayName() + " view is empty.");
+                    setMessage(null);
+                    setErrorMessage("Location URL for " + viewName.getDisplayName() + " view is empty.");
                     return false;
                 }
             } else if (part.getHtmlButton().getSelection()) {
@@ -109,16 +109,16 @@ public class WizardNewViewPage extends WizardPage {
                         && !part.getPeopleButton().getSelection()
                         && !part.getActivityButton().getSelection()
                         && !part.getAppDataButton().getSelection()) {
-                    setErrorMessage(null);
-                    setMessage(
+                    setMessage(null);
+                    setErrorMessage(
                             "It is necessary to select at least one type for generating sample code in "
                                     + viewName.getDisplayName() + " view.");
                     return false;
                 }
                 if (part.getCreateJavaScriptFileButton().getSelection()
                         && (part.getFilenameText().getText().trim().length() == 0)) {
-                    setErrorMessage(null);
-                    setMessage("The JavaScript file name for " + viewName.getDisplayName()
+                    setMessage(null);
+                    setErrorMessage("The JavaScript file name for " + viewName.getDisplayName()
                             + " view is empty.");
                     return false;
                 }
