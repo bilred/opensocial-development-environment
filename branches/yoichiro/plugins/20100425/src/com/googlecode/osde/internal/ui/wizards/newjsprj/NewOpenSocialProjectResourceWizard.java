@@ -103,6 +103,10 @@ public class NewOpenSocialProjectResourceWizard extends BasicNewProjectResourceW
     public IProject getNewProject() {
         return newProject;
     }
+    
+    public String getProjectName() {
+        return mainPage.getProjectName();
+    }
 
     @Override
     public boolean performFinish() {
