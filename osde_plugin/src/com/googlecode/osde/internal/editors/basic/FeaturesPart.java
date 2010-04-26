@@ -184,6 +184,7 @@ public class FeaturesPart extends AbstractFormPart {
         freeFraturesList.setContentProvider(new FreeFeaturesListContentProvider());
         freeFraturesList.setLabelProvider(new FreeFeaturesListLabelProvider());
         final SectionPart part = new SectionPart(section);
+        part.initialize(managedForm);
         freeFraturesList.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 getManagedForm().fireSelectionChanged(part, event.getSelection());
