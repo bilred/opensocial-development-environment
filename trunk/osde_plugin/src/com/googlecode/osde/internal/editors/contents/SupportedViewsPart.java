@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.googlecode.osde.internal.common.SectionPartFactory;
 import com.googlecode.osde.internal.gadgets.ViewType;
 import com.googlecode.osde.internal.gadgets.model.Module;
 import com.googlecode.osde.internal.gadgets.model.Module.Content;
@@ -88,7 +89,7 @@ public class SupportedViewsPart extends SectionPart implements IPartSelectionLis
         supportedViewList = new TableViewer(table);
         supportedViewList.setContentProvider(new SupportedViewListContentProvider());
         supportedViewList.setLabelProvider(new SupportedViewListLabelProvider());
-        final SectionPart part = new SectionPart(section);
+        final SectionPart part = SectionPartFactory.create(section, getManagedForm());
         supportedViewList.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 getManagedForm().fireSelectionChanged(part, event.getSelection());
