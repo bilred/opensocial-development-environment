@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.ConnectionException;
+import com.googlecode.osde.internal.common.SectionPartFactory;
 import com.googlecode.osde.internal.shindig.ActivityService;
 import com.googlecode.osde.internal.shindig.ShindigLauncher;
 
@@ -121,7 +122,7 @@ public class ActivitiesPart extends SectionPart implements IPartSelectionListene
         activityList = new TableViewer(table);
         activityList.setContentProvider(new ActivityListContentProvider());
         activityList.setLabelProvider(new ActivityListLabelProvider());
-        final SectionPart part = new SectionPart(section);
+        final SectionPart part = SectionPartFactory.create(section, getManagedForm());
         activityList.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 getManagedForm().fireSelectionChanged(part, event.getSelection());

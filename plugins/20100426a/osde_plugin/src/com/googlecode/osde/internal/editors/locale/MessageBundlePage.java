@@ -20,6 +20,8 @@ package com.googlecode.osde.internal.editors.locale;
 import java.util.List;
 import java.util.Map;
 
+import com.googlecode.osde.internal.common.SectionPartFactory;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -59,6 +61,10 @@ public class MessageBundlePage implements IDetailsPage {
         super();
         this.page = page;
     }
+    
+    public void initialize(IManagedForm managedForm) {
+        this.managedForm = managedForm;
+    }
 
     public void createContents(Composite parent) {
         GridLayout layout = new GridLayout(1, false);
@@ -74,7 +80,7 @@ public class MessageBundlePage implements IDetailsPage {
         Composite messagesPane = toolkit.createComposite(messagesSection);
         messagesPane.setLayout(new GridLayout(2, false));
         messagesSection.setClient(messagesPane);
-        final SectionPart messagesPart = new SectionPart(messagesSection);
+        final SectionPart messagesPart = SectionPartFactory.create(messagesSection, managedForm);
         //
         internalButton = new Button(messagesPane, SWT.CHECK);
         internalButton.setText("Define this message bundle in Gadget XML file.");
@@ -116,10 +122,6 @@ public class MessageBundlePage implements IDetailsPage {
         layoutData.verticalAlignment = GridData.BEGINNING;
         deleteButton.setLayoutData(layoutData);
         deleteButton.addSelectionListener(new RemoveButtonSelectionListener(messagesPart));
-    }
-
-    public void initialize(IManagedForm managedForm) {
-        this.managedForm = managedForm;
     }
 
     public void selectionChanged(IFormPart part, ISelection selection) {

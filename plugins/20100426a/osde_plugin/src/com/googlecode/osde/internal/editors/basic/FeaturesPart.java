@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.googlecode.osde.internal.common.SectionPartFactory;
 import com.googlecode.osde.internal.gadgets.FeatureName;
 import com.googlecode.osde.internal.gadgets.model.Module;
 import com.googlecode.osde.internal.gadgets.model.Module.ModulePrefs;
@@ -183,8 +184,8 @@ public class FeaturesPart extends AbstractFormPart {
         freeFraturesList = new TableViewer(table);
         freeFraturesList.setContentProvider(new FreeFeaturesListContentProvider());
         freeFraturesList.setLabelProvider(new FreeFeaturesListLabelProvider());
-        final SectionPart part = new SectionPart(section);
-        part.initialize(managedForm);
+         //
+        final SectionPart part = SectionPartFactory.create(section, getManagedForm());
         freeFraturesList.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 getManagedForm().fireSelectionChanged(part, event.getSelection());
