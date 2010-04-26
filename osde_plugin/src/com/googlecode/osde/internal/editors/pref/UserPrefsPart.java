@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.googlecode.osde.internal.common.SectionPartFactory;
 import com.googlecode.osde.internal.editors.pref.UserPrefModel.DataType;
 
 import com.googlecode.osde.internal.gadgets.model.Module;
@@ -89,7 +90,7 @@ public class UserPrefsPart extends SectionPart implements IPartSelectionListener
         userPrefsList = new TableViewer(table);
         userPrefsList.setContentProvider(new UserPrefsListContentProvider());
         userPrefsList.setLabelProvider(new UserPrefsListLabelProvider());
-        final SectionPart part = new SectionPart(section);
+        final SectionPart part = SectionPartFactory.create(section, getManagedForm());
         userPrefsList.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 getManagedForm().fireSelectionChanged(part, event.getSelection());

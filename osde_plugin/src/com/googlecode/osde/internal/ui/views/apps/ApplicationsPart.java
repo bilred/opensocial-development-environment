@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.ConnectionException;
+import com.googlecode.osde.internal.common.SectionPartFactory;
 import com.googlecode.osde.internal.shindig.ApplicationService;
 
 import org.apache.shindig.social.opensocial.hibernate.entities.ApplicationImpl;
@@ -83,7 +84,7 @@ public class ApplicationsPart extends SectionPart implements IPartSelectionListe
         applicationList = new TableViewer(table);
         applicationList.setContentProvider(new ApplicationListContentProvider());
         applicationList.setLabelProvider(new ApplicationListLabelProvider());
-        final SectionPart part = new SectionPart(section);
+        final SectionPart part = SectionPartFactory.create(section, getManagedForm());
         applicationList.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 getManagedForm().fireSelectionChanged(part, event.getSelection());

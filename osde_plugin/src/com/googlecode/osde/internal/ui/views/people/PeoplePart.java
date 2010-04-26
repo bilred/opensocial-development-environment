@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.ConnectionException;
+import com.googlecode.osde.internal.common.SectionPartFactory;
 import com.googlecode.osde.internal.shindig.PersonService;
 
 import org.apache.shindig.social.opensocial.model.Person;
@@ -84,7 +85,7 @@ public class PeoplePart extends SectionPart implements IPartSelectionListener {
         personList = new TableViewer(table);
         personList.setContentProvider(new PersonListContentProvider());
         personList.setLabelProvider(new PersonListLabelProvider());
-        final SectionPart part = new SectionPart(section);
+        final SectionPart part = SectionPartFactory.create(section, getManagedForm());
         personList.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 getManagedForm().fireSelectionChanged(part, event.getSelection());
