@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.ConnectionException;
+import com.googlecode.osde.internal.common.SectionPartFactory;
 import com.googlecode.osde.internal.shindig.PersonService;
 
 import org.apache.commons.lang.StringUtils;
@@ -151,7 +152,7 @@ public class PersonPage implements IDetailsPage {
         Composite basicPane = toolkit.createComposite(basicSection);
         basicPane.setLayout(new GridLayout(4, false));
         basicSection.setClient(basicPane);
-        final SectionPart basicPart = new SectionPart(basicSection);
+        final SectionPart basicPart = SectionPartFactory.create(basicSection, managedForm);
         ValueChangeListener basicValueChangeListener = new ValueChangeListener(basicPart);
         //
         toolkit.createLabel(basicPane, "ID:");
@@ -181,7 +182,7 @@ public class PersonPage implements IDetailsPage {
         Composite generalPane = toolkit.createComposite(generalSection);
         generalPane.setLayout(new GridLayout(2, false));
         generalSection.setClient(generalPane);
-        final SectionPart generalPart = new SectionPart(generalSection);
+        final SectionPart generalPart = SectionPartFactory.create(generalSection, managedForm);
         ValueChangeListener generalValueChangeListener = new ValueChangeListener(generalPart);
         //
         aboutMeText = createText("About me:", generalPane, toolkit, generalValueChangeListener);
@@ -269,7 +270,7 @@ public class PersonPage implements IDetailsPage {
         Composite namePane = toolkit.createComposite(nameSection);
         namePane.setLayout(new GridLayout(2, false));
         nameSection.setClient(namePane);
-        final SectionPart namePart = new SectionPart(nameSection);
+        final SectionPart namePart = SectionPartFactory.create(nameSection, managedForm);
         ValueChangeListener nameValueChangeListener = new ValueChangeListener(namePart);
         //
         givenNameText = createText("Given name:", namePane, toolkit, nameValueChangeListener);
@@ -292,7 +293,7 @@ public class PersonPage implements IDetailsPage {
         Composite bodyTypePane = toolkit.createComposite(bodyTypeSection);
         bodyTypePane.setLayout(new GridLayout(2, false));
         bodyTypeSection.setClient(bodyTypePane);
-        final SectionPart bodyTypePart = new SectionPart(bodyTypeSection);
+        final SectionPart bodyTypePart = SectionPartFactory.create(bodyTypeSection, managedForm);
         ValueChangeListener bodyTypeValueChangeListener = new ValueChangeListener(bodyTypePart);
         //
         buildText = createText("Build:", bodyTypePane, toolkit, bodyTypeValueChangeListener);

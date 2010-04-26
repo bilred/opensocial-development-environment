@@ -20,6 +20,7 @@ package com.googlecode.osde.internal.editors.pref;
 import java.util.Map;
 
 import com.googlecode.osde.internal.Activator;
+import com.googlecode.osde.internal.common.SectionPartFactory;
 import com.googlecode.osde.internal.editors.pref.UserPrefModel.DataType;
 
 import org.apache.commons.lang.StringUtils;
@@ -99,7 +100,7 @@ public class UserPrefPage implements IDetailsPage {
         Composite detailsPane = toolkit.createComposite(detailsSection);
         detailsPane.setLayout(new GridLayout(2, false));
         detailsSection.setClient(detailsPane);
-        final SectionPart detailsPart = new SectionPart(detailsSection);
+        final SectionPart detailsPart = SectionPartFactory.create(detailsSection, managedForm);
         UpdateFieldsListener listener = new UpdateFieldsListener(detailsPart);
         //
         toolkit.createLabel(detailsPane, "Name:");
@@ -151,7 +152,7 @@ public class UserPrefPage implements IDetailsPage {
         Composite enumValuesPane = toolkit.createComposite(enumValuesSection);
         enumValuesPane.setLayout(new GridLayout(2, false));
         enumValuesSection.setClient(enumValuesPane);
-        final SectionPart enumValuesPart = new SectionPart(enumValuesSection);
+        final SectionPart enumValuesPart = SectionPartFactory.create(enumValuesSection, managedForm);
         //
         Table table = toolkit.createTable(enumValuesPane,
                 SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);

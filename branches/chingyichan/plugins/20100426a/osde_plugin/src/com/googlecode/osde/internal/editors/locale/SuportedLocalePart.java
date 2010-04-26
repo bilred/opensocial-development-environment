@@ -26,6 +26,7 @@ import java.util.Map;
 import com.googlecode.osde.internal.shindig.ShindigServer;
 import com.googlecode.osde.internal.utils.Logger;
 
+import com.googlecode.osde.internal.common.SectionPartFactory;
 import com.googlecode.osde.internal.gadgets.model.MessageBundle;
 import com.googlecode.osde.internal.gadgets.model.MessageBundle.Msg;
 import com.googlecode.osde.internal.gadgets.model.Module;
@@ -103,7 +104,7 @@ public class SuportedLocalePart extends SectionPart implements IPartSelectionLis
         supportedLocaleList = new TableViewer(table);
         supportedLocaleList.setContentProvider(new SupportedLocaleListContentProvider());
         supportedLocaleList.setLabelProvider(new SupportedLocaleListLabelProvider());
-        final SectionPart part = new SectionPart(section);
+        final SectionPart part = SectionPartFactory.create(section, getManagedForm());
         supportedLocaleList.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 getManagedForm().fireSelectionChanged(part, event.getSelection());
