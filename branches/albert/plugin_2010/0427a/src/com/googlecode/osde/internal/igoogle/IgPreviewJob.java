@@ -52,19 +52,17 @@ public class IgPreviewJob extends Job {
     private static Logger logger = new Logger(IgPreviewJob.class);
     static final String HOST_PROJECT_NAME_FOR_PREVIEW = "preview";
 
-    private String username;
-    private String password;
+    private IgCredentials igCredentials;
     private String hostProjectName;
     private IFile gadgetXmlIFile;
     private Shell shell;
     private boolean useCanvasView;
     private boolean useExternalBrowser;
 
-    public IgPreviewJob(String username, String password, String hostProjectName,
+    public IgPreviewJob(IgCredentials igCredentials, String hostProjectName,
     		IFile gadgetXmlIFile, Shell shell, boolean useCanvasView, boolean useExternalBrowser) {
         super("iGoogle - Preview Gadget");
-        this.username = username;
-        this.password = password;
+        this.igCredentials = igCredentials;
         this.hostProjectName = hostProjectName;
         this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
@@ -78,8 +76,6 @@ public class IgPreviewJob extends Job {
 
         final String previewGadgetUrl;
         try {
-            IgCredentials igCredentials = IgCredentials.createCurrentInstance(username, password);
-
             // Get hosting URL.
             String hostingFolder = IgHostFileJob.OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
             String hostingUrl = IgHostingUtil.formHostingUrl(

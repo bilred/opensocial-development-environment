@@ -95,7 +95,7 @@ public class IgAddItDialog extends TitleAreaDialog {
         useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
         useExternalBrowserCheckbox.setText("Use an external Web browser");
         useExternalBrowserCheckbox.setLayoutData(
-                new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+                new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
         IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
         if (!browserSupport.isInternalWebBrowserAvailable()) {
             useExternalBrowserCheckbox.setSelection(true);
