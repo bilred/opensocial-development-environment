@@ -57,7 +57,7 @@ public class IgAddItJob extends Job {
     private boolean useExternalBrowser;
 
     public IgAddItJob(String gadgetUrl, IFile gadgetXmlIFile, Shell shell,
-    		boolean useExternalBrowser) {
+            boolean useExternalBrowser) {
         super("iGoogle - Add a Gadget");
         this.gadgetUrl = gadgetUrl;
         this.gadgetXmlIFile = gadgetXmlIFile;
@@ -124,7 +124,7 @@ public class IgAddItJob extends Job {
 
             // Upload the modified gadget file to iGoogle.
             IgHostingUtil.uploadFile(igCredentials, osdeWorkFolder.getAbsolutePath(),
-            		IgConstants.GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
+                    IgConstants.GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
         } catch (IOException e) {
             logger.warn(e.getMessage());
             throw new IgException(e);

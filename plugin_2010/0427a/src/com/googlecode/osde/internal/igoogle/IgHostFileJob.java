@@ -51,12 +51,12 @@ public class IgHostFileJob extends Job {
 
     private String username;
     private String password;
-	private String hostProjectName;
+    private String hostProjectName;
     private IFile gadgetXmlIFile;
     private Shell shell;
 
     public IgHostFileJob(String username, String password, String hostProjectName,
-    		IFile gadgetXmlIFile, Shell shell) {
+            IFile gadgetXmlIFile, Shell shell) {
         super("iGoogle - Host Gadget Files");
         this.username = username;
         this.password = password;
@@ -82,11 +82,11 @@ public class IgHostFileJob extends Job {
             String eclipseProjectName = gadgetXmlIFile.getProject().getName();
             String oldHostingUrl = IgConstants.LOCAL_HOST_URL + eclipseProjectName + "/";
             modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
-            		hostingFolder);
+                    hostingFolder);
 
             // Upload files.
             relativeFilePathsOfHostedFiles = IgHostingUtil.uploadFiles(
-            		igCredentials, gadgetXmlIFile.getProject(), hostingFolder);
+                    igCredentials, gadgetXmlIFile.getProject(), hostingFolder);
         } catch (IgException e) {
             logger.warn(e.getMessage());
             monitor.setCanceled(true);
@@ -146,11 +146,11 @@ public class IgHostFileJob extends Job {
 
             // Upload the modified gadget file to iGoogle.
             IgHostingUtil.uploadFile(igCredentials, osdeWorkFolder.getAbsolutePath(),
-            		IgConstants.GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
+                    IgConstants.GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
             
             // Update IgAddItDialog.currentGadgetUrl
             IgAddItDialog.setCurrentGadgetUrl(
-            		newHostingUrl + IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
+                    newHostingUrl + IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
 
 
         } catch (IOException e) {
@@ -173,13 +173,13 @@ public class IgHostFileJob extends Job {
     }
 
     private class HostingFileRunnable implements Runnable {
-    	String hostingUrl;
-    	List<String> relativeFilePathsOfHostedFiles;
+        String hostingUrl;
+        List<String> relativeFilePathsOfHostedFiles;
 
         private HostingFileRunnable(String hostingUrl,
-        		List<String> relativeFilePathsOfHostedFiles) {
-        	this.hostingUrl = hostingUrl;
-        	this.relativeFilePathsOfHostedFiles = relativeFilePathsOfHostedFiles;
+                List<String> relativeFilePathsOfHostedFiles) {
+            this.hostingUrl = hostingUrl;
+            this.relativeFilePathsOfHostedFiles = relativeFilePathsOfHostedFiles;
         }
 
         public void run() {
@@ -190,7 +190,7 @@ public class IgHostFileJob extends Job {
             StringBuilder dialogMessage = new StringBuilder();
             dialogMessage.append("All your following gadget files:\n\n");
             for (String urlOfHostedFile : relativeFilePathsOfHostedFiles) {
-            	dialogMessage.append(urlOfHostedFile).append("\n");
+                dialogMessage.append(urlOfHostedFile).append("\n");
             }
             dialogMessage.append("\nand the gadget file for preview: ");
             dialogMessage.append(IgConstants.GADGET_FILE_WITH_MODIFIED_URL);

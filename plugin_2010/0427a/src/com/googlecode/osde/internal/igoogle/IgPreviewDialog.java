@@ -115,12 +115,12 @@ public class IgPreviewDialog extends TitleAreaDialog {
             useExternalBrowserCheckbox.setSelection(true);
             useExternalBrowserCheckbox.setEnabled(false);
         }
-        
+
         // Prepare extra description.
         Label extraDescription = new Label(panelComposite, SWT.LEFT);
         extraDescription.setText("\nNOTE: Some social-related functions might not work here\n"
-        		+ "unless you check some options via the OSDE feature:\n"
-        		+ "iGoogle - Add Gadget.");
+                + "unless you check some options via the OSDE feature:\n"
+                + "iGoogle - Add Gadget.");
         extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 
         return dialogAreaComposite;
@@ -131,13 +131,13 @@ public class IgPreviewDialog extends TitleAreaDialog {
         Composite credentialsComposite = new Composite(dialogAreaComposite, SWT.NONE);
         credentialsComposite.setLayout(new GridLayout(3, true));
         credentialsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        
+
         // Prepare useCurrentIgCredentialsButton.
         usePreviousIgCredentialsButton = new Button(credentialsComposite, SWT.RADIO);
         usePreviousIgCredentialsButton.setText("Use the previous Google account session");
         usePreviousIgCredentialsButton.setLayoutData(
                 new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-        
+
         // Prepare useNewIgCredentialsButton.
         Button useNewIgCredentialsButton = new Button(credentialsComposite, SWT.RADIO);
         useNewIgCredentialsButton.setText("Use the following Google account");
@@ -148,14 +148,14 @@ public class IgPreviewDialog extends TitleAreaDialog {
         Composite newCredentialsComposite = new Composite(dialogAreaComposite, SWT.NONE);
         newCredentialsComposite.setLayout(new GridLayout(3, true));
         newCredentialsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        
+
         // Prepare username.
         Label usernameLabel = new Label(newCredentialsComposite, SWT.LEFT);
         usernameLabel.setText("\tUsername: ");
         usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         usernameText = new Text(newCredentialsComposite, SWT.SINGLE);
         usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-        
+
         // Set mouse focus.
         // If this text field is unavailable, the focus will be passed to the next available one.
         usernameText.setFocus();
@@ -167,43 +167,43 @@ public class IgPreviewDialog extends TitleAreaDialog {
         passwordText = new Text(newCredentialsComposite, SWT.SINGLE);
         passwordText.setEchoChar('*');
         passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-        
+
         // Prepare selection listeners for radio buttons.
         usePreviousIgCredentialsButton.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// Do nothing.
-			}
+            public void widgetDefaultSelected(SelectionEvent e) {
+                // Do nothing.
+            }
 
-			public void widgetSelected(SelectionEvent e) {
-				usernameText.setEnabled(false);
-				passwordText.setEnabled(false);
-			}     	
+            public void widgetSelected(SelectionEvent e) {
+                usernameText.setEnabled(false);
+                passwordText.setEnabled(false);
+            }
         });
         useNewIgCredentialsButton.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// Do nothing.
-			}
+            public void widgetDefaultSelected(SelectionEvent e) {
+                // Do nothing.
+            }
 
-			public void widgetSelected(SelectionEvent e) {
-				usernameText.setEnabled(true);
-				passwordText.setEnabled(true);
-			}     	
+            public void widgetSelected(SelectionEvent e) {
+                usernameText.setEnabled(true);
+                passwordText.setEnabled(true);
+            }
         });
-        
+
         // Configure "selection" and "enabled" initially.
         boolean hasCurrentIgCredentials = IgCredentials.hasCurrentInstance();
         if (hasCurrentIgCredentials) {
             usePreviousIgCredentialsButton.setEnabled(true);
             usePreviousIgCredentialsButton.setSelection(true);
-			usernameText.setEnabled(false);
-			passwordText.setEnabled(false);
+            usernameText.setEnabled(false);
+            passwordText.setEnabled(false);
         } else {
             usePreviousIgCredentialsButton.setEnabled(false);
             useNewIgCredentialsButton.setSelection(true);
         }
-	}
+    }
 
-	@Override
+    @Override
     protected Point getInitialSize() {
         logger.fine("getInitialSize");
         return new Point(350, 350);
@@ -212,7 +212,7 @@ public class IgPreviewDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         logger.fine("okPressed");
-        
+
         usePreviousIgCredentials = usePreviousIgCredentialsButton.getSelection();
         username = usernameText.getText();
         password = passwordText.getText();
@@ -225,9 +225,9 @@ public class IgPreviewDialog extends TitleAreaDialog {
         logger.fine("gonna close");
         close();
     }
-    
+
     boolean isUsePreviousIgCredentials() {
-    	return usePreviousIgCredentials;
+        return usePreviousIgCredentials;
     }
 
     String getUsername() {
@@ -239,7 +239,7 @@ public class IgPreviewDialog extends TitleAreaDialog {
     }
 
     String getHostProjectName() {
-    	return hostProjectName;
+        return hostProjectName;
     }
 
     boolean isUseCanvasView() {
