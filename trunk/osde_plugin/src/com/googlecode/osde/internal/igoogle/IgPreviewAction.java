@@ -74,12 +74,23 @@ public class IgPreviewAction
         logger.fine("openResult: " + openResult);
         if (openResult == Window.OK) {
             logger.fine("OK pressed");
-            String username = dialog.getUsername();
-            String password = dialog.getPassword();
             String hostProjectName = dialog.getHostProjectName();
             boolean useCanvasView = dialog.isUseCanvasView();
             boolean useExternalBrowser = dialog.isUseExternalBrowser();
-            Job job = new IgPreviewJob(username, password, hostProjectName, gadgetXmlIFile, shell,
+
+            IgCredentials igCredentials = null;
+            if (IgCredentials.hasCurrentInstance()) {
+                igCredentials = IgCredentials.getCurrentInstance();
+            } else {
+                String username = dialog.getUsername();
+                String password = dialog.getPassword();
+                try {
+                    igCredentials = IgCredentials.createCurrentInstance(username, password);
+                } catch (IgException e) {
+                    logger.error("Invalid iGoogle Credentials (username, password)");
+                }
+            }
+            Job job = new IgPreviewJob(igCredentials, hostProjectName, gadgetXmlIFile, shell,
                     useCanvasView, useExternalBrowser);
             logger.fine("job: " + job);
             job.schedule();

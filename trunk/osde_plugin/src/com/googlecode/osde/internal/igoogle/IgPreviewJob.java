@@ -52,19 +52,17 @@ public class IgPreviewJob extends Job {
     private static Logger logger = new Logger(IgPreviewJob.class);
     static final String HOST_PROJECT_NAME_FOR_PREVIEW = "preview";
 
-    private String username;
-    private String password;
+    private IgCredentials igCredentials;
     private String hostProjectName;
     private IFile gadgetXmlIFile;
     private Shell shell;
     private boolean useCanvasView;
     private boolean useExternalBrowser;
 
-    public IgPreviewJob(String username, String password, String hostProjectName,
-    		IFile gadgetXmlIFile, Shell shell, boolean useCanvasView, boolean useExternalBrowser) {
+    public IgPreviewJob(IgCredentials igCredentials, String hostProjectName,
+            IFile gadgetXmlIFile, Shell shell, boolean useCanvasView, boolean useExternalBrowser) {
         super("iGoogle - Preview Gadget");
-        this.username = username;
-        this.password = password;
+        this.igCredentials = igCredentials;
         this.hostProjectName = hostProjectName;
         this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
@@ -78,8 +76,6 @@ public class IgPreviewJob extends Job {
 
         final String previewGadgetUrl;
         try {
-            IgCredentials igCredentials = IgCredentials.createCurrentInstance(username, password);
-
             // Get hosting URL.
             String hostingFolder = IgHostFileJob.OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
             String hostingUrl = IgHostingUtil.formHostingUrl(
@@ -89,11 +85,11 @@ public class IgPreviewJob extends Job {
             String eclipseProjectName = gadgetXmlIFile.getProject().getName();
             String oldHostingUrl = IgConstants.LOCAL_HOST_URL + eclipseProjectName + "/";
             modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
-            		hostingFolder);
+                    hostingFolder);
 
             // Upload files.
             IgHostingUtil.uploadFiles(igCredentials, gadgetXmlIFile.getProject(),
-            		hostingFolder);
+                    hostingFolder);
 
             // Form hosted gadget file url.
             String urlOfHostedGadgetFile = hostingUrl + IgConstants.GADGET_FILE_WITH_MODIFIED_URL;
@@ -159,7 +155,7 @@ public class IgPreviewJob extends Job {
 
             // Upload the modified gadget file to iGoogle.
             IgHostingUtil.uploadFile(igCredentials, osdeWorkFolder.getAbsolutePath(),
-            		IgConstants.GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
+                    IgConstants.GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
         } catch (IOException e) {
             logger.warn(e.getMessage());
             throw new IgException(e);
