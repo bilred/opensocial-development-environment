@@ -88,7 +88,7 @@ public class IgHostingUtilTest {
             throws IgException {
         // Prepare Authentication.
         IgCredentials igCredentials =
-    	        IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
+                IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
         String sid = igCredentials.getSid();
         logger.info("sid: " + sid);
         String publicId = igCredentials.getPublicId();
@@ -143,7 +143,7 @@ public class IgHostingUtilTest {
 
         // Test and verify the method call.
         IgCredentials igCredentials =
-    	        IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
+                IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
         logger.info("igCredentials:\n" + igCredentials);
         uploadFiles(igCredentials, project, TEST_HOSTING_FOLDER);
         verify(project, targetFolder, targetFolderLocation);
@@ -160,7 +160,7 @@ public class IgHostingUtilTest {
             throws IgException {
         // Prepare Authentication.
         IgCredentials igCredentials =
-    	        IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
+                IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
 
         // Verify preview legacy gadget.
         String previewUrlForLegacyGadget =
