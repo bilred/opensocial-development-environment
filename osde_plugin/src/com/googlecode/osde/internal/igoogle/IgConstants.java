@@ -27,6 +27,6 @@ import com.googlecode.osde.internal.shindig.ShindigServer;
  */
 public class IgConstants {
     static final String LOCAL_HOST_URL =
-    	    "http://localhost:" + ShindigServer.DEFAULT_SHINDIG_PORT + "/";
+            "http://localhost:" + ShindigServer.DEFAULT_SHINDIG_PORT + "/";
     static final String GADGET_FILE_WITH_MODIFIED_URL = "modified_gadget.xml";
 }

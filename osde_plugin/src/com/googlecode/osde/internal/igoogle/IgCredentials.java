@@ -63,17 +63,17 @@ public class IgCredentials {
     private static IgCredentials currentInstance = null;
     
     static boolean hasCurrentInstance() {
-    	return currentInstance != null;
+        return currentInstance != null;
     }
     
     static IgCredentials getCurrentInstance() {
-    	return currentInstance;
+        return currentInstance;
     }
     
     static IgCredentials createCurrentInstance(String username, String password)
             throws IgException {
-    	currentInstance = new IgCredentials(username, password);
-    	return currentInstance;
+        currentInstance = new IgCredentials(username, password);
+        return currentInstance;
     }
 
     private IgCredentials(String username, String password) throws IgException {

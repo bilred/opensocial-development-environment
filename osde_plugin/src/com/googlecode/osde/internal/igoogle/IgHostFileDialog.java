@@ -96,7 +96,7 @@ public class IgHostFileDialog extends TitleAreaDialog {
         // Prepare extra description.
         Label extraDescription = new Label(panel, SWT.LEFT);
         extraDescription.setText("\nNOTE: It might take a few hours to have these files to be\n"
-        		+ "updated on iGoogle.");
+                + "updated on iGoogle.");
         extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 
         return composite;
@@ -129,6 +129,6 @@ public class IgHostFileDialog extends TitleAreaDialog {
     }
     
     String getHostProjectName() {
-    	return hostProjectName;
+        return hostProjectName;
     }
 }

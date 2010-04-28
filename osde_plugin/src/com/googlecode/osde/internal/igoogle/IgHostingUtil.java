@@ -85,7 +85,7 @@ public class IgHostingUtil {
      * @throws IgException
      */
     static List<String> uploadFiles(IgCredentials igCredentials, IProject project,
-    		String hostingFolder)
+            String hostingFolder)
             throws IgException {
         String uploadFromPath =
                 project.getFolder(GadgetBuilder.TARGET_FOLDER_NAME).getLocation().toOSString();
@@ -93,7 +93,7 @@ public class IgHostingUtil {
 
         // Upload files.
         List<String> relativeFilePaths =
-        	    IgHostingUtil.uploadFiles(igCredentials, uploadFromPath, hostingFolder);
+                IgHostingUtil.uploadFiles(igCredentials, uploadFromPath, hostingFolder);
 
         return relativeFilePaths;
     }

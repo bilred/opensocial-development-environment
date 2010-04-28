@@ -127,6 +127,6 @@ public class IgCleanDialog extends TitleAreaDialog {
     }
     
     String getHostProjectName() {
-    	return hostProjectName;
+        return hostProjectName;
     }
 }
