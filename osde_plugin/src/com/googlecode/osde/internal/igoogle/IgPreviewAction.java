@@ -20,85 +20,30 @@ package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * The Action for processing preview a gadget against iGoogle server.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgPreviewAction
-        implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+public class IgPreviewAction extends IgGadgetSelectedAction {
     private static Logger logger = new Logger(IgPreviewAction.class);
-
-    private IFile gadgetXmlIFile;
-    private Shell shell;
-
-    public void init(IWorkbenchWindow window) {
-        logger.fine("in init");
-        IWorkbenchPart targetPart = window.getActivePage().getActivePart();
-        shell = targetPart.getSite().getShell();
-    }
-
-    public void selectionChanged(IAction action, ISelection selection) {
-        logger.fine("in selectionChanged");
-        if (selection instanceof IStructuredSelection) {
-            IStructuredSelection structured = (IStructuredSelection) selection;
-            Object element = structured.getFirstElement();
-            if (element instanceof IFile) {
-                gadgetXmlIFile = (IFile) element;
-            }
-        }
-    }
-
-    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        logger.fine("in setActivePart");
-        shell = targetPart.getSite().getShell();
-    }
 
     public void run(IAction action) {
         logger.fine("in run");
-        IgPreviewDialog dialog = new IgPreviewDialog(shell);
-        logger.fine("dialog: " + dialog);
+        IgPreviewDialog dialog = new IgPreviewDialog(getShell());
         int openResult = dialog.open();
-        logger.fine("openResult: " + openResult);
         if (openResult == Window.OK) {
-            logger.fine("OK pressed");
+            IgCredentials igCredentials = retrieveCredentials(dialog);
             String hostProjectName = dialog.getHostProjectName();
             boolean useCanvasView = dialog.isUseCanvasView();
             boolean useExternalBrowser = dialog.isUseExternalBrowser();
-
-            IgCredentials igCredentials = null;
-            if (IgCredentials.hasCurrentInstance()) {
-                igCredentials = IgCredentials.getCurrentInstance();
-            } else {
-                String username = dialog.getUsername();
-                String password = dialog.getPassword();
-                try {
-                    igCredentials = IgCredentials.createCurrentInstance(username, password);
-                } catch (IgException e) {
-                    logger.error("Invalid iGoogle Credentials (username, password)");
-                }
-            }
-            Job job = new IgPreviewJob(igCredentials, hostProjectName, gadgetXmlIFile, shell,
-                    useCanvasView, useExternalBrowser);
-            logger.fine("job: " + job);
+            Job job = new IgPreviewJob(getShell(), igCredentials, hostProjectName,
+            		getGadgetXmlIFile(), useCanvasView, useExternalBrowser);
             job.schedule();
         }
-        logger.fine("leaving run");
-    }
-
-    public void dispose() {
-        logger.fine("in dispose");
     }
 }

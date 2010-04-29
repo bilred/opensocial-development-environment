@@ -56,12 +56,12 @@ public class IgAddItJob extends Job {
     private Shell shell;
     private boolean useExternalBrowser;
 
-    public IgAddItJob(String gadgetUrl, IFile gadgetXmlIFile, Shell shell,
-            boolean useExternalBrowser) {
+    public IgAddItJob(Shell shell, IFile gadgetXmlIFile, String gadgetUrl,
+    		boolean useExternalBrowser) {
         super("iGoogle - Add a Gadget");
-        this.gadgetUrl = gadgetUrl;
-        this.gadgetXmlIFile = gadgetXmlIFile;
         this.shell = shell;
+        this.gadgetXmlIFile = gadgetXmlIFile;
+        this.gadgetUrl = gadgetUrl;
         this.useExternalBrowser = useExternalBrowser;
     }
 
