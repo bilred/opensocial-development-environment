@@ -318,7 +318,7 @@ public class IgHostingUtil {
 
         return sb.toString();
     }
-    
+
     /**
      * Forms the url for previewing a legacy gadget.
      *
@@ -470,13 +470,5 @@ public class IgHostingUtil {
         for (String file : hostedFilesList) {
             deleteFile(file, igCredentials);
         }
-    }
-
-    static void cleanFiles(String username, String password, String hostingFolder)
-            throws IgException {
-        IgCredentials igCredentials = IgCredentials.createCurrentInstance(username, password);
-
-        // Clean files.
-        IgHostingUtil.cleanFiles(igCredentials, hostingFolder);
     }
 }

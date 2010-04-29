@@ -49,20 +49,18 @@ public class IgHostFileJob extends Job {
     private static Logger logger = new Logger(IgHostFileJob.class);
     static final String OSDE_HOST_BASE_FOLDER = "/osde/";
 
-    private String username;
-    private String password;
+    IgCredentials igCredentials;
     private String hostProjectName;
     private IFile gadgetXmlIFile;
     private Shell shell;
 
-    public IgHostFileJob(String username, String password, String hostProjectName,
-            IFile gadgetXmlIFile, Shell shell) {
+    public IgHostFileJob(Shell shell, IgCredentials igCredentials, String hostProjectName,
+    		IFile gadgetXmlIFile) {
         super("iGoogle - Host Gadget Files");
-        this.username = username;
-        this.password = password;
+        this.shell = shell;
+        this.igCredentials = igCredentials;
         this.hostProjectName = hostProjectName;
         this.gadgetXmlIFile = gadgetXmlIFile;
-        this.shell = shell;
     }
 
     protected IStatus run(final IProgressMonitor monitor) {
@@ -72,17 +70,14 @@ public class IgHostFileJob extends Job {
         List<String> relativeFilePathsOfHostedFiles = null;
         String hostingUrl = null;
         try {
-            IgCredentials igCredentials = IgCredentials.createCurrentInstance(username, password);
-
             // Get hosting URL.
             String hostingFolder = OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
             hostingUrl = IgHostingUtil.formHostingUrl(igCredentials.getPublicId(), hostingFolder);
-            
+
             // Modify gadget file with new hosting url, and upload it.
             String eclipseProjectName = gadgetXmlIFile.getProject().getName();
             String oldHostingUrl = IgConstants.LOCAL_HOST_URL + eclipseProjectName + "/";
-            modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, igCredentials,
-                    hostingFolder);
+            modifyHostingUrlForGadgetFileAndUploadIt(oldHostingUrl, hostingUrl, hostingFolder);
 
             // Upload files.
             relativeFilePathsOfHostedFiles = IgHostingUtil.uploadFiles(
@@ -110,7 +105,7 @@ public class IgHostFileJob extends Job {
      * @throws IgException
      */
     void modifyHostingUrlForGadgetFileAndUploadIt(String oldHostingUrl, String newHostingUrl,
-            IgCredentials igCredentials, String hostingFolder)
+            String hostingFolder)
             throws IgException {
         // Get gadget file's full path.
         IProject project = gadgetXmlIFile.getProject();
@@ -147,7 +142,7 @@ public class IgHostFileJob extends Job {
             // Upload the modified gadget file to iGoogle.
             IgHostingUtil.uploadFile(igCredentials, osdeWorkFolder.getAbsolutePath(),
                     IgConstants.GADGET_FILE_WITH_MODIFIED_URL, hostingFolder);
-            
+
             // Update IgAddItDialog.currentGadgetUrl
             IgAddItDialog.setCurrentGadgetUrl(
                     newHostingUrl + IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
@@ -185,7 +180,7 @@ public class IgHostFileJob extends Job {
         public void run() {
             logger.fine("in Runnable's run");
             String dialogTitle = "Your Files Are Hosted.";
-            
+
             // For dialog message
             StringBuilder dialogMessage = new StringBuilder();
             dialogMessage.append("All your following gadget files:\n\n");
@@ -196,7 +191,7 @@ public class IgHostFileJob extends Job {
             dialogMessage.append(IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
             dialogMessage.append("\nare hosted under this URL:\n\n");
             dialogMessage.append(hostingUrl);
-            
+
             int dialogImageType = MessageDialog.INFORMATION;
             Image dialogTitleImage = null;
             String[] dialogButtonLabels = {"OK"};
