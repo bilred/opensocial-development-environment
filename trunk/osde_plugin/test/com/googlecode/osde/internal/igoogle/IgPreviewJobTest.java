@@ -81,7 +81,7 @@ public class IgPreviewJobTest {
         IgCredentials igCredentials =
                 IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
         IgPreviewJob job =
-            new IgPreviewJob(igCredentials, "preview", gadgetXmlIFile, null, false, false);
+            new IgPreviewJob(null, igCredentials, "preview", gadgetXmlIFile, false, false);
         job.modifyHostingUrlForGadgetFileAndUploadIt(IgConstants.LOCAL_HOST_URL,
                 NEW_HOSTING_URL, igCredentials, "/osde/preview/");
 

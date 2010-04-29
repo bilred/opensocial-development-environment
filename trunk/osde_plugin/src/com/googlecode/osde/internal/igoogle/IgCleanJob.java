@@ -38,15 +38,13 @@ public class IgCleanJob extends Job {
     private static Logger logger = new Logger(IgCleanJob.class);
 
     private Shell shell;
-    private String username;
-    private String password;
+    IgCredentials igCredentials;
     private String hostProjectName;
 
-    public IgCleanJob(Shell shell, String username, String password, String hostProjectName) {
+    public IgCleanJob(Shell shell, IgCredentials igCredentials, String hostProjectName) {
         super("iGoogle - Clean Host Files");
         this.shell = shell;
-        this.username = username;
-        this.password = password;
+        this.igCredentials = igCredentials;
         this.hostProjectName = hostProjectName;
     }
 
@@ -60,7 +58,7 @@ public class IgCleanJob extends Job {
         String hostingFolder = IgHostFileJob.OSDE_HOST_BASE_FOLDER + hostProjectName + "/";
         try {
             // Clean all files as hosted on iGoogle.
-            IgHostingUtil.cleanFiles(username, password, hostingFolder);
+            IgHostingUtil.cleanFiles(igCredentials, hostingFolder);
         } catch (IgException e) {
             logger.warn(e.getMessage());
             monitor.setCanceled(true);

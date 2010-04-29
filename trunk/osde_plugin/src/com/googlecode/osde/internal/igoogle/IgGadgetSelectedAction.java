@@ -20,28 +20,33 @@ package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
- * The Action for adding a gadget to iGoogle page.
+ * The base Action for iGoogle-related features where a gadget xml
+ * file must be selected.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgAddItAction extends IgGadgetSelectedAction {
-    private static Logger logger = new Logger(IgAddItAction.class);
+public abstract class IgGadgetSelectedAction extends IgBaseAction {
+    private static Logger logger = new Logger(IgGadgetSelectedAction.class);
 
-    public void run(IAction action) {
-        logger.fine("in run");
-        IgAddItDialog dialog = new IgAddItDialog(getShell());
-        int openResult = dialog.open();
-        if (openResult == Window.OK) {
-            String gadgetUrl = dialog.getGadgetUrl();
-            boolean useExternalBrowser = dialog.isUseExternalBrowser();
-            Job job =
-            	    new IgAddItJob(getShell(), getGadgetXmlIFile(), gadgetUrl, useExternalBrowser);
-            job.schedule();
+    private IFile gadgetXmlIFile;
+    IFile getGadgetXmlIFile() {
+    	return gadgetXmlIFile;
+    }
+
+    public void selectionChanged(IAction action, ISelection selection) {
+    	logger.fine("(in selectionChanged");
+        if (selection instanceof IStructuredSelection) {
+            IStructuredSelection structured = (IStructuredSelection) selection;
+            Object element = structured.getFirstElement();
+            if (element instanceof IFile) {
+                gadgetXmlIFile = (IFile) element;
+            }
         }
     }
 }

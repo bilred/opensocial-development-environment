@@ -22,54 +22,25 @@ import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * The Action for cleaning files as hosted on iGoogle server.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgCleanAction
-        implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+public class IgCleanAction extends IgBaseAction {
     private static Logger logger = new Logger(IgCleanAction.class);
-
-    private Shell shell;
-
-    public void init(IWorkbenchWindow window) {
-        logger.fine("in init");
-        IWorkbenchPart targetPart = window.getActivePage().getActivePart();
-        shell = targetPart.getSite().getShell();
-    }
-
-    public void selectionChanged(IAction action, ISelection selection) {
-        logger.fine("in selectionChanged");
-    }
-
-    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        logger.fine("in setActivePart");
-        shell = targetPart.getSite().getShell();
-    }
 
     public void run(IAction action) {
         logger.fine("in run");
-        IgCleanDialog dialog = new IgCleanDialog(shell);
+        IgCleanDialog dialog = new IgCleanDialog(getShell());
         int openResult = dialog.open();
         if (openResult == Window.OK) {
-            String username = dialog.getUsername();
-            String password = dialog.getPassword();
+            IgCredentials igCredentials = this.retrieveCredentials(dialog);
             String hostProjectName = dialog.getHostProjectName();
-            Job job = new IgCleanJob(shell, username, password, hostProjectName);
+            Job job = new IgCleanJob(getShell(), igCredentials, hostProjectName);
             job.schedule();
         }
-    }
-
-    public void dispose() {
-        logger.fine("in dispose");
     }
 }
