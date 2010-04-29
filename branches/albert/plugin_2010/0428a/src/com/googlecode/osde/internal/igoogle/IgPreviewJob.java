@@ -59,13 +59,13 @@ public class IgPreviewJob extends Job {
     private boolean useCanvasView;
     private boolean useExternalBrowser;
 
-    public IgPreviewJob(IgCredentials igCredentials, String hostProjectName,
-            IFile gadgetXmlIFile, Shell shell, boolean useCanvasView, boolean useExternalBrowser) {
+    public IgPreviewJob(Shell shell, IgCredentials igCredentials, String hostProjectName,
+            IFile gadgetXmlIFile, boolean useCanvasView, boolean useExternalBrowser) {
         super("iGoogle - Preview Gadget");
+        this.shell = shell;
         this.igCredentials = igCredentials;
         this.hostProjectName = hostProjectName;
         this.gadgetXmlIFile = gadgetXmlIFile;
-        this.shell = shell;
         this.useCanvasView = useCanvasView;
         this.useExternalBrowser = useExternalBrowser;
     }

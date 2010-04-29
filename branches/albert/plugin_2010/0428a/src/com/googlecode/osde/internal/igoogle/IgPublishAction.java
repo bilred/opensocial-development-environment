@@ -22,57 +22,24 @@ import com.googlecode.osde.internal.utils.Logger;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * The Action for processing publish a gadget against iGoogle server.
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgPublishAction
-        implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+public class IgPublishAction extends IgBaseAction {
     private static Logger logger = new Logger(IgPublishAction.class);
-
-    private Shell shell;
-
-    public void init(IWorkbenchWindow window) {
-        logger.fine("in init");
-        IWorkbenchPart targetPart = window.getActivePage().getActivePart();
-        shell = targetPart.getSite().getShell();
-    }
-
-    public void selectionChanged(IAction action, ISelection selection) {
-        logger.fine("in selectionChanged");
-    }
-
-    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        logger.fine("in setActivePart");
-        shell = targetPart.getSite().getShell();
-    }
 
     public void run(IAction action) {
         logger.fine("in run");
-        IgPublishDialog dialog = new IgPublishDialog(shell);
-        logger.fine("dialog: " + dialog);
+        IgPublishDialog dialog = new IgPublishDialog(getShell());
         int openResult = dialog.open();
-        logger.fine("openResult: " + openResult);
         if (openResult == Window.OK) {
-            logger.fine("OK pressed");
             String hostProjectName = dialog.getGadgetUrl();
-            Job job = new IgPublishJob(shell, hostProjectName);
-            logger.fine("job: " + job);
+            Job job = new IgPublishJob(getShell(), hostProjectName);
             job.schedule();
         }
-        logger.fine("leaving run");
-    }
-
-    public void dispose() {
-        logger.fine("in dispose");
     }
 }

@@ -20,10 +20,7 @@ package com.googlecode.osde.internal.igoogle;
 
 import com.googlecode.osde.internal.utils.Logger;
 
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -32,7 +29,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
@@ -42,17 +38,9 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  *
  * @author albert.cheng.ig@gmail.com
  */
-public class IgPreviewDialog extends TitleAreaDialog {
+public class IgPreviewDialog extends IgCredentialsDialog {
     private static Logger logger = new Logger(IgPreviewDialog.class);
 
-    private boolean usePreviousIgCredentials;
-    private Button usePreviousIgCredentialsButton;
-    private String username;
-    private Text usernameText;
-    private String password;
-    private Text passwordText;
-    private String hostProjectName;
-    private Text hostProjectNameText;
     private boolean useCanvasView;
     private Button useCanvasViewButton;
     private boolean useExternalBrowser;
@@ -66,31 +54,21 @@ public class IgPreviewDialog extends TitleAreaDialog {
     protected Control createDialogArea(Composite parent) {
         logger.fine("createDialogArea");
 
-        // Disable help dialog.
-        setDialogHelpAvailable(false);
-
         // Set title and message.
         setTitle("Preview Gadget on iGoogle");
         setMessage("The allows you to preview a gadget on iGoogle.");
 
+        // Disable help button.
+        setHelpAvailable(false);
+
         // Prepare dialog area composite.
         Composite dialogAreaComposite = (Composite) super.createDialogArea(parent);
-
-        // Prepare credentialsComposite.
-        prepareCredentialsComposite(dialogAreaComposite);
+        prepareComposite(dialogAreaComposite);
 
         // Prepare panel composite.
         Composite panelComposite = new Composite(dialogAreaComposite, SWT.NONE);
         panelComposite.setLayout(new GridLayout(3, true));
         panelComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        // Prepare host-project-name.
-        Label hostProjectNameLabel = new Label(panelComposite, SWT.LEFT);
-        hostProjectNameLabel.setText("Project name: ");
-        hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        hostProjectNameText = new Text(panelComposite, SWT.SINGLE);
-        hostProjectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-        hostProjectNameText.setText(IgPreviewJob.HOST_PROJECT_NAME_FOR_PREVIEW);
 
         // Prepare radio buttons for choosing view type.
         Label viewTypeLabel = new Label(panelComposite, SWT.LEFT);
@@ -126,120 +104,16 @@ public class IgPreviewDialog extends TitleAreaDialog {
         return dialogAreaComposite;
     }
 
-    private void prepareCredentialsComposite(Composite dialogAreaComposite) {
-        // Prepare credentialsComposite.
-        Composite credentialsComposite = new Composite(dialogAreaComposite, SWT.NONE);
-        credentialsComposite.setLayout(new GridLayout(3, true));
-        credentialsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        // Prepare useCurrentIgCredentialsButton.
-        usePreviousIgCredentialsButton = new Button(credentialsComposite, SWT.RADIO);
-        usePreviousIgCredentialsButton.setText("Use the previous Google account session");
-        usePreviousIgCredentialsButton.setLayoutData(
-                new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-
-        // Prepare useNewIgCredentialsButton.
-        Button useNewIgCredentialsButton = new Button(credentialsComposite, SWT.RADIO);
-        useNewIgCredentialsButton.setText("Use the following Google account");
-        useNewIgCredentialsButton.setLayoutData(
-                new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-
-        // Prepare newCredentialsComposite which is used for username and password.
-        Composite newCredentialsComposite = new Composite(dialogAreaComposite, SWT.NONE);
-        newCredentialsComposite.setLayout(new GridLayout(3, true));
-        newCredentialsComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-        // Prepare username.
-        Label usernameLabel = new Label(newCredentialsComposite, SWT.LEFT);
-        usernameLabel.setText("\tUsername: ");
-        usernameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        usernameText = new Text(newCredentialsComposite, SWT.SINGLE);
-        usernameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-
-        // Set mouse focus.
-        // If this text field is unavailable, the focus will be passed to the next available one.
-        usernameText.setFocus();
-
-        // Prepare password.
-        Label passwordLabel = new Label(newCredentialsComposite, SWT.LEFT);
-        passwordLabel.setText("\tPassword: ");
-        passwordLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
-        passwordText = new Text(newCredentialsComposite, SWT.SINGLE);
-        passwordText.setEchoChar('*');
-        passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-
-        // Prepare selection listeners for radio buttons.
-        usePreviousIgCredentialsButton.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected(SelectionEvent e) {
-                // Do nothing.
-            }
-
-            public void widgetSelected(SelectionEvent e) {
-                usernameText.setEnabled(false);
-                passwordText.setEnabled(false);
-            }
-        });
-        useNewIgCredentialsButton.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected(SelectionEvent e) {
-                // Do nothing.
-            }
-
-            public void widgetSelected(SelectionEvent e) {
-                usernameText.setEnabled(true);
-                passwordText.setEnabled(true);
-            }
-        });
-
-        // Configure "selection" and "enabled" initially.
-        boolean hasCurrentIgCredentials = IgCredentials.hasCurrentInstance();
-        if (hasCurrentIgCredentials) {
-            usePreviousIgCredentialsButton.setEnabled(true);
-            usePreviousIgCredentialsButton.setSelection(true);
-            usernameText.setEnabled(false);
-            passwordText.setEnabled(false);
-        } else {
-            usePreviousIgCredentialsButton.setEnabled(false);
-            useNewIgCredentialsButton.setSelection(true);
-        }
-    }
-
     @Override
     protected Point getInitialSize() {
-        logger.fine("getInitialSize");
-        return new Point(350, 350);
+        return new Point(350, 400);
     }
 
     @Override
     protected void okPressed() {
-        logger.fine("okPressed");
-
-        usePreviousIgCredentials = usePreviousIgCredentialsButton.getSelection();
-        username = usernameText.getText();
-        password = passwordText.getText();
-        hostProjectName = hostProjectNameText.getText();
         useCanvasView = useCanvasViewButton.getSelection();
         useExternalBrowser = useExternalBrowserCheckbox.getSelection();
-
-        logger.fine("gonna setReturnCode");
-        setReturnCode(OK);
-        logger.fine("gonna close");
-        close();
-    }
-
-    boolean isUsePreviousIgCredentials() {
-        return usePreviousIgCredentials;
-    }
-
-    String getUsername() {
-        return username;
-    }
-
-    String getPassword() {
-        return password;
-    }
-
-    String getHostProjectName() {
-        return hostProjectName;
+        super.okPressed();
     }
 
     boolean isUseCanvasView() {
