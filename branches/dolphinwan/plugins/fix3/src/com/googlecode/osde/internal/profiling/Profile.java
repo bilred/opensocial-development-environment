@@ -69,12 +69,25 @@ class Profile {
 
     /**
      * Returns true if there is an Firefox instance running with this profile.
+     * See http://kb.mozillazine.org/Profile_in_use.
      */
     boolean isRunning() {
-        File macAndLinuxLockFile = new File(profileDir, ".parentlock");
-        File windowsLockFile = new File(profileDir, "parent.lock");
+        Platform platform = Platform.getCurrent();
 
-        return macAndLinuxLockFile.exists() || windowsLockFile.exists();
+        switch (platform) {
+            case MAC:
+                return new File(profileDir, ".parentlock").exists();
+            case XP:
+            case VISTA:
+            case WINDOWS:
+                return new File(profileDir, "parent.lock").exists();
+            case LINUX:
+            case UNIX:
+                return new File(profileDir, ".parentlock").exists() && 
+                    new File(profileDir, "lock").exists();
+        }
+
+        return false;
     }
 
     void installPageSpeed() throws IOException {
