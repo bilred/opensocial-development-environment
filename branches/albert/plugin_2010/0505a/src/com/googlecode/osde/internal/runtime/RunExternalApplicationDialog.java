@@ -197,13 +197,13 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         separator.setLayoutData(layoutData);
         //
         notUseSecurityTokenCheck = new Button(panel, SWT.CHECK);
-        notUseSecurityTokenCheck.setText("Non-social.");
+        notUseSecurityTokenCheck.setText("This is not a social application.");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 4;
         notUseSecurityTokenCheck.setLayoutData(layoutData);
         //
         useExternalBrowserCheck = new Button(panel, SWT.CHECK);
-        useExternalBrowserCheck.setText("Use an external Web browser.");
+        useExternalBrowserCheck.setText("Use an external web browser.");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 4;
         useExternalBrowserCheck.setLayoutData(layoutData);
@@ -299,7 +299,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         notUseSecurityToken = notUseSecurityTokenCheck.getSelection();
-        
+
         int viewerIndex = viewers.getSelectionIndex();
         int ownerIndex = owners.getSelectionIndex();
         if (!notUseSecurityToken && ((viewerIndex == -1) || (ownerIndex == -1))) {
@@ -375,7 +375,7 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
     public boolean isMeasurePerformance() {
         return measurePerformance;
     }
-    
+
     public boolean isNotUseSecurityToken() {
         return notUseSecurityToken;
     }

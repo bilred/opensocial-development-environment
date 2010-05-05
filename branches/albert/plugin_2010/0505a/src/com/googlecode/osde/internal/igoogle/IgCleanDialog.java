@@ -42,8 +42,8 @@ public class IgCleanDialog extends IgCredentialsDialog {
         logger.fine("createDialogArea");
 
         // Set title and message.
-        setTitle("iGoogle - Clean Hosted Files");
-        setMessage("This allows you to clean hosted files on iGoogle.");
+        setTitle("Delete gadget files from iGoogle");
+        setMessage("This allows you to delete your files hosted on iGoogle.");
 
         // Disable help button.
         setHelpAvailable(false);

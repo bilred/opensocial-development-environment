@@ -179,17 +179,17 @@ public class IgHostFileJob extends Job {
 
         public void run() {
             logger.fine("in Runnable's run");
-            String dialogTitle = "Your Files Are Hosted.";
+            String dialogTitle = "Success!";
 
             // For dialog message
             StringBuilder dialogMessage = new StringBuilder();
-            dialogMessage.append("All your following gadget files:\n\n");
+            dialogMessage.append("All of your gadget files:\n\n");
             for (String urlOfHostedFile : relativeFilePathsOfHostedFiles) {
-                dialogMessage.append(urlOfHostedFile).append("\n");
+                dialogMessage.append("\t").append(urlOfHostedFile).append("\n");
             }
-            dialogMessage.append("\nand the gadget file for preview: ");
-            dialogMessage.append(IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
-            dialogMessage.append("\nare hosted under this URL:\n\n");
+            dialogMessage.append("\t").append(IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
+            dialogMessage.append(" (automatically generated with modified reference links)\n\n");
+            dialogMessage.append("are now hosted at::\n\n");
             dialogMessage.append(hostingUrl);
 
             int dialogImageType = MessageDialog.INFORMATION;
