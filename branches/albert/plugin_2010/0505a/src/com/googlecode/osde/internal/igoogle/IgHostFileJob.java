@@ -189,7 +189,7 @@ public class IgHostFileJob extends Job {
             }
             dialogMessage.append("\t").append(IgConstants.GADGET_FILE_WITH_MODIFIED_URL);
             dialogMessage.append(" (automatically generated with modified reference links)\n\n");
-            dialogMessage.append("are now hosted at::\n\n");
+            dialogMessage.append("are now hosted at:\n\n");
             dialogMessage.append(hostingUrl);
 
             int dialogImageType = MessageDialog.INFORMATION;
