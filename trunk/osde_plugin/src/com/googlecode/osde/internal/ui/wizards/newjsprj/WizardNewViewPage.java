@@ -324,9 +324,9 @@ public class WizardNewViewPage extends WizardPage {
             sampleGroup.setLayoutData(layoutData);
             layoutData.horizontalSpan = 2;
             sampleGroup.setLayout(new GridLayout());
-            peopleButton = createCheckbox(sampleGroup, "Fetching a person data and friends.");
+            peopleButton = createCheckbox(sampleGroup, "Fetching a user's list of friends.");
             activityButton = createCheckbox(sampleGroup, "Posting an activity.");
-            appDataButton = createCheckbox(sampleGroup, "Sharing data with friends.");
+            appDataButton = createCheckbox(sampleGroup, "Sharing with friends.");
             sampleButton.addSelectionListener(new SelectionListener() {
                 public void widgetDefaultSelected(SelectionEvent e) {
                 }
@@ -354,7 +354,7 @@ public class WizardNewViewPage extends WizardPage {
             hrefText = createText(urlGroup);
             hrefText.addListener(SWT.Modify, modifyListener);
             hrefText.setEnabled(false);
-            notSupportButton = createRadio(composite, "Not support");
+            notSupportButton = createRadio(composite, "Not supported");
             notSupportButton.addListener(SWT.Selection, modifyListener);
             SelectionListener selectionListener = new SelectionListener() {
                 public void widgetDefaultSelected(SelectionEvent e) {

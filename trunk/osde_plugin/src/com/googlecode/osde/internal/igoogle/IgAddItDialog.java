@@ -42,7 +42,7 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
  */
 public class IgAddItDialog extends TitleAreaDialog {
     private static Logger logger = new Logger(IgAddItDialog.class);
-    
+
     /**
      * The static variable stores current gadgetUrl.
      * It is for the convenience purpose to help users to enter gadgetUrl.
@@ -67,12 +67,12 @@ public class IgAddItDialog extends TitleAreaDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         logger.fine("createDialogArea");
-        
+
         // Disable help dialog.
         setDialogHelpAvailable(false);
 
         // Set title and message.
-        setTitle("Add a gadget to your iGoogle page");
+        setTitle("Add gadget to my iGoogle page");
         setMessage("This allows you to add this gadget to your iGoogle page.");
 
         // Prepare composite and panel.
@@ -93,7 +93,7 @@ public class IgAddItDialog extends TitleAreaDialog {
 
         // Prepare checkbox of useExternalBrowser.
         useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
-        useExternalBrowserCheckbox.setText("Use an external Web browser");
+        useExternalBrowserCheckbox.setText("Use an external web browser");
         useExternalBrowserCheckbox.setLayoutData(
                 new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
         IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
@@ -106,12 +106,12 @@ public class IgAddItDialog extends TitleAreaDialog {
         Label extraDescription = new Label(panel, SWT.LEFT);
         extraDescription.setText(
                 "\nNOTES:\n"
-                + "* This features allows you to configure the following two social features\n"
+                + "* This features allows you to configure the following two social features "
                 + "for your gadget.\n"
-                + "(1) Know who I am and see my Friends group\n"
-                + "(2) Post my activities to Updates.\n"
-                + "* You need to do this only once for each URL of the hosted gadget file.\n"
-                + "* Please remember to login to your iGoogle page on browser.\n");
+                + "\t(1) Know who I am and see my Friends group\n"
+                + "\t(2) Post my activities to Updates.\n"
+                + "* You only need to do this once for each gadget.\n"
+                + "* Please remember to login to your iGoogle page on your browser.\n");
         extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 
         return composite;
