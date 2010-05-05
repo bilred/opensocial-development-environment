@@ -790,7 +790,7 @@ for NSIS, however, are subject to the terms of the Common Public License version
    </license>
 
    <url>
-      <update label="OSDE Release Candiate - Update Site" url="http://opensocial-development-environment.googlecode.com/svn/update-site-candidate/site.xml"/>
+      <update label="OSDE Update Site" url="http://opensocial-development-environment.googlecode.com/svn/update-site/site.xml"/>
    </url>
 
    <requires>
