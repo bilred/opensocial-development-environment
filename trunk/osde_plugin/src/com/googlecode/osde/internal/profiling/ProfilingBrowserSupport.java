@@ -25,7 +25,6 @@ import com.googlecode.osde.internal.OsdeConfig;
 import com.googlecode.osde.internal.common.AbstractJob;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.browser.AbstractWebBrowser;
@@ -40,10 +39,9 @@ import org.eclipse.ui.browser.IWebBrowser;
  */
 public class ProfilingBrowserSupport extends AbstractWorkbenchBrowserSupport {
     private final String profileName = "osde";
-    private final Shell shell;
 
     public ProfilingBrowserSupport(Shell shell) {
-        this.shell = shell;
+    	// do nothing
     }
 
     /**
@@ -98,17 +96,7 @@ public class ProfilingBrowserSupport extends AbstractWorkbenchBrowserSupport {
             monitor.worked(1);
 
             monitor.subTask("Launch Firefox browser window");
-            boolean success = binary.launch(profile, url.toExternalForm());
-            if (!success) {
-                // The firefox is already running with that profile.
-                shell.getDisplay().asyncExec(new Runnable() {
-                    public void run() {
-                        MessageDialog.openWarning(shell, "Cannot open a Firefox browser",
-                                "There is a Firefox browser already running with profile (" +
-                                        profileName + ")");
-                    }
-                });
-            }
+            binary.launch(profile, url.toExternalForm());
             monitor.worked(1);
         }
     }
