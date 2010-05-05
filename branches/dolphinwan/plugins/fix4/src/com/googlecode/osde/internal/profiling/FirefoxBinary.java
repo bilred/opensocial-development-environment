@@ -61,15 +61,8 @@ class FirefoxBinary {
 
     /**
      * Launches a Firefox browser window using a given profile.
-     *
-     * @return True if launch is successful, or false if the profile is already
-     *         running.
      */
-    public boolean launch(Profile profile, String url) throws IOException {
-        if (profile.isRunning()) {
-            return false;
-        }
-
+    public void launch(Profile profile, String url) throws IOException {
         ProcessBuilder builder =
                 new ProcessBuilder(executableLocation, "-no-remote", "-P", profile.name, url);
 
@@ -77,7 +70,6 @@ class FirefoxBinary {
         Process process = builder.start();
 
         new ProcessWatcher(process).watch();
-        return true;
     }
 
 
