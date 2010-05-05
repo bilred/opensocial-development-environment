@@ -98,17 +98,7 @@ public class ProfilingBrowserSupport extends AbstractWorkbenchBrowserSupport {
             monitor.worked(1);
 
             monitor.subTask("Launch Firefox browser window");
-            boolean success = binary.launch(profile, url.toExternalForm());
-            if (!success) {
-                // The firefox is already running with that profile.
-                shell.getDisplay().asyncExec(new Runnable() {
-                    public void run() {
-                        MessageDialog.openWarning(shell, "Cannot open a Firefox browser",
-                                "There is a Firefox browser already running with profile (" +
-                                        profileName + ")");
-                    }
-                });
-            }
+            binary.launch(profile, url.toExternalForm());
             monitor.worked(1);
         }
     }
