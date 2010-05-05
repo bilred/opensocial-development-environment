@@ -85,7 +85,7 @@ public class IgPreviewDialog extends IgCredentialsDialog {
 
         // Prepare checkbox of useExternalBrowser.
         useExternalBrowserCheckbox = new Button(panelComposite, SWT.CHECK);
-        useExternalBrowserCheckbox.setText("Use an external Web browser");
+        useExternalBrowserCheckbox.setText("Use an external web browser");
         useExternalBrowserCheckbox.setLayoutData(
                 new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
         IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
@@ -96,11 +96,9 @@ public class IgPreviewDialog extends IgCredentialsDialog {
 
         // Prepare extra description.
         Label extraDescription = new Label(panelComposite, SWT.LEFT);
-        extraDescription.setText("\nNOTE: Some social-related functions might not work here\n"
-                + "unless you check some options via the OSDE feature:\n"
-                + "iGoogle - Add Gadget.");
+        extraDescription.setText("\nNote: Some social features will not function properly unless\n"
+        		+ "you select the necessary options in the 'Add gadget to my\niGoogle page' step.");
         extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-
         return dialogAreaComposite;
     }
 

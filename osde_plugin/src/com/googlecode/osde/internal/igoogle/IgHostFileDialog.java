@@ -46,7 +46,7 @@ public class IgHostFileDialog extends IgCredentialsDialog {
         logger.fine("createDialogArea");
 
         // Set title and message.
-        setTitle("Host gadget files to iGoogle");
+        setTitle("Host gadget files on iGoogle");
         setMessage("This allows you to host your gadget files on iGoogle.");
 
         // Disable help button.
@@ -64,8 +64,8 @@ public class IgHostFileDialog extends IgCredentialsDialog {
 
         // Prepare extra description.
         Label extraDescription = new Label(panelComposite, SWT.LEFT);
-        extraDescription.setText("\nNOTE: It might take a few hours to have these files to be\n"
-                + "updated on iGoogle.");
+        extraDescription.setText(
+        		"\nNote: It may take up to 24 hours for your latest changes to\ntake effect.");
         extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 
         return dialogAreaComposite;

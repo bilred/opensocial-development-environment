@@ -95,7 +95,7 @@ public class RunApplicationDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        setTitle("Run application");
+        setTitle("Run application locally");
         setMessage("Please select some information.");
         Composite composite = (Composite) super.createDialogArea(parent);
         Composite panel = new Composite(composite, SWT.NONE);
@@ -188,13 +188,13 @@ public class RunApplicationDialog extends TitleAreaDialog {
         separator.setLayoutData(layoutData);
         //
         notUseSecurityTokenCheck = new Button(panel, SWT.CHECK);
-        notUseSecurityTokenCheck.setText("Non-social.");
+        notUseSecurityTokenCheck.setText("This is not a social application.");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 4;
         notUseSecurityTokenCheck.setLayoutData(layoutData);
         //
         useExternalBrowserCheck = new Button(panel, SWT.CHECK);
-        useExternalBrowserCheck.setText("Use an external Web browser.");
+        useExternalBrowserCheck.setText("Use an external web browser.");
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 4;
         useExternalBrowserCheck.setLayoutData(layoutData);
@@ -311,16 +311,16 @@ public class RunApplicationDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         setErrorMessage("");
-        
+
         notUseSecurityToken = notUseSecurityTokenCheck.getSelection();
-        
+
         int viewerIndex = viewers.getSelectionIndex();
         int ownerIndex = owners.getSelectionIndex();
         if (!notUseSecurityToken && ((viewerIndex == -1) || (ownerIndex == -1))) {
             setErrorMessage("Owner or Viewer not selected.");
             return;
         }
-        
+
         view = viewKind.getItem(viewKind.getSelectionIndex()).toLowerCase();
         if (viewerIndex != -1)
             viewer = viewers.getItem(viewerIndex);
