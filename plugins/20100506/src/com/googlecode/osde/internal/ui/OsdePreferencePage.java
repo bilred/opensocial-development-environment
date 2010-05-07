@@ -17,16 +17,23 @@
  */
 package com.googlecode.osde.internal.ui;
 
+import java.io.File;
+
 import com.googlecode.osde.internal.Activator;
 import com.googlecode.osde.internal.OsdeConfig;
 import com.googlecode.osde.internal.OsdePreferencesModel;
 import com.googlecode.osde.internal.common.JdkVersion;
 import com.googlecode.osde.internal.shindig.DatabaseServer;
 import com.googlecode.osde.internal.ui.OsdePreferenceBinder.ConverterAdapter;
+import com.googlecode.osde.internal.utils.Logger;
 import com.googlecode.osde.internal.utils.OpenSocialUtil;
 
 import org.apache.commons.lang.StringUtils;
-
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -49,6 +56,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * Eclipse preference page for OSDE.
  */
 public class OsdePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+    
+    private static final Logger logger = new Logger(OsdePreferencePage.class);
 
     private Combo languages;
     private Combo countries;
@@ -68,6 +77,7 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
     private Button compileJavaScriptCheckbox;
     private Text firefoxLocation;
     private OsdePreferenceBinder binder;
+    private Button clearDbButton;
 
     public OsdePreferencePage() {
         super();
@@ -172,6 +182,12 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
                 "Database directory",
                 "Please select the directory to store the Shindig database files.",
                 databaseDirText);
+        //
+        Label clearDbLabel = new Label(internalDatabasePanel, SWT.NONE);
+        clearDbLabel.setText("Clear Shindig database");
+        clearDbButton = new Button(internalDatabasePanel, SWT.PUSH);
+        clearDbButton.setText("Clear");
+        clearDbButton.addSelectionListener(new ClearDatabaseButtonSelectionListener());
         //
         externalDatabaseRadio = new Button(group, SWT.RADIO);
         externalDatabaseRadio.setText("Use the external database.");
@@ -407,6 +423,46 @@ public class OsdePreferencePage extends PreferencePage implements IWorkbenchPref
 
         public void widgetSelected(SelectionEvent e) {
             changeDatabaseControlEnabled();
+        }
+    }
+    
+    private class ClearDatabaseButtonSelectionListener implements SelectionListener {
+        public void widgetDefaultSelected(SelectionEvent e) {
+        }
+
+        public void widgetSelected(SelectionEvent e) {
+            Activator activator = Activator.getDefault();
+            if (activator.isRunningShindig()) {
+                MessageDialog.openWarning(getShell(), "Warning",
+                        "Apache Shindig is currently running.\n"
+                      + "You need to stop Apache Shindig before clearing your database.");
+            } else {
+                OsdeConfig config = activator.getOsdeConfiguration();
+                final String databaseDir = config.getDatabaseDir();
+                boolean result = MessageDialog.openConfirm(getShell(), "Confirm",
+                        "Do you really want to clear your database now?\n"
+                      + "If true, the following files will be deleted.\n"
+                      + databaseDir + File.separator + "*.db");
+                if (result) {
+                    Job job = new Job("Clear your database") {
+                        @Override
+                        protected IStatus run(IProgressMonitor monitor) {
+                            monitor.beginTask("Clear your database", 1);
+                            File dir = new File(databaseDir);
+                            File[] files = dir.listFiles();
+                            for (File file : files) {
+                                if (file.isFile() && file.getName().endsWith(".db")) {
+                                    file.delete();
+                                    logger.fine(file.getAbsolutePath() + " has been deleted.");
+                                }
+                            }
+                            monitor.done();
+                            return Status.OK_STATUS;
+                        }
+                    };
+                    job.schedule();
+                }
+            }
         }
     }
 
