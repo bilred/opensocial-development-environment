@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Module><ModulePrefs thumbnail="http://www.eisbahn.jp/opensocial/retrieve_it/retrieve_it_t.png" screenshot="http://www.eisbahn.jp/opensocial/retrieve_it/retrieve_it.png" author_email="yoichiro@eisbahn.jp" author="Yoichiro Tanaka" description="The feature of OpenSocial is to be able to run anywhere. Therefore,                      if SNS is different, the supported field is different. This application                      shows the results of calling Environment#supportsField() function for OpenSocial developers.                      You will be able to save the waste to be worried about which fields is supported." title="Retrieve it?"><Require feature="opensocial-0.7"/><Require feature="dynamic-height"/><Icon>http://www.eisbahn.jp/opensocial/retrieve_it/retrieve_it_i.png</Icon><Locale country="us" lang="en"/></ModulePrefs><Content type="html">
+
+&lt;style type=&quot;text/css&quot;&gt;
+div#target {
+  border: 1px dotted silver;
+  height: 300px;
+  overflow: auto;
+}
+div.ok {
+  color: green;
+}
+div.ng {
+  color: red;
+}
+div.level0 {
+  margin-left: 5px;
+}
+div.level1 {
+  margin-left: 20px;
+}
+div.condition {
+  margin-left: 5px;
+  margin-bottom: 10px;
+}
+table {
+  width: 100%;
+}
+table td.r1 {
+  background-color: #EEEEFF;
+}
+&lt;/style&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+
+var list = [
+  [&quot;Person.Field.ABOUT_ME&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.ABOUT_ME, 0],
+  [&quot;Person.Field.ACTIVITIES&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.ACTIVITIES, 0],
+  [&quot;Person.Field.ADDRESSES&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.ADDRESSES, 0],
+    [&quot;Address.Field.COUNTRY&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.COUNTRY, 1],
+    [&quot;Address.Field.EXTENDED_ADDRESS&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.EXTENDED_ADDRESS, 1],
+    [&quot;Address.Field.LATITUDE&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.LATITUDE, 1],
+    [&quot;Address.Field.LONGITUDE&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.LONGITUDE, 1],
+    [&quot;Address.Field.PO_BOX&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.PO_BOX, 1],
+    [&quot;Address.Field.POSTAL_CODE&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.POSTAL_CODE, 1],
+    [&quot;Address.Field.REGION&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.REGION, 1],
+    [&quot;Address.Field.STREET_ADDRESS&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.STREET_ADDRESS, 1],
+    [&quot;Address.Field.TYPE&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.TYPE, 1],
+    [&quot;Address.Field.UNSTRUCTURED_ADDRESS&quot;, opensocial.Environment.ObjectType.ADDRESS, opensocial.Address.Field.UNSTRUCTURED_ADDRESS, 1],
+  [&quot;Person.Field.AGE&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.AGE, 0],
+  [&quot;Person.Field.BODY_TYPE&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.BODY_TYPE, 0],
+    [&quot;BodyType.Field.BUILD&quot;, opensocial.Environment.ObjectType.BODY_TYPE, opensocial.BodyType.Field.BUILD, 1],
+    [&quot;BodyType.Field.EYE_COLOR&quot;, opensocial.Environment.ObjectType.BODY_TYPE, opensocial.BodyType.Field.EYE_COLOR, 1],
+    [&quot;BodyType.Field.HAIR_COLOR&quot;, opensocial.Environment.ObjectType.BODY_TYPE, opensocial.BodyType.Field.HAIR_COLOR, 1],
+    [&quot;BodyType.Field.HEIGHT&quot;, opensocial.Environment.ObjectType.BODY_TYPE, opensocial.BodyType.Field.HEIGHT, 1],
+    [&quot;BodyType.Field.WEIGHT&quot;, opensocial.Environment.ObjectType.BODY_TYPE, opensocial.BodyType.Field.WEIGHT, 1],
+  [&quot;Person.Field.BOOKS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.BOOKS, 0],
+  [&quot;Person.Field.CARS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.CARS, 0],
+  [&quot;Person.Field.CHILDREN&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.CHILDREN, 0],
+  [&quot;Person.Field.CURRENT_LOCATION&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.CURRENT_LOCATION, 0],
+  [&quot;Person.Field.DATE_OF_BIRTH&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.DATE_OF_BIRTH, 0],
+  [&quot;Person.Field.DRINKER&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.DRINKER, 0],
+  [&quot;Person.Field.EMAILS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.EMAILS, 0],
+    [&quot;Email.Field.ADDRESS&quot;, opensocial.Environment.ObjectType.EMAIL, opensocial.Email.Field.ADDRESS, 1],
+    [&quot;Email.Field.TYPE&quot;, opensocial.Environment.ObjectType.EMAIL, opensocial.Email.Field.TYPE, 1],
+  [&quot;Person.Field.ETHNICITY&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.ETHNICITY, 0],
+  [&quot;Person.Field.FASHION&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.FASHION, 0],
+  [&quot;Person.Field.FOOD&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.FOOD, 0],
+  [&quot;Person.Field.GENDER&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.GENDER, 0],
+  [&quot;Person.Field.HAPPIEST_WHEN&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.HAPPIEST_WHEN, 0],
+  [&quot;Person.Field.HEROES&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.HEROES, 0],
+  [&quot;Person.Field.HUMOR&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.HUMOR, 0],
+  [&quot;Person.Field.ID&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.ID, 0],
+  [&quot;Person.Field.INTERESTS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.INTERESTS, 0],
+  [&quot;Person.Field.JOB_INTERESTS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.JOB_INTERESTS, 0],
+  [&quot;Person.Field.JOBS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.JOBS, 0],
+    [&quot;Organization.Field.ADDRESS&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.ADDRESS, 1],
+    [&quot;Organization.Field.DESCRIPTION&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.DESCRIPTION, 1],
+    [&quot;Organization.Field.END_DATE&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.END_DATE, 1],
+    [&quot;Organization.Field.FIELD&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.FIELD, 1],
+    [&quot;Organization.Field.NAME&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.NAME, 1],
+    [&quot;Organization.Field.SALARY&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.SALARY, 1],
+    [&quot;Organization.Field.START_DATE&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.START_DATE, 1],
+    [&quot;Organization.Field.SUB_FIELD&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.SUB_FIELD, 1],
+    [&quot;Organization.Field.TITLE&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.TITLE, 1],
+    [&quot;Organization.Field.WEBPAGE&quot;, opensocial.Environment.ObjectType.ORGANIZATION, opensocial.Organization.Field.WEBPAGE, 1],
+  [&quot;Person.Field.LANGUAGES_SPOKEN&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.LANGUAGES_SPOKEN, 0],
+  [&quot;Person.Field.LIVING_ARRANGEMENT&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.LIVING_ARRANGEMENT, 0],
+  [&quot;Person.Field.LOOKING_FOR&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.LOOKING_FOR, 0],
+  [&quot;Person.Field.MOVIES&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.MOVIES, 0],
+  [&quot;Person.Field.MUSIC&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.MUSIC, 0],
+  [&quot;Person.Field.NAME&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.NAME, 0],
+    [&quot;Name.Field.ADDITIONAL_NAME&quot;, opensocial.Environment.ObjectType.NAME, opensocial.Name.Field.ADDITIONAL_NAME, 1],
+    [&quot;Name.Field.FAMILY_NAME&quot;, opensocial.Environment.ObjectType.NAME, opensocial.Name.Field.FAMILY_NAME, 1],
+    [&quot;Name.Field.GIVEN_NAME&quot;, opensocial.Environment.ObjectType.NAME, opensocial.Name.Field.GIVEN_NAME, 1],
+    [&quot;Name.Field.HONORIFIC_PREFIX&quot;, opensocial.Environment.ObjectType.NAME, opensocial.Name.Field.HONORIFIC_PREFIX, 1],
+    [&quot;Name.Field.HONORIFIC_SUFFIX&quot;, opensocial.Environment.ObjectType.NAME, opensocial.Name.Field.HONORIFIC_SUFFIX, 1],
+    [&quot;Name.Field.UNSTRUCTURED&quot;, opensocial.Environment.ObjectType.NAME, opensocial.Name.Field.UNSTRUCTURED, 1],
+  [&quot;Person.Field.NICKNAME&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.NICKNAME, 0],
+  [&quot;Person.Field.PETS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.PETS, 0],
+  [&quot;Person.Field.PHONE_NUMBERS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.PHONE_NUMBERS, 0],
+    [&quot;Phone.Field.NUMBER&quot;, opensocial.Environment.ObjectType.PHONE, opensocial.Phone.Field.NUMBER, 1],
+    [&quot;Phone.Field.TYPE&quot;, opensocial.Environment.ObjectType.PHONE, opensocial.Phone.Field.TYPE, 1],
+  [&quot;Person.Field.POLITICAL_VIEWS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.POLITICAL_VIEWS, 0],
+  [&quot;Person.Field.PROFILE_SONG&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.PROFILE_SONG, 0],
+  [&quot;Person.Field.PROFILE_URL&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.PROFILE_URL, 0],
+  [&quot;Person.Field.PROFILE_VIDEO&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.PROFILE_VIDEO, 0],
+  [&quot;Person.Field.QUOTES&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.QUOTES, 0],
+  [&quot;Person.Field.RELATIONSHIP_STATUS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.RELATIONSHIP_STATUS, 0],
+  [&quot;Person.Field.RELIGION&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.RELIGION, 0],
+  [&quot;Person.Field.ROMANCE&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.ROMANCE, 0],
+  [&quot;Person.Field.SCARED_OF&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.SCARED_OF, 0],
+  [&quot;Person.Field.SCHOOLS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.SCHOOLS, 0],
+  [&quot;Person.Field.SEXUAL_ORIENTATION&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.SEXUAL_ORIENTATION, 0],
+  [&quot;Person.Field.SMOKER&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.SMOKER, 0],
+  [&quot;Person.Field.SPORTS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.SPORTS, 0],
+  [&quot;Person.Field.STATUS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.STATUS, 0],
+  [&quot;Person.Field.TAGS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.TAGS, 0],
+  [&quot;Person.Field.THUMBNAIL_URL&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.THUMBNAIL_URL, 0],
+  [&quot;Person.Field.TIME_ZONE&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.TIME_ZONE, 0],
+  [&quot;Person.Field.TURN_OFFS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.TURN_OFFS, 0],
+  [&quot;Person.Field.TURN_ONS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.TURN_ONS, 0],
+  [&quot;Person.Field.TV_SHOWS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.TV_SHOWS, 0],
+  [&quot;Person.Field.URLS&quot;, opensocial.Environment.ObjectType.PERSON, opensocial.Person.Field.URLS, 0],
+    [&quot;Url.Field.ADDRESS&quot;, opensocial.Environment.ObjectType.URL, opensocial.Url.Field.ADDRESS, 1],
+    [&quot;Url.Field.LINK_TEXT&quot;, opensocial.Environment.ObjectType.URL, opensocial.Url.Field.LINK_TEXT, 1],
+    [&quot;Url.Field.TYPE&quot;, opensocial.Environment.ObjectType.URL, opensocial.Url.Field.TYPE, 1],
+  [&quot;Activity.Field.APP_ID&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.APP_ID, 0],
+  [&quot;Activity.Field.BODY&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.BODY, 0],
+  [&quot;Activity.Field.BODY_ID&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.BODY_ID, 0],
+  [&quot;Activity.Field.EXTERNAL_ID&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.EXTERNAL_ID, 0],
+  [&quot;Activity.Field.ID&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.ID, 0],
+  [&quot;Activity.Field.MEDIA_ITEMS&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.MEDIA_ITEMS, 0],
+    [&quot;Activity.MediaItem.Field.MIME_TYPE&quot;, opensocial.Environment.ObjectType.ACTIVITY_MEDIA_ITEM, opensocial.Activity.MediaItem.Field.MIME_TYPE, 1],
+    [&quot;Activity.MediaItem.Field.TYPE&quot;, opensocial.Environment.ObjectType.ACTIVITY_MEDIA_ITEM, opensocial.Activity.MediaItem.Field.TYPE, 1],
+    [&quot;Activity.MediaItem.Field.URL&quot;, opensocial.Environment.ObjectType.ACTIVITY_MEDIA_ITEM, opensocial.Activity.MediaItem.Field.URL, 1],
+  [&quot;Activity.Field.POSTED_TIME&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.POSTED_TIME, 0],
+  [&quot;Activity.Field.PRIORITY&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.PRIORITY, 0],
+  [&quot;Activity.Field.STREAM_FAVICON_URL&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.STREAM_FAVICON_URL, 0],
+  [&quot;Activity.Field.STREAM_SOURCE_URL&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.STREAM_SOURCE_URL, 0],
+  [&quot;Activity.Field.STREAM_TITLE&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.STREAM_TITLE, 0],
+  [&quot;Activity.Field.STREAM_URL&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.STREAM_URL, 0],
+  [&quot;Activity.Field.TEMPLATE_PARAMS&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.TEMPLATE_PARAMS, 0],
+  [&quot;Activity.Field.TITLE&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.TITLE, 0],
+  [&quot;Activity.Field.TITLE_ID&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.TITLE_ID, 0],
+  [&quot;Activity.Field.URL&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.URL, 0],
+  [&quot;Activity.Field.USER_ID&quot;, opensocial.Environment.ObjectType.ACTIVITY, opensocial.Activity.Field.USER_ID, 0],
+  [&quot;DataRequest.FilterType.ALL&quot;, opensocial.Environment.ObjectType.FILTER_TYPE, opensocial.DataRequest.FilterType.ALL, 0],
+  [&quot;DataRequest.FilterType.HAS_APP&quot;, opensocial.Environment.ObjectType.FILTER_TYPE, opensocial.DataRequest.FilterType.HAS_APP, 0],
+  [&quot;DataRequest.SortOrder.NAME&quot;, opensocial.Environment.ObjectType.SORT_ORDER, opensocial.DataRequest.SortOrder.NAME, 0],
+  [&quot;DataRequest.SortOrder.TOP_FRIENDS&quot;, opensocial.Environment.ObjectType.SORT_ORDER, opensocial.DataRequest.SortOrder.TOP_FRIENDS, 0],
+  [&quot;Message.Field.BODY&quot;, opensocial.Environment.ObjectType.MESSAGE, opensocial.Message.Field.BODY, 0],
+  [&quot;Message.Field.TITLE&quot;, opensocial.Environment.ObjectType.MESSAGE, opensocial.Message.Field.TITLE, 0],
+  [&quot;Message.Field.TYPE&quot;, opensocial.Environment.ObjectType.MESSAGE, opensocial.Message.Field.TYPE, 0],
+    [&quot;Message.Type.EMAIL&quot;, opensocial.Environment.ObjectType.MESSAGE_TYPE, opensocial.Message.Type.EMAIL, 1],
+    [&quot;Message.Type.NOTIFICTION&quot;, opensocial.Environment.ObjectType.MESSAGE_TYPE, opensocial.Message.Type.NOTIFICATION, 1],
+    [&quot;Message.Type.PRIVATE_MESSAGE&quot;, opensocial.Environment.ObjectType.MESSAGE_TYPE, opensocial.Message.Type.PRIVATE_MESSAGE, 1],
+    [&quot;Message.Type.PUBLIC_MESSAGE&quot;, opensocial.Environment.ObjectType.MESSAGE_TYPE, opensocial.Message.Type.PUBLIC_MESSAGE, 1]
+];
+
+function init() {
+  displayResult(&quot;&quot;);
+  document.getElementById(&quot;condition&quot;).focus();
+}
+
+function displayResult(condition) {
+  var env = opensocial.getEnvironment();
+  var html = &quot;&lt;table cellpadding='0' cellspacing='0'&gt;&lt;tr&gt;&lt;th&gt;Field&lt;/th&gt;&lt;th&gt;Retrieve it?&lt;/th&gt;&lt;/tr&gt;&quot;;
+  for (var i = 0; i &lt; list.length; i++) {
+    if (condition.length == 0 || list[i][0].toLowerCase().indexOf(condition) &gt; -1) {
+      var row = (i % 2 == 0) ? &quot; class='r1'&quot; : &quot;&quot;;
+      var supported = env.supportsField(list[i][1], list[i][2]);
+      var color = supported ? &quot;ok&quot; : &quot;ng&quot;;
+//      target.innerHTML += &quot;&lt;div class='&quot; + color + &quot; level&quot; + list[i][3] + &quot;'&gt;&quot; + list[i][0] + &quot; : &quot; + supported + &quot;&lt;/div&gt;&quot;;
+      html += &quot;&lt;tr&gt;&quot;;
+      html += &quot;&lt;td&quot; + row + &quot;&gt;&lt;div class='&quot; + color + &quot; level&quot; + list[i][3] + &quot;'&gt;&quot; + list[i][0] + &quot;&lt;/td&gt;&quot;;
+      html += &quot;&lt;td align='center'&quot; + row + &quot;&gt;&lt;div class='&quot; + color + &quot;'&gt;&quot; + supported + &quot;&lt;/td&gt;&quot;;
+      html += &quot;&lt;/tr&gt;&quot;;
+    }
+  }
+  html += &quot;&lt;/table&gt;&quot;;
+  document.getElementById(&quot;target&quot;).innerHTML = html;
+  gadgets.window.adjustHeight();
+}
+
+function onKeyupCondition(condition) {
+  displayResult(condition.value.toLowerCase());
+}
+
+gadgets.util.registerOnLoadHandler(init);
+
+&lt;/script&gt;
+
+&lt;div class=&quot;condition&quot;&gt;
+  Condition: &lt;input id=&quot;condition&quot; type=&quot;text&quot; size=&quot;20&quot; onkeyup=&quot;onKeyupCondition(this);&quot;&gt;&lt;/input&gt;
+&lt;/div&gt;
+
+&lt;div id=&quot;target&quot;&gt;&lt;/div&gt;
+
+  </Content></Module>
