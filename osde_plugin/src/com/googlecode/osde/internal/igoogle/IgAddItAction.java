@@ -38,9 +38,7 @@ public class IgAddItAction extends IgGadgetSelectedAction {
         int openResult = dialog.open();
         if (openResult == Window.OK) {
             String gadgetUrl = dialog.getGadgetUrl();
-            boolean useExternalBrowser = dialog.isUseExternalBrowser();
-            Job job =
-            	    new IgAddItJob(getShell(), getGadgetXmlIFile(), gadgetUrl, useExternalBrowser);
+            Job job = new IgAddItJob(getShell(), getGadgetXmlIFile(), gadgetUrl);
             job.schedule();
         }
     }
