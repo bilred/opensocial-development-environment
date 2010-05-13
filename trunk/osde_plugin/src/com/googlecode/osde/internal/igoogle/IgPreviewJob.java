@@ -57,17 +57,15 @@ public class IgPreviewJob extends Job {
     private IFile gadgetXmlIFile;
     private Shell shell;
     private boolean useCanvasView;
-    private boolean useExternalBrowser;
 
     public IgPreviewJob(Shell shell, IgCredentials igCredentials, String hostProjectName,
-            IFile gadgetXmlIFile, boolean useCanvasView, boolean useExternalBrowser) {
+            IFile gadgetXmlIFile, boolean useCanvasView) {
         super("iGoogle - Preview Gadget");
         this.shell = shell;
         this.igCredentials = igCredentials;
         this.hostProjectName = hostProjectName;
         this.gadgetXmlIFile = gadgetXmlIFile;
         this.useCanvasView = useCanvasView;
-        this.useExternalBrowser = useExternalBrowser;
     }
 
     protected IStatus run(final IProgressMonitor monitor) {
@@ -107,7 +105,7 @@ public class IgPreviewJob extends Job {
         monitor.worked(1);
         monitor.done();
 
-        display.syncExec(new PreviewingRunnable(previewGadgetUrl, useExternalBrowser));
+        display.syncExec(new PreviewingRunnable(previewGadgetUrl));
         return Status.OK_STATUS;
     }
 
@@ -181,11 +179,9 @@ public class IgPreviewJob extends Job {
         private static final String PREVIEW_IGOOGLE_TOOLTIP = "Preview gadget on iGoogle";
 
         private String previewGadgetUrl;
-        private boolean useExternalBrowser;
 
-        private PreviewingRunnable(String previewGadgetUrl, boolean useExternalBrowser) {
+        private PreviewingRunnable(String previewGadgetUrl) {
             this.previewGadgetUrl = previewGadgetUrl;
-            this.useExternalBrowser = useExternalBrowser;
         }
 
         public void run() {
@@ -193,17 +189,12 @@ public class IgPreviewJob extends Job {
             try {
                 IWorkbenchBrowserSupport support =
                         PlatformUI.getWorkbench().getBrowserSupport();
-                IWebBrowser browser;
-                if (useExternalBrowser) {
-                    browser = support.getExternalBrowser();
-                } else {
-                    int style = IWorkbenchBrowserSupport.LOCATION_BAR
-                            | IWorkbenchBrowserSupport.NAVIGATION_BAR
-                            | IWorkbenchBrowserSupport.AS_EDITOR;
-                    browser = support.createBrowser(style, PREVIEW_IGOOGLE_BROWSER_ID,
-                            PREVIEW_IGOOGLE_BROWSER_NAME, PREVIEW_IGOOGLE_TOOLTIP);
-                }
-                browser.openURL(new URL(previewGadgetUrl));
+            int style = IWorkbenchBrowserSupport.LOCATION_BAR
+                    | IWorkbenchBrowserSupport.NAVIGATION_BAR
+                    | IWorkbenchBrowserSupport.AS_EDITOR;
+            IWebBrowser browser = support.createBrowser(style, PREVIEW_IGOOGLE_BROWSER_ID,
+                    PREVIEW_IGOOGLE_BROWSER_NAME, PREVIEW_IGOOGLE_TOOLTIP);
+            browser.openURL(new URL(previewGadgetUrl));
             } catch (MalformedURLException e) {
                 logger.warn(e.getMessage());
             } catch (PartInitException e) {

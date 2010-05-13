@@ -25,14 +25,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
  * The popup dialog asking for users authentication info in order
@@ -56,9 +53,7 @@ public class IgAddItDialog extends TitleAreaDialog {
     }
 
     private String gadgetUrl;
-    private boolean useExternalBrowser;
     private Text gadgetUrlText;
-    private Button useExternalBrowserCheckbox;
 
     public IgAddItDialog(Shell shell) {
         super(shell);
@@ -91,17 +86,6 @@ public class IgAddItDialog extends TitleAreaDialog {
         gadgetUrlText.setText(currentGadgetUrl);
         gadgetUrlText.setFocus();
 
-        // Prepare checkbox of useExternalBrowser.
-        useExternalBrowserCheckbox = new Button(panel, SWT.CHECK);
-        useExternalBrowserCheckbox.setText("Use an external web browser");
-        useExternalBrowserCheckbox.setLayoutData(
-                new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-        IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
-        if (!browserSupport.isInternalWebBrowserAvailable()) {
-            useExternalBrowserCheckbox.setSelection(true);
-            useExternalBrowserCheckbox.setEnabled(false);
-        }
-
         // Prepare extra description.
         Label extraDescription = new Label(panel, SWT.LEFT);
         extraDescription.setText(
@@ -120,7 +104,7 @@ public class IgAddItDialog extends TitleAreaDialog {
     @Override
     protected Point getInitialSize() {
         logger.fine("getInitialSize");
-        return new Point(750, 400);
+        return new Point(750, 350);
     }
 
     @Override
@@ -128,7 +112,6 @@ public class IgAddItDialog extends TitleAreaDialog {
         logger.fine("okPressed");
 
         gadgetUrl = gadgetUrlText.getText();
-        useExternalBrowser = useExternalBrowserCheckbox.getSelection();
 
         setReturnCode(OK);
         close();
@@ -136,9 +119,5 @@ public class IgAddItDialog extends TitleAreaDialog {
 
     String getGadgetUrl() {
         return gadgetUrl;
-    }
-
-    boolean isUseExternalBrowser() {
-        return useExternalBrowser;
     }
 }

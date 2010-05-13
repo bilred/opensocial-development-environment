@@ -86,14 +86,12 @@ public abstract class AbstractRunAction {
                 String owner = dialog.getOwner();
                 String width = dialog.getWidth();
                 String appId = appInfo.getAppId();
-                boolean useExternalBrowser = dialog.isUseExternalBrowser();
                 String country = dialog.getCountry();
                 String language = dialog.getLanguage();
                 boolean measurePerformance = dialog.isMeasurePerformance();
                 boolean notUseSecurityToken = dialog.isNotUseSecurityToken();
                 LaunchApplicationInformation information = new LaunchApplicationInformation(
-                        viewer, owner, view, width, appId, useExternalBrowser,
-                        country, language, project,
+                        viewer, owner, view, width, appId, country, language, project,
                         gadgetXmlFile.getProjectRelativePath().toPortableString(),
                         project.getName() + ":" + gadgetXmlFile.getName(),
                         measurePerformance, notUseSecurityToken);

@@ -29,8 +29,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
  * The popup dialog asking for users authentication info in order
@@ -43,8 +41,6 @@ public class IgPreviewDialog extends IgCredentialsDialog {
 
     private boolean useCanvasView;
     private Button useCanvasViewButton;
-    private boolean useExternalBrowser;
-    private Button useExternalBrowserCheckbox;
 
     public IgPreviewDialog(Shell shell) {
         super(shell);
@@ -83,17 +79,6 @@ public class IgPreviewDialog extends IgCredentialsDialog {
         homeViewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         homeViewButton.setSelection(false); // default view is canvas view
 
-        // Prepare checkbox of useExternalBrowser.
-        useExternalBrowserCheckbox = new Button(panelComposite, SWT.CHECK);
-        useExternalBrowserCheckbox.setText("Use an external web browser");
-        useExternalBrowserCheckbox.setLayoutData(
-                new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-        IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
-        if (!browserSupport.isInternalWebBrowserAvailable()) {
-            useExternalBrowserCheckbox.setSelection(true);
-            useExternalBrowserCheckbox.setEnabled(false);
-        }
-
         // Prepare extra description.
         Label extraDescription = new Label(panelComposite, SWT.LEFT);
         extraDescription.setText("\nNote: Some social features will not function properly unless\n"
@@ -113,15 +98,10 @@ public class IgPreviewDialog extends IgCredentialsDialog {
     @Override
     protected void okPressed() {
         useCanvasView = useCanvasViewButton.getSelection();
-        useExternalBrowser = useExternalBrowserCheckbox.getSelection();
         super.okPressed();
     }
 
     boolean isUseCanvasView() {
         return useCanvasView;
-    }
-
-    boolean isUseExternalBrowser() {
-        return useExternalBrowser;
     }
 }
