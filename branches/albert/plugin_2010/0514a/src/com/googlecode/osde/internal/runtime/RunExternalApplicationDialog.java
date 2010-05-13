@@ -42,8 +42,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
 /**
  * Dialog for running external application.
@@ -59,8 +57,6 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
     private static final String PREF_WIDTH = "pref_width_for_external";
     private static final String PREF_COUNTRY = "pref_country_for_external";
     private static final String PREF_LANG = "pref_lang_for_external";
-    private static final String PREF_USE_EXTERNAL_BROWSER =
-            "pref_use_external_browser_for_external";
     private static final String PREF_MEASURE_PERFORMANCE = "pref_measure_performance_for_external";
     private static final String PREF_NOT_USE_SECURITY_TOKEN = "pref_not_use_security_token";
 
@@ -74,7 +70,6 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
     private String country;
     private String language;
     private boolean notUseSecurityToken;
-    private boolean useExternalBrowser;
     private boolean measurePerformance;
 
     private Combo urlCombo;
@@ -85,7 +80,6 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
     private Combo countries;
     private Combo languages;
     private Button notUseSecurityTokenCheck;
-    private Button useExternalBrowserCheck;
     private Button measurePerformanceCheck;
 
     private List<String> urls = new ArrayList<String>();
@@ -202,37 +196,11 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         layoutData.horizontalSpan = 4;
         notUseSecurityTokenCheck.setLayoutData(layoutData);
         //
-        useExternalBrowserCheck = new Button(panel, SWT.CHECK);
-        useExternalBrowserCheck.setText("Use an external web browser.");
-        layoutData = new GridData(GridData.FILL_HORIZONTAL);
-        layoutData.horizontalSpan = 4;
-        useExternalBrowserCheck.setLayoutData(layoutData);
-        //
-        IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-        if (!support.isInternalWebBrowserAvailable()) {
-            useExternalBrowserCheck.setSelection(true);
-            useExternalBrowserCheck.setEnabled(false);
-        }
-        //
         measurePerformanceCheck = new Button(panel, SWT.CHECK);
         measurePerformanceCheck.setText(Messages.pref01);
         layoutData = new GridData(GridData.FILL_HORIZONTAL);
         layoutData.horizontalSpan = 4;
         measurePerformanceCheck.setLayoutData(layoutData);
-        measurePerformanceCheck.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
-                boolean enabled = measurePerformanceCheck.getSelection();
-                if (enabled) {
-                    useExternalBrowserCheck.setSelection(true);
-                    useExternalBrowserCheck.setEnabled(false);
-                } else {
-                    useExternalBrowserCheck.setEnabled(true);
-                }
-            }
-
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-        });
         //
         setDefaultValues();
         //
@@ -273,10 +241,6 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         if (StringUtils.isNotEmpty(prevViewer) && StringUtils.isNumeric(prevViewer)) {
             viewers.select(Integer.parseInt(prevViewer));
         }
-        String prevUseExternalBrowser = store.getString(PREF_USE_EXTERNAL_BROWSER);
-        if (StringUtils.isNotEmpty(prevUseExternalBrowser)) {
-            useExternalBrowserCheck.setSelection(Boolean.parseBoolean(prevUseExternalBrowser));
-        }
         String prevView = store.getString(PREF_VIEW);
         if (StringUtils.isNotEmpty(prevView) && StringUtils.isNumeric(prevView)) {
             viewKind.select(Integer.parseInt(prevView));
@@ -314,7 +278,6 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         if (ownerIndex != -1)
             owner = owners.getItem(ownerIndex);
         width = widths.getText();
-        useExternalBrowser = useExternalBrowserCheck.getSelection();
         measurePerformance = measurePerformanceCheck.getSelection();
         country = countries.getText();
         country = country.substring(country.indexOf('(') + 1, country.length() - 1);
@@ -332,8 +295,6 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
         store.setValue(PREF_VIEWER, String.valueOf(viewers.getSelectionIndex()));
         store.setValue(PREF_VIEW, String.valueOf(viewKind.getSelectionIndex()));
         store.setValue(PREF_WIDTH, String.valueOf(widths.getSelection()));
-        store.setValue(PREF_USE_EXTERNAL_BROWSER,
-                String.valueOf(useExternalBrowserCheck.getSelection()));
         store.setValue(PREF_MEASURE_PERFORMANCE, measurePerformanceCheck.getSelection());
         store.setValue(PREF_NOT_USE_SECURITY_TOKEN, notUseSecurityTokenCheck.getSelection());
         setReturnCode(OK);
@@ -354,10 +315,6 @@ public class RunExternalApplicationDialog extends TitleAreaDialog {
 
     public String getWidth() {
         return width;
-    }
-
-    public boolean isUseExternalBrowser() {
-        return useExternalBrowser;
     }
 
     public String getCountry() {

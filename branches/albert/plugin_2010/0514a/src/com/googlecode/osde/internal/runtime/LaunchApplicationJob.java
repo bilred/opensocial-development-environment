@@ -59,7 +59,6 @@ public class LaunchApplicationJob extends Job {
     private String view;
     private String width;
     private String appId;
-    private boolean useExternalBrowser;
     private String country;
     private String language;
     private Shell shell;
@@ -77,7 +76,6 @@ public class LaunchApplicationJob extends Job {
         this.view = information.getView();
         this.width = information.getWidth();
         this.appId = information.getAppId();
-        this.useExternalBrowser = information.isUseExternalBrwoser();
         this.country = information.getCountry();
         this.language = information.getLanguage();
         this.shell = shell;
@@ -131,23 +129,18 @@ public class LaunchApplicationJob extends Job {
             shell.getDisplay().syncExec(new Runnable() {
                 public void run() {
                     try {
-                        IWebBrowser browser;
-                        if (!useExternalBrowser) {
-                            String title = appTitle + " [" + view + "]";
-                            String desc;
-                            if (notUseSecurityToken) {
-                                desc = appTitle + " [" + view + "] viewer=" + viewer + " owner=" + owner;
-                            } else {
-                                desc = appTitle + " [" + view + "]";
-                            }
-                            browser = browserSupport.createBrowser(
-                                    IWorkbenchBrowserSupport.LOCATION_BAR
-                                            | IWorkbenchBrowserSupport.NAVIGATION_BAR
-                                            | IWorkbenchBrowserSupport.AS_EDITOR,
-                                    title, title, desc);
+                        String title = appTitle + " [" + view + "]";
+                        String desc;
+                        if (notUseSecurityToken) {
+                            desc = appTitle + " [" + view + "] viewer=" + viewer + " owner=" + owner;
                         } else {
-                            browser = browserSupport.getExternalBrowser();
+                            desc = appTitle + " [" + view + "]";
                         }
+                        IWebBrowser browser = browserSupport.createBrowser(
+                                IWorkbenchBrowserSupport.LOCATION_BAR
+                                        | IWorkbenchBrowserSupport.NAVIGATION_BAR
+                                        | IWorkbenchBrowserSupport.AS_EDITOR,
+                                title, title, desc);
                         browser.openURL(new URL(kicker));
                     } catch (MalformedURLException e) {
                         logger.error("Launching the Web Browser failed.", e);

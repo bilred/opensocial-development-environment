@@ -30,7 +30,6 @@ public class LaunchApplicationInformation {
     private String view;
     private String width;
     private String appId;
-    private boolean useExternalBrwoser;
     private String country;
     private String language;
     private IProject project;
@@ -41,7 +40,7 @@ public class LaunchApplicationInformation {
 
     public LaunchApplicationInformation(String viewer, String owner,
             String view, String width, String appId,
-            boolean useExternalBrwoser, String country, String language,
+            String country, String language,
             IProject project, String url, String applicationTitle,
             boolean measurePerformance, boolean notUseSecurityToken) {
         this.viewer = viewer;
@@ -49,7 +48,6 @@ public class LaunchApplicationInformation {
         this.view = view;
         this.width = width;
         this.appId = appId;
-        this.useExternalBrwoser = useExternalBrwoser;
         this.country = country;
         this.language = language;
         this.project = project;
@@ -97,14 +95,6 @@ public class LaunchApplicationInformation {
 
     public void setAppId(String appId) {
         this.appId = appId;
-    }
-
-    public boolean isUseExternalBrwoser() {
-        return useExternalBrwoser;
-    }
-
-    public void setUseExternalBrwoser(boolean useExternalBrwoser) {
-        this.useExternalBrwoser = useExternalBrwoser;
     }
 
     public String getCountry() {

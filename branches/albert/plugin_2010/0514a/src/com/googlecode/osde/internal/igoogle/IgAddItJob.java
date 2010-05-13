@@ -54,15 +54,12 @@ public class IgAddItJob extends Job {
     private String gadgetUrl;
     private IFile gadgetXmlIFile;
     private Shell shell;
-    private boolean useExternalBrowser;
 
-    public IgAddItJob(Shell shell, IFile gadgetXmlIFile, String gadgetUrl,
-    		boolean useExternalBrowser) {
+    public IgAddItJob(Shell shell, IFile gadgetXmlIFile, String gadgetUrl) {
         super("iGoogle - Add a Gadget");
         this.shell = shell;
         this.gadgetXmlIFile = gadgetXmlIFile;
         this.gadgetUrl = gadgetUrl;
-        this.useExternalBrowser = useExternalBrowser;
     }
 
     protected IStatus run(final IProgressMonitor monitor) {
@@ -76,7 +73,7 @@ public class IgAddItJob extends Job {
         monitor.worked(1);
         monitor.done();
 
-        display.syncExec(new AddingGadgetRunnable(addGadgetUrl, useExternalBrowser));
+        display.syncExec(new AddingGadgetRunnable(addGadgetUrl));
         return Status.OK_STATUS;
     }
 
@@ -150,11 +147,9 @@ public class IgAddItJob extends Job {
         private static final String ADD_IGOOGLE_TOOLTIP = "Add gadget to iGoogle";
 
         private String addGadgetUrl;
-        private boolean useExternalBrowser;
 
-        private AddingGadgetRunnable(String addGadgetUrl, boolean useExternalBrowser) {
+        private AddingGadgetRunnable(String addGadgetUrl) {
             this.addGadgetUrl = addGadgetUrl;
-            this.useExternalBrowser = useExternalBrowser;
         }
 
         public void run() {
@@ -162,16 +157,11 @@ public class IgAddItJob extends Job {
             try {
                 IWorkbenchBrowserSupport support =
                         PlatformUI.getWorkbench().getBrowserSupport();
-                IWebBrowser browser;
-                if (useExternalBrowser) {
-                    browser = support.getExternalBrowser();
-                } else {
-                    int style = IWorkbenchBrowserSupport.LOCATION_BAR
-                            | IWorkbenchBrowserSupport.NAVIGATION_BAR
-                            | IWorkbenchBrowserSupport.AS_EDITOR;
-                    browser = support.createBrowser(style, ADD_IGOOGLE_BROWSER_ID,
-                            ADD_IGOOGLE_BROWSER_NAME, ADD_IGOOGLE_TOOLTIP);
-                }
+                int style = IWorkbenchBrowserSupport.LOCATION_BAR
+                        | IWorkbenchBrowserSupport.NAVIGATION_BAR
+                        | IWorkbenchBrowserSupport.AS_EDITOR;
+                IWebBrowser browser = support.createBrowser(style, ADD_IGOOGLE_BROWSER_ID,
+                        ADD_IGOOGLE_BROWSER_NAME, ADD_IGOOGLE_TOOLTIP);
                 browser.openURL(new URL(addGadgetUrl));
             } catch (MalformedURLException e) {
                 logger.warn(e.getMessage());

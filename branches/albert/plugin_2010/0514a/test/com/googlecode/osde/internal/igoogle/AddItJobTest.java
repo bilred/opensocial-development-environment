@@ -78,7 +78,7 @@ public class AddItJobTest {
         replay(gadgetXmlIFile, project, targetFolder, targetFolderLocation);
 
         // Execute modifyHostingUrlForGadgetFileAndUploadIt().
-        IgAddItJob job = new IgAddItJob(null, gadgetXmlIFile, "preview", false);
+        IgAddItJob job = new IgAddItJob(null, gadgetXmlIFile, "preview");
         IgCredentials igCredentials =
                     IgCredentials.createCurrentInstance(TEST_USERNAME, TEST_PASSWORD);
         job.modifyHostingUrlForGadgetFileAndUploadIt(IgConstants.LOCAL_HOST_URL,
