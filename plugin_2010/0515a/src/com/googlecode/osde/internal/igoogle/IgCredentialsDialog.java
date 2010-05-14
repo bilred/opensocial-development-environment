@@ -103,6 +103,13 @@ public class IgCredentialsDialog extends TitleAreaDialog {
         passwordText.setEchoChar('*');
         passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
+        // Prepare description for authentication in HTTPS.
+        Label authenticationDescriptionLabel = new Label(usernamePasswordComposite, SWT.LEFT);
+        authenticationDescriptionLabel
+                .setText("(The authentication is processed via a secured HTTPS\nconnection.)");
+        authenticationDescriptionLabel
+                .setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+
         // Prepare selection listeners for radio buttons.
         usePreviousIgCredentialsButton.addSelectionListener(new SelectionListener() {
             public void widgetDefaultSelected(SelectionEvent e) {
@@ -142,7 +149,7 @@ public class IgCredentialsDialog extends TitleAreaDialog {
 
     @Override
     protected Point getInitialSize() {
-        return new Point(350, 300);
+        return new Point(350, 350);
     }
 
     @Override
