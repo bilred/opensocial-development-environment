@@ -79,7 +79,7 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
             final PersonService personService = Activator.getDefault().getPersonService();
             boolean confirm = MessageDialog.openConfirm(shell,
                     "Confirm", "Would you like to create sample data in Shindig database?\n"
-                            + "(Created people are 'canonical', 'john.doe', 'jane.doe' and 'george.doe')");
+                            + "(Created people are 'conrad.doe', 'john.doe', 'jane.doe' and 'george.doe')");
             if (confirm) {
                 Job job = new Job("Create sample data") {
                     @Override
@@ -144,22 +144,22 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
     }
 
     protected void setRelations(Person[] samplePeople, PersonService personService) {
-        Person canonical = samplePeople[0];
+        Person conrad = samplePeople[0];
         Person john = samplePeople[1];
         Person jane = samplePeople[2];
         Person george = samplePeople[3];
-        personService.createRelationship("friends", canonical, john);
-        personService.createRelationship("friends", canonical, jane);
-        personService.createRelationship("friends", canonical, george);
+        personService.createRelationship("friends", conrad, john);
+        personService.createRelationship("friends", conrad, jane);
+        personService.createRelationship("friends", conrad, george);
         personService.createRelationship("friends", john, jane);
         personService.createRelationship("friends", john, george);
         personService.createRelationship("friends", jane, john);
         personService.createRelationship("friends", george, john);
     }
-    
+
     protected Person[] createSamplePeople() {
         return  new Person[] {
-                createCanonicalPerson(),
+                createConradPerson(),
                 createJohnPerson(),
                 createJanePerson(),
                 createGeorgePerson()
@@ -205,11 +205,11 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         return john;
     }
 
-    private Person createCanonicalPerson() {
-        Person canonical = new PersonImpl();
-        canonical.setId("canonical");
-        canonical.setAboutMe("I have an example of every piece of data");
-        canonical.setActivities(Arrays.asList("Coding Shindig"));
+    private Person createConradPerson() {
+        Person person = new PersonImpl();
+        person.setId("conrad.doe");
+        person.setAboutMe("I have an example of every piece of data");
+        person.setActivities(Arrays.asList("Coding Shindig"));
         Address address = new AddressImpl();
         address.setCountry("US");
         address.setLatitude(28.3043f);
@@ -220,39 +220,39 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         address.setStreetAddress("1 OpenStandards Way");
         address.setType("home");
         address.setFormatted("PoBox 3565, 1 OpenStandards Way, Apache CA");
-        canonical.setAddresses(Arrays.asList(address));
-        canonical.setAge(33);
+        person.setAddresses(Arrays.asList(address));
+        person.setAge(33);
         BodyType bodyType = new BodyTypeImpl();
         bodyType.setBuild("svelte");
         bodyType.setEyeColor("blue");
         bodyType.setHairColor("black");
         bodyType.setHeight(1.84f);
         bodyType.setWeight(74f);
-        canonical.setBodyType(bodyType);
-        canonical.setBooks(Arrays.asList("The Cathedral & the Bazaar", "Catch 22"));
-        canonical.setCars(Arrays.asList("beetle", "prius"));
-        canonical.setChildren("3");
+        person.setBodyType(bodyType);
+        person.setBooks(Arrays.asList("The Cathedral & the Bazaar", "Catch 22"));
+        person.setCars(Arrays.asList("beetle", "prius"));
+        person.setChildren("3");
         Address currentLocation = new AddressImpl();
         currentLocation.setLatitude(48.858193f);
         currentLocation.setLongitude(2.29419f);
-        canonical.setCurrentLocation(currentLocation);
-        canonical.setBirthday(Gadgets.getDate(1975, 0, 1));
-        canonical.setDisplayName("Shin Digg");
-        canonical.setDrinker(new DrinkerImpl(Drinker.SOCIALLY, "Socially"));
+        person.setCurrentLocation(currentLocation);
+        person.setBirthday(Gadgets.getDate(1975, 0, 1));
+        person.setDisplayName("Conrad Doe");
+        person.setDrinker(new DrinkerImpl(Drinker.SOCIALLY, "Socially"));
         ListField email = new EmailImpl();
         email.setValue("shindig-dev@incubator.apache.org");
         email.setType("work");
-        canonical.setEmails(Arrays.asList(email));
-        canonical.setEthnicity("developer");
-        canonical.setFashion("t-shirts");
-        canonical.setFood(Arrays.asList("sushi", "burgers"));
-        canonical.setGender(Gender.male);
-        canonical.setHappiestWhen("coding");
-        canonical.setHasApp(true);
-        canonical.setHeroes(Arrays.asList("Doug Crockford", "Charles Babbage"));
-        canonical.setHumor("none to speak of");
-        canonical.setInterests(Arrays.asList("PHP", "Java"));
-        canonical.setJobInterests("will work for beer");
+        person.setEmails(Arrays.asList(email));
+        person.setEthnicity("developer");
+        person.setFashion("t-shirts");
+        person.setFood(Arrays.asList("sushi", "burgers"));
+        person.setGender(Gender.male);
+        person.setHappiestWhen("coding");
+        person.setHasApp(true);
+        person.setHeroes(Arrays.asList("Doug Crockford", "Charles Babbage"));
+        person.setHumor("none to speak of");
+        person.setInterests(Arrays.asList("PHP", "Java"));
+        person.setJobInterests("will work for beer");
         Organization organization1 = new OrganizationImpl();
         address = new AddressImpl();
         address.setFormatted("1 Shindig Drive");
@@ -281,10 +281,10 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         organization2.setTitle("Gopher");
         organization2.setWebpage("");
         organization2.setType("job");
-        canonical.setOrganizations(Arrays.asList(organization1, organization2));
-        canonical.setLanguagesSpoken(Arrays.asList("English", "Dutch", "Esperanto"));
-        canonical.setUpdated(Gadgets.getDate(2006, 5, 6, 12, 12, 12));
-        canonical.setLivingArrangement("in a house");
+        person.setOrganizations(Arrays.asList(organization1, organization2));
+        person.setLanguagesSpoken(Arrays.asList("English", "Dutch", "Esperanto"));
+        person.setUpdated(Gadgets.getDate(2006, 5, 6, 12, 12, 12));
+        person.setLivingArrangement("in a house");
         Enum<LookingFor> lookingFor1 = new LookingForImpl();
         lookingFor1.setValue(LookingFor.RANDOM);
         lookingFor1.setDisplayValue("Random");
@@ -295,55 +295,55 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         List<Enum<LookingFor>> lookingFors = new ArrayList<Enum<LookingFor>>();
         lookingFors.add(lookingFor1);
         lookingFors.add(lookingFor2);
-        canonical.setLookingFor(lookingFors);
+        person.setLookingFor(lookingFors);
 
-        canonical.setMovies(Arrays.asList("Iron Man", "Nosferatu"));
-        canonical.setMusic(Arrays.asList("Chieftains", "Beck"));
+        person.setMovies(Arrays.asList("Iron Man", "Nosferatu"));
+        person.setMusic(Arrays.asList("Chieftains", "Beck"));
         Name name = new NameImpl();
         name.setAdditionalName("H");
-        name.setFamilyName("Digg");
-        name.setGivenName("Shin");
+        name.setFamilyName("Doe");
+        name.setGivenName("Conrad");
         name.setHonorificPrefix("Sir");
         name.setHonorificSuffix("Social Butterfly");
-        name.setFormatted("Sir Shin H. Digg Social Butterfly");
-        canonical.setName(name);
-        canonical.setNetworkPresence(new NetworkPresenceImpl(NetworkPresence.ONLINE, "Online"));
-        canonical.setNickname("diggy");
-        canonical.setPets("dog,cat");
+        name.setFormatted("Sir Conrad H. Doe Social Butterfly");
+        person.setName(name);
+        person.setNetworkPresence(new NetworkPresenceImpl(NetworkPresence.ONLINE, "Online"));
+        person.setNickname("diggy");
+        person.setPets("dog,cat");
         PhoneNumberImpl phone1 = new PhoneNumberImpl();
         phone1.setValue("111-111-111");
         phone1.setType("work");
         PhoneNumberImpl phone2 = new PhoneNumberImpl();
         phone2.setValue("999-999-999");
         phone2.setType("mobile");
-        canonical.setPhoneNumbers(Arrays.<ListField>asList(phone1, phone2));
-        canonical.setPoliticalViews("open leaning");
+        person.setPhoneNumbers(Arrays.<ListField>asList(phone1, phone2));
+        person.setPoliticalViews("open leaning");
         UrlImpl profileSong = new UrlImpl();
         profileSong.setValue("http://www.example.org/songs/OnlyTheLonely.mp3");
         profileSong.setLinkText("Feelin' blue");
         profileSong.setType("road");
-        canonical.setProfileSong(profileSong);
-        canonical.setProfileUrl("http://www.example.org/?id=1");
+        person.setProfileSong(profileSong);
+        person.setProfileUrl("http://www.example.org/?id=1");
         UrlImpl profileVideo = new UrlImpl();
         profileVideo.setValue("http://www.example.org/videos/Thriller.flv");
         profileVideo.setLinkText("Thriller");
         profileVideo.setType("video");
-        canonical.setProfileVideo(profileVideo);
-        canonical.setQuotes(Arrays.asList("I am therfore I code", "Doh!"));
-        canonical.setRelationshipStatus("married to my job");
-        canonical.setReligion("druidic");
-        canonical.setRomance("twice a year");
-        canonical.setScaredOf("COBOL");
-        canonical.setSexualOrientation("north");
-        canonical.setSmoker(new SmokerImpl(Smoker.NO, "No"));
-        canonical.setSports(Arrays.asList("frisbee", "rugby"));
-        canonical.setStatus("happy");
-        canonical.setTags(Arrays.asList("C#", "JSON", "template"));
-        canonical.setThumbnailUrl("http://www.example.org/pic/?id=1");
-        canonical.setUtcOffset(-8l);
-        canonical.setTurnOffs(Arrays.asList("lack of unit tests", "cabbage"));
-        canonical.setTurnOns(Arrays.asList("well document code"));
-        canonical.setTvShows(Arrays.asList("House", "Battlestart Galactica"));
+        person.setProfileVideo(profileVideo);
+        person.setQuotes(Arrays.asList("I am therfore I code", "Doh!"));
+        person.setRelationshipStatus("married to my job");
+        person.setReligion("druidic");
+        person.setRomance("twice a year");
+        person.setScaredOf("COBOL");
+        person.setSexualOrientation("north");
+        person.setSmoker(new SmokerImpl(Smoker.NO, "No"));
+        person.setSports(Arrays.asList("frisbee", "rugby"));
+        person.setStatus("happy");
+        person.setTags(Arrays.asList("C#", "JSON", "template"));
+        person.setThumbnailUrl("http://www.example.org/pic/?id=1");
+        person.setUtcOffset(-8l);
+        person.setTurnOffs(Arrays.asList("lack of unit tests", "cabbage"));
+        person.setTurnOns(Arrays.asList("well document code"));
+        person.setTvShows(Arrays.asList("House", "Battlestart Galactica"));
         UrlImpl url1 = new UrlImpl();
         url1.setValue("http://www.example.org/?id=1");
         url1.setLinkText("my profile");
@@ -352,8 +352,8 @@ public class CreateSampleDataAction extends Action implements IWorkbenchWindowAc
         url2.setValue("http://www.example.org/pic/?id=1");
         url2.setLinkText("my awesome picture");
         url2.setType("thumbnail");
-        canonical.setUrls(Arrays.<Url>asList(url1, url2));
-        return canonical;
+        person.setUrls(Arrays.<Url>asList(url1, url2));
+        return person;
     }
 
     public void selectionChanged(IAction action, ISelection selection) {
