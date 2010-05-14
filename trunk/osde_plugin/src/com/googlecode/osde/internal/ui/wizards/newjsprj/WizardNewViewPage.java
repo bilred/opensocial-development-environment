@@ -325,6 +325,7 @@ public class WizardNewViewPage extends WizardPage {
             layoutData.horizontalSpan = 2;
             sampleGroup.setLayout(new GridLayout());
             peopleButton = createCheckbox(sampleGroup, "Fetching a user's list of friends.");
+            peopleButton.setSelection(true);
             activityButton = createCheckbox(sampleGroup, "Posting an activity.");
             appDataButton = createCheckbox(sampleGroup, "Sharing with friends.");
             sampleButton.addSelectionListener(new SelectionListener() {
