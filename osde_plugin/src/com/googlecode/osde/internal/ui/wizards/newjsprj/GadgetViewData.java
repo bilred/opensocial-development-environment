@@ -31,8 +31,6 @@ public class GadgetViewData implements Serializable {
 
     private boolean createExternalJavaScript;
 
-    private boolean createInitFunction;
-
     private String href;
 
     private boolean createSampleCodeSet;
@@ -78,11 +76,10 @@ public class GadgetViewData implements Serializable {
     }
 
     public boolean isCreateInitFunction() {
-        return createInitFunction;
-    }
-
-    public void setCreateInitFunction(boolean createInitFunction) {
-        this.createInitFunction = createInitFunction;
+    	// Always return true.
+    	// We keep this function here in case the corresponding feature
+    	// becomes complex in the future.
+        return true;
     }
 
     public String getHref() {
