@@ -150,7 +150,6 @@ public class WizardNewViewPage extends WizardPage {
                     data.setType(ViewType.html);
                     data.setCreateExternalJavaScript(
                             part.getCreateJavaScriptFileButton().getSelection());
-                    data.setCreateInitFunction(part.getInitFunctionButton().getSelection());
                     data.setCreateSampleCodeSet(part.getSampleButton().getSelection());
                     data.setCreatePeople(part.getPeopleButton().getSelection());
                     data.setCreateActivity(part.getActivityButton().getSelection());
@@ -173,7 +172,6 @@ public class WizardNewViewPage extends WizardPage {
         private Composite composite;
         private Button htmlButton;
         private Button createJavaScriptFileButton;
-        private Button initFunctionButton;
         private Button urlButton;
         private Text hrefText;
         private Button notSupportButton;
@@ -200,10 +198,6 @@ public class WizardNewViewPage extends WizardPage {
 
         public Button getCreateJavaScriptFileButton() {
             return createJavaScriptFileButton;
-        }
-
-        public Button getInitFunctionButton() {
-            return initFunctionButton;
         }
 
         public Button getUrlButton() {
@@ -242,7 +236,6 @@ public class WizardNewViewPage extends WizardPage {
             sampleButton.setEnabled(true);
             if (sampleButton.getSelection()) {
                 createJavaScriptFileButton.setEnabled(false);
-                initFunctionButton.setEnabled(false);
                 peopleButton.setEnabled(true);
                 activityButton.setEnabled(true);
                 appDataButton.setEnabled(true);
@@ -250,7 +243,6 @@ public class WizardNewViewPage extends WizardPage {
             } else {
                 createJavaScriptFileButton.setEnabled(true);
                 boolean selection = createJavaScriptFileButton.getSelection();
-                initFunctionButton.setEnabled(selection);
                 peopleButton.setEnabled(false);
                 activityButton.setEnabled(false);
                 appDataButton.setEnabled(false);
@@ -263,7 +255,6 @@ public class WizardNewViewPage extends WizardPage {
                 setEnabledForGenerateFiles();
             } else {
                 createJavaScriptFileButton.setEnabled(false);
-                initFunctionButton.setEnabled(false);
                 sampleButton.setEnabled(false);
                 peopleButton.setEnabled(false);
                 activityButton.setEnabled(false);
@@ -300,12 +291,6 @@ public class WizardNewViewPage extends WizardPage {
             filenameText.setText(viewName.name() + ".js");
             filenameText.addListener(SWT.Modify, modifyListener);
             createJavaScriptFileButton.addListener(SWT.Selection, modifyListener);
-            initFunctionButton = createCheckbox(htmlGroup,
-                    "Generate the init() function that is called when this view is loaded.");
-            initFunctionButton.addListener(SWT.Selection, modifyListener);
-            layoutData = new GridData();
-            layoutData.horizontalSpan = 2;
-            initFunctionButton.setLayoutData(layoutData);
             createJavaScriptFileButton.addSelectionListener(new SelectionListener() {
                 public void widgetDefaultSelected(SelectionEvent e) {
                 }
