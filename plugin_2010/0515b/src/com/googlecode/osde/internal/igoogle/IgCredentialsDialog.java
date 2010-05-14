@@ -47,7 +47,11 @@ public class IgCredentialsDialog extends TitleAreaDialog {
     private Text usernameText;
     private String password;
     private Text passwordText;
-    private String hostProjectName;
+
+    // "hostProjectName" is remembered through the whole application,
+    // so it needs to be static.
+    // Its default value is "preview".
+    private static String hostProjectName = IgPreviewJob.HOST_PROJECT_NAME_FOR_PREVIEW;
     private Text hostProjectNameText;
 
     public IgCredentialsDialog(Shell shell) {
@@ -68,7 +72,7 @@ public class IgCredentialsDialog extends TitleAreaDialog {
         hostProjectNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
         hostProjectNameText = new Text(credentialsComposite, SWT.SINGLE);
         hostProjectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
-        hostProjectNameText.setText(IgPreviewJob.HOST_PROJECT_NAME_FOR_PREVIEW);
+        hostProjectNameText.setText(hostProjectName);
         hostProjectNameText.setFocus();
 
         // Prepare useCurrentIgCredentialsButton.
