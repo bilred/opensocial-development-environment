@@ -19,6 +19,7 @@ package com.googlecode.osde.internal.gadgets;
 
 public enum FeatureName {
 
+    OPENSOCIAL_0_9("opensocial-0.9"),
     OPENSOCIAL_0_8("opensocial-0.8"),
     OPENSOCIAL_0_7("opensocial-0.7"),
     PUBSUB("pubsub"),
