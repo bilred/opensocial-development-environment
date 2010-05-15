@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 
 import static com.googlecode.osde.internal.ui.wizards.ComponentUtils.createCheckbox;
 import static com.googlecode.osde.internal.ui.wizards.ComponentUtils.createLabel;
+import static com.googlecode.osde.internal.ui.wizards.ComponentUtils.createRadio;
 import static com.googlecode.osde.internal.ui.wizards.ComponentUtils.createText;
 
 public class WizardNewGadgetXmlPage extends WizardPage {
@@ -152,10 +153,16 @@ public class WizardNewGadgetXmlPage extends WizardPage {
         layout.numColumns = 4;
         featuresGroup.setLayout(layout);
         featuresGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        opensocial09Button = createCheckbox(featuresGroup, "OpenSocial v0.9");
+
+        // Prepare OpenSocial version selection.
+        // Each row in featureGroup has 4 columns (spans),
+        // and we have 3 options (v0.9, v0.8, v0.7) here.
+        // So the last option (v0.7) needs 2 spans.
+        opensocial09Button = createRadio(featuresGroup, "OpenSocial v0.9");
         opensocial09Button.setSelection(true);
-        opensocial08Button = createCheckbox(featuresGroup, "OpenSocial v0.8");
-        opensocial07Button = createCheckbox(featuresGroup, "OpenSocial v0.7");
+        opensocial08Button = createRadio(featuresGroup, "OpenSocial v0.8");
+        opensocial07Button = createRadio(featuresGroup, "OpenSocial v0.7", 2); // 2 means span=2
+
         pubsubButton = createCheckbox(featuresGroup, "PubSub");
         viewsButton = createCheckbox(featuresGroup, "Views");
         flashButton = createCheckbox(featuresGroup, "Flash");

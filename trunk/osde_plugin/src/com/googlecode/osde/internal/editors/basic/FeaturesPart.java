@@ -138,6 +138,8 @@ public class FeaturesPart extends AbstractFormPart {
         fixedFeaturesPanel.setLayout(layout);
         fixedFeaturesPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         //
+        Button opensocial09Button = createCheckbox(fixedFeaturesPanel, "OpenSocial v0.9", toolkit);
+        buttonMap.put(FeatureName.OPENSOCIAL_0_9, opensocial09Button);
         Button opensocial08Button = createCheckbox(fixedFeaturesPanel, "OpenSocial v0.8", toolkit);
         buttonMap.put(FeatureName.OPENSOCIAL_0_8, opensocial08Button);
         Button opensocial07Button = createCheckbox(fixedFeaturesPanel, "OpenSocial v0.7", toolkit);
