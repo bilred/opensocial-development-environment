@@ -7,6 +7,9 @@
 	<classpathentry kind="lib" path="libs/httpcore-4.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/junit-addons-1.4.jar"/>
 	<classpathentry kind="lib" path="libs/json_simple-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/shindig-common-1.1-BETA5-incubating.jar"/>
+	<classpathentry kind="lib" path="libs/shindig-hibernate-1.1-BETA5-incubating.jar"/>
+	<classpathentry kind="lib" path="libs/shindig-social-api-1.1-BETA5-incubating.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
@@ -36,9 +39,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/mysql-connector-java-5.1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/ojdbc5.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/persistence-api-1.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/shindig-common-1.1-BETA1-incubating.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/shindig-hibernate-1.1-BETA1-incubating.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/shindig-social-api-1.1-BETA1-incubating.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/google-closure-compiler-r46.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -67,6 +67,6 @@ Bundle-ClassPath: .,
  libs/ojdbc5.jar,
  libs/persistence-api-1.0.jar,
  libs/servlet-api-2.5-6.1.14.jar,
- libs/shindig-common-1.1-BETA1-incubating.jar,
- libs/shindig-hibernate-1.1-BETA1-incubating.jar,
- libs/shindig-social-api-1.1-BETA1-incubating.jar
+ libs/shindig-common-1.1-BETA5-incubating.jar,
+ libs/shindig-hibernate-1.1-BETA5-incubating.jar,
+ libs/shindig-social-api-1.1-BETA5-incubating.jar
