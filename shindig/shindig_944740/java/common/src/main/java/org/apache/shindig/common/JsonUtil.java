@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.Set;
 
@@ -75,7 +76,9 @@ public class JsonUtil {
   
   static Map<String, Method> getGetters(Object pojo) {
     Class<?> clazz = pojo.getClass();
-
+    if (clazz.getName().indexOf("$$EnhancerByCGLIB$$") != -1) {
+      clazz = clazz.getSuperclass();
+    }
     Map<String, Method> methods = getters.get(clazz);
     if (methods != null) {
       return methods;
