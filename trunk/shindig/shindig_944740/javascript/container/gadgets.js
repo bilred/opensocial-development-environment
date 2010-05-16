@@ -241,6 +241,7 @@ gadgets.IfrGadgetService.prototype.requestSendMessage = function(recipients,
  */
 gadgets.IfrGadgetService.prototype.requestNavigateTo = function(view,
     opt_params) {
+/*
   var id = gadgets.container.gadgetService.getGadgetIdFromModuleId(this.f);
   var url = gadgets.container.gadgetService.getUrlForView(view);
 
@@ -254,6 +255,34 @@ gadgets.IfrGadgetService.prototype.requestNavigateTo = function(view,
   if (url && document.location.href.indexOf(url) == -1) {
     document.location.href = url;
   }
+*/
+        alert("Navigate to the [" + view + "] view.");
+        var params = new Array();
+        var query = document.location.search;
+        if (query.indexOf('?', 0) > -1) {
+                query = query.split('?')[1];
+        }
+        query = query.split('&');
+        for (var i = 0; i < query.length; i++) {
+                var p = query[i].split('=');
+                if (p[0] != '') {
+                        params[p[0]] = typeof(p[1]) == 'undefined' ? true : p[1];
+                }
+        }
+        params["view"] = view;
+        if (opt_params) {
+                var paramStr = gadgets.json.stringify(opt_params);
+                if (paramStr.length > 0) {
+                        params["appParams"] = encodeURIComponent(paramStr);
+                }
+        }
+        var query = "?";
+        var amp = '';
+        for (var i in params) {
+                query = query + amp + i + "=" + params[i];
+                amp = '&';
+        }
+        document.location.href = document.location.protocol + "//" + document.location.host + document.location.pathname + query;
 };
 
 /**
@@ -394,11 +423,6 @@ gadgets.Gadget = function(params) {
       this[name] = params[name];
     }
   }
-  if (!this.secureToken) {
-    // Assume that the default security token implementation is
-    // in use on the server.
-    this.secureToken = 'john.doe:john.doe:appid:cont:url:0:default';
-  }
 };
 
 gadgets.Gadget.prototype.getUserPrefs = function() {
@@ -497,6 +521,7 @@ gadgets.IfrGadget.prototype.cssClassGadgetContent = 'gadgets-gadget-content';
 gadgets.IfrGadget.prototype.rpcToken = (0x7FFFFFFF * Math.random()) | 0;
 gadgets.IfrGadget.prototype.rpcRelay = 'files/container/rpc_relay.html';
 
+/*
 gadgets.IfrGadget.prototype.getTitleBarContent = function(continuation) {
   var settingsButton = this.hasViewablePrefs_() ?
       '<a href="#" onclick="gadgets.container.getGadget(' + this.id +
@@ -511,6 +536,14 @@ gadgets.IfrGadget.prototype.getTitleBarContent = function(continuation) {
       '<a href="#" onclick="gadgets.container.getGadget(' + this.id +
       ').handleToggle();return false;" class="' + this.cssClassTitleButton +
       '">toggle</a></span></div>');
+};
+*/
+
+gadgets.IfrGadget.prototype.getTitleBarContent = function(continuation) {
+  continuation('<div id="' + this.cssClassTitleBar + '-' + this.id +
+      '" class="' + this.cssClassTitleBar + '"><span id="' +
+      this.getIframeId() + '_title" class="' +
+      this.cssClassTitle + '">' + (this.title ? this.title : 'Title') + '</span></div>');
 };
 
 gadgets.IfrGadget.prototype.getUserPrefsDialogContent = function(continuation) {

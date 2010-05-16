@@ -360,6 +360,7 @@
         <module>java/common</module>
         <module>java/gadgets</module>
         <module>java/social-api</module>
+        <module>java/hibernate</module>
         <module>java/server</module>
       </modules>
     </profile>
@@ -402,6 +403,14 @@
       </modules>
     </profile>
 
+    <!-- profile to build java/hibernate -->
+    <profile>
+      <id>hibernate</id>
+      <modules>
+        <module>java/hibernate</module>
+      </modules>
+    </profile>
+
     <profile>
       <id>run</id>
       <properties>
@@ -418,6 +427,12 @@
         <dependency>
           <groupId>org.apache.shindig</groupId>
           <artifactId>shindig-social-api</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>org.apache.shindig</groupId>
+          <artifactId>shindig-hibernate</artifactId>
           <version>${project.version}</version>
         </dependency>
 
@@ -466,8 +481,9 @@
         <module>java/common</module>
         <module>java/gadgets</module>
         <module>java/social-api</module>
+        <module>java/hibernate</module>
         <module>java/server</module>
-        <module>java/samples</module>
+        <!-- <module>java/samples</module> -->
       </modules>
       <build>
         <plugins>
@@ -750,8 +766,9 @@
         <module>java/common</module>
         <module>java/gadgets</module>
         <module>java/social-api</module>
+        <module>java/hibernate</module>
         <module>java/server</module>
-        <module>java/samples</module>
+        <!-- <module>java/samples</module> -->
         <module>assembly</module>
       </modules>
       <build>
@@ -834,6 +851,7 @@
         <module>java/common</module>
         <module>java/gadgets</module>
         <module>java/social-api</module>
+        <module>java/hibernate</module>
         <module>java/server</module>
         <module>assembly</module>
       </modules>
@@ -887,7 +905,7 @@
             <source>1.5</source>
             <target>1.5</target>
             <showDeprecation>true</showDeprecation>
-            <compilerArgument>-Xlint:unchecked,deprecation,fallthrough,finally</compilerArgument>
+            <compilerArgument>-Xlint:deprecation,fallthrough,finally</compilerArgument>
             <fork>true</fork>
             <encoding>${project.build.sourceEncoding}</encoding>
           </configuration>
@@ -1298,6 +1316,11 @@
         <artifactId>shindig-common</artifactId>
         <version>${project.version}</version>
         <type>test-jar</type>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.shindig</groupId>
+        <artifactId>shindig-hibernate</artifactId>
+        <version>${project.version}</version>
       </dependency>
 
       <!-- external dependencies -->

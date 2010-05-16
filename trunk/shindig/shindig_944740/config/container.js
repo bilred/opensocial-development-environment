@@ -103,12 +103,22 @@
     "profile" : {
       "isOnlyVisible" : false,
       "urlTemplate" : "http://localhost/gadgets/profile?{var}",
-      "aliases": ["DASHBOARD", "default"]
+      "aliases": ["PROFILE", "default"]
     },
     "canvas" : {
       "isOnlyVisible" : true,
       "urlTemplate" : "http://localhost/gadgets/canvas?{var}",
-      "aliases" : ["FULL_PAGE"]
+      "aliases" : ["CANVAS"]
+    },
+    "preview" : {
+      "isOnlyVisible" : true,
+      "urlTemplate" : "http://localhost/gadgets/preview?{var}",
+      "aliases": ["PREVIEW"]
+    },
+    "home" : {
+      "isOnlyVisible" : false,
+      "urlTemplate" : "http://localhost/gadgets/home?{var}",
+      "aliases": ["HOME"]
     }
   },
   "rpc" : {
@@ -139,7 +149,7 @@
     "path" : "http://%host%/social/rpc",
     // Path to issue invalidate calls
     "invalidatePath" : "http://%host%/gadgets/api/rpc",
-    "domain" : "shindig",
+    "domain" : "osde",
     "enableCaja" : false,
     "supportedFields" : {
        "person" : ["id", {"name" : ["familyName", "givenName", "unstructured"]}, "thumbnailUrl", "profileUrl"],
