@@ -54,7 +54,7 @@ public class ShindigServer extends ExternalApp {
                     .withMainClassName("Main")
                     .withArgument(DEFAULT_SHINDIG_PORT)
                     .withArgumentQuoted(Activator.getResourceUrl(
-                            "/shindig/shindig-server-1.1-BETA1-incubating.war"))
+                            "/shindig/shindig-server-1.1-BETA5-incubating.war"))
                     .withArgumentQuoted(
                             Activator.getDefault().getOsdeConfiguration().getJettyDir())
                     .withVmArgument("log4j.configuration", getLoggerConfigurationFile())
