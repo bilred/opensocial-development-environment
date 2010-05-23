@@ -32,7 +32,14 @@ public class OpenSocialCodeAssistProcessor implements IContentAssistProcessor {
     private static final IContextInformation[] NO_CONTEXTS = new IContextInformation[0];
 
     public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
-    	return new ICompletionProposal[]{new CompletionProposal("abc", offset, 3, 0)};
+        // TODO need to provide the different Proposals for each OpenSocial spec. 
+        int len = 3;
+        int pos = len;
+        int s = offset;
+        return new ICompletionProposal[] { 
+                new CompletionProposal("opensocial.Activity", s, 0, len),
+                new CompletionProposal("opensocial.Activity.getId()", s, 0, len)
+        };
     }
 
     public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
