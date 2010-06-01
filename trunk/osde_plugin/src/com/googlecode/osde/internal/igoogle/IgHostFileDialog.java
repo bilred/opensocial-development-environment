@@ -65,7 +65,7 @@ public class IgHostFileDialog extends IgCredentialsDialog {
         // Prepare extra description.
         Label extraDescription = new Label(panelComposite, SWT.LEFT);
         extraDescription.setText(
-        		"\nNote: It may take up to 24 hours for your latest changes to\ntake effect.");
+        		"\nNote: It might take around 5 min for your latest changes to\ntake effect.");
         extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 
         return dialogAreaComposite;
