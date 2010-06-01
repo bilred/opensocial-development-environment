@@ -81,9 +81,12 @@ public class IgPreviewDialog extends IgCredentialsDialog {
 
         // Prepare extra description.
         Label extraDescription = new Label(panelComposite, SWT.LEFT);
-        extraDescription.setText("\nNote: Some social features will not function properly unless\n"
-        		+ "you select the necessary options in the 'Add gadget to my\n"
-        		+ "iGoogle page' step. These options are:\n"
+        extraDescription.setText("\nNotes:\n"
+        		+ "#1 It might take around 5 min for your latest changes to\n"
+        		+ "    take effect.\n"
+        		+ "#2 Some social features will not function properly unless\n"
+        		+ "    you select the necessary options in the 'Add gadget to my\n"
+        		+ "    iGoogle page' step. These options are:\n"
                 + "\t(1) Know who I am and see my Friends group\n"
                 + "\t(2) Post my activities to Updates\n");
         extraDescription.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
@@ -92,7 +95,7 @@ public class IgPreviewDialog extends IgCredentialsDialog {
 
     @Override
     protected Point getInitialSize() {
-        return new Point(350, 400);
+        return new Point(350, 450);
     }
 
     @Override
