@@ -36,11 +36,11 @@ public abstract class IgGadgetSelectedAction extends IgBaseAction {
 
     private IFile gadgetXmlIFile;
     IFile getGadgetXmlIFile() {
-    	return gadgetXmlIFile;
+        return gadgetXmlIFile;
     }
 
     public void selectionChanged(IAction action, ISelection selection) {
-    	logger.fine("(in selectionChanged");
+        logger.fine("(in selectionChanged");
         if (selection instanceof IStructuredSelection) {
             IStructuredSelection structured = (IStructuredSelection) selection;
             Object element = structured.getFirstElement();

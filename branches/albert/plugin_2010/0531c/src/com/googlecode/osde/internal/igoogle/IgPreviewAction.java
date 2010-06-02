@@ -41,7 +41,7 @@ public class IgPreviewAction extends IgGadgetSelectedAction {
             String hostProjectName = dialog.getHostProjectName();
             boolean useCanvasView = dialog.isUseCanvasView();
             Job job = new IgPreviewJob(getShell(), igCredentials, hostProjectName,
-            		getGadgetXmlIFile(), useCanvasView);
+                    getGadgetXmlIFile(), useCanvasView);
             job.schedule();
         }
     }

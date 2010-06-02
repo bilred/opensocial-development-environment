@@ -59,7 +59,7 @@ public class IgCredentialsDialog extends TitleAreaDialog {
     }
 
     void prepareComposite(Composite dialogAreaComposite) {
-    	logger.fine("in prepareComposite");
+        logger.fine("in prepareComposite");
 
         // Prepare credentialsComposite.
         Composite credentialsComposite = new Composite(dialogAreaComposite, SWT.NONE);

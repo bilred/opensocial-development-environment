@@ -39,7 +39,7 @@ public abstract class IgBaseAction
 
     private Shell shell;
     Shell getShell() {
-    	return shell;
+        return shell;
     }
 
     public void init(IWorkbenchWindow window) {
