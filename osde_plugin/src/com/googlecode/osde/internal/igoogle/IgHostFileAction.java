@@ -40,7 +40,7 @@ public class IgHostFileAction extends IgGadgetSelectedAction {
             IgCredentials igCredentials = retrieveCredentials(dialog);
             String hostProjectName = dialog.getHostProjectName();
             Job job = new IgHostFileJob(
-            		getShell(), igCredentials, hostProjectName, getGadgetXmlIFile());
+                    getShell(), igCredentials, hostProjectName, getGadgetXmlIFile());
             job.schedule();
         }
     }
