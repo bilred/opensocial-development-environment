@@ -55,7 +55,7 @@ public class IgHostFileJob extends Job {
     private Shell shell;
 
     public IgHostFileJob(Shell shell, IgCredentials igCredentials, String hostProjectName,
-    		IFile gadgetXmlIFile) {
+            IFile gadgetXmlIFile) {
         super("iGoogle - Host Gadget Files");
         this.shell = shell;
         this.igCredentials = igCredentials;
