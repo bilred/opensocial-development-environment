@@ -62,7 +62,7 @@ public abstract class IgBaseAction
 
     IgCredentials retrieveCredentials(IgCredentialsDialog dialog) {
         IgCredentials igCredentials = null;
-        if (IgCredentials.hasCurrentInstance()) {
+        if (dialog.isUsePreviousIgCredentials()) {
             igCredentials = IgCredentials.getCurrentInstance();
         } else {
             String username = dialog.getUsername();
