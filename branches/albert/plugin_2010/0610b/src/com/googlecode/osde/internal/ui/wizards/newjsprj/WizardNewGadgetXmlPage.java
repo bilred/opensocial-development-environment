@@ -42,9 +42,11 @@ public class WizardNewGadgetXmlPage extends WizardPage {
     private Text descriptionText;
     private Text authorEmailText;
     private Text specFilenameText;
+    private Button opensocialButton;
     private Button opensocial09Button;
     private Button opensocial08Button;
     private Button opensocial07Button;
+    private Button nonOpensocialButton;
     private Button pubsubButton;
     private Button viewsButton;
     private Button flashButton;
@@ -156,12 +158,12 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 
         // Prepare OpenSocial version selection.
         // Each row in featureGroup has 4 columns (spans),
-        // and we have 3 options (v0.9, v0.8, v0.7) here.
-        // So the last option (v0.7) needs 2 spans.
+        opensocialButton = createRadio(featuresGroup, "OpenSocial");
+        opensocialButton.setSelection(true);
         opensocial09Button = createRadio(featuresGroup, "OpenSocial v0.9");
-        opensocial09Button.setSelection(true);
         opensocial08Button = createRadio(featuresGroup, "OpenSocial v0.8");
-        opensocial07Button = createRadio(featuresGroup, "OpenSocial v0.7", 2); // 2 means span=2
+        opensocial07Button = createRadio(featuresGroup, "OpenSocial v0.7");
+        nonOpensocialButton = createRadio(featuresGroup, "Non-OpenSocial", 4); // 4 means span=4
 
         pubsubButton = createCheckbox(featuresGroup, "PubSub");
         viewsButton = createCheckbox(featuresGroup, "Views");
@@ -210,9 +212,11 @@ public class WizardNewGadgetXmlPage extends WizardPage {
         data.setDynamicHeight(dynamicHeightButton.getSelection());
         data.setFlash(flashButton.getSelection());
         data.setMiniMessage(miniMessageButton.getSelection());
+        data.setOpensocial(opensocialButton.getSelection());
         data.setOpensocial07(opensocial07Button.getSelection());
         data.setOpensocial08(opensocial08Button.getSelection());
         data.setOpensocial09(opensocial09Button.getSelection());
+        data.setNonOpensocial(nonOpensocialButton.getSelection());
         data.setPubsub(pubsubButton.getSelection());
         data.setSetTitle(setTitleButton.getSelection());
         data.setSkins(skinsButton.getSelection());
