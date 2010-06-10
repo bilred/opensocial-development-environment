@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module>
+    <ModulePrefs
+            title="title1"
+            title_url="titleUrl1"
+            description="description1"
+            author="author1"
+            author_email="authorEmail1"
+            screenshot="screenshot1"
+            thumbnail="thumbnail1"
+            height="78">
+        <Require feature="feature1">
+            <Param name="name1">value1</Param>
+        </Require>
+        <Optional feature="feature2">
+            <Param name="name2">value2</Param>
+        </Optional>
+        <Icon mode="mode1" type="type1">value3</Icon>
+        <Link href="href1" rel="rel1" method="method1" />
+        <Locale lang="lang1" country="country1" messages="messages1" language_direction="languageDirection1">
+            <msg name="name3" desc="desc1">value4</msg>
+        </Locale>
+        <OAuth>
+            <Service name="name4">
+                <Request url="url1" method="method2" param_location="paramLocation1" />
+                <Access url="url2" method="method3" param_location="paramLocation2" />
+                <Authorization url="url3" />
+            </Service>
+        </OAuth>
+        <Preload href="href2" authz="authz1" sign_owner="true" sign_viewer="true"
+                views="views1" oauth_service_name="oauthServiceName1" oauth_token_name="oauthTokenName1"
+                oauth_request_token="oauthRequestToken1" oauth_request_token_secret="oauthRequestTokenSecret1" />
+    </ModulePrefs>
+    <UserPref name="name5" display_name="displayName1" default_value="defaultValue1" required="required1" datatype="datatype1">
+        <EnumValue value="value5" display_value="displayValue1" />
+    </UserPref>
+    <Content type="type2" href="href3" view="view1" preferred_width="123" preferred_height="456">value6</Content>
+</Module>
