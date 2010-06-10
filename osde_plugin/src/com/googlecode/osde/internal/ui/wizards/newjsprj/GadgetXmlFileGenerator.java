@@ -77,6 +77,9 @@ public class GadgetXmlFileGenerator {
                 content += " thumbnail=\"" + gadgetXmlData.getThumbnail() + "\"";
             }
             content += ">\n";
+            if (gadgetXmlData.isOpensocial()) {
+                content += "    <Require feature=\"opensocial\" />\n";
+            }
             if (gadgetXmlData.isOpensocial09()) {
                 content += "    <Require feature=\"opensocial-0.9\" />\n";
             }

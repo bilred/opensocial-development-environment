@@ -30,20 +30,13 @@ public class GadgetXmlData implements Serializable {
     private String screenshot = "";
     private String thumbnail = "";
 
-    /**
-     * opensocial-0.9
-     */
+    // OSDE supports 4 Feature's: opensocial, opensocial v0.9, opensocial v0.8, opensocial v0.7
+    // "nonOpensocial" means no opensocial Feature is supported.
+    private boolean opensocial;
     private boolean opensocial09;
-
-    /**
-     * opensocial-0.8
-     */
     private boolean opensocial08;
-
-    /**
-     * opensocial-0.7
-     */
     private boolean opensocial07;
+    private boolean nonOpensocial;
 
     private boolean pubsub;
     private boolean views;
@@ -119,6 +112,22 @@ public class GadgetXmlData implements Serializable {
         this.thumbnail = thumbnail;
     }
 
+    public boolean isOpensocial() {
+        return opensocial;
+    }
+
+    public void setOpensocial(boolean opensocial) {
+        this.opensocial = opensocial;
+    }
+
+    public boolean isOpensocial07() {
+        return opensocial07;
+    }
+
+    public void setOpensocial07(boolean opensocial07) {
+        this.opensocial07 = opensocial07;
+    }
+
     public boolean isOpensocial08() {
         return opensocial08;
     }
@@ -135,12 +144,12 @@ public class GadgetXmlData implements Serializable {
         this.opensocial09 = opensocial09;
     }
 
-    public boolean isOpensocial07() {
-        return opensocial07;
+    public boolean isNonOpensocial() {
+        return nonOpensocial;
     }
 
-    public void setOpensocial07(boolean opensocial07) {
-        this.opensocial07 = opensocial07;
+    public void setNonOpensocial(boolean nonOpensocial) {
+        this.nonOpensocial = nonOpensocial;
     }
 
     public boolean isPubsub() {
