@@ -2,7 +2,7 @@
 <feature
       id="com.googlecode.osde.feature"
       label="OpenSocial Development Environment Feature"
-      version="0.9.4"
+      version="0.9.5"
       provider-name="OSDE Project"
       plugin="com.googlecode.osde">
 
