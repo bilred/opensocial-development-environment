@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="OpenSocial Development Environment User Guide">
+	<topic label="Overview"  href="html/overview.html"> 
+	</topic>
+ <topic href="html/getting_started.html" label="Getting started">
+ </topic>
+</toc>
