@@ -158,12 +158,12 @@ public class WizardNewGadgetXmlPage extends WizardPage {
 
         // Prepare OpenSocial version selection.
         // Each row in featureGroup has 4 columns (spans),
-        opensocialButton = createRadio(featuresGroup, "OpenSocial");
-        opensocialButton.setSelection(true);
-        opensocial09Button = createRadio(featuresGroup, "OpenSocial v0.9");
-        opensocial08Button = createRadio(featuresGroup, "OpenSocial v0.8");
-        opensocial07Button = createRadio(featuresGroup, "OpenSocial v0.7");
-        nonOpensocialButton = createRadio(featuresGroup, "Non-OpenSocial", 4); // 4 means span=4
+        opensocial09Button = createRadio(featuresGroup, "OpenSocial v0.9", 1); // 1 means span=1
+        opensocial09Button.setSelection(true);
+        opensocial08Button = createRadio(featuresGroup, "OpenSocial v0.8", 1);
+        opensocial07Button = createRadio(featuresGroup, "OpenSocial v0.7", 2);
+        opensocialButton = createRadio(featuresGroup, "OpenSocial (not fully supported yet)", 2);
+        nonOpensocialButton = createRadio(featuresGroup, "Non-OpenSocial", 2);
 
         pubsubButton = createCheckbox(featuresGroup, "PubSub");
         viewsButton = createCheckbox(featuresGroup, "Views");
