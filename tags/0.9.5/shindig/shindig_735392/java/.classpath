@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="target/maven-shared-archive-resources"/>
+	<classpathentry kind="src" output="common/target/classes" path="common/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="common/target/classes" path="common/src/main/bundle"/>
+	<classpathentry excluding="**" kind="src" output="common/target/classes" path="common/conf"/>
+	<classpathentry excluding="**" kind="src" output="common/target/classes" path="common/target/maven-shared-archive-resources"/>
+	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
+	<classpathentry kind="src" output="gadgets/target/classes" path="gadgets/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="gadgets/target/classes" path="gadgets/target/maven-shared-archive-resources"/>
+	<classpathentry kind="src" output="gadgets/target/test-classes" path="gadgets/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="gadgets/target/test-classes" path="gadgets/src/test/resources"/>
+	<classpathentry kind="src" output="social-api/target/classes" path="social-api/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="social-api/target/classes" path="social-api/target/maven-shared-archive-resources"/>
+	<classpathentry kind="src" output="social-api/target/test-classes" path="social-api/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="social-api/target/test-classes" path="social-api/src/test/resources"/>
+	<classpathentry excluding="**" kind="src" output="Users/yoichiro/Documents/osde/opensocial-development-environment/trunk/shindig/shindig_735392/features/target/classes" path="Users/yoichiro/Documents/osde/opensocial-development-environment/trunk/shindig/shindig_735392/features"/>
+	<classpathentry kind="src" output="hibernate/target/classes" path="hibernate/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="hibernate/target/classes" path="hibernate/src/main/resources"/>
+	<classpathentry excluding="**" kind="src" output="hibernate/target/classes" path="hibernate/target/maven-shared-archive-resources"/>
+	<classpathentry kind="src" output="hibernate/target/test-classes" path="hibernate/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="hibernate/target/test-classes" path="hibernate/src/test/resources"/>
+	<classpathentry excluding="**" kind="src" output="server/target/classes" path="server/target/maven-shared-archive-resources"/>
+	<classpathentry kind="src" output="server/target/test-classes" path="server/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="server/target/test-classes" path="server/src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
