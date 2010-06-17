@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="http://opensocial-development-environment.googlecode.com/files/com.googlecode.osde.feature_0.9.3.jar" id="com.googlecode.osde.feature" version="0.9.3">
+   <feature url="http://opensocial-development-environment.googlecode.com/files/com.googlecode.osde.feature_0.9.5.jar" id="com.googlecode.osde.feature" version="0.9.5">
       <category name="jp.eisbahn.eclipse.plugins.osde.category"/>
    </feature>
-   <archive path="plugins/com.googlecode.osde_0.9.3.jar" url="http://opensocial-development-environment.googlecode.com/files/com.googlecode.osde_0.9.3.jar"/>
+   <archive path="plugins/com.googlecode.osde_0.9.5.jar" url="http://opensocial-development-environment.googlecode.com/files/com.googlecode.osde_0.9.5.jar"/>
    <category-def name="jp.eisbahn.eclipse.plugins.osde.category" label="OpenSocial">
       <description>
          This category contains plug-ins regarding to OpenSocial
