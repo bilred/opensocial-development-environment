@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OpenSocial Development Environment Plug-in
 Bundle-SymbolicName: com.googlecode.osde;singleton:=true
-Bundle-Version: 0.9.5
+Bundle-Version: 1.0.0
 Bundle-Activator: com.googlecode.osde.internal.Activator
 Bundle-Vendor: OSDE Project
 Bundle-Shindig-Revision: 796905
