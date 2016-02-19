@@ -1,0 +1,48 @@
+# How does logger work #
+
+OSDE provides an embedded Shindig container, which in turn runs in our embedded Jetty server. They are both open source projects and their development teams choose different logging frameworks. Jetty creates its own logger factory and can switch to SLF4J. Shindig uses Log4J and its related projects use java.util.logging. In order to provide an easy way to configure logger settings, we use the SLF4J over Log4J and java.util.logging and merge the log4j.properties and logging.properties (used to java.util.logging) in the same file.
+
+## The logging.properties ##
+
+If you have no logger settings, OSDE will use a default logging.properties file. It has the following content:
+
+```
+##
+# java.util.logging section
+##
+.level=INFO
+
+##
+# apache log4j section
+##
+log4j.rootLogger=INFO, stdout
+#log4j.rootLogger=INFO, FILE, stdout
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%-4r [%t] %-5p %c %x - %m%n
+#log4j.appender.FILE=org.apache.log4j.FileAppender
+#log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+#log4j.appender.FILE.layout.ConversionPattern=%-5p: [%t] %C.%M (%F:%L) | %m%n
+#log4j.appender.FILE.filter=org.apache.log4j.varia.LevelRangeFilter
+#log4j.appender.FILE.filter.LevelMin=WARN
+#log4j.appender.FILE.filter.LevelMax=FATAL
+#log4j.appender.FILE.File=${user.home}/osde-plugin-log.log
+log4j.logger.org.hibernate=WARN
+log4j.logger.org.apache.shindig.social.opensocial.hibernate.utils.HttpLogFilter=WARN
+
+```
+
+The following tutorials will be helpful if you have problems on how to configure:
+
+  * Configuring Logger Default Values with a Properties File
+> > http://www.exampledepot.com/egs/java.util.logging/Props.html
+
+  * Short introduction to log4j
+> > http://logging.apache.org/log4j/1.2/manual.html
+
+## Customized logger configuration file ##
+
+In the OSDE preference page, you can set the file location in the **Logger settings** section
+
+
+> ![http://opensocial-development-environment.googlecode.com/files/logger_settings.jpg](http://opensocial-development-environment.googlecode.com/files/logger_settings.jpg)

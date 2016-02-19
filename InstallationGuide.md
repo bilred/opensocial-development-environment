@@ -1,0 +1,69 @@
+# Installation guide #
+
+The installation process is described in this page. You'll be able to install OSDE easily, because OSDE is distributed with the update site.
+
+## Required software ##
+
+You must install the following software before installing OSDE.
+
+  * Java SE Development Kit 5.0 or higher [Download](http://java.sun.com/javase/downloads/index.jsp)
+    * We have already known the problem at running on JDK1.6.0\_03 (See #47). You should use the latest version of JDK.
+  * Eclipse IDE 3.4.1 or higher [Download](http://www.eclipse.org/downloads/)
+    * There are various versions of Eclipse. It is recommended to use the version of "Eclipse Classic".
+    * You might need to manually install some library plugins for some versions of Eclipse. For example, you might need to manually install the org.eclipse.wst (Web Standard Tools) eclipse plugin. Because there are too many details, please refer to eclipse website for more details on how to install these library.
+
+## Installation of OSDE ##
+
+You can install this OSDE with update-site.
+
+### 1. Launch Eclipse IDE. ###
+
+Launch your Eclipse IDE after installing the required software.
+
+### 2. Invoke Software Updates and Add-ons dialog. ###
+
+Due to open the dialog for installing plug-in, you select the following menus.
+
+  * `[Help`] -> `[Install New Software...`]
+
+### 3. Add the update-site ###
+
+Add the update-site to have OSDE.
+
+  * Click on `[Add...`] button.
+  * Input the following URL to Location field, and push `[OK`] button.
+    * http://opensocial-development-environment.googlecode.com/svn/update-site/site.xml
+
+Then, you can see the OSDE update-site shown in site list.
+
+### 4. Install OSDE ###
+
+You can install OSDE from registered update-site.
+
+  * Expand the node of registered update-site.
+  * Select the node of OpenSocial category.
+  * Click on `[Install...`] button.
+
+After calculating requirements and dependencies, you'll see the Intall dialog.
+
+  * Click on `[Next`] button.
+  * If you agree the OSDE license, then select `[I accept ...`] and click on `[Finish`] button.
+
+Eclipse starts to download and install OSDE. If the intalling task succeeds, you can see the dialog to specify restarting Eclipse.
+
+  * Click on `[Yes`] button.
+
+Install complete after restarting Eclipse. If installing OSDE is successful, you'll be able to find the OpenSocial icon in Eclipse toolbar.
+
+### 5. Check a configuration ###
+
+OSDE allows you to configure some preferences on a preference panel. If you want to adjust the values, please select the following menus.
+
+  * `[Eclipse`] -> `[Preferences...`] -> `[OSDE`] (for MacOSX)
+  * `[Window`] -> `[Preferences...`] -> `[OSDE`] (for Windows)
+
+You can find the two fields "Jetty context directory" and "Shindig database directory". These fields is set the default path. In case that you use Windows, If the paths starts with any server name (ex. \\server\_name\folder\...), you can't launch your application. To resolve this situation, please re-write to the path that starts with Drive letter (ex. C:\osde\...).
+
+### 6. Next ###
+
+See [Quick start](QuickStart.md) at next.

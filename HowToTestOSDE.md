@@ -1,0 +1,45 @@
+# Introduction #
+
+This page describes how test files are organized in OSDE. The contents in this page is a general description on how to checkout, run tests, and request code review. If you are a developer and would like to actually write testing codes in OSDE. You should read this page first. And then refer to [OSDE Test Specs](http://code.google.com/p/opensocial-development-environment/wiki/OSDETestSpecs) for more details and guidelines.
+
+There are two kinds of tests for developing plug-ins in eclipse. One is the regular JUnit Test and the other is JUnit **Plug-in** Test. The regular JUnit Test is the one you have probably been familiar with. They can be run direclty in eclipse like in any other development environments during the development. The JUnit Plug-in Test is, however, the special one you must pay attention to. Typically a JUnit Plug-in Test should be run under a new instance of eclipse. That is, another runtime eclipse instance will be started to run your JUnit Plug-in test besides your current working eclipse. So you will have 2 instances of eclipse running when you execute JUnit Plug-in Tests: One is the development environment for developing your plug-in, the other one is the runtime eclipse that runs your plug-in and JUnit Plug-in Tests.
+
+Given their distinct runtime behaviors, we separate regular JUnit Test from JUnit Plug-in Test: The former lives with source files in the host project and the latter is put under the fragment project. Therefore:
+
+**All JUnit Test files should be put under [/trunk/jp.eisbahn.eclipse.plugins.osde/test](http://code.google.com/p/opensocial-development-environment/source/browse/#svn/trunk/jp.eisbahn.eclipse.plugins.osde/test)**
+
+**All JUnit Plug-in Test files should be put under [/trunk/jp.eisbahn.eclipse.plugins.osde.test/src](http://code.google.com/p/opensocial-development-environment/source/browse/#svn/trunk/jp.eisbahn.eclipse.plugins.osde.test/src)**
+
+
+
+# Details #
+
+JUnit Plug-in Test files are separated from source code files in OSDE. They are extracted and put in a fragment project that relies on host project (or host plug-in). A fragment project in eclipse context is an extension to the host plug-in project. It contains its own config files but depends on the host project for library dependencies. The benefit of using fragment project is that we can extract things that are not relevant to production release into another place to form a clear separation and abstraction. The size of the trunk for host plug-in can also be reduced in this way.
+
+The fragment test project should thus contain only testing codes but not host plug-in source codes.
+
+In OSDE, source code and regular JUnit Test code of host plug-in are put under [svn/trunk/jp.eisbahn.eclipse.plugins.osde](http://code.google.com/p/opensocial-development-environment/source/browse/#svn/trunk/jp.eisbahn.eclipse.plugins.osde)
+while JUnit Plug-in test files for it are put under [svn/trunk/jp.eisbahn.eclipse.plugins.osde.test](http://code.google.com/p/opensocial-development-environment/source/browse/#svn/trunk/jp.eisbahn.eclipse.plugins.osde.test).
+
+In order to successfully run both kinds of tests for OSDE, you have to checkout both of them as two separate eclipse projects onto your local machine. And then run JUnit Test or JUnit Plug-in Test separately. You should be able to run tests without seeing compile errors by following this simple step. If you only want to run regular JUnit Test, you can only check out the host plug-in project.
+
+When running your JUnit Plug-in test, if you are seeing errors like "unresolved type" in the fragment test project. Try to keep only the host plug-in project and test project opened in eclipse and close all other unrelated projects. Then make sure the errors are gone and run the tests again.
+
+If you are still seeing compile errors in the test project. Make sure you didn't touch/modify the [manifest.mf file](http://code.google.com/p/opensocial-development-environment/source/browse/trunk/jp.eisbahn.eclipse.plugins.osde.test/META-INF/MANIFEST.MF) in the test project. The manifest file is supposed to stay as it is and not frequently changed.
+
+# Caveat For Developers #
+
+Based on the above discussions, since the files are distributed into two diffrent places. **_Please carefully read the following section on how to conduct development and request code review under this context._**
+
+# Development and Code Review for Testing Code #
+
+Developing testing code in the fragment test project requires more attention since you might have two separate projects in your workspace and also in the trunk. When requesting code review for your source files and their testing code:
+  * **For regular JUnit Test, put your test files under test directory in the host project**.
+
+or
+
+  * **For JUnit Plug-in Test, put your source files in the host plug-in project and testing files in the fragment test project**. In this way, you have to create **TWO** branches and file **TWO** code reviews since your files are now scattered in two different projects/branches.
+
+# Reference #
+
+  * [Unit Testing Plug-ins with Fragments](http://rcpquickstart.com/2007/06/20/unit-testing-plug-ins-with-fragments/)

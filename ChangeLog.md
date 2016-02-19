@@ -1,0 +1,201 @@
+# Change log #
+
+### January 3, 2010 ###
+> Version 0.7.0 Candidate 1 has been released.
+
+  * Supported the hasApp filter and provided Application view to show the information and managing an application's member.
+  * Provided a way to evaluate the web preformance of a gadget.
+  * Deleted a monitoring view for Shindig.
+
+### December 18, 2009 ###
+> Version 0.5.0 stable has been released.
+
+  * Supported to preview and publish your application on iGoogle.
+  * Fixed some bugs.
+
+### December 13, 2009 ###
+> Version 0.5.0 Candidate 2 has been released.
+
+  * Fixed the problem to be locked files by Windows.
+
+### December 6, 2009 ###
+> Version 0.5.0 Candidate 1 has been released.
+
+  * Supported to preview and publish your application on iGoogle.
+  * Fixed some bugs.
+
+### November 16, 2009 ###
+> Version 0.3.1 has been released.
+
+  * Fixed some issues:
+    * Check for valid author\_email format when creating a new OSDE project.
+    * 'Building workspace' has encountered a problem - Eclipse couldn't refresh the "target" directory.
+    * 'Building workspace' has encountered a problem. Errors occured during the build.
+
+### October 24, 2009 ###
+> Version 0.3.0 stable has been released.
+
+  * Supporting to OpenSocial v0.9.
+  * Replacing some libraries to a recent version.
+  * Fixed some bugs.
+
+### October 21, 2009 ###
+> Version 0.3.0 Candidate 3 has been released.
+
+  * Building and copying the Gadget XML file failed.
+  * Could not create action delegate for id: ......editorActions.runAction.
+
+### October 15, 2009 ###
+> Version 0.3.0 Candidate 2 has been released.
+
+  * The option of "TAIWAN, PROVINCE OF CHINA (TW)" has been changed to "TAIWAN".
+  * Open default XML editor when user double clicks on the message bundle file.
+
+### October 4, 2009 ###
+> Version 0.3.0 Candidate 1 has been released.
+
+  * Supporting to OpenSocial v0.9.
+  * Changing the default path of the working directory for OSDE.
+  * Fixed about add Relationship.
+  * Fixed the problem that can't execute the gadget in a sub folder.
+  * Removing the legacy of h2-library.
+  * Fixed shindig launch error.
+  * Add the logging function. The log file will be written in the $HOME/.osde directory.
+
+### August 16, 2009 ###
+> Version 0.2.8 has been released.
+
+  * Selected view is unselected after saving changes in OSDE editor
+  * makeRequest does not work anymore in OSDE 0.2.7
+  * Fetching app data using "`*`" doesn't work
+  * typo "Contry" while adding a new supported locale
+  * maxElementsInMemory for parsedDocument needs more than 1.
+  * The context directory for jetty doesn't be made.
+  * org.apache.shindig.gadgets.GadgetException: url parameter is missing
+
+> You can see more details: [Milestone-Release0.2.8](http://code.google.com/p/opensocial-development-environment/issues/list?can=1&q=label%3AMilestone-Release0.2.8)
+
+### June 29, 2009 ###
+> Version 0.2.7 has been released.
+
+  * Support the keyboard shortcut for launching your gadget on the gadget editor directly. You can launch your gadget by pressing Ctrl+R or Alt+R.
+
+  * Fixed the issue that selected view is unselected after saving changes in OSDE editor.
+
+  * Fixed the issue that AppData can be removed by the other user.
+
+  * Fixed the issue that undefined error occurred in a sample code.
+
+  * Fixed the issue that for Person populated with newFetchPersonRequest, both Person.isOwner() and Person.isViewer() returning false.
+
+  * You can input a feature name freely.
+
+  * Implemented HTTP Traffic View.
+
+> You can see more details: [Milestone-Release0.2.7](http://code.google.com/p/opensocial-development-environment/issues/list?can=1&q=label%3AMilestone-Release0.2.7)
+
+### May 8, 2009 ###
+> Version 0.2.6 has been released.
+
+  * Adding, deleting and updating AppData. You can manipulate appdatas in AppData view.
+
+  * The target directory of a creating new project. Fixed the issue when you change the target directory at creating new OSDE project.
+
+  * New Project is always created to default location. This issue related on the previous issue.
+
+  * Error while booting up Apache Shinding Server. In this version, two temporary directories (Jetty and H2 Database) has been changed from OS temporary directory to its sub directory.
+
+  * Display the revision number of Apache Shindig.
+
+  * The parameters for navigating between views.
+
+  * retrieve activities not work.
+
+> You can see more details: [Milestone-Release0.2.6](http://code.google.com/p/opensocial-development-environment/issues/list?can=1&q=label%3AMilestone-Release0.2.6)
+
+### Mar 27, 2009 ###
+> Version 0.2.5 has been released.
+
+  * External database connection. OSDE supports an external database (MySQL, Oracle) for storing data to be used by Apache Shindig and some views. You can use the external database when you configure an information for connecting your MySQL or Oracle instance with OSDE's preference panel in your Eclipse.
+  * Stopped using a JAXB, instead, a commons-digester is used for parsing a gadget spec file.This change is a solution for fixing a bug which JAXB conflicts between an implementation had OSDE and a standard implementation had JDK1.6.
+
+> You can see more details: [Milestone-Release0.2.5](http://code.google.com/p/opensocial-development-environment/issues/list?can=1&q=label%3AMilestone-Release0.2.5)
+
+### Mar 22, 2009 ###
+> Version 0.2.4 has been released.
+
+  * Allow you to specify a file name of Gadget spec XML file and JavaScript files at creating on a new project.
+  * Adding Docs view. Using this view, you can visit sites (API references, blogs, project home pages, and so on) regarding OpenSocial in your Eclipse.
+  * Allow you to change a context directory for Jetty on OSDE's preference page.
+  * Provide an Outline view for Gadget XML editor. By using this view, you can jump a place of a specified element in Gadget spec file on Gadget XML Editor directly.
+  * Fixed the issue which a launching Apache Shindig failed in the case of the database directory path which ends with '¥' character.
+
+> You can see more details: [Milestone-Release0.2.4](http://code.google.com/p/opensocial-development-environment/issues/list?can=1&q=label%3AMilestone-Release0.2.4)
+
+### Mar 4, 2009 ###
+> Version 0.2.3 has been released.
+
+  * The project site of OSDE has been moved from eisbahn.jp to code.google.com.
+
+### Mar 1, 2009 ###
+> Version 0.2.2 has been released.
+
+  * This version allows you to generate a sample code for using People API, Persistence API and Activities API at creating new OpenSocial project.
+  * Fixed some bugs about the caching and content-rewrite.
+  * You're able to specify the path of Shindig database files.
+
+### Feb 18, 2009 ###
+> Version 0.2.1 has been released.
+
+  * No need to launch Shindig before launching your application. If you launchs your application, OSDE confirms you whether or not to launch shindig.
+  * OSDE allow you to set the default locale for launching your application on a preference page.
+  * You can launch your application to only push a button for launching the last executed application.
+
+### Feb 10, 2009 ###
+> Version 0.2.0 has been released.
+
+  * No need to launch the local web server for the spec XML file.
+  * Support to edit the Gadget XML file directly using the 'Source' tab on Gadget XML editor.
+  * Provide the function to create the sample data in Shindig database.
+
+### Jan 25, 2009 ###
+> Version 0.1.7 has been released.
+
+  * Supported to launch external application. You can launch and test an application which has already been published on any Web server with local Shindig in OSDE.
+
+### Jan 22, 2009 ###
+> Version 0.1.6 has been released.
+
+  * Fixed some bugs.
+
+### Jan 21, 2009 ###
+> Version 0.1.5 has been released.
+
+  * Issued Consumer key and Consumer Secret for each application.
+  * Provided the wizard to create Java project with sample code for accessing to local Shindig with Restful Protocol by opensocial-java-client.
+
+### Jan 17, 2009 ###
+> Version 0.1.4 has been released.
+
+  * Supported UserPrefs.
+  * Provided OSDE perspective.
+
+### Jan 14, 2009 ###
+> Version 0.1.3 has been released.
+
+  * Supported requestNavigateTo() function.
+
+### Jan 11, 2009 ###
+> Version 0.1.2 has been released.
+
+  * Supported Locale and Message bundle.
+
+### Jan 8, 2009 ###
+> Version 0.1.1 has been released.
+
+  * Supported to send a signed request.
+
+### Jan 5, 2009 ###
+> First version 0.1.0 has been released.
+
+  * First release.

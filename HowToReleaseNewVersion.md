@@ -1,0 +1,112 @@
+# How to release a new version of OSDE #
+
+This page describes a way for releasing a new version of OSDE.
+
+## Announce about starting to release ##
+
+Announce about starting to release a new version of OSDE in Google Groups. Users can know a number of the new version.
+
+## Check out /svn/trunk ##
+
+For changing the version number, check out /svn/trunk.
+
+  * svn checkout https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.plugins.osde --username (your mail address)
+  * svn checkout https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.features.osde --username (your mail address)
+  * svn checkout https://opensocial-development-environment.googlecode.com/svn/update-site --username (your mail address)
+
+Import these project into your Eclipse workspace.
+
+## Change a version number ##
+
+Re-write a new version number in some codes.
+
+  * Bundle-Version in [jp.eisbahn.eclipse.plugins.osde/META-INF/MANIFEST.MF](http://code.google.com/p/opensocial-development-environment/source/browse/trunk/jp.eisbahn.eclipse.plugins.osde/META-INF/MANIFEST.MF) file.
+    * ex) Bundle-Version: 0.2.7 => Bundle-Version: 0.2.8
+  * feature@version in [jp.eisbahn.eclipse.features.osde/feature.xml](http://code.google.com/p/opensocial-development-environment/source/browse/trunk/jp.eisbahn.eclipse.features.osde/feature.xml) file.
+    * ex) version="0.2.7" => version="0.2.8"
+
+Commit the modified files into the svn repository.
+
+## Build OSDE ##
+
+Build and make jar files for putting into an update-site.
+
+### Generate a build file for Ant ###
+
+Apache Ant is used for building jar files of both a feature and a plugin. We can generate a build file for Ant automatically.
+
+  * Right click and show a context menu on the feature.xml file in the jp.eisbahn.eclipse.features.osde project on Package view of Eclipse workbench.
+  * Select a menu `[`PDE Tools`]`->`[`Create Ant Build File`]`.
+
+You can see the generated build.xml files in both the feature and the plugin projects.
+
+### Build OSDE using Ant ###
+
+Using the generated build.xml file, build OSDE. When you build the feature project, the plugin project will be built at the same time.
+
+  * Right click and show a context menu on the build.xml file in the jp.eisbahn.eclipse.features.osde project on Package view of Eclipse workbench.
+  * Select a menu `[`Run As`]`->`[`Ant Build...`]`.
+  * After confirming 'build.update.jar' is only checked, press `[`Run`]` button.
+  * Refresh both the feature and plugin projects.
+
+You can see the generated far files in both the feature and plugin projects, if building was done successfully.
+
+  * jp.eisbahn.eclipse.features.osde`_`(Version number).jar
+  * jp.eisbahn.eclipse.plugins.osde`_`(Version number).jar
+
+## Add the new version into the update-site ##
+
+Put the built jar files into the update-site project, and write a definition for the new version in a site.xml file. Then, users can install the new version of OSDE using this update-site.
+
+### Copy the built jar files ###
+
+Copy the two built jar files from each projects to the update-site project.
+
+  * jp.eisbahn.eclipse.features.osde`_`(Version number).jar in the feature project
+    * Copy into update-site/features
+  * jp.eisbahn.eclipse.plugins.osde`_`(Version number).jar
+    * Copy into update-site/plugins
+
+### Edit the site.xml file ###
+
+Edit the site.xml for adding a new definition of the new version of OSDE under a `<`site`>` tag.
+
+```
+<feature url="features/jp.eisbahn.eclipse.features.osde_(Version number).jar"
+         id="jp.eisbahn.eclipse.features.osde"
+         version="(Version number)">
+   <category name="jp.eisbahn.eclipse.plugins.osde.category" />
+</feature>
+```
+
+Commit the site.xml file and two jar files.
+
+## Tag the new version ##
+
+Copy the files under /svn/trunk to a /svn/tags with a new version number.
+
+  * svn mkdir https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Make a directory for a new version"
+  * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.features.osde https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Tag the new version"
+  * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.eclipse.plugins.osde https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Tag the new version"
+  * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/jp.eisbahn.launcher.shindig https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Tag the new version"
+  * svn copy https://opensocial-development-environment.googlecode.com/svn/trunk/shindig https://opensocial-development-environment.googlecode.com/svn/tags/(Version number) -m "Tag the new version"
+
+## Announce about released ##
+
+Announce to users that the new version of OSDE has been released in the Google Groups. Users can know it soon!
+
+It will be better to write the changes on the post.
+
+## Adjust items for an issue tracking ##
+
+For managing issues, adjust items for an issue tracking.
+
+  * Add the next milestone. For example, you have to add 'Milestone-Release(next version number) = For next release'. You also remove '= For next version' from the previous milestone.
+    * If you released the version '0.2.8', you have to add 'Milestone-Release0.2.9'.
+  * Add the next version. For example, you have to add 'Version-(next version number)'. You also remove '= Current version' from the previous version.
+    * If you released the version '0.2.8', you have to add 'Version-0.2.8'.
+  * Replace the latest version which templates have.
+
+## Write a change log ##
+
+Finally, write a change log on this project site. The page of the change log is [here](ChangeLog.md). In addition, re-write the latest version on the top page of this project site.

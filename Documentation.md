@@ -1,0 +1,1 @@
+OSDE Documentation is available at **http://sites.google.com/site/opensocialdevenv**, including [user guide](http://sites.google.com/site/opensocialdevenv/user-guide) and [developer guide](http://sites.google.com/site/opensocialdevenv/developer-guide).
